@@ -12,10 +12,12 @@
         }
 
         body {
-            font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
-            background: #f5f5f5;
-            color: #1a1a1a;
+            font-family: 'Segoe UI', 'Segoe UI Web (West European)', 'Segoe UI', -apple-system, BlinkMacSystemFont, 'Roboto', 'Helvetica Neue', sans-serif;
+            background: #faf9f8;
+            color: #201f1e;
             line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
         }
 
         .app-container {
@@ -27,11 +29,12 @@
 
         /* Sidebar */
         .sidebar {
-            background: linear-gradient(180deg, #1e293b 0%, #0f172a 100%);
+            background: linear-gradient(180deg, #8B5CF6 0%, #6D28D9 100%);
             color: white;
             padding: 30px 20px;
             overflow-y: auto;
-            border-right: 1px solid rgba(255, 255, 255, 0.1);
+            border-right: 1px solid rgba(255, 255, 255, 0.15);
+            box-shadow: 2px 0 10px rgba(139, 92, 246, 0.1);
         }
 
         .sidebar h1 {
@@ -70,13 +73,13 @@
         }
 
         .principle-item:hover {
-            background: rgba(255, 255, 255, 0.1);
-            border-left-color: #60a5fa;
+            background: rgba(255, 255, 255, 0.15);
+            border-left-color: #E0B0FF;
         }
 
         .principle-item.active {
-            background: rgba(96, 165, 250, 0.2);
-            border-left-color: #60a5fa;
+            background: rgba(224, 176, 255, 0.25);
+            border-left-color: #E0B0FF;
         }
 
         .principle-item .name {
@@ -167,13 +170,15 @@
         }
 
         .btn-primary {
-            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+            background: linear-gradient(135deg, #8B5CF6 0%, #6D28D9 100%);
             color: white;
+            font-family: 'Segoe UI', 'Segoe UI Web', -apple-system, BlinkMacSystemFont, sans-serif;
         }
 
         .btn-primary:hover {
             transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
+            box-shadow: 0 4px 12px rgba(139, 92, 246, 0.4);
+            background: linear-gradient(135deg, #9D6FFF 0%, #7C3AED 100%);
         }
 
         .btn-secondary {
@@ -237,8 +242,8 @@
         }
 
         .badge-info {
-            background: #dbeafe;
-            color: #1e40af;
+            background: #F3E9FF;
+            color: #6D28D9;
         }
 
         .form-group {
@@ -269,8 +274,8 @@
         .form-group textarea:focus,
         .form-group select:focus {
             outline: none;
-            border-color: #3b82f6;
-            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+            border-color: #8B5CF6;
+            box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.1);
         }
 
         .form-group textarea {
@@ -304,8 +309,9 @@
         }
 
         .template-chip:hover {
-            background: #e5e7eb;
-            border-color: #9ca3af;
+            background: #F3E9FF;
+            border-color: #8B5CF6;
+            color: #6D28D9;
         }
 
         /* Results Panel */
@@ -366,8 +372,8 @@
         }
 
         .score-status.good {
-            background: #dbeafe;
-            color: #1e40af;
+            background: #E0E7FF;
+            color: #4C1D95;
         }
 
         .score-status.needs-work {
@@ -432,8 +438,8 @@
         }
 
         .issue-item.info {
-            border-left-color: #3b82f6;
-            background: #eff6ff;
+            border-left-color: #8B5CF6;
+            background: #FAF5FF;
         }
 
         .issue-header {
@@ -569,7 +575,7 @@
             width: 50px;
             height: 50px;
             border: 4px solid #e5e7eb;
-            border-top-color: #3b82f6;
+            border-top-color: #8B5CF6;
             border-radius: 50%;
             animation: spin 1s linear infinite;
             margin: 0 auto 20px;
@@ -649,8 +655,8 @@
     <div class="app-container">
         <!-- Sidebar -->
         <div class="sidebar">
-            <h1>🎯 Agent Scorecard</h1>
-            <p class="tagline">Platform Coherence Evaluator</p>
+            <h1>✨ Copilot</h1>
+            <p class="tagline">Agent Coherence Evaluator</p>
 
             <div class="principle-section">
                 <h3>Core Principles</h3>
@@ -695,7 +701,7 @@
                     <span class="value" id="avgScore">--</span>
                 </div>
                 <div class="stat-row">
-                    <span class="label">Platform Certified</span>
+                    <span class="label">Copilot Certified</span>
                     <span class="value" id="certifiedCount">0</span>
                 </div>
             </div>
@@ -705,8 +711,8 @@
         <div class="main-content">
             <div class="header">
                 <div class="header-left">
-                    <h2>Feature Evaluation</h2>
-                    <p>Assess your agent or feature against platform principles</p>
+                    <h2>Copilot Extension Evaluation</h2>
+                    <p>Assess your agent or extension against Copilot platform principles</p>
                 </div>
                 <div class="header-actions">
                     <button class="btn btn-secondary" onclick="clearForm()">
@@ -724,8 +730,7 @@
                     <div class="input-panel">
                         <div class="card">
                             <div class="card-header">
-                                <h3>Feature Specification</h3>
-                                <span class="badge badge-info">Required</span>
+                            <h3>Extension Specification</h3>
                             </div>
 
                             <div class="quick-templates">
@@ -736,18 +741,18 @@
                             </div>
 
                             <div class="form-group">
-                                <label>Feature Name</label>
+                                <label>Extension Name</label>
                                 <input type="text" id="featureName" placeholder="e.g., SmartTravel Booking Agent">
-                                <div class="form-hint">Give your feature a descriptive name</div>
+                                <div class="form-hint">Give your Copilot extension a descriptive name</div>
                             </div>
 
                             <div class="form-group">
-                                <label>Feature Type</label>
+                                <label>Extension Type</label>
                                 <select id="featureType">
-                                    <option value="agent">Autonomous Agent</option>
                                     <option value="copilot">Copilot Extension</option>
-                                    <option value="skill">Platform Skill</option>
-                                    <option value="plugin">Third-party Plugin</option>
+                                    <option value="agent">Declarative Agent</option>
+                                    <option value="plugin">API Plugin</option>
+                                    <option value="skill">Custom Engine Agent</option>
                                 </select>
                             </div>
 
@@ -1270,8 +1275,8 @@ Your choice!`
                 issues.push({
                     severity: 'info',
                     principle: 'General',
-                    title: 'Excellent Platform Alignment! 🎉',
-                    description: 'This feature demonstrates strong adherence to platform principles. Consider it for "Platform Certified" badge.',
+                    title: 'Excellent Copilot Alignment! 🎉',
+                    description: 'This extension demonstrates strong adherence to Copilot platform principles. Consider it for "Copilot Certified" badge.',
                     remediation: 'Continue monitoring real-world usage. Collect user feedback on clarity and helpfulness.'
                 });
             }
@@ -1308,10 +1313,10 @@ Your choice!`
             if (score >= 85) {
                 color = '#10b981';
                 statusClass = 'excellent';
-                statusText = 'Platform Certified';
+                statusText = 'Copilot Certified';
                 statusIcon = '✓';
             } else if (score >= 70) {
-                color = '#3b82f6';
+                color = '#8B5CF6';
                 statusClass = 'good';
                 statusText = 'Good Standing';
                 statusIcon = '✓';
@@ -1468,7 +1473,7 @@ Your choice!`
         }
 
         function generateMarkdownReport(evaluation) {
-            let md = `# Platform Coherence Report: ${evaluation.featureName}\n\n`;
+            let md = `# Copilot Coherence Report: ${evaluation.featureName}\n\n`;
             md += `**Date:** ${new Date(evaluation.timestamp).toLocaleString()}\n`;
             md += `**Type:** ${evaluation.featureType}\n`;
             md += `**Overall Score:** ${evaluation.overallScore}/100\n\n`;
@@ -1481,7 +1486,7 @@ Your choice!`
 
             md += `\n## Issues & Recommendations\n\n`;
             if (evaluation.issues.length === 0) {
-                md += `No issues found! This feature demonstrates excellent platform alignment.\n`;
+                md += `No issues found! This extension demonstrates excellent alignment with Copilot principles.\n`;
             } else {
                 evaluation.issues.forEach((issue, i) => {
                     md += `### ${i + 1}. ${issue.title} [${issue.severity.toUpperCase()}]\n\n`;
@@ -1537,7 +1542,7 @@ Your choice!`
 
         // Initialize
         window.addEventListener('load', () => {
-            console.log('🎯 Agent Scorecard initialized');
+            console.log('✨ Copilot Agent Scorecard initialized');
             console.log('Platform Principles loaded:', Object.keys(PRINCIPLES).length);
         });
     </script>

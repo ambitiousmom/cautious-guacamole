@@ -229,7 +229,7 @@
 
         .content-grid {
             display: grid;
-            grid-template-columns: 1fr 400px 280px;
+            grid-template-columns: 1fr 380px;
             gap: 30px;
             height: 100%;
         }
@@ -347,21 +347,21 @@
         .results-panel {
             display: flex;
             flex-direction: column;
-            gap: 20px;
+            gap: 15px;
         }
 
         .score-card {
             background: white;
             border-radius: 12px;
-            padding: 30px;
+            padding: 20px;
             box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
             text-align: center;
         }
 
         .score-circle {
-            width: 160px;
-            height: 160px;
-            margin: 0 auto 20px;
+            width: 120px;
+            height: 120px;
+            margin: 0 auto 15px;
             position: relative;
         }
 
@@ -421,8 +421,8 @@
 
         .principle-score-item {
             display: flex;
-            justify-content: space-between;
-            align-items: center;
+            flex-direction: column;
+            gap: 8px;
             padding: 12px 0;
             border-bottom: 1px solid #f3f4f6;
         }
@@ -432,14 +432,39 @@
         }
 
         .principle-score-item .name {
-            font-size: 0.9em;
+            font-size: 0.85em;
             color: #374151;
-            font-weight: 500;
+            font-weight: 600;
         }
 
-        .principle-score-item .score {
+        .score-meter {
+            position: relative;
+            width: 100%;
+            height: 28px;
+            background: #f3f4f6;
+            border-radius: 14px;
+            overflow: hidden;
+        }
+
+        .score-meter-fill {
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 100%;
+            transition: width 0.6s ease-out;
+            border-radius: 14px;
+        }
+
+        .score-meter-text {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
             font-weight: 700;
-            font-size: 1em;
+            font-size: 0.9em;
+            color: white;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.2);
+            z-index: 1;
         }
 
         /* Issues Panel */
@@ -615,22 +640,27 @@
             display: flex;
             flex-direction: column;
             gap: 15px;
+        }
+
+        /* Right Sidebar Container */
+        .right-sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
             overflow-y: auto;
-            max-height: calc(100vh - 400px);
+            max-height: calc(100vh - 320px);
         }
 
         .history-panel .card {
-            position: sticky;
-            top: 0;
-            z-index: 1;
+            flex-shrink: 0;
         }
 
         .history-list {
             display: flex;
             flex-direction: column;
-            gap: 10px;
+            gap: 8px;
+            max-height: 300px;
             overflow-y: auto;
-            max-height: calc(100vh - 450px);
             padding-right: 5px;
         }
 
@@ -758,22 +788,11 @@
         /* Responsive */
         @media (max-width: 1200px) {
             .content-grid {
-                grid-template-columns: 1fr 250px;
+                grid-template-columns: 1fr;
             }
             
-            .results-panel {
-                grid-column: 1;
-                grid-row: 1;
-            }
-            
-            .input-panel {
-                grid-column: 1;
-                grid-row: 2;
-            }
-            
-            .history-panel {
-                grid-column: 2;
-                grid-row: 1 / 3;
+            .right-sidebar {
+                max-height: none;
             }
             
             .principles-grid {
@@ -960,54 +979,57 @@
                         </div>
                     </div>
 
-                    <!-- Results Panel -->
-                    <div class="results-panel">
-                        <div class="card score-card" id="scoreCard" style="display: none;">
-                            <div class="score-circle">
-                                <svg width="160" height="160">
-                                    <circle cx="80" cy="80" r="70" fill="none" stroke="#e5e7eb" stroke-width="12"/>
-                                    <circle id="scoreCircle" cx="80" cy="80" r="70" fill="none" stroke="#10b981" stroke-width="12" 
-                                            stroke-dasharray="440" stroke-dashoffset="440" stroke-linecap="round"/>
-                                </svg>
-                                <div class="score-value" id="scoreValue">--</div>
-                            </div>
-                            <div class="score-label">Coherence Score</div>
-                            <div class="score-status excellent" id="scoreStatus">
-                                <span>✓</span>
-                                <span>Platform Certified</span>
-                            </div>
-
-                            <div class="principle-scores" id="principleScores"></div>
-
-                            <div class="export-options">
-                                <button class="export-btn" onclick="exportReport('json')">📄 Export JSON</button>
-                                <button class="export-btn" onclick="exportReport('markdown')">📝 Export MD</button>
-                            </div>
-                        </div>
-
-                        <div class="card" id="issuesCard" style="display: none;">
-                            <div class="card-header">
-                                <h3>Issues & Recommendations</h3>
-                                <span class="badge badge-info" id="issueCount">0 Issues</span>
-                            </div>
-                            <div class="issues-list" id="issuesList"></div>
-                        </div>
-                    </div>
-
-                    <!-- History Panel -->
-                    <div class="history-panel">
-                        <div class="card">
-                            <div class="card-header">
-                                <h3>Evaluation History</h3>
-                            </div>
-                            <div class="history-list" id="historyList">
-                                <div class="empty-state">
-                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                        <path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
-                                    </svg>
-                                    <h3>No evaluations yet</h3>
-                                    <p>Start by evaluating your first extension</p>
+                    <!-- Right Sidebar: History + Results -->
+                    <div class="right-sidebar">
+                        <!-- History Panel -->
+                        <div class="history-panel">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h3>Evaluation History</h3>
                                 </div>
+                                <div class="history-list" id="historyList">
+                                    <div class="empty-state">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
+                                        </svg>
+                                        <h3>No evaluations yet</h3>
+                                        <p>Start by evaluating your first extension</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Results Panel -->
+                        <div class="results-panel">
+                            <div class="card score-card" id="scoreCard" style="display: none;">
+                                <div class="score-circle">
+                                    <svg width="120" height="120">
+                                        <circle cx="60" cy="60" r="50" fill="none" stroke="#e5e7eb" stroke-width="10"/>
+                                        <circle id="scoreCircle" cx="60" cy="60" r="50" fill="none" stroke="#10b981" stroke-width="10" 
+                                                stroke-dasharray="314" stroke-dashoffset="314" stroke-linecap="round"/>
+                                    </svg>
+                                    <div class="score-value" id="scoreValue">--</div>
+                                </div>
+                                <div class="score-label">Coherence Score</div>
+                                <div class="score-status excellent" id="scoreStatus">
+                                    <span>✓</span>
+                                    <span>Platform Certified</span>
+                                </div>
+
+                                <div class="principle-scores" id="principleScores"></div>
+
+                                <div class="export-options">
+                                    <button class="export-btn" onclick="exportReport('json')">📄 Export JSON</button>
+                                    <button class="export-btn" onclick="exportReport('markdown')">📝 Export MD</button>
+                                </div>
+                            </div>
+
+                            <div class="card" id="issuesCard" style="display: none;">
+                                <div class="card-header">
+                                    <h3>Issues & Recommendations</h3>
+                                    <span class="badge badge-info" id="issueCount">0 Issues</span>
+                                </div>
+                                <div class="issues-list" id="issuesList"></div>
                             </div>
                         </div>
                     </div>
@@ -1655,7 +1677,7 @@ Your choice!`
             // Animate score circle
             const score = evaluation.overallScore;
             const circle = document.getElementById('scoreCircle');
-            const circumference = 2 * Math.PI * 70;
+            const circumference = 2 * Math.PI * 50; // Updated for 120px circle (r=50)
             const offset = circumference - (score / 100) * circumference;
 
             circle.style.strokeDashoffset = offset;
@@ -1698,17 +1720,23 @@ Your choice!`
 
             for (const [key, score] of Object.entries(evaluation.principleScores)) {
                 const principle = PRINCIPLES[key];
-                let scoreColor;
-                if (score >= 85) scoreColor = '#10b981';
-                else if (score >= 70) scoreColor = '#3b82f6';
-                else if (score >= 50) scoreColor = '#f59e0b';
-                else scoreColor = '#dc2626';
+                let meterColor;
+                if (score === 100) {
+                    meterColor = '#10b981'; // Green
+                } else if (score >= 80) {
+                    meterColor = '#f59e0b'; // Yellow
+                } else {
+                    meterColor = '#dc2626'; // Red
+                }
 
                 const item = document.createElement('div');
                 item.className = 'principle-score-item';
                 item.innerHTML = `
                     <span class="name">${principle.name}</span>
-                    <span class="score" style="color: ${scoreColor}">${score}</span>
+                    <div class="score-meter">
+                        <div class="score-meter-fill" style="width: ${score}%; background: ${meterColor};"></div>
+                        <div class="score-meter-text">${score}</div>
+                    </div>
                 `;
                 principleScoresEl.appendChild(item);
             }

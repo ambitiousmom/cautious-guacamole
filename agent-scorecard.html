@@ -1056,21 +1056,43 @@
                         <!-- Results Panel -->
                         <div class="results-panel">
                             <div class="card score-card" id="scoreCard" style="display: none;">
-                                <div class="score-circle">
-                                    <svg width="120" height="120">
-                                        <circle cx="60" cy="60" r="50" fill="none" stroke="#e5e7eb" stroke-width="10"/>
-                                        <circle id="scoreCircle" cx="60" cy="60" r="50" fill="none" stroke="#10b981" stroke-width="10" 
-                                                stroke-dasharray="314" stroke-dashoffset="314" stroke-linecap="round"/>
-                                    </svg>
-                                    <div class="score-value" id="scoreValue">--</div>
-                                </div>
-                                <div class="score-label">Coherence Score</div>
-                                <div class="score-status excellent" id="scoreStatus">
-                                    <span>✓</span>
-                                    <span>Highly Coherent</span>
+                                <h3 style="font-size: 1.2em; font-weight: 600; color: #1f2937; margin-bottom: 20px; text-align: center;">Assessment</h3>
+                                
+                                <div style="display: flex; gap: 30px; justify-content: center; margin-bottom: 25px;">
+                                    <!-- Coherence Score Circle -->
+                                    <div style="text-align: center;">
+                                        <div class="score-circle">
+                                            <svg width="120" height="120">
+                                                <circle cx="60" cy="60" r="50" fill="none" stroke="#e5e7eb" stroke-width="10"/>
+                                                <circle id="scoreCircle" cx="60" cy="60" r="50" fill="none" stroke="#10b981" stroke-width="10" 
+                                                        stroke-dasharray="314" stroke-dashoffset="314" stroke-linecap="round"/>
+                                            </svg>
+                                            <div class="score-value" id="scoreValue">--</div>
+                                        </div>
+                                        <div class="score-label">Coherence</div>
+                                        <div class="score-status excellent" id="scoreStatus">
+                                            <span>✓</span>
+                                            <span>Highly Coherent</span>
+                                        </div>
+                                    </div>
+
+                                    <!-- Platform Gravity Circle -->
+                                    <div style="text-align: center;">
+                                        <div class="score-circle">
+                                            <svg width="120" height="120">
+                                                <circle cx="60" cy="60" r="50" fill="none" stroke="#e5e7eb" stroke-width="10"/>
+                                                <circle id="gravityCircle" cx="60" cy="60" r="50" fill="none" stroke="#7C3AED" stroke-width="10" 
+                                                        stroke-dasharray="314" stroke-dashoffset="314" stroke-linecap="round"/>
+                                            </svg>
+                                            <div class="score-value" id="gravityValue">--</div>
+                                        </div>
+                                        <div class="score-label">Platform Gravity</div>
+                                        <div class="gravity-status" id="gravityStatus">Medium Gravity</div>
+                                    </div>
                                 </div>
 
                                 <div class="principle-scores" id="principleScores"></div>
+                                <div id="gravityAssessmentSection"></div>
 
                                 <div class="export-options">
                                     <button class="export-btn" onclick="exportReport('json')">📄 Export JSON</button>
@@ -1669,62 +1691,54 @@ Your choice!`
 
         // Display Results
         function displayPlatformGravity(gravity) {
-            const resultsPanel = document.querySelector('.results-panel');
+            const gravitySection = document.getElementById('gravityAssessmentSection');
             
-            // Remove old gravity card if exists
-            const oldCard = document.querySelector('.platform-gravity-card');
-            if (oldCard) oldCard.remove();
-
-            const gravityCard = document.createElement('div');
-            gravityCard.className = 'platform-gravity-card animate-in';
-            gravityCard.innerHTML = `
-                <h3>🚀 Platform Gravity Assessment</h3>
-                <div class="gravity-score">${gravity.score}<span style="font-size: 0.4em;">/100</span></div>
-                <div class="gravity-label">${gravity.label}</div>
-                
-                <div class="gravity-metrics">
-                    <div class="gravity-metric">
-                        <div class="gravity-metric-label">Ubiquity</div>
-                        <div class="gravity-metric-bar">
-                            <div class="gravity-metric-fill" style="width: ${gravity.ubiquity}%"></div>
-                            <div class="gravity-metric-value">${gravity.ubiquity}</div>
-                        </div>
-                    </div>
-                    <div class="gravity-metric">
-                        <div class="gravity-metric-label">Complexity</div>
-                        <div class="gravity-metric-bar">
-                            <div class="gravity-metric-fill" style="width: ${gravity.complexity}%"></div>
-                            <div class="gravity-metric-value">${gravity.complexity}</div>
-                        </div>
-                    </div>
-                    <div class="gravity-metric">
-                        <div class="gravity-metric-label">Interop</div>
-                        <div class="gravity-metric-bar">
-                            <div class="gravity-metric-fill" style="width: ${gravity.interoperability}%"></div>
-                            <div class="gravity-metric-value">${gravity.interoperability}</div>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="platform-recommendation">
-                    <strong>💡 Recommendation:</strong>
-                    ${gravity.recommendation}
-                </div>
-                
-                ${gravity.capabilityMatches.length > 0 ? `
-                    <div class="capability-matches">
-                        <strong>⚠️ Existing Platform Capabilities Detected:</strong>
-                        ${gravity.capabilityMatches.map(match => `
-                            <div class="capability-item">
-                                <strong>${match.capability}</strong> - Consider using instead of reimplementing
-                                <div style="font-size: 0.9em; opacity: 0.8; margin-top: 4px;">Matched: ${match.keywords.join(', ')}</div>
+            gravitySection.innerHTML = `
+                <div class="platform-gravity-section">
+                    <h3>🚀 Platform Gravity Assessment</h3>
+                    
+                    <div class="gravity-metrics">
+                        <div class="gravity-metric">
+                            <div class="gravity-metric-label">Ubiquity</div>
+                            <div class="gravity-metric-bar">
+                                <div class="gravity-metric-fill" style="width: ${gravity.ubiquity}%"></div>
+                                <div class="gravity-metric-value">${gravity.ubiquity}</div>
                             </div>
-                        `).join('')}
+                        </div>
+                        <div class="gravity-metric">
+                            <div class="gravity-metric-label">Complexity</div>
+                            <div class="gravity-metric-bar">
+                                <div class="gravity-metric-fill" style="width: ${gravity.complexity}%"></div>
+                                <div class="gravity-metric-value">${gravity.complexity}</div>
+                            </div>
+                        </div>
+                        <div class="gravity-metric">
+                            <div class="gravity-metric-label">Interop</div>
+                            <div class="gravity-metric-bar">
+                                <div class="gravity-metric-fill" style="width: ${gravity.interoperability}%"></div>
+                                <div class="gravity-metric-value">${gravity.interoperability}</div>
+                            </div>
+                        </div>
                     </div>
-                ` : ''}
+                    
+                    <div class="platform-recommendation">
+                        <strong>💡 Recommendation:</strong>
+                        ${gravity.recommendation}
+                    </div>
+                    
+                    ${gravity.capabilityMatches.length > 0 ? `
+                        <div class="capability-matches">
+                            <strong>⚠️ Existing Platform Capabilities Detected:</strong>
+                            ${gravity.capabilityMatches.map(match => `
+                                <div class="capability-item">
+                                    <strong>${match.capability}</strong> - Consider using instead of reimplementing
+                                    <div style="font-size: 0.9em; opacity: 0.8; margin-top: 4px;">Matched: ${match.keywords.join(', ')}</div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    ` : ''}
+                </div>
             `;
-            
-            resultsPanel.insertBefore(gravityCard, resultsPanel.firstChild);
         }
 
         function displayResults(evaluation) {
@@ -1736,13 +1750,29 @@ Your choice!`
             issuesCard.style.display = 'block';
             issuesCard.classList.add('animate-in');
 
-            // Animate score circle
+            // Animate coherence score circle
             const score = evaluation.overallScore;
             const circle = document.getElementById('scoreCircle');
-            const circumference = 2 * Math.PI * 50; // Updated for 120px circle (r=50)
+            const circumference = 2 * Math.PI * 50;
             const offset = circumference - (score / 100) * circumference;
-
             circle.style.strokeDashoffset = offset;
+
+            // Animate gravity score circle
+            const gravityScore = evaluation.gravityAssessment.score;
+            const gravityCircle = document.getElementById('gravityCircle');
+            const gravityOffset = circumference - (gravityScore / 100) * circumference;
+            gravityCircle.style.strokeDashoffset = gravityOffset;
+            
+            // Set gravity circle value and color
+            document.getElementById('gravityValue').textContent = gravityScore;
+            let gravityColor = '#7C3AED'; // Purple default
+            if (gravityScore >= 70) gravityColor = '#dc2626'; // Red (high gravity - bad)
+            else if (gravityScore >= 40) gravityColor = '#f59e0b'; // Yellow (medium)
+            else gravityColor = '#10b981'; // Green (low gravity - good)
+            gravityCircle.style.stroke = gravityColor;
+            
+            // Update gravity status label
+            document.getElementById('gravityStatus').textContent = evaluation.gravityAssessment.label;
 
             // Set color based on score
             let color, statusClass, statusText, statusIcon;
@@ -1806,7 +1836,7 @@ Your choice!`
             }
 
             // Add Platform Gravity at the end
-            displayPlatformGravity(evaluation.gravityAssessment, principleScoresEl);
+            displayPlatformGravity(evaluation.gravityAssessment);
 
             // Display issues
             const issuesListEl = document.getElementById('issuesList');

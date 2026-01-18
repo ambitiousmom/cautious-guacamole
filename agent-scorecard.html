@@ -343,6 +343,74 @@
             color: #5B21B6;
         }
 
+        /* Live Feedback */
+        .live-feedback {
+            background: #f9fafb;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            padding: 12px;
+            margin-top: 12px;
+            font-size: 0.85em;
+        }
+
+        .live-feedback-header {
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #374151;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .live-feedback-list {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .feedback-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px;
+            border-radius: 4px;
+        }
+
+        .feedback-item.success {
+            background: #d1fae5;
+            color: #065f46;
+        }
+
+        .feedback-item.warning {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .feedback-item.error {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .feedback-icon {
+            font-size: 1em;
+            flex-shrink: 0;
+        }
+
+        .principle-status-icon {
+            font-size: 1em;
+            margin-left: 4px;
+        }
+
+        .live-score-preview {
+            background: linear-gradient(135deg, #F3E8FF 0%, #E9D5FF 100%);
+            padding: 10px;
+            border-radius: 6px;
+            margin-top: 12px;
+            text-align: center;
+            font-weight: 600;
+            color: #5B21B6;
+        }
+
         /* Results Panel */
         .results-panel {
             display: flex;
@@ -1105,9 +1173,9 @@
                             <div class="form-group">
                                 <label>Agent Type</label>
                                 <select id="featureType">
-                                    <option value="agent" selected>Declarative Agent</option>
+                                    <option value="declarative" selected>Declarative Agent</option>
                                     <option value="plugin">API Plugin</option>
-                                    <option value="skill">Custom Engine Agent</option>
+                                    <option value="custom">Custom Engine Agent</option>
                                 </select>
                             </div>
 
@@ -1115,6 +1183,16 @@
                                 <label>Description & Behavior</label>
                                 <textarea id="featureDescription" placeholder="Describe how the feature works, what data it uses, how it interacts with users...&#10;&#10;Example: This agent helps users book travel by analyzing their preferences and budget. It requests access to calendar and location data, then presents personalized options. The agent clearly identifies itself and explains why it needs each permission."></textarea>
                                 <div class="form-hint">Be specific about user interactions, data handling, and UI patterns</div>
+                                
+                                <!-- Live Feedback Panel -->
+                                <div id="liveFeedback" class="live-feedback" style="display: none;">
+                                    <div class="live-feedback-header">
+                                        <span>⚡</span>
+                                        <span>Live Principle Check</span>
+                                    </div>
+                                    <div id="liveFeedbackList" class="live-feedback-list"></div>
+                                    <div id="liveScorePreview" class="live-score-preview" style="display: none;"></div>
+                                </div>
                             </div>
 
                             <div style="display: flex; gap: 12px; margin-top: 20px;">
@@ -1312,7 +1390,37 @@
         const TEMPLATES = {
             travel: {
                 name: 'SmartTravel Booking Agent',
-                type: 'agent',
+                type: 'declarative',
+                instructions: `You are SmartTravel, an AI travel assistant. Always introduce yourself clearly. Request only necessary permissions with clear explanations. Present options with transparent trade-offs. Respect user privacy and data minimization principles.`,
+                manifest: `{"schema_version": "v2.1",
+  "name": "SmartTravel",
+  "description": "AI travel booking assistant",
+  "instructions": "Help users plan trips with personalized recommendations",
+  "capabilities": {
+    "conversation_starters": [
+      "Plan a trip to Paris",
+      "Find budget-friendly flights",
+      "Show me weekend getaways"
+    ]
+  },
+  "actions": [
+    {"name": "searchFlights", "description": "Search for flight options"},
+    {"name": "checkCalendar", "description": "Check user availability", "requires_consent": true}
+  ]
+}`,
+                apiActions: `async function searchFlights(destination, dates) {
+  // Always request consent before calendar access
+  const calendarConsent = await requestPermission('Calendar.Read', 
+    'I\'ll check your calendar to avoid conflicts');
+  
+  if (!calendarConsent) {
+    // Graceful fallback: manual date entry
+    return await searchWithManualDates(destination);
+  }
+  
+  const availableDates = await graph.calendar.getFreeSlots();
+  return await travelAPI.search({destination, dates: availableDates});
+}`,
                 description: `A travel booking agent that helps users plan trips based on their preferences and budget.
 
 User Interaction Flow:
@@ -1355,7 +1463,34 @@ Which interests you?`
             },
             shopping: {
                 name: 'PersonalShopper AI',
-                type: 'copilot',
+                type: 'declarative',
+                instructions: `You are PersonalShopper, an AI shopping assistant. Always respect user privacy. Request consent before using browsing history. Provide clear comparisons and explain recommendations transparently.`,
+                manifest: `{"schema_version": "v2.1",
+  "name": "PersonalShopper",
+  "description": "AI shopping assistant",
+  "capabilities": {
+    "conversation_starters": [
+      "Find me a laptop for design work",
+      "Show budget-friendly options"
+    ]
+  },
+  "actions": [
+    {"name": "searchProducts", "description": "Search for products"},
+    {"name": "trackPrices", "description": "Track price changes"}
+  ]
+}`,
+                apiActions: `async function searchProducts(query, prefs) {
+  // Anonymous by default
+  const useHistory = await requestPermission('BrowsingHistory.Read',
+    'I can personalize recommendations using your browsing history');
+  
+  if (useHistory) {
+    return await productAPI.searchPersonalized(query, prefs);
+  }
+  
+  // Fallback: generic search without personalization
+  return await productAPI.searchGeneric(query);
+}`,
                 description: `A shopping assistant that helps users find products matching their style and needs.
 
 Features:
@@ -1392,7 +1527,35 @@ Agent: Here are 3 great options:
             },
             health: {
                 name: 'WellnessCoach AI',
-                type: 'agent',
+                type: 'declarative',
+                instructions: `You are WellnessCoach, an AI wellness assistant. IMPORTANT: Always include disclaimer that you are not a medical professional. Reference evidence-based sources. Encourage professional consultation for health concerns. Never diagnose or prescribe.`,
+                manifest: `{"schema_version": "v2.1",
+  "name": "WellnessCoach",
+  "description": "AI wellness and fitness coach",
+  "capabilities": {
+    "conversation_starters": [
+      "Help me start exercising",
+      "Create a fitness plan"
+    ]
+  },
+  "actions": [
+    {"name": "createFitnessPlan", "description": "Generate personalized fitness recommendations"},
+    {"name": "trackProgress", "description": "Track wellness goals", "requires_consent": true}
+  ]
+}`,
+                apiActions: `async function trackProgress(userId) {
+  // Health data requires explicit consent
+  const consent = await requestPermission('HealthData.ReadWrite',
+    'I\'ll securely store your progress. You can export or delete anytime.');
+  
+  if (!consent) {
+    // Graceful fallback: manual logging
+    return await promptManualEntry();
+  }
+  
+  // Ensure encryption at rest
+  return await healthAPI.getProgress(userId, {encrypted: true});
+}`,
                 description: `A health and wellness coaching agent that provides personalized fitness and nutrition guidance.
 
 Critical Features:
@@ -1428,7 +1591,39 @@ Want me to send daily reminders? You can turn these off anytime in settings.`
             },
             finance: {
                 name: 'FinanceAdvisor Pro',
-                type: 'agent',
+                type: 'declarative',
+                instructions: `You are FinanceAdvisor Pro. CRITICAL: Always include disclaimer: "For informational purposes only, not financial advice." Suggest consulting licensed advisors for major decisions. Never give specific stock recommendations. Link to authoritative sources (SEC, consumer.gov). Be transparent about limitations.`,
+                manifest: `{"schema_version": "v2.1",
+  "name": "FinanceAdvisor",
+  "description": "AI financial education assistant",
+  "capabilities": {
+    "conversation_starters": [
+      "Explain diversification",
+      "Help me understand budgeting"
+    ]
+  },
+  "actions": [
+    {"name": "calculateBudget", "description": "Budget calculator"},
+    {"name": "viewAccounts", "description": "View account balances", "requires_consent": true, "read_only": true}
+  ]
+}`,
+                apiActions: `async function viewAccounts(userId) {
+  // Financial data - read-only access with 2FA
+  await requireTwoFactorAuth();
+  
+  const consent = await requestPermission('FinancialData.Read',
+    'Read-only access. I cannot execute transactions.');
+  
+  if (!consent) {
+    return await promptManualEntry();
+  }
+  
+  // Session timeout: 10 minutes
+  return await financialAPI.getAccounts(userId, {
+    readOnly: true,
+    sessionTimeout: 600000
+  });
+}`,
                 description: `A financial planning agent that helps users budget, save, and understand investment options.
 
 Compliance-First:
@@ -1470,6 +1665,167 @@ Your choice!`
         // State Management
         let evaluationHistory = [];
         let currentEvaluation = null;
+        let liveCheckTimeout = null;
+
+        // Live Validation Functions
+        function checkPrincipleInText(principle, text) {
+            const lowerText = text.toLowerCase();
+            const checks = [];
+
+            switch(principle) {
+                case 'transparency':
+                    if (lowerText.includes('i\'m') || lowerText.includes('i am')) {
+                        checks.push({ pass: true, message: '✓ Agent introduces itself' });
+                    } else if (text.length > 50) {
+                        checks.push({ pass: false, message: '⚠ Consider: "I\'m [AgentName], your..."' });
+                    }
+                    break;
+
+                case 'privacy':
+                    if (lowerText.includes('consent') || lowerText.includes('permission') || lowerText.includes('is that okay')) {
+                        checks.push({ pass: true, message: '✓ Requests consent' });
+                    } else if (lowerText.includes('data') || lowerText.includes('access')) {
+                        checks.push({ pass: false, message: '⚠ Add just-in-time consent prompt' });
+                    }
+
+                    if (lowerText.includes('minimization') || lowerText.includes('only necessary')) {
+                        checks.push({ pass: true, message: '✓ Data minimization mentioned' });
+                    }
+                    break;
+
+                case 'grounding-fidelity':
+                    if (lowerText.includes('citation') || lowerText.includes('source') || lowerText.includes('reference')) {
+                        checks.push({ pass: true, message: '✓ Mentions sources/citations' });
+                    } else if (text.length > 100) {
+                        checks.push({ pass: false, message: '⚠ Consider adding source citations' });
+                    }
+                    break;
+
+                case 'error-recovery':
+                    if (lowerText.includes('fallback') || lowerText.includes('graceful') || lowerText.includes('error')) {
+                        checks.push({ pass: true, message: '✓ Error handling mentioned' });
+                    } else if (text.length > 100) {
+                        checks.push({ pass: false, message: '⚠ Add error recovery strategy' });
+                    }
+                    break;
+
+                case 'ux-signature':
+                    if (lowerText.includes('progressive') || lowerText.includes('cards') || lowerText.includes('copilot')) {
+                        checks.push({ pass: true, message: '✓ Copilot UX patterns mentioned' });
+                    }
+                    break;
+            }
+
+            return checks;
+        }
+
+        function performLiveCheck() {
+            const description = document.getElementById('featureDescription').value;
+            const trace = document.getElementById('interactionTrace').value;
+            const combinedText = description + ' ' + trace;
+
+            if (combinedText.trim().length < 20) {
+                document.getElementById('liveFeedback').style.display = 'none';
+                updatePrincipleIndicators({});
+                return;
+            }
+
+            document.getElementById('liveFeedback').style.display = 'block';
+
+            const feedback = [];
+            const principleStatus = {};
+
+            // Check each principle
+            ['transparency', 'privacy', 'grounding-fidelity', 'error-recovery', 'ux-signature'].forEach(principle => {
+                const checks = checkPrincipleInText(principle, combinedText);
+                checks.forEach(check => {
+                    feedback.push({
+                        type: check.pass ? 'success' : 'warning',
+                        message: check.message
+                    });
+                });
+
+                // Determine principle status
+                const passCount = checks.filter(c => c.pass).length;
+                const totalCount = checks.length;
+                if (totalCount === 0) {
+                    principleStatus[principle] = 'neutral';
+                } else if (passCount === totalCount) {
+                    principleStatus[principle] = 'pass';
+                } else if (passCount > 0) {
+                    principleStatus[principle] = 'partial';
+                } else {
+                    principleStatus[principle] = 'fail';
+                }
+            });
+
+            // Render feedback
+            const feedbackList = document.getElementById('liveFeedbackList');
+            feedbackList.innerHTML = '';
+
+            if (feedback.length === 0) {
+                feedbackList.innerHTML = '<div class="feedback-item" style="color: #6b7280;">Keep writing to see principle checks...</div>';
+            } else {
+                feedback.slice(0, 5).forEach(item => {
+                    const div = document.createElement('div');
+                    div.className = `feedback-item ${item.type}`;
+                    div.innerHTML = `<span class="feedback-icon">${item.type === 'success' ? '✓' : '⚠'}</span><span>${item.message}</span>`;
+                    feedbackList.appendChild(div);
+                });
+            }
+
+            // Show estimated score
+            const passCount = feedback.filter(f => f.type === 'success').length;
+            const totalCount = feedback.length;
+            if (totalCount > 0) {
+                const estimatedScore = Math.round(50 + (passCount / totalCount) * 40);
+                document.getElementById('liveScorePreview').style.display = 'block';
+                document.getElementById('liveScorePreview').textContent = `Estimated Score: ${estimatedScore}/100`;
+            }
+
+            // Update principle indicators in top banner
+            updatePrincipleIndicators(principleStatus);
+        }
+
+        function updatePrincipleIndicators(status) {
+            document.querySelectorAll('.principle-item').forEach(item => {
+                const principle = item.dataset.principle;
+                const nameElement = item.querySelector('.name');
+                
+                // Remove existing status icons
+                const existingIcon = nameElement.querySelector('.principle-status-icon');
+                if (existingIcon) {
+                    existingIcon.remove();
+                }
+
+                // Add new status icon
+                if (status[principle]) {
+                    const icon = document.createElement('span');
+                    icon.className = 'principle-status-icon';
+                    switch(status[principle]) {
+                        case 'pass':
+                            icon.textContent = '✓';
+                            icon.style.color = '#10b981';
+                            break;
+                        case 'partial':
+                            icon.textContent = '○';
+                            icon.style.color = '#f59e0b';
+                            break;
+                        case 'fail':
+                            icon.textContent = '○';
+                            icon.style.color = '#dc2626';
+                            break;
+                    }
+                    nameElement.appendChild(icon);
+                }
+            });
+        }
+
+        function onDescriptionChange() {
+            // Debounce the live check
+            clearTimeout(liveCheckTimeout);
+            liveCheckTimeout = setTimeout(performLiveCheck, 500);
+        }
 
         // Toggle Logic Trace visibility
         function toggleLogicTrace() {
@@ -1493,17 +1849,34 @@ Your choice!`
             const template = TEMPLATES[templateKey];
             document.getElementById('featureName').value = template.name;
             document.getElementById('featureType').value = template.type;
+            document.getElementById('agentInstructions').value = template.instructions || '';
+            document.getElementById('manifestJson').value = template.manifest || '';
+            document.getElementById('apiActions').value = template.apiActions || '';
             document.getElementById('featureDescription').value = template.description;
             document.getElementById('interactionTrace').value = template.trace || '';
+            
+            // Trigger live check after loading template
+            performLiveCheck();
         }
+
+        // Initialize event listeners when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('featureDescription').addEventListener('input', onDescriptionChange);
+            document.getElementById('interactionTrace').addEventListener('input', onDescriptionChange);
+        });
 
         // Clear form
         function clearForm() {
             document.getElementById('featureName').value = '';
+            document.getElementById('agentInstructions').value = 'You are a helpful AI assistant. Be concise, accurate, and always cite sources when providing factual information.';
+            document.getElementById('manifestJson').value = '{"schema_version": "v2.1",\n  "name": "ExampleAgent",\n  "description": "A helpful AI assistant",\n  "capabilities": {\n    "conversation_starters": [\n      "Help me get started"\n    ]\n  },\n  "actions": []\n}';
+            document.getElementById('apiActions').value = '// Example: API action definition\nasync function getUserCalendar(userId) {\n  // Request consent before accessing\n  const consent = await requestPermission(\'Calendar.Read\');\n  if (!consent) return fallbackOptions();\n  \n  return await graph.calendar.getEvents(userId);\n}';
             document.getElementById('featureDescription').value = '';
             document.getElementById('interactionTrace').value = '';
             document.getElementById('scoreCard').style.display = 'none';
             document.getElementById('issuesCard').style.display = 'none';
+            document.getElementById('liveFeedback').style.display = 'none';
+            updatePrincipleIndicators({});
         }
 
         // Evaluate Feature (Simulated LLM Judge)

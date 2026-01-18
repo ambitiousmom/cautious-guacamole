@@ -21,114 +21,142 @@
         }
 
         .app-container {
-            display: grid;
-            grid-template-columns: 300px 1fr;
-            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
             overflow: hidden;
         }
 
-        /* Sidebar */
+        /* Top Banner */
         .sidebar {
-            background: linear-gradient(180deg, #8B5CF6 0%, #6D28D9 100%);
-            color: white;
-            padding: 30px 20px;
-            overflow-y: auto;
-            border-right: 1px solid rgba(255, 255, 255, 0.15);
-            box-shadow: 2px 0 10px rgba(139, 92, 246, 0.1);
+            background: linear-gradient(135deg, #E9D5FF 0%, #DDD6FE 100%);
+            color: #4C1D95;
+            padding: 30px 40px;
+            border-bottom: 3px solid #C4B5FD;
+            box-shadow: 0 4px 12px rgba(139, 92, 246, 0.08);
+            flex-shrink: 0;
         }
 
         .sidebar h1 {
-            font-size: 1.4em;
+            font-size: 2em;
             margin-bottom: 8px;
-            font-weight: 600;
+            font-weight: 700;
+            text-align: center;
+            background: linear-gradient(135deg, #7C3AED 0%, #6D28D9 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
 
         .sidebar .tagline {
-            font-size: 0.85em;
-            opacity: 0.7;
+            font-size: 0.95em;
+            opacity: 0.8;
             margin-bottom: 30px;
+            text-align: center;
+            font-weight: 500;
         }
 
         .principle-section {
-            margin-bottom: 30px;
+            margin-bottom: 25px;
         }
 
         .principle-section h3 {
-            font-size: 0.85em;
+            font-size: 0.9em;
             text-transform: uppercase;
-            letter-spacing: 1px;
-            opacity: 0.5;
+            letter-spacing: 1.5px;
+            opacity: 0.7;
             margin-bottom: 15px;
-            font-weight: 600;
+            font-weight: 700;
+            text-align: center;
+        }
+
+        .principles-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 12px;
+            margin-bottom: 20px;
         }
 
         .principle-item {
-            padding: 12px;
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 8px;
-            margin-bottom: 8px;
+            padding: 16px;
+            background: white;
+            border-radius: 12px;
             cursor: pointer;
-            transition: all 0.2s;
-            border-left: 3px solid transparent;
+            transition: all 0.3s;
+            border: 2px solid #E9D5FF;
+            text-align: center;
+            box-shadow: 0 2px 4px rgba(139, 92, 246, 0.05);
         }
 
         .principle-item:hover {
-            background: rgba(255, 255, 255, 0.15);
-            border-left-color: #E0B0FF;
+            background: #FAF5FF;
+            border-color: #C4B5FD;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(139, 92, 246, 0.12);
         }
 
         .principle-item.active {
-            background: rgba(224, 176, 255, 0.25);
-            border-left-color: #E0B0FF;
+            background: #F3E8FF;
+            border-color: #A78BFA;
         }
 
         .principle-item .name {
-            font-weight: 600;
-            font-size: 0.95em;
-            margin-bottom: 4px;
+            font-weight: 700;
+            font-size: 1em;
+            margin-bottom: 8px;
+            color: #5B21B6;
         }
 
         .principle-item .description {
-            font-size: 0.8em;
-            opacity: 0.7;
-            line-height: 1.4;
+            font-size: 0.85em;
+            opacity: 0.75;
+            line-height: 1.5;
+            color: #6D28D9;
         }
 
         .stats-summary {
-            background: rgba(255, 255, 255, 0.05);
-            padding: 15px;
-            border-radius: 8px;
-            margin-top: 30px;
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            margin-top: 20px;
+            border: 2px solid #E9D5FF;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 20px;
+            text-align: center;
         }
 
         .stats-summary h3 {
-            font-size: 0.85em;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            opacity: 0.5;
-            margin-bottom: 12px;
+            display: none;
         }
 
         .stat-row {
             display: flex;
-            justify-content: space-between;
-            margin-bottom: 8px;
-            font-size: 0.9em;
+            flex-direction: column;
+            gap: 8px;
         }
 
         .stat-row .label {
-            opacity: 0.8;
+            opacity: 0.7;
+            font-size: 0.85em;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-weight: 600;
+            color: #5B21B6;
         }
 
         .stat-row .value {
-            font-weight: 600;
+            font-weight: 700;
+            font-size: 2em;
+            color: #7C3AED;
         }
 
         /* Main Content */
         .main-content {
             display: flex;
             flex-direction: column;
-            overflow: hidden;
+            flex: 1;
+            overflow-y: auto;
         }
 
         .header {
@@ -170,15 +198,15 @@
         }
 
         .btn-primary {
-            background: linear-gradient(135deg, #8B5CF6 0%, #6D28D9 100%);
+            background: linear-gradient(135deg, #A78BFA 0%, #8B5CF6 100%);
             color: white;
             font-family: 'Segoe UI', 'Segoe UI Web', -apple-system, BlinkMacSystemFont, sans-serif;
         }
 
         .btn-primary:hover {
             transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(139, 92, 246, 0.4);
-            background: linear-gradient(135deg, #9D6FFF 0%, #7C3AED 100%);
+            box-shadow: 0 4px 16px rgba(139, 92, 246, 0.35);
+            background: linear-gradient(135deg, #8B5CF6 0%, #7C3AED 100%);
         }
 
         .btn-secondary {
@@ -274,8 +302,8 @@
         .form-group textarea:focus,
         .form-group select:focus {
             outline: none;
-            border-color: #8B5CF6;
-            box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.1);
+            border-color: #A78BFA;
+            box-shadow: 0 0 0 3px rgba(167, 139, 250, 0.15);
         }
 
         .form-group textarea {
@@ -309,9 +337,9 @@
         }
 
         .template-chip:hover {
-            background: #F3E9FF;
-            border-color: #8B5CF6;
-            color: #6D28D9;
+            background: #F3E8FF;
+            border-color: #C4B5FD;
+            color: #5B21B6;
         }
 
         /* Results Panel */
@@ -483,11 +511,12 @@
 
         /* Platform Gravity */
         .platform-gravity-card {
-            background: linear-gradient(135deg, #8B5CF6 0%, #6D28D9 100%);
-            color: white;
+            background: linear-gradient(135deg, #E9D5FF 0%, #DDD6FE 100%);
+            color: #4C1D95;
             border-radius: 12px;
             padding: 25px;
             margin-bottom: 20px;
+            border: 2px solid #C4B5FD;
         }
 
         .platform-gravity-card h3 {
@@ -523,9 +552,10 @@
 
         .gravity-metric {
             text-align: center;
-            background: rgba(255, 255, 255, 0.15);
+            background: white;
             padding: 15px;
             border-radius: 8px;
+            border: 2px solid rgba(124, 58, 237, 0.15);
         }
 
         .gravity-metric-value {
@@ -540,12 +570,13 @@
         }
 
         .platform-recommendation {
-            background: rgba(255, 255, 255, 0.2);
+            background: white;
             padding: 15px;
             border-radius: 8px;
             margin-top: 15px;
             font-size: 0.95em;
             line-height: 1.6;
+            border: 2px solid rgba(124, 58, 237, 0.15);
         }
 
         .platform-recommendation strong {
@@ -672,7 +703,7 @@
             width: 50px;
             height: 50px;
             border: 4px solid #e5e7eb;
-            border-top-color: #8B5CF6;
+            border-top-color: #A78BFA;
             border-radius: 50%;
             animation: spin 1s linear infinite;
             margin: 0 auto 20px;
@@ -752,66 +783,59 @@
     <div class="app-container">
         <!-- Sidebar -->
         <div class="sidebar">
-            <h1>✨ Copilot</h1>
-            <p class="tagline">Agent Coherence Evaluator</p>
+            <h1>✨ Copilot Agent Scorecard</h1>
+            <p class="tagline">Evaluate extensions against platform principles & strategic fit</p>
 
             <div class="principle-section">
-                <h3>Core Principles</h3>
-                <div class="principle-item active" data-principle="ux-signature">
-                    <div class="name">🎨 UX Signature</div>
-                    <div class="description">Consistent design language and progressive disclosure</div>
-                </div>
-                <div class="principle-item" data-principle="handoff-integrity">
-                    <div class="name">🔄 Handoff Integrity</div>
-                    <div class="description">Intent preservation and privacy protection</div>
-                </div>
-                <div class="principle-item" data-principle="grounding-fidelity">
-                    <div class="name">📊 Grounding Fidelity</div>
-                    <div class="description">Data usage accuracy and no hallucinations</div>
-                </div>
-            </div>
-
-            <div class="principle-section">
-                <h3>Extended Principles</h3>
-                <div class="principle-item" data-principle="transparency">
-                    <div class="name">👁️ Transparency</div>
-                    <div class="description">Clear agent identity and capability disclosure</div>
-                </div>
-                <div class="principle-item" data-principle="privacy">
-                    <div class="name">🔒 Privacy First</div>
-                    <div class="description">Data minimization and just-in-time consent</div>
-                </div>
-                <div class="principle-item" data-principle="error-recovery">
-                    <div class="name">⚡ Error Recovery</div>
-                    <div class="description">Graceful degradation and clear fallbacks</div>
-                </div>
-            </div>
-
-            <div class="principle-section">
-                <h3>Strategic Assessment</h3>
-                <div class="principle-item" data-principle="platform-gravity">
-                    <div class="name">🚀 Platform Gravity</div>
-                    <div class="description">Should this be a platform-level capability?</div>
+                <h3>Evaluation Framework</h3>
+                <div class="principles-grid">
+                    <div class="principle-item active" data-principle="ux-signature">
+                        <div class="name">🎨 UX Signature</div>
+                        <div class="description">Consistent design language</div>
+                    </div>
+                    <div class="principle-item" data-principle="handoff-integrity">
+                        <div class="name">🔄 Handoff Integrity</div>
+                        <div class="description">Intent preservation</div>
+                    </div>
+                    <div class="principle-item" data-principle="grounding-fidelity">
+                        <div class="name">📊 Grounding Fidelity</div>
+                        <div class="description">Data accuracy</div>
+                    </div>
+                    <div class="principle-item" data-principle="transparency">
+                        <div class="name">👁️ Transparency</div>
+                        <div class="description">Clear agent identity</div>
+                    </div>
+                    <div class="principle-item" data-principle="privacy">
+                        <div class="name">🔒 Privacy First</div>
+                        <div class="description">Data minimization</div>
+                    </div>
+                    <div class="principle-item" data-principle="error-recovery">
+                        <div class="name">⚡ Error Recovery</div>
+                        <div class="description">Graceful degradation</div>
+                    </div>
+                    <div class="principle-item" data-principle="platform-gravity">
+                        <div class="name">🚀 Platform Gravity</div>
+                        <div class="description">Strategic platform fit</div>
+                    </div>
                 </div>
             </div>
 
             <div class="stats-summary">
-                <h3>Session Stats</h3>
                 <div class="stat-row">
-                    <span class="label">Evaluations</span>
                     <span class="value" id="totalEvals">0</span>
+                    <span class="label">Evaluations</span>
                 </div>
                 <div class="stat-row">
-                    <span class="label">Avg Score</span>
                     <span class="value" id="avgScore">--</span>
+                    <span class="label">Avg Score</span>
                 </div>
                 <div class="stat-row">
-                    <span class="label">Copilot Certified</span>
                     <span class="value" id="certifiedCount">0</span>
+                    <span class="label">Copilot Certified</span>
                 </div>
                 <div class="stat-row">
-                    <span class="label">Platform Candidates</span>
                     <span class="value" id="platformCandidates">0</span>
+                    <span class="label">Platform Candidates</span>
                 </div>
             </div>
         </div>

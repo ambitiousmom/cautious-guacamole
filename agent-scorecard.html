@@ -72,15 +72,15 @@
 
         .principles-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 12px;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 10px;
             margin-bottom: 20px;
         }
 
         .principle-item {
-            padding: 16px;
+            padding: 12px 8px;
             background: white;
-            border-radius: 12px;
+            border-radius: 10px;
             cursor: pointer;
             transition: all 0.3s;
             border: 2px solid #E9D5FF;
@@ -102,27 +102,27 @@
 
         .principle-item .name {
             font-weight: 700;
-            font-size: 1em;
-            margin-bottom: 8px;
+            font-size: 0.9em;
+            margin-bottom: 6px;
             color: #5B21B6;
         }
 
         .principle-item .description {
-            font-size: 0.85em;
+            font-size: 0.75em;
             opacity: 0.75;
-            line-height: 1.5;
+            line-height: 1.4;
             color: #6D28D9;
         }
 
         .stats-summary {
             background: white;
-            padding: 20px;
+            padding: 15px 20px;
             border-radius: 12px;
             margin-top: 20px;
             border: 2px solid #E9D5FF;
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 20px;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
             text-align: center;
         }
 
@@ -147,7 +147,7 @@
 
         .stat-row .value {
             font-weight: 700;
-            font-size: 2em;
+            font-size: 1.8em;
             color: #7C3AED;
         }
 
@@ -228,7 +228,7 @@
 
         .content-grid {
             display: grid;
-            grid-template-columns: 1fr 400px;
+            grid-template-columns: 1fr 400px 280px;
             gap: 30px;
             height: 100%;
         }
@@ -610,10 +610,45 @@
         }
 
         /* History Panel */
+        .history-panel {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            overflow-y: auto;
+            max-height: calc(100vh - 400px);
+        }
+
+        .history-panel .card {
+            position: sticky;
+            top: 0;
+            z-index: 1;
+        }
+
         .history-list {
             display: flex;
             flex-direction: column;
             gap: 10px;
+            overflow-y: auto;
+            max-height: calc(100vh - 450px);
+            padding-right: 5px;
+        }
+
+        .history-list::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .history-list::-webkit-scrollbar-track {
+            background: #f1f3f5;
+            border-radius: 3px;
+        }
+
+        .history-list::-webkit-scrollbar-thumb {
+            background: #C4B5FD;
+            border-radius: 3px;
+        }
+
+        .history-list::-webkit-scrollbar-thumb:hover {
+            background: #A78BFA;
         }
 
         .history-item {
@@ -728,15 +763,19 @@
             .results-panel {
                 order: -1;
             }
+            
+            .principles-grid {
+                grid-template-columns: repeat(4, 1fr);
+            }
         }
 
         @media (max-width: 768px) {
-            .app-container {
-                grid-template-columns: 1fr;
+            .principles-grid {
+                grid-template-columns: repeat(2, 1fr);
             }
-
-            .sidebar {
-                display: none;
+            
+            .stats-summary {
+                grid-template-columns: repeat(2, 1fr);
             }
         }
 
@@ -941,7 +980,10 @@
                             </div>
                             <div class="issues-list" id="issuesList"></div>
                         </div>
+                    </div>
 
+                    <!-- History Panel -->
+                    <div class="history-panel">
                         <div class="card">
                             <div class="card-header">
                                 <h3>Evaluation History</h3>
@@ -952,7 +994,7 @@
                                         <path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
                                     </svg>
                                     <h3>No evaluations yet</h3>
-                                    <p>Start by evaluating your first feature</p>
+                                    <p>Start by evaluating your first extension</p>
                                 </div>
                             </div>
                         </div>

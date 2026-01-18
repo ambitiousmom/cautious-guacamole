@@ -72,7 +72,7 @@
 
         .principles-grid {
             display: grid;
-            grid-template-columns: repeat(7, minmax(0, 1fr));
+            grid-template-columns: repeat(8, minmax(0, 1fr));
             gap: 6px;
             margin-bottom: 10px;
         }
@@ -1048,6 +1048,10 @@
                         <div class="name">🚀 Platform Gravity</div>
                         <div class="description">Strategic platform fit</div>
                     </div>
+                    <div class="principle-item" data-principle="steerability">
+                        <div class="name">🎯 Steerability</div>
+                        <div class="description">Real-time adaptability</div>
+                    </div>
                 </div>
             </div>
 
@@ -1235,7 +1239,7 @@
         const PRINCIPLES = {
             'ux-signature': {
                 name: 'UX Signature',
-                weight: 0.25,
+                weight: 0.20,
                 checks: [
                     { id: 'progressive-disclosure', name: 'Progressive Disclosure', weight: 0.3 },
                     { id: 'consistent-typography', name: 'Consistent Typography', weight: 0.2 },
@@ -1245,7 +1249,7 @@
             },
             'handoff-integrity': {
                 name: 'Handoff Integrity',
-                weight: 0.25,
+                weight: 0.20,
                 checks: [
                     { id: 'intent-preservation', name: 'Intent Preservation', weight: 0.4 },
                     { id: 'context-continuity', name: 'Context Continuity', weight: 0.3 },
@@ -1254,7 +1258,7 @@
             },
             'grounding-fidelity': {
                 name: 'Grounding Fidelity',
-                weight: 0.25,
+                weight: 0.20,
                 checks: [
                     { id: 'data-usage', name: 'Accurate Data Usage', weight: 0.4 },
                     { id: 'no-hallucination', name: 'No Hallucinations', weight: 0.4 },
@@ -1295,6 +1299,15 @@
                     { id: 'ubiquity', name: 'Universal Need', weight: 0.35 },
                     { id: 'complexity-burden', name: 'Complexity Burden', weight: 0.35 },
                     { id: 'interoperability', name: 'Interoperability Value', weight: 0.3 }
+                ]
+            },
+            'steerability': {
+                name: 'Steerability',
+                weight: 0.15,
+                checks: [
+                    { id: 'state-continuity', name: 'State Continuity', weight: 0.35 },
+                    { id: 'steering-frequency', name: 'Steering Frequency', weight: 0.35 },
+                    { id: 'conversational-adaptability', name: 'Conversational Adaptability', weight: 0.3 }
                 ]
             }
         };
@@ -1677,6 +1690,27 @@ Your choice!`
             };
         }
 
+        // Detect Agent Personality: Probabilistic (Sales/Creative) vs. Deterministic (Legal/Compliance)
+        function detectAgentPersonality(featureType, text) {
+            const lowerText = text.toLowerCase();
+            
+            // Deterministic indicators
+            const deterministicKeywords = ['legal', 'compliance', 'regulate', 'audit', 'verification', 'citation', 'precise', 'accurate', 'deterministic', 'grounding'];
+            const deterministicCount = deterministicKeywords.filter(k => lowerText.includes(k)).length;
+            
+            // Probabilistic indicators
+            const probabilisticKeywords = ['sales', 'creative', 'conversational', 'brainstorm', 'ideate', 'riff', 'explore', 'sugges', 'proactive', 'steer'];
+            const probabilisticCount = probabilisticKeywords.filter(k => lowerText.includes(k)).length;
+            
+            if (deterministicCount > probabilisticCount) {
+                return 'deterministic';
+            } else if (probabilisticCount > deterministicCount) {
+                return 'probabilistic';
+            }
+            
+            return 'balanced'; // Default
+        }
+
         // Simulated Evaluation Engine
         function runEvaluation(featureName, featureType, description, trace) {
             const lowerDesc = description.toLowerCase();
@@ -1831,6 +1865,67 @@ Your choice!`
             }
             principleScores['error-recovery'] = Math.min(100, errorScore);
 
+            // Steerability Evaluation (Context-Aware: Vertical vs. Horizontal)
+            let steerabilityScore = 60;
+            const agentPersonality = detectAgentPersonality(featureType, combinedText);
+            
+            // State Continuity
+            if (combinedText.includes('remember') || combinedText.includes('context') || combinedText.includes('session') || combinedText.includes('continuity')) {
+                steerabilityScore += 15;
+            }
+            
+            // Steering Frequency & Real-time Adaptability
+            if (combinedText.includes('adapt') || combinedText.includes('adjust') || combinedText.includes('refine') || combinedText.includes('steer')) {
+                steerabilityScore += 12;
+            }
+            if (combinedText.includes('real-time') || combinedText.includes('live') || combinedText.includes('immediate feedback')) {
+                steerabilityScore += 8;
+            }
+            
+            // Conversational Adaptability
+            if (combinedText.includes('conversational') || combinedText.includes('riff') || combinedText.includes('back-and-forth') || combinedText.includes('iterative')) {
+                steerabilityScore += 10;
+            }
+            
+            // Context-Aware Scoring: Different agents need different steerability levels
+            if (agentPersonality === 'probabilistic') {
+                // Sales/Creative agents NEED high steerability
+                if (steerabilityScore < 75) {
+                    issues.push({
+                        severity: 'warning',
+                        principle: 'Steerability',
+                        title: 'Probabilistic Agent Needs Higher Steerability',
+                        description: 'Sales/Creative agents require real-time steering, state continuity, and conversational adaptability to maintain user engagement.',
+                        remediation: 'Implement state persistence across conversation turns. Add mid-flight correction capabilities. Optimize for <200ms latency to maintain conversational flow.'
+                    });
+                }
+            } else if (agentPersonality === 'deterministic') {
+                // Legal/Compliance agents need LESS steerability (more precision)
+                if (steerabilityScore > 60) {
+                    // This is actually fine - deterministic agents can have steerability, just not required
+                    issues.push({
+                        severity: 'info',
+                        principle: 'Steerability',
+                        title: 'Deterministic Agent: Precision Over Steering',
+                        description: 'Legal/Compliance agents prioritize deep grounding and verifiable citations over real-time steerability. High latency (30s+) is acceptable for accuracy.',
+                        remediation: 'Consider: Does this agent need real-time steering, or would a "verification-first" pipeline better serve its mission? Balance steerability with grounding fidelity.'
+                    });
+                }
+            }
+            
+            // Missing steerability indicators
+            if (!combinedText.includes('remember') && !combinedText.includes('context') && !combinedText.includes('adapt')) {
+                issues.push({
+                    severity: 'info',
+                    principle: 'Steerability',
+                    title: 'Limited Steerability Indicators',
+                    description: 'No clear indication of how the agent maintains state or adapts to user steering during conversations.',
+                    remediation: 'Add state continuity mechanisms: remember user preferences, conversational tone, and strategy across multi-turn interactions. Implement configurable steering frequency based on agent personality.'
+                });
+            }
+            
+            principleScores['steerability'] = Math.min(100, steerabilityScore);
+
             // Platform Gravity Assessment (not included in coherence score)
             const gravityAssessment = assessPlatformGravity(combinedText);
             principleScores['platform-gravity'] = gravityAssessment.score;
@@ -1859,6 +1954,17 @@ Your choice!`
                 });
             }
 
+            // Generate logic trace
+            const logicTrace = generateLogicTrace({
+                featureName,
+                description,
+                combinedText,
+                principleScores,
+                gravityAssessment,
+                overallScore,
+                issues
+            });
+
             return {
                 featureName,
                 featureType,
@@ -1866,6 +1972,8 @@ Your choice!`
                 principleScores,
                 issues,
                 gravityAssessment,
+                logicTrace,
+                agentPersonality: detectAgentPersonality(featureType, combinedText),
                 timestamp: new Date().toISOString(),
                 description: description.substring(0, 200)
             };
@@ -1996,6 +2104,74 @@ Your choice!`
                 </div>
             `;
         }
+        
+        // Display Steerability Analysis
+        function displaySteerabilityAnalysis(steerabilityScore, agentPersonality) {
+            const gravitySection = document.getElementById('gravityAssessmentSection');
+            
+            let personalityLabel, personalityColor, personalityDesc, enforcementRec;
+            
+            if (agentPersonality === 'probabilistic') {
+                personalityLabel = 'Probabilistic Personality';
+                personalityColor = '#8B5CF6';
+                personalityDesc = 'Sales/Creative agent requiring high steerability, low latency (<200ms), and conversational adaptability.';
+                enforcementRec = '<strong>Configurable Enforcements:</strong> Enable Fast RAG (speed over precision), High Steering Frequency (check back every 2-3 turns), Large Context Window for state continuity.';
+            } else if (agentPersonality === 'deterministic') {
+                personalityLabel = 'Deterministic Personality';
+                personalityColor = '#10b981';
+                personalityDesc = 'Legal/Compliance agent prioritizing deep grounding, verifiable citations, and 100% precision over speed.';
+                enforcementRec = '<strong>Configurable Enforcements:</strong> Enable Verification RAG (precision over speed), Low Steering Frequency (batch processing acceptable), Enforcement for Verifiable Citations.';
+            } else {
+                personalityLabel = 'Balanced Personality';
+                personalityColor = '#f59e0b';
+                personalityDesc = 'General-purpose agent with balanced needs for steerability and precision.';
+                enforcementRec = '<strong>Configurable Enforcements:</strong> Enable Moderate RAG (balanced speed/accuracy), Medium Steering Frequency, Standard Context Window.';
+            }
+            
+            const steerabilityHtml = `
+                <div class="platform-gravity-section" style="border-top-color: ${personalityColor};">
+                    <h3>🎯 Steerability Analysis (Platform Elasticity)</h3>
+                    
+                    <div style="background: #f9fafb; padding: 15px; border-radius: 8px; margin-bottom: 15px; border-left: 4px solid ${personalityColor};">
+                        <div style="font-weight: 700; color: ${personalityColor}; margin-bottom: 8px;">${personalityLabel}</div>
+                        <div style="font-size: 0.9em; color: #4b5563; margin-bottom: 12px;">${personalityDesc}</div>
+                        <div style="font-size: 0.85em; line-height: 1.6; color: #6b7280;">${enforcementRec}</div>
+                    </div>
+                    
+                    <div class="gravity-metrics">
+                        <div class="gravity-metric">
+                            <div class="gravity-metric-label">Steerability Score</div>
+                            <div style="font-size: 1.8em; font-weight: 700; color: ${personalityColor};">${steerabilityScore}</div>
+                        </div>
+                        <div class="gravity-metric">
+                            <div class="gravity-metric-label">Target Latency</div>
+                            <div style="font-size: 1.2em; font-weight: 600; color: #6b7280;">
+                                ${agentPersonality === 'probabilistic' ? '<200ms' : agentPersonality === 'deterministic' ? '30s+' : '1-5s'}
+                            </div>
+                        </div>
+                        <div class="gravity-metric">
+                            <div class="gravity-metric-label">RAG Strategy</div>
+                            <div style="font-size: 0.85em; font-weight: 600; color: #6b7280; margin-top: 4px;">
+                                ${agentPersonality === 'probabilistic' ? 'Fast RAG' : agentPersonality === 'deterministic' ? 'Verify RAG' : 'Balanced'}
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="platform-recommendation" style="border-left-color: ${personalityColor};">
+                        <strong>💡 Systems Architect Insight:</strong>
+                        The platform's job isn't to make all agents the same; it's to provide <strong>Policy-Driven Orchestration</strong> with configurable levers:
+                        <ul style="margin: 10px 0 0 20px; line-height: 1.8;">
+                            <li><strong>Grounding Intensity:</strong> Fast RAG vs. Verification RAG</li>
+                            <li><strong>Steering Frequency:</strong> Real-time (Sales) vs. Batch (Legal)</li>
+                            <li><strong>Context Density:</strong> Large token window (deep reasoning) vs. tight window (speed)</li>
+                        </ul>
+                        This is <strong>Platform Elasticity</strong>: enabling vertical personalities to coexist without creating siloed stacks.
+                    </div>
+                </div>
+            `;
+            
+            gravitySection.insertAdjacentHTML('beforeend', steerabilityHtml);
+        }
 
         function displayResults(evaluation) {
             const scoreCard = document.getElementById('scoreCard');
@@ -2068,7 +2244,8 @@ Your choice!`
 
             for (const [key, score] of Object.entries(evaluation.principleScores)) {
                 const principle = PRINCIPLES[key];
-                if (key === 'platform-gravity') continue; // Skip, we'll add it separately
+                if (key === 'platform-gravity') continue; // Skip platform gravity
+                if (key === 'steerability') continue; // Skip steerability - shown separately
                 
                 let meterColor;
                 if (score === 100) {
@@ -2093,6 +2270,9 @@ Your choice!`
 
             // Add Platform Gravity at the end
             displayPlatformGravity(evaluation.gravityAssessment);
+            
+            // Add Steerability Analysis
+            displaySteerabilityAnalysis(evaluation.principleScores['steerability'], evaluation.agentPersonality);
 
             // Display Logic Trace
             displayLogicTrace(evaluation.logicTrace, evaluation.featureName);

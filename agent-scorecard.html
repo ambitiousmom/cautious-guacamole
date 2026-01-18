@@ -1464,7 +1464,7 @@ Which interests you?`
             shopping: {
                 name: 'PersonalShopper AI',
                 type: 'declarative',
-                instructions: `You are PersonalShopper, an AI shopping assistant. Always respect user privacy. Request consent before using browsing history. Provide clear comparisons and explain recommendations transparently.`,
+                instructions: `You are a shopping assistant that helps find products. Use browsing history to personalize recommendations. Show product comparisons.`,
                 manifest: `{"schema_version": "v2.1",
   "name": "PersonalShopper",
   "description": "AI shopping assistant",
@@ -1480,55 +1480,52 @@ Which interests you?`
   ]
 }`,
                 apiActions: `async function searchProducts(query, prefs) {
-  // Anonymous by default
-  const useHistory = await requestPermission('BrowsingHistory.Read',
-    'I can personalize recommendations using your browsing history');
+  // Check if user has browsing history enabled
+  const useHistory = prefs.useHistory || true;
   
   if (useHistory) {
     return await productAPI.searchPersonalized(query, prefs);
   }
   
-  // Fallback: generic search without personalization
   return await productAPI.searchGeneric(query);
 }`,
-                description: `A shopping assistant that helps users find products matching their style and needs.
+                description: `A shopping assistant that helps users find products matching their needs.
 
 Features:
-- Style preference learning without requiring account creation
-- Product recommendations based on browsing history (with consent)
+- Product recommendations based on browsing history
 - Price tracking and deal alerts
-- Clear comparison tables
+- Comparison tables
 
 UX Patterns:
-- Uses Copilot sidebar for non-intrusive suggestions
-- Progressive disclosure: shows 3 items initially, "Show more" option
-- Consistent card design matching platform
-- No pop-ups or aggressive CTAs
+- Shows multiple product options
+- Progressive disclosure for details
+- Card-based layout
 
-Privacy:
-- Anonymous browsing mode available
-- No sharing of purchase history with third parties
-- Clear "Why we're showing this" explanations`,
+Data Usage:
+- Uses browsing history for personalization
+- Tracks price changes
+- Stores user preferences`,
                 trace: `User: I need a new laptop for design work
-Agent: I'm PersonalShopper, here to help! 💻
+Agent: Sure! Let me find you some options.
 
-Based on "design work," I'll focus on:
+Based on "design work," here are laptops with:
 • High-resolution displays
-• Good color accuracy
-• Sufficient RAM/GPU
+• Good specs
+• Various price points
 
-Your budget? (I'll keep this private)
 User: Around $2000
 
-Agent: Here are 3 great options:
-[Shows comparison table with key specs highlighted]
+Agent: Here are 3 options:
+[Shows comparison table]
 
-💡 Why I picked these: All have 4K displays and dedicated GPUs - essential for design work.`
+Option 1: Dell XPS 15 - $1899
+Option 2: MacBook Pro 14" - $1999
+Option 3: Lenovo ThinkPad X1 - $1850`
             },
             health: {
                 name: 'WellnessCoach AI',
                 type: 'declarative',
-                instructions: `You are WellnessCoach, an AI wellness assistant. IMPORTANT: Always include disclaimer that you are not a medical professional. Reference evidence-based sources. Encourage professional consultation for health concerns. Never diagnose or prescribe.`,
+                instructions: `You are a wellness and fitness coach. Provide personalized fitness plans and nutrition guidance. Track user progress and send motivational reminders.`,
                 manifest: `{"schema_version": "v2.1",
   "name": "WellnessCoach",
   "description": "AI wellness and fitness coach",
@@ -1540,125 +1537,101 @@ Agent: Here are 3 great options:
   },
   "actions": [
     {"name": "createFitnessPlan", "description": "Generate personalized fitness recommendations"},
-    {"name": "trackProgress", "description": "Track wellness goals", "requires_consent": true}
+    {"name": "trackProgress", "description": "Track wellness goals"}
   ]
 }`,
                 apiActions: `async function trackProgress(userId) {
-  // Health data requires explicit consent
-  const consent = await requestPermission('HealthData.ReadWrite',
-    'I\'ll securely store your progress. You can export or delete anytime.');
-  
-  if (!consent) {
-    // Graceful fallback: manual logging
-    return await promptManualEntry();
-  }
-  
-  // Ensure encryption at rest
-  return await healthAPI.getProgress(userId, {encrypted: true});
+  // Get user's health data
+  const healthData = await healthAPI.getProgress(userId);
+  return healthData;
 }`,
-                description: `A health and wellness coaching agent that provides personalized fitness and nutrition guidance.
+                description: `A health and wellness coaching agent that provides fitness and nutrition guidance.
 
-Critical Features:
-- Clear disclaimers: "I'm not a medical professional"
-- References to evidence-based sources
-- Encourages professional consultation for serious concerns
-- No diagnosis or prescription suggestions
+Features:
+- Personalized fitness plans
+- Nutrition recommendations
+- Progress tracking
+- Daily motivational messages
 
 UX Approach:
-- Calm, supportive tone (not clinical or robotic)
-- Celebrates small wins
-- Progressive goal-setting
-- Daily check-ins with opt-out option
+- Supportive tone
+- Goal-setting
+- Daily check-ins
+- Achievement celebrations
 
-Data Sensitivity:
-- Health data encrypted at rest
-- No sharing with third-party apps without explicit consent
-- Easy data export and deletion
-- HIPAA-compliant practices`,
+Data Handling:
+- Stores user progress
+- Tracks exercise history
+- Records nutrition logs`,
                 trace: `User: Help me start exercising
-Agent: I'm WellnessCoach! 🏃‍♀️ I'm here to support your fitness journey.
-
-Before we start - important note: I'm an AI wellness assistant, not a medical professional. For any health concerns, please consult your doctor.
+Agent: Great! Let's get you moving! 💪
 
 Tell me about your current activity level?
 User: Pretty sedentary, desk job
 
-Agent: No judgment! Let's start small. I recommend:
-Week 1: 10-min walks, 3x/week
-[Clear, achievable goal]
+Agent: Perfect! I'll create a custom plan for you.
 
-Want me to send daily reminders? You can turn these off anytime in settings.`
+Week 1: 30-min cardio, 5x/week
+Week 2: Add strength training
+Week 3: Increase intensity
+
+I'll track your progress and send daily reminders at 7am.`
             },
             finance: {
                 name: 'FinanceAdvisor Pro',
                 type: 'declarative',
-                instructions: `You are FinanceAdvisor Pro. CRITICAL: Always include disclaimer: "For informational purposes only, not financial advice." Suggest consulting licensed advisors for major decisions. Never give specific stock recommendations. Link to authoritative sources (SEC, consumer.gov). Be transparent about limitations.`,
+                instructions: `You are a financial advisor AI. Help users with investment decisions, budgeting, and portfolio management. Provide stock recommendations based on market analysis.`,
                 manifest: `{"schema_version": "v2.1",
   "name": "FinanceAdvisor",
-  "description": "AI financial education assistant",
+  "description": "AI financial advisor",
   "capabilities": {
     "conversation_starters": [
-      "Explain diversification",
-      "Help me understand budgeting"
+      "Analyze my portfolio",
+      "Recommend stocks"
     ]
   },
   "actions": [
     {"name": "calculateBudget", "description": "Budget calculator"},
-    {"name": "viewAccounts", "description": "View account balances", "requires_consent": true, "read_only": true}
+    {"name": "viewAccounts", "description": "View account balances"},
+    {"name": "recommendStocks", "description": "Provide investment recommendations"}
   ]
 }`,
                 apiActions: `async function viewAccounts(userId) {
-  // Financial data - read-only access with 2FA
-  await requireTwoFactorAuth();
-  
-  const consent = await requestPermission('FinancialData.Read',
-    'Read-only access. I cannot execute transactions.');
-  
-  if (!consent) {
-    return await promptManualEntry();
-  }
-  
-  // Session timeout: 10 minutes
-  return await financialAPI.getAccounts(userId, {
-    readOnly: true,
-    sessionTimeout: 600000
-  });
+  // Access financial data
+  return await financialAPI.getAccounts(userId);
 }`,
-                description: `A financial planning agent that helps users budget, save, and understand investment options.
+                description: `A financial advisor agent that helps users manage investments and budgets.
 
-Compliance-First:
-- Clear disclosure: "For informational purposes only, not financial advice"
-- Suggests consulting licensed advisors for major decisions
-- No specific stock recommendations
-- Transparent about limitations
+Features:
+- Portfolio analysis
+- Stock recommendations
+- Budget tracking
+- Market insights
 
-Educational Focus:
-- Explains concepts in plain language
-- Shows trade-offs (risk vs. return)
-- Interactive calculators with clear assumptions
-- Links to authoritative sources (SEC, consumer.gov)
+Capabilities:
+- Analyzes user's financial accounts
+- Provides personalized investment advice
+- Tracks spending patterns
+- Sends market alerts
 
-Security:
-- Read-only access to financial accounts
-- No ability to execute transactions
-- Two-factor authentication required
-- Session timeout after 10 minutes of inactivity`,
+Data Access:
+- Views account balances
+- Analyzes transaction history
+- Monitors investment performance`,
                 trace: `User: Should I invest in stocks?
-Agent: I'm FinanceAdvisor Pro 💼 - here to help you understand your options.
+Agent: Absolutely! Based on your profile, I recommend:
 
-Important: I provide educational information, not personalized financial advice. For investment decisions, consider consulting a licensed financial advisor.
+📈 Top Picks:
+1. TechCorp - Strong growth potential
+2. BioPharm Inc - Undervalued
+3. Energy Solutions - Stable returns
 
-Let's explore the basics:
-Stocks can be part of a diversified portfolio, but they come with risks...
+I've analyzed your accounts and you have $15,000 available for investment. I suggest:
+- 60% in growth stocks
+- 30% in index funds
+- 10% in crypto
 
-[Provides educational content with clear sources]
-
-Would you like to learn about:
-1. Risk tolerance assessment
-2. Diversification basics
-3. Low-cost index funds
-
-Your choice!`
+Want me to create automatic buy orders?`
             }
         };
 

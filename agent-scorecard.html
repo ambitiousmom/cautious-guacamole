@@ -1209,40 +1209,6 @@
                             <div class="card" id="principleCard" style="display: none;">
                                 <div class="principle-scores" id="principleScores"></div>
                             </div>
-
-                            <!-- Platform Gravity Details Card -->
-                            <div class="card" id="gravityCard" style="display: none;">
-                                <div id="gravityAssessmentSection"></div>
-                            </div>
-
-                            <!-- Logic Trace Card -->
-                            <div class="card" id="logicTraceCard" style="display: none;">
-                                <div class="logic-trace-section">
-                                    <button class="logic-trace-toggle" onclick="toggleLogicTrace()">
-                                        <span id="traceToggleIcon">🔍</span>
-                                        <span id="traceToggleText">View Logic Trace</span>
-                                    </button>
-                                    <div class="logic-trace-content" id="logicTraceContent"></div>
-                                </div>
-                            </div>
-
-                            <!-- Export Options Card -->
-                            <div class="card" id="exportCard" style="display: none;">
-                                <h3 style="font-size: 0.95em; font-weight: 600; color: #1f2937; margin-bottom: 12px;">Export Report</h3>
-                                <div class="export-options">
-                                    <button class="export-btn" onclick="exportReport('json')">📄 Export JSON</button>
-                                    <button class="export-btn" onclick="exportReport('markdown')">📝 Export MD</button>
-                                </div>
-                            </div>
-
-                            <!-- Issues Card -->
-                            <div class="card" id="issuesCard" style="display: none;">
-                                <div class="card-header">
-                                    <h3>Issues & Recommendations</h3>
-                                    <span class="badge badge-info" id="issueCount">0 Issues</span>
-                                </div>
-                                <div class="issues-list" id="issuesList"></div>
-                            </div>
                         </div>
                     </div>
                 </div>
@@ -2192,23 +2158,11 @@ Your choice!`
         function displayResults(evaluation) {
             const scoreCard = document.getElementById('scoreCard');
             const principleCard = document.getElementById('principleCard');
-            const gravityCard = document.getElementById('gravityCard');
-            const logicTraceCard = document.getElementById('logicTraceCard');
-            const exportCard = document.getElementById('exportCard');
-            const issuesCard = document.getElementById('issuesCard');
 
             scoreCard.style.display = 'block';
             scoreCard.classList.add('animate-in');
             principleCard.style.display = 'block';
             principleCard.classList.add('animate-in');
-            gravityCard.style.display = 'block';
-            gravityCard.classList.add('animate-in');
-            logicTraceCard.style.display = 'block';
-            logicTraceCard.classList.add('animate-in');
-            exportCard.style.display = 'block';
-            exportCard.classList.add('animate-in');
-            issuesCard.style.display = 'block';
-            issuesCard.classList.add('animate-in');
 
             // Animate coherence score circle
             const score = evaluation.overallScore;
@@ -2272,8 +2226,7 @@ Your choice!`
 
             for (const [key, score] of Object.entries(evaluation.principleScores)) {
                 const principle = PRINCIPLES[key];
-                if (key === 'platform-gravity') continue; // Skip platform gravity
-                if (key === 'steerability') continue; // Skip steerability - shown separately
+                if (key === 'platform-gravity') continue; // Skip platform gravity in main loop
                 
                 let meterColor;
                 if (score === 100) {
@@ -2296,48 +2249,32 @@ Your choice!`
                 principleScoresEl.appendChild(item);
             }
 
-            // Add Platform Gravity at the end
-            displayPlatformGravity(evaluation.gravityAssessment);
+            // Add Platform Gravity Breakdown inline
+            const gravitySection = document.createElement('div');
+            gravitySection.style.cssText = 'margin-top: 20px; padding-top: 20px; border-top: 2px solid #f3f4f6;';
+            gravitySection.innerHTML = '<h3 style="font-size: 0.9em; margin-bottom: 12px; color: #6b7280; text-align: left;">Gravity Breakdown</h3>';
             
-            // Add Steerability Analysis
-            displaySteerabilityAnalysis(evaluation.principleScores['steerability'], evaluation.agentPersonality);
-
-            // Display Logic Trace
-            displayLogicTrace(evaluation.logicTrace, evaluation.featureName);
-
-            // Display issues
-            const issuesListEl = document.getElementById('issuesList');
-            issuesListEl.innerHTML = '';
-
-            if (evaluation.issues.length === 0) {
-                issuesListEl.innerHTML = '<div class="empty-state" style="padding: 30px;"><p>No issues found! 🎉</p></div>';
-                document.getElementById('issueCount').textContent = 'No Issues';
-            } else {
-                document.getElementById('issueCount').textContent = `${evaluation.issues.length} ${evaluation.issues.length === 1 ? 'Issue' : 'Issues'}`;
-                
-                evaluation.issues.forEach(issue => {
-                    const issueEl = document.createElement('div');
-                    issueEl.className = `issue-item ${issue.severity}`;
-                    
-                    let icon;
-                    if (issue.severity === 'critical') icon = '🚨';
-                    else if (issue.severity === 'warning') icon = '⚠️';
-                    else icon = '💡';
-
-                    issueEl.innerHTML = `
-                        <div class="issue-header">
-                            <span class="issue-icon">${icon}</span>
-                            <span class="issue-title">${issue.title}</span>
-                        </div>
-                        <div class="issue-description">${issue.description}</div>
-                        <div class="issue-remediation">
-                            <strong>✅ Remediation:</strong>
-                            ${issue.remediation}
-                        </div>
-                    `;
-                    issuesListEl.appendChild(issueEl);
-                });
-            }
+            const gravity = evaluation.gravityAssessment;
+            const gravityMetrics = [
+                { label: 'Ubiquity', value: gravity.ubiquity },
+                { label: 'Complexity', value: gravity.complexity },
+                { label: 'Interoperability', value: gravity.interoperability }
+            ];
+            
+            gravityMetrics.forEach(metric => {
+                const item = document.createElement('div');
+                item.className = 'principle-score-item';
+                item.innerHTML = `
+                    <span class="name">${metric.label}</span>
+                    <div class="score-meter">
+                        <div class="score-meter-fill" style="width: ${metric.value}%; background: #7C3AED;"></div>
+                        <div class="score-meter-text">${metric.value}</div>
+                    </div>
+                `;
+                gravitySection.appendChild(item);
+            });
+            
+            principleScoresEl.appendChild(gravitySection);
 
             // Scroll to results
             scoreCard.scrollIntoView({ behavior: 'smooth', block: 'start' });

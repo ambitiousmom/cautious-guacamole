@@ -365,10 +365,6 @@
             position: relative;
         }
 
-        .score-circle svg {
-            transform: rotate(-90deg);
-        }
-
         .score-circle .score-value {
             position: absolute;
             top: 50%;
@@ -1109,8 +1105,7 @@
                             <div class="form-group">
                                 <label>Agent Type</label>
                                 <select id="featureType">
-                                    <option value="copilot">Copilot Agent</option>
-                                    <option value="agent">Declarative Agent</option>
+                                    <option value="agent" selected>Declarative Agent</option>
                                     <option value="plugin">API Plugin</option>
                                     <option value="skill">Custom Engine Agent</option>
                                 </select>

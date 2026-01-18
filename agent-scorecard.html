@@ -244,7 +244,7 @@
         .card {
             background: white;
             border-radius: 12px;
-            padding: 25px;
+            padding: 20px;
             box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
         }
 
@@ -347,13 +347,13 @@
         .results-panel {
             display: flex;
             flex-direction: column;
-            gap: 15px;
+            gap: 12px;
         }
 
         .score-card {
             background: white;
             border-radius: 12px;
-            padding: 20px;
+            padding: 15px;
             box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
             text-align: center;
         }
@@ -694,8 +694,8 @@
         .right-sidebar {
             display: flex;
             flex-direction: column;
-            gap: 20px;
-            overflow-y: hidden;
+            gap: 15px;
+            overflow-y: auto;
             max-height: calc(100vh - 40px);
             min-height: 0;
         }
@@ -1167,10 +1167,11 @@
 
                         <!-- Results Panel -->
                         <div class="results-panel">
+                            <!-- Assessment Scores Card -->
                             <div class="card score-card" id="scoreCard" style="display: none;">
-                                <h3 style="font-size: 1.2em; font-weight: 600; color: #1f2937; margin-bottom: 20px; text-align: center;">Assessment</h3>
+                                <h3 style="font-size: 1.05em; font-weight: 600; color: #1f2937; margin-bottom: 15px; text-align: center;">Assessment Scores</h3>
                                 
-                                <div style="display: flex; gap: 30px; justify-content: center; margin-bottom: 25px;">
+                                <div style="display: flex; gap: 25px; justify-content: center;">
                                     <!-- Coherence Score Circle -->
                                     <div style="text-align: center;">
                                         <div class="score-circle">
@@ -1202,10 +1203,20 @@
                                         <div class="gravity-status" id="gravityStatus">Medium Gravity</div>
                                     </div>
                                 </div>
+                            </div>
 
+                            <!-- Principle Breakdown Card -->
+                            <div class="card" id="principleCard" style="display: none;">
                                 <div class="principle-scores" id="principleScores"></div>
-                                <div id="gravityAssessmentSection"></div>
+                            </div>
 
+                            <!-- Platform Gravity Details Card -->
+                            <div class="card" id="gravityCard" style="display: none;">
+                                <div id="gravityAssessmentSection"></div>
+                            </div>
+
+                            <!-- Logic Trace Card -->
+                            <div class="card" id="logicTraceCard" style="display: none;">
                                 <div class="logic-trace-section">
                                     <button class="logic-trace-toggle" onclick="toggleLogicTrace()">
                                         <span id="traceToggleIcon">🔍</span>
@@ -1213,13 +1224,18 @@
                                     </button>
                                     <div class="logic-trace-content" id="logicTraceContent"></div>
                                 </div>
+                            </div>
 
+                            <!-- Export Options Card -->
+                            <div class="card" id="exportCard" style="display: none;">
+                                <h3 style="font-size: 0.95em; font-weight: 600; color: #1f2937; margin-bottom: 12px;">Export Report</h3>
                                 <div class="export-options">
                                     <button class="export-btn" onclick="exportReport('json')">📄 Export JSON</button>
                                     <button class="export-btn" onclick="exportReport('markdown')">📝 Export MD</button>
                                 </div>
                             </div>
 
+                            <!-- Issues Card -->
                             <div class="card" id="issuesCard" style="display: none;">
                                 <div class="card-header">
                                     <h3>Issues & Recommendations</h3>
@@ -2175,10 +2191,22 @@ Your choice!`
 
         function displayResults(evaluation) {
             const scoreCard = document.getElementById('scoreCard');
+            const principleCard = document.getElementById('principleCard');
+            const gravityCard = document.getElementById('gravityCard');
+            const logicTraceCard = document.getElementById('logicTraceCard');
+            const exportCard = document.getElementById('exportCard');
             const issuesCard = document.getElementById('issuesCard');
 
             scoreCard.style.display = 'block';
             scoreCard.classList.add('animate-in');
+            principleCard.style.display = 'block';
+            principleCard.classList.add('animate-in');
+            gravityCard.style.display = 'block';
+            gravityCard.classList.add('animate-in');
+            logicTraceCard.style.display = 'block';
+            logicTraceCard.classList.add('animate-in');
+            exportCard.style.display = 'block';
+            exportCard.classList.add('animate-in');
             issuesCard.style.display = 'block';
             issuesCard.classList.add('animate-in');
 

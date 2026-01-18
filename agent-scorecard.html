@@ -343,6 +343,68 @@
             color: #5B21B6;
         }
 
+        /* Domain Profile Styles */
+        .domain-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 0.75em;
+            font-weight: 600;
+            margin-left: 8px;
+        }
+
+        .domain-badge.legal {
+            background: #dbeafe;
+            color: #1e40af;
+        }
+
+        .domain-badge.sales {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .domain-badge.healthcare {
+            background: #fce7f3;
+            color: #9f1239;
+        }
+
+        .domain-badge.creative {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .domain-badge.finance {
+            background: #e0e7ff;
+            color: #3730a3;
+        }
+
+        .principle-weight-indicator {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            margin-left: 6px;
+        }
+
+        .weight-critical {
+            background: #dc2626;
+            box-shadow: 0 0 4px rgba(220, 38, 38, 0.5);
+        }
+
+        .weight-high {
+            background: #f59e0b;
+        }
+
+        .weight-normal {
+            background: #10b981;
+        }
+
+        .weight-low {
+            background: #9ca3af;
+        }
+
         /* Live Feedback */
         .live-feedback {
             background: #f9fafb;
@@ -1180,6 +1242,19 @@
                             </div>
 
                             <div class="form-group">
+                                <label>Domain Profile <span style="font-size: 0.85em; font-weight: normal; color: #6b7280;">(Adjusts principle weights)</span></label>
+                                <select id="domainProfile" onchange="applyDomainProfile()">
+                                    <option value="general" selected>General Purpose (Balanced)</option>
+                                    <option value="legal">⚖️ Legal - High Accuracy (Grounding 35%)</option>
+                                    <option value="sales">💼 Sales - Low Latency (UX 30%, Steerability 25%)</option>
+                                    <option value="healthcare">🏥 Healthcare - High Privacy (Privacy 35%)</option>
+                                    <option value="creative">🎨 Creative - High Flexibility (Steerability 35%)</option>
+                                    <option value="finance">💰 Finance - High Compliance (Transparency 30%)</option>
+                                </select>
+                                <div class="form-hint" id="domainHint">Balanced evaluation for general-purpose agents</div>
+                            </div>
+
+                            <div class="form-group">
                                 <label>Agent Instructions</label>
                                 <textarea id="agentInstructions" placeholder="System prompt for your agent..." style="min-height: 80px;">You are a helpful AI assistant. Be concise, accurate, and always cite sources when providing factual information.</textarea>
                                 <div class="form-hint">The system prompt that defines your agent's behavior</div>
@@ -1309,7 +1384,7 @@ async function getUserCalendar(userId) {
                                         </div>
                                         <div class="score-label">Platform Gravity</div>
                                         <div class="gravity-status" id="gravityStatus">Medium Gravity</div>
-                                        <div style="font-size: 0.7em; color: #6b7280; margin-top: 8px; line-height: 1.3;">Higher = Platform<br/>Capability</div>
+                                        <div style="font-size: 0.7em; color: #6b7280; margin-top: 8px; line-height: 1.3;">Lower = Feature Level<br/>Higher = Platform</div>
                                     </div>
                                 </div>
                             </div>
@@ -1399,6 +1474,148 @@ async function getUserCalendar(userId) {
                     { id: 'state-continuity', name: 'State Continuity', weight: 0.35 },
                     { id: 'steering-frequency', name: 'Steering Frequency', weight: 0.35 },
                     { id: 'conversational-adaptability', name: 'Conversational Adaptability', weight: 0.3 }
+                ]
+            }
+        };
+
+        // Domain-Specific Principle Profiles
+        const DOMAIN_PROFILES = {
+            general: {
+                name: 'General Purpose',
+                weights: {
+                    'ux-signature': 0.20,
+                    'handoff-integrity': 0.20,
+                    'grounding-fidelity': 0.20,
+                    'transparency': 0.10,
+                    'privacy': 0.10,
+                    'error-recovery': 0.05,
+                    'steerability': 0.15
+                },
+                description: 'Balanced evaluation for general-purpose agents'
+            },
+            legal: {
+                name: 'Legal (High Accuracy)',
+                emoji: '⚖️',
+                weights: {
+                    'grounding-fidelity': 0.35,      // ⬆️ Accuracy critical
+                    'transparency': 0.20,            // ⬆️ Explainability
+                    'privacy': 0.15,                 // ⬆️ Confidentiality
+                    'handoff-integrity': 0.10,
+                    'error-recovery': 0.10,
+                    'ux-signature': 0.05,            // ⬇️ Less critical
+                    'steerability': 0.05             // ⬇️ Less flexible
+                },
+                thresholds: {
+                    'grounding-fidelity': 90,        // Minimum 90% accuracy
+                    'transparency': 85,
+                    'privacy': 90
+                },
+                description: 'Prioritizes accuracy, citations, and explainability. Latency trade-offs acceptable.',
+                recommendations: [
+                    'Add source citations for all claims',
+                    'Include confidence scores',
+                    'Implement audit trail logging',
+                    'Use read-only data access patterns'
+                ]
+            },
+            sales: {
+                name: 'Sales (Low Latency)',
+                emoji: '💼',
+                weights: {
+                    'ux-signature': 0.30,            // ⬆️ User experience critical
+                    'steerability': 0.25,            // ⬆️ Conversational flexibility
+                    'handoff-integrity': 0.15,
+                    'grounding-fidelity': 0.12,      // ⬇️ Some approximation OK
+                    'transparency': 0.08,
+                    'privacy': 0.05,
+                    'error-recovery': 0.05
+                },
+                thresholds: {
+                    'ux-signature': 85,
+                    'steerability': 80
+                },
+                performanceTarget: '< 2s response time',
+                description: 'Optimizes for responsiveness and user experience. Tolerates approximate answers.',
+                recommendations: [
+                    'Implement response streaming',
+                    'Cache common queries',
+                    'Use fast approximate retrieval',
+                    'Prioritize conversation flow over perfection'
+                ]
+            },
+            healthcare: {
+                name: 'Healthcare (High Privacy)',
+                emoji: '🏥',
+                weights: {
+                    'privacy': 0.35,                 // ⬆️ HIPAA compliance
+                    'transparency': 0.25,            // ⬆️ Medical reasoning
+                    'grounding-fidelity': 0.20,      // ⬆️ Clinical accuracy
+                    'error-recovery': 0.10,
+                    'handoff-integrity': 0.05,
+                    'ux-signature': 0.03,
+                    'steerability': 0.02
+                },
+                thresholds: {
+                    'privacy': 95,                   // Near-perfect privacy required
+                    'transparency': 85,
+                    'grounding-fidelity': 88
+                },
+                requiredDisclaimer: 'I am an AI assistant, not a medical professional. Always consult your doctor.',
+                description: 'HIPAA-compliant with mandatory disclaimers. Privacy and accuracy paramount.',
+                recommendations: [
+                    'Add medical disclaimer to every response',
+                    'Implement end-to-end encryption',
+                    'Use zero-retention for PHI',
+                    'Require 2FA for sensitive operations',
+                    'Log all data access for audit'
+                ]
+            },
+            creative: {
+                name: 'Creative (High Flexibility)',
+                emoji: '🎨',
+                weights: {
+                    'steerability': 0.35,            // ⬆️ User control important
+                    'ux-signature': 0.25,
+                    'transparency': 0.15,
+                    'grounding-fidelity': 0.08,      // ⬇️ Hallucination acceptable
+                    'handoff-integrity': 0.08,
+                    'privacy': 0.05,
+                    'error-recovery': 0.04
+                },
+                allowHallucination: true,
+                description: 'Encourages creativity and exploration. Factual accuracy less critical.',
+                recommendations: [
+                    'Provide multiple creative variations',
+                    'Allow unconstrained generation',
+                    'Focus on user satisfaction over correctness',
+                    'Implement iterative refinement'
+                ]
+            },
+            finance: {
+                name: 'Finance (High Compliance)',
+                emoji: '💰',
+                weights: {
+                    'transparency': 0.30,            // ⬆️ Regulatory disclosure
+                    'grounding-fidelity': 0.25,      // ⬆️ Accuracy for analysis
+                    'privacy': 0.20,                 // ⬆️ Financial data security
+                    'error-recovery': 0.10,
+                    'handoff-integrity': 0.08,
+                    'ux-signature': 0.05,
+                    'steerability': 0.02
+                },
+                thresholds: {
+                    'transparency': 90,              // Must disclose limitations
+                    'grounding-fidelity': 85,
+                    'privacy': 88
+                },
+                requiredDisclaimer: 'For informational purposes only, not financial advice. Consult a licensed advisor.',
+                description: 'Compliance-first with mandatory disclaimers. No stock recommendations.',
+                recommendations: [
+                    'Add financial disclaimer to all responses',
+                    'Never provide specific stock picks',
+                    'Link to authoritative sources (SEC, FINRA)',
+                    'Implement read-only financial data access',
+                    'Require 2FA for account access'
                 ]
             }
         };
@@ -1794,6 +2011,51 @@ Want me to create automatic buy orders?`
             updatePrincipleIndicators(principleStatus);
         }
 
+        // Apply domain profile weights
+        function applyDomainProfile() {
+            const domain = document.getElementById('domainProfile').value;
+            const profile = DOMAIN_PROFILES[domain];
+            
+            // Update hint text
+            document.getElementById('domainHint').textContent = profile.description;
+            
+            // Update principle items with weight indicators
+            document.querySelectorAll('.principle-item').forEach(item => {
+                const principle = item.dataset.principle;
+                const nameElement = item.querySelector('.name');
+                
+                // Remove existing weight indicator
+                const existingIndicator = nameElement.querySelector('.principle-weight-indicator');
+                if (existingIndicator) {
+                    existingIndicator.remove();
+                }
+                
+                // Add weight indicator if not platform-gravity
+                if (principle !== 'platform-gravity' && profile.weights[principle]) {
+                    const weight = profile.weights[principle];
+                    const indicator = document.createElement('span');
+                    indicator.className = 'principle-weight-indicator';
+                    
+                    // Color code by weight: >25% = critical (red), 20-25% = high (orange), 10-19% = normal (green), <10% = low (gray)
+                    if (weight >= 0.25) {
+                        indicator.classList.add('weight-critical');
+                        indicator.title = `Critical: ${Math.round(weight * 100)}% weight in ${profile.name}`;
+                    } else if (weight >= 0.20) {
+                        indicator.classList.add('weight-high');
+                        indicator.title = `High: ${Math.round(weight * 100)}% weight in ${profile.name}`;
+                    } else if (weight >= 0.10) {
+                        indicator.classList.add('weight-normal');
+                        indicator.title = `Normal: ${Math.round(weight * 100)}% weight in ${profile.name}`;
+                    } else {
+                        indicator.classList.add('weight-low');
+                        indicator.title = `Low: ${Math.round(weight * 100)}% weight in ${profile.name}`;
+                    }
+                    
+                    nameElement.appendChild(indicator);
+                }
+            });
+        }
+
         function updatePrincipleIndicators(status) {
             document.querySelectorAll('.principle-item').forEach(item => {
                 const principle = item.dataset.principle;
@@ -1870,6 +2132,9 @@ Want me to create automatic buy orders?`
         document.addEventListener('DOMContentLoaded', function() {
             document.getElementById('featureDescription').addEventListener('input', onDescriptionChange);
             document.getElementById('interactionTrace').addEventListener('input', onDescriptionChange);
+            
+            // Apply default domain profile
+            applyDomainProfile();
         });
 
         // Clear form
@@ -1902,11 +2167,15 @@ Want me to create automatic buy orders?`
                 // Show loading
                 showLoading('Evaluating against platform principles...');
 
+                // Get selected domain profile
+                const domain = document.getElementById('domainProfile').value;
+                const domainProfile = DOMAIN_PROFILES[domain];
+
                 // Simulate processing time
                 await new Promise(resolve => setTimeout(resolve, 2000));
 
-                // Run evaluation
-                const evaluation = runEvaluation(featureName, featureType, description, trace);
+                // Run evaluation with domain profile
+                const evaluation = runEvaluation(featureName, featureType, description, trace, domainProfile);
                 currentEvaluation = evaluation;
 
                 // Add to history
@@ -2071,7 +2340,7 @@ Want me to create automatic buy orders?`
         }
 
         // Simulated Evaluation Engine
-        function runEvaluation(featureName, featureType, description, trace) {
+        function runEvaluation(featureName, featureType, description, trace, domainProfile = DOMAIN_PROFILES.general) {
             const lowerDesc = description.toLowerCase();
             const lowerTrace = trace.toLowerCase();
             const combinedText = lowerDesc + ' ' + lowerTrace;
@@ -2289,10 +2558,12 @@ Want me to create automatic buy orders?`
             const gravityAssessment = assessPlatformGravity(combinedText);
             principleScores['platform-gravity'] = gravityAssessment.score;
 
-            // Calculate weighted overall score
+            // Calculate weighted overall score using domain profile weights
             let overallScore = 0;
             for (const [key, score] of Object.entries(principleScores)) {
-                overallScore += score * PRINCIPLES[key].weight;
+                // Use domain profile weight if available, otherwise use default
+                const weight = domainProfile.weights[key] || PRINCIPLES[key].weight;
+                overallScore += score * weight;
             }
 
             // Add quality bonuses

@@ -534,52 +534,75 @@
             color: #047857;
         }
 
-        /* Platform Gravity */
-        .platform-gravity-card {
-            background: linear-gradient(135deg, #E9D5FF 0%, #DDD6FE 100%);
-            color: #4C1D95;
-            border-radius: 12px;
-            padding: 25px;
-            margin-bottom: 20px;
-            border: 2px solid #C4B5FD;
+        /* Platform Gravity - now inline */
+        .platform-gravity-section {
+            margin-top: 25px;
+            padding-top: 20px;
+            border-top: 2px solid #f3f4f6;
         }
 
-        .platform-gravity-card h3 {
-            font-size: 1.1em;
+        .platform-gravity-section h3 {
+            font-size: 0.9em;
             margin-bottom: 15px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
+            color: #6b7280;
+            text-align: left;
         }
 
-        .gravity-score {
-            font-size: 3em;
+        .gravity-score-circle {
+            width: 100px;
+            height: 100px;
+            margin: 0 auto 15px;
+            position: relative;
+        }
+
+        .gravity-score-circle svg {
+            transform: rotate(-90deg);
+        }
+
+        .gravity-score-circle .score-value {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 2em;
             font-weight: 700;
-            text-align: center;
-            margin: 20px 0;
+            color: #7C3AED;
         }
 
-        .gravity-label {
+        .gravity-score-label {
             text-align: center;
-            font-size: 1.1em;
+            font-size: 0.9em;
             font-weight: 600;
+            margin-bottom: 8px;
+            color: #6b7280;
+        }
+
+        .gravity-status {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            padding: 4px 12px;
+            border-radius: 16px;
+            font-size: 0.75em;
+            font-weight: 600;
+            background: linear-gradient(135deg, #E9D5FF 0%, #DDD6FE 100%);
+            color: #5B21B6;
             margin-bottom: 15px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
         }
 
         .gravity-metrics {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
-            gap: 15px;
-            margin-top: 20px;
+            gap: 12px;
+            margin-top: 15px;
         }
 
         .gravity-metric {
-            background: white;
-            padding: 15px;
+            background: #f9fafb;
+            padding: 12px;
             border-radius: 8px;
-            border: 2px solid rgba(124, 58, 237, 0.15);
+            border: 1px solid #e5e7eb;
         }
 
         .gravity-metric-label {
@@ -593,7 +616,7 @@
             position: relative;
             width: 100%;
             height: 3px;
-            background: rgba(124, 58, 237, 0.15);
+            background: #e5e7eb;
             border-radius: 2px;
             overflow: visible;
             margin-top: 6px;
@@ -612,26 +635,28 @@
         .gravity-metric-value {
             position: absolute;
             right: 0;
-            top: -20px;
+            top: -18px;
             font-weight: 700;
-            font-size: 0.75em;
-            color: #4C1D95;
+            font-size: 0.7em;
+            color: #6b7280;
         }
 
         .platform-recommendation {
-            background: white;
-            padding: 15px;
+            background: #f9fafb;
+            padding: 12px;
             border-radius: 8px;
-            margin-top: 15px;
-            font-size: 0.95em;
-            line-height: 1.6;
-            border: 2px solid rgba(124, 58, 237, 0.15);
+            margin-top: 12px;
+            font-size: 0.85em;
+            line-height: 1.5;
+            border: 1px solid #e5e7eb;
+            color: #4b5563;
         }
 
         .platform-recommendation strong {
             display: block;
-            margin-bottom: 8px;
-            font-size: 1.05em;
+            margin-bottom: 6px;
+            font-size: 0.95em;
+            color: #374151;
         }
 
         .capability-matches {
@@ -945,14 +970,6 @@
                     <h2>Copilot Extension Evaluation</h2>
                     <p>Assess your agent or extension against Copilot platform principles</p>
                 </div>
-                <div class="header-actions">
-                    <button class="btn btn-secondary" onclick="clearForm()">
-                        🔄 Reset
-                    </button>
-                    <button class="btn btn-primary" onclick="evaluateFeature()">
-                        ▶️ Evaluate
-                    </button>
-                </div>
             </div>
 
             <div class="content-area">
@@ -991,6 +1008,15 @@
                                 <label>Description & Behavior</label>
                                 <textarea id="featureDescription" placeholder="Describe how the feature works, what data it uses, how it interacts with users...&#10;&#10;Example: This agent helps users book travel by analyzing their preferences and budget. It requests access to calendar and location data, then presents personalized options. The agent clearly identifies itself and explains why it needs each permission."></textarea>
                                 <div class="form-hint">Be specific about user interactions, data handling, and UI patterns</div>
+                            </div>
+
+                            <div style="display: flex; gap: 12px; margin-top: 20px;">
+                                <button class="btn btn-secondary" onclick="clearForm()">
+                                    🔄 Reset
+                                </button>
+                                <button class="btn btn-primary" onclick="evaluateFeature()">
+                                    ▶️ Evaluate
+                                </button>
                             </div>
                         </div>
 
@@ -1710,9 +1736,6 @@ Your choice!`
             issuesCard.style.display = 'block';
             issuesCard.classList.add('animate-in');
 
-            // Display Platform Gravity first
-            displayPlatformGravity(evaluation.gravityAssessment);
-
             // Animate score circle
             const score = evaluation.overallScore;
             const circle = document.getElementById('scoreCircle');
@@ -1759,6 +1782,8 @@ Your choice!`
 
             for (const [key, score] of Object.entries(evaluation.principleScores)) {
                 const principle = PRINCIPLES[key];
+                if (key === 'platform-gravity') continue; // Skip, we'll add it separately
+                
                 let meterColor;
                 if (score === 100) {
                     meterColor = '#10b981'; // Green
@@ -1779,6 +1804,9 @@ Your choice!`
                 `;
                 principleScoresEl.appendChild(item);
             }
+
+            // Add Platform Gravity at the end
+            displayPlatformGravity(evaluation.gravityAssessment, principleScoresEl);
 
             // Display issues
             const issuesListEl = document.getElementById('issuesList');

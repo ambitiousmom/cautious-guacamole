@@ -422,8 +422,8 @@
         .principle-score-item {
             display: flex;
             flex-direction: column;
-            gap: 8px;
-            padding: 12px 0;
+            gap: 6px;
+            padding: 10px 0;
             border-bottom: 1px solid #f3f4f6;
         }
 
@@ -432,18 +432,20 @@
         }
 
         .principle-score-item .name {
-            font-size: 0.85em;
+            font-size: 0.82em;
             color: #374151;
             font-weight: 600;
+            letter-spacing: 0.3px;
         }
 
         .score-meter {
             position: relative;
             width: 100%;
-            height: 28px;
+            height: 20px;
             background: #f3f4f6;
-            border-radius: 14px;
+            border-radius: 10px;
             overflow: hidden;
+            box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);
         }
 
         .score-meter-fill {
@@ -452,7 +454,8 @@
             top: 0;
             height: 100%;
             transition: width 0.6s ease-out;
-            border-radius: 14px;
+            border-radius: 10px;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.1);
         }
 
         .score-meter-text {
@@ -461,9 +464,9 @@
             top: 50%;
             transform: translate(-50%, -50%);
             font-weight: 700;
-            font-size: 0.9em;
+            font-size: 0.8em;
             color: white;
-            text-shadow: 0 1px 2px rgba(0,0,0,0.2);
+            text-shadow: 0 1px 2px rgba(0,0,0,0.3);
             z-index: 1;
         }
 
@@ -648,10 +651,15 @@
             flex-direction: column;
             gap: 20px;
             overflow-y: auto;
-            max-height: calc(100vh - 320px);
+            max-height: calc(100vh - 340px);
+            min-height: 0;
         }
 
         .history-panel .card {
+            flex-shrink: 0;
+        }
+
+        .results-panel .card {
             flex-shrink: 0;
         }
 
@@ -1669,7 +1677,9 @@ Your choice!`
             const issuesCard = document.getElementById('issuesCard');
 
             scoreCard.style.display = 'block';
+            scoreCard.classList.add('animate-in');
             issuesCard.style.display = 'block';
+            issuesCard.classList.add('animate-in');
 
             // Display Platform Gravity first
             displayPlatformGravity(evaluation.gravityAssessment);

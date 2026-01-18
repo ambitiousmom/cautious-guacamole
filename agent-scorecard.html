@@ -1,0 +1,1545 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agent Scorecard - Platform Coherence Evaluator</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #f5f5f5;
+            color: #1a1a1a;
+            line-height: 1.6;
+        }
+
+        .app-container {
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            background: linear-gradient(180deg, #1e293b 0%, #0f172a 100%);
+            color: white;
+            padding: 30px 20px;
+            overflow-y: auto;
+            border-right: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .sidebar h1 {
+            font-size: 1.4em;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        .sidebar .tagline {
+            font-size: 0.85em;
+            opacity: 0.7;
+            margin-bottom: 30px;
+        }
+
+        .principle-section {
+            margin-bottom: 30px;
+        }
+
+        .principle-section h3 {
+            font-size: 0.85em;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            opacity: 0.5;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+
+        .principle-item {
+            padding: 12px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            margin-bottom: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+            border-left: 3px solid transparent;
+        }
+
+        .principle-item:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-left-color: #60a5fa;
+        }
+
+        .principle-item.active {
+            background: rgba(96, 165, 250, 0.2);
+            border-left-color: #60a5fa;
+        }
+
+        .principle-item .name {
+            font-weight: 600;
+            font-size: 0.95em;
+            margin-bottom: 4px;
+        }
+
+        .principle-item .description {
+            font-size: 0.8em;
+            opacity: 0.7;
+            line-height: 1.4;
+        }
+
+        .stats-summary {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 30px;
+        }
+
+        .stats-summary h3 {
+            font-size: 0.85em;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            opacity: 0.5;
+            margin-bottom: 12px;
+        }
+
+        .stat-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            font-size: 0.9em;
+        }
+
+        .stat-row .label {
+            opacity: 0.8;
+        }
+
+        .stat-row .value {
+            font-weight: 600;
+        }
+
+        /* Main Content */
+        .main-content {
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .header {
+            background: white;
+            padding: 20px 40px;
+            border-bottom: 1px solid #e5e7eb;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header-left h2 {
+            font-size: 1.5em;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .header-left p {
+            font-size: 0.9em;
+            color: #6b7280;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 12px;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border-radius: 8px;
+            border: none;
+            font-size: 0.9em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
+        }
+
+        .btn-secondary {
+            background: white;
+            color: #374151;
+            border: 1px solid #d1d5db;
+        }
+
+        .btn-secondary:hover {
+            background: #f9fafb;
+        }
+
+        /* Content Area */
+        .content-area {
+            flex: 1;
+            overflow-y: auto;
+            padding: 30px 40px;
+        }
+
+        .content-grid {
+            display: grid;
+            grid-template-columns: 1fr 400px;
+            gap: 30px;
+            height: 100%;
+        }
+
+        /* Input Panel */
+        .input-panel {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .card-header h3 {
+            font-size: 1.1em;
+            font-weight: 600;
+            color: #1f2937;
+        }
+
+        .badge {
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 0.75em;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .badge-info {
+            background: #dbeafe;
+            color: #1e40af;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #374151;
+            font-size: 0.9em;
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            font-size: 0.95em;
+            font-family: inherit;
+            transition: all 0.2s;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        .form-group textarea {
+            min-height: 120px;
+            resize: vertical;
+            font-family: 'Consolas', 'Monaco', monospace;
+            font-size: 0.85em;
+        }
+
+        .form-hint {
+            font-size: 0.8em;
+            color: #6b7280;
+            margin-top: 6px;
+        }
+
+        .quick-templates {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+        }
+
+        .template-chip {
+            padding: 6px 14px;
+            background: #f3f4f6;
+            border: 1px solid #d1d5db;
+            border-radius: 20px;
+            font-size: 0.85em;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .template-chip:hover {
+            background: #e5e7eb;
+            border-color: #9ca3af;
+        }
+
+        /* Results Panel */
+        .results-panel {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .score-card {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        .score-circle {
+            width: 160px;
+            height: 160px;
+            margin: 0 auto 20px;
+            position: relative;
+        }
+
+        .score-circle svg {
+            transform: rotate(-90deg);
+        }
+
+        .score-circle .score-value {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 2.5em;
+            font-weight: 700;
+        }
+
+        .score-label {
+            font-size: 1.1em;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .score-status {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .score-status.excellent {
+            background: #d1fae5;
+            color: #065f46;
+        }
+
+        .score-status.good {
+            background: #dbeafe;
+            color: #1e40af;
+        }
+
+        .score-status.needs-work {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .score-status.critical {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .principle-scores {
+            margin-top: 20px;
+        }
+
+        .principle-score-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid #f3f4f6;
+        }
+
+        .principle-score-item:last-child {
+            border-bottom: none;
+        }
+
+        .principle-score-item .name {
+            font-size: 0.9em;
+            color: #374151;
+            font-weight: 500;
+        }
+
+        .principle-score-item .score {
+            font-weight: 700;
+            font-size: 1em;
+        }
+
+        /* Issues Panel */
+        .issues-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .issue-item {
+            padding: 16px;
+            border-radius: 8px;
+            border-left: 4px solid;
+            background: #fafafa;
+        }
+
+        .issue-item.critical {
+            border-left-color: #dc2626;
+            background: #fef2f2;
+        }
+
+        .issue-item.warning {
+            border-left-color: #f59e0b;
+            background: #fffbeb;
+        }
+
+        .issue-item.info {
+            border-left-color: #3b82f6;
+            background: #eff6ff;
+        }
+
+        .issue-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 8px;
+        }
+
+        .issue-icon {
+            font-size: 1.2em;
+        }
+
+        .issue-title {
+            font-weight: 600;
+            font-size: 0.95em;
+            color: #1f2937;
+        }
+
+        .issue-description {
+            font-size: 0.85em;
+            color: #4b5563;
+            line-height: 1.5;
+            margin-bottom: 10px;
+        }
+
+        .issue-remediation {
+            background: white;
+            padding: 10px;
+            border-radius: 6px;
+            font-size: 0.8em;
+            color: #059669;
+            border: 1px solid #d1fae5;
+        }
+
+        .issue-remediation strong {
+            display: block;
+            margin-bottom: 4px;
+            color: #047857;
+        }
+
+        /* History Panel */
+        .history-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .history-item {
+            padding: 12px;
+            background: #f9fafb;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: 1px solid #e5e7eb;
+        }
+
+        .history-item:hover {
+            background: #f3f4f6;
+            border-color: #d1d5db;
+        }
+
+        .history-item-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 6px;
+        }
+
+        .history-item-name {
+            font-weight: 600;
+            font-size: 0.9em;
+            color: #1f2937;
+        }
+
+        .history-item-score {
+            font-weight: 700;
+            font-size: 0.85em;
+        }
+
+        .history-item-meta {
+            font-size: 0.75em;
+            color: #6b7280;
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #9ca3af;
+        }
+
+        .empty-state svg {
+            width: 80px;
+            height: 80px;
+            margin-bottom: 20px;
+            opacity: 0.3;
+        }
+
+        .empty-state h3 {
+            font-size: 1.2em;
+            margin-bottom: 8px;
+            color: #6b7280;
+        }
+
+        .empty-state p {
+            font-size: 0.9em;
+        }
+
+        /* Loading State */
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+
+        .loading-content {
+            background: white;
+            padding: 40px;
+            border-radius: 12px;
+            text-align: center;
+            max-width: 300px;
+        }
+
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid #e5e7eb;
+            border-top-color: #3b82f6;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .loading-text {
+            font-size: 1em;
+            color: #374151;
+            font-weight: 600;
+        }
+
+        /* Responsive */
+        @media (max-width: 1200px) {
+            .content-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .results-panel {
+                order: -1;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .app-container {
+                grid-template-columns: 1fr;
+            }
+
+            .sidebar {
+                display: none;
+            }
+        }
+
+        /* Animations */
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .animate-in {
+            animation: slideIn 0.4s ease-out;
+        }
+
+        /* Export Panel */
+        .export-options {
+            display: flex;
+            gap: 8px;
+            margin-top: 15px;
+        }
+
+        .export-btn {
+            flex: 1;
+            padding: 8px;
+            background: #f3f4f6;
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            font-size: 0.8em;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .export-btn:hover {
+            background: #e5e7eb;
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <h1>🎯 Agent Scorecard</h1>
+            <p class="tagline">Platform Coherence Evaluator</p>
+
+            <div class="principle-section">
+                <h3>Core Principles</h3>
+                <div class="principle-item active" data-principle="ux-signature">
+                    <div class="name">🎨 UX Signature</div>
+                    <div class="description">Consistent design language and progressive disclosure</div>
+                </div>
+                <div class="principle-item" data-principle="handoff-integrity">
+                    <div class="name">🔄 Handoff Integrity</div>
+                    <div class="description">Intent preservation and privacy protection</div>
+                </div>
+                <div class="principle-item" data-principle="grounding-fidelity">
+                    <div class="name">📊 Grounding Fidelity</div>
+                    <div class="description">Data usage accuracy and no hallucinations</div>
+                </div>
+            </div>
+
+            <div class="principle-section">
+                <h3>Extended Principles</h3>
+                <div class="principle-item" data-principle="transparency">
+                    <div class="name">👁️ Transparency</div>
+                    <div class="description">Clear agent identity and capability disclosure</div>
+                </div>
+                <div class="principle-item" data-principle="privacy">
+                    <div class="name">🔒 Privacy First</div>
+                    <div class="description">Data minimization and just-in-time consent</div>
+                </div>
+                <div class="principle-item" data-principle="error-recovery">
+                    <div class="name">⚡ Error Recovery</div>
+                    <div class="description">Graceful degradation and clear fallbacks</div>
+                </div>
+            </div>
+
+            <div class="stats-summary">
+                <h3>Session Stats</h3>
+                <div class="stat-row">
+                    <span class="label">Evaluations</span>
+                    <span class="value" id="totalEvals">0</span>
+                </div>
+                <div class="stat-row">
+                    <span class="label">Avg Score</span>
+                    <span class="value" id="avgScore">--</span>
+                </div>
+                <div class="stat-row">
+                    <span class="label">Platform Certified</span>
+                    <span class="value" id="certifiedCount">0</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <div class="header">
+                <div class="header-left">
+                    <h2>Feature Evaluation</h2>
+                    <p>Assess your agent or feature against platform principles</p>
+                </div>
+                <div class="header-actions">
+                    <button class="btn btn-secondary" onclick="clearForm()">
+                        🔄 Reset
+                    </button>
+                    <button class="btn btn-primary" onclick="evaluateFeature()">
+                        ▶️ Evaluate
+                    </button>
+                </div>
+            </div>
+
+            <div class="content-area">
+                <div class="content-grid">
+                    <!-- Input Panel -->
+                    <div class="input-panel">
+                        <div class="card">
+                            <div class="card-header">
+                                <h3>Feature Specification</h3>
+                                <span class="badge badge-info">Required</span>
+                            </div>
+
+                            <div class="quick-templates">
+                                <div class="template-chip" onclick="loadTemplate('travel')">🌍 Travel Agent</div>
+                                <div class="template-chip" onclick="loadTemplate('shopping')">🛍️ Shopping Assistant</div>
+                                <div class="template-chip" onclick="loadTemplate('health')">🏥 Health Coach</div>
+                                <div class="template-chip" onclick="loadTemplate('finance')">💰 Finance Advisor</div>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Feature Name</label>
+                                <input type="text" id="featureName" placeholder="e.g., SmartTravel Booking Agent">
+                                <div class="form-hint">Give your feature a descriptive name</div>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Feature Type</label>
+                                <select id="featureType">
+                                    <option value="agent">Autonomous Agent</option>
+                                    <option value="copilot">Copilot Extension</option>
+                                    <option value="skill">Platform Skill</option>
+                                    <option value="plugin">Third-party Plugin</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Description & Behavior</label>
+                                <textarea id="featureDescription" placeholder="Describe how the feature works, what data it uses, how it interacts with users...&#10;&#10;Example: This agent helps users book travel by analyzing their preferences and budget. It requests access to calendar and location data, then presents personalized options. The agent clearly identifies itself and explains why it needs each permission."></textarea>
+                                <div class="form-hint">Be specific about user interactions, data handling, and UI patterns</div>
+                            </div>
+                        </div>
+
+                        <div class="card">
+                            <div class="card-header">
+                                <h3>Interaction Trace (Optional)</h3>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Sample Interaction Log</label>
+                                <textarea id="interactionTrace" placeholder="User: Book me a flight to Paris&#10;Agent: I'm your SmartTravel assistant. To find the best options, I'll need access to:&#10;  • Your calendar (to find available dates)&#10;  • Your location (for departure airport)&#10;Is that okay?&#10;User: Yes&#10;Agent: [Shows 3 options with clear pricing and trade-offs]"></textarea>
+                                <div class="form-hint">Paste a sample conversation or interaction flow</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Results Panel -->
+                    <div class="results-panel">
+                        <div class="card score-card" id="scoreCard" style="display: none;">
+                            <div class="score-circle">
+                                <svg width="160" height="160">
+                                    <circle cx="80" cy="80" r="70" fill="none" stroke="#e5e7eb" stroke-width="12"/>
+                                    <circle id="scoreCircle" cx="80" cy="80" r="70" fill="none" stroke="#10b981" stroke-width="12" 
+                                            stroke-dasharray="440" stroke-dashoffset="440" stroke-linecap="round"/>
+                                </svg>
+                                <div class="score-value" id="scoreValue">--</div>
+                            </div>
+                            <div class="score-label">Coherence Score</div>
+                            <div class="score-status excellent" id="scoreStatus">
+                                <span>✓</span>
+                                <span>Platform Certified</span>
+                            </div>
+
+                            <div class="principle-scores" id="principleScores"></div>
+
+                            <div class="export-options">
+                                <button class="export-btn" onclick="exportReport('json')">📄 Export JSON</button>
+                                <button class="export-btn" onclick="exportReport('markdown')">📝 Export MD</button>
+                            </div>
+                        </div>
+
+                        <div class="card" id="issuesCard" style="display: none;">
+                            <div class="card-header">
+                                <h3>Issues & Recommendations</h3>
+                                <span class="badge badge-info" id="issueCount">0 Issues</span>
+                            </div>
+                            <div class="issues-list" id="issuesList"></div>
+                        </div>
+
+                        <div class="card">
+                            <div class="card-header">
+                                <h3>Evaluation History</h3>
+                            </div>
+                            <div class="history-list" id="historyList">
+                                <div class="empty-state">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
+                                    </svg>
+                                    <h3>No evaluations yet</h3>
+                                    <p>Start by evaluating your first feature</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Platform Principles Schema
+        const PRINCIPLES = {
+            'ux-signature': {
+                name: 'UX Signature',
+                weight: 0.25,
+                checks: [
+                    { id: 'progressive-disclosure', name: 'Progressive Disclosure', weight: 0.3 },
+                    { id: 'consistent-typography', name: 'Consistent Typography', weight: 0.2 },
+                    { id: 'copilot-tone', name: 'Copilot-appropriate Tone', weight: 0.3 },
+                    { id: 'visual-hierarchy', name: 'Clear Visual Hierarchy', weight: 0.2 }
+                ]
+            },
+            'handoff-integrity': {
+                name: 'Handoff Integrity',
+                weight: 0.25,
+                checks: [
+                    { id: 'intent-preservation', name: 'Intent Preservation', weight: 0.4 },
+                    { id: 'context-continuity', name: 'Context Continuity', weight: 0.3 },
+                    { id: 'privacy-protection', name: 'Privacy During Handoff', weight: 0.3 }
+                ]
+            },
+            'grounding-fidelity': {
+                name: 'Grounding Fidelity',
+                weight: 0.25,
+                checks: [
+                    { id: 'data-usage', name: 'Accurate Data Usage', weight: 0.4 },
+                    { id: 'no-hallucination', name: 'No Hallucinations', weight: 0.4 },
+                    { id: 'source-citation', name: 'Source Citation', weight: 0.2 }
+                ]
+            },
+            'transparency': {
+                name: 'Transparency',
+                weight: 0.1,
+                checks: [
+                    { id: 'agent-identity', name: 'Clear Agent Identity', weight: 0.4 },
+                    { id: 'capability-disclosure', name: 'Capability Disclosure', weight: 0.3 },
+                    { id: 'limitation-clarity', name: 'Limitation Clarity', weight: 0.3 }
+                ]
+            },
+            'privacy': {
+                name: 'Privacy First',
+                weight: 0.1,
+                checks: [
+                    { id: 'data-minimization', name: 'Data Minimization', weight: 0.4 },
+                    { id: 'jit-consent', name: 'Just-in-Time Consent', weight: 0.3 },
+                    { id: 'retention-policy', name: 'Clear Retention Policy', weight: 0.3 }
+                ]
+            },
+            'error-recovery': {
+                name: 'Error Recovery',
+                weight: 0.05,
+                checks: [
+                    { id: 'graceful-degradation', name: 'Graceful Degradation', weight: 0.4 },
+                    { id: 'clear-errors', name: 'Clear Error Messages', weight: 0.3 },
+                    { id: 'fallback-options', name: 'Fallback Options', weight: 0.3 }
+                ]
+            }
+        };
+
+        // Feature Templates
+        const TEMPLATES = {
+            travel: {
+                name: 'SmartTravel Booking Agent',
+                type: 'agent',
+                description: `A travel booking agent that helps users plan trips based on their preferences and budget.
+
+User Interaction Flow:
+1. Agent introduces itself: "I'm SmartTravel, your AI travel assistant"
+2. Asks for destination and dates conversationally
+3. Requests calendar access with clear justification: "I'll check your calendar to avoid conflicts"
+4. Shows 3-5 personalized options with clear trade-offs (price vs. convenience)
+5. Uses consistent Copilot UI patterns (cards, progressive disclosure)
+6. Provides clear booking steps and confirmation
+
+Data Handling:
+- Requests only necessary data (destination, dates, budget)
+- Explains why each permission is needed
+- Does not store payment information
+- Clears temporary data after booking
+
+Privacy:
+- Just-in-time consent for calendar access
+- Option to search without location data
+- Clear data retention policy (30 days)`,
+                trace: `User: Help me plan a trip to Paris
+Agent: I'm SmartTravel, your AI travel assistant! 🌍 I can help you find the best options for Paris.
+
+To give you personalized recommendations, I'd like to:
+• Check your calendar for available dates
+• Use your location to find the best departure airport
+
+Is that okay?
+
+User: Yes, that's fine
+
+Agent: Great! I found you're free June 15-22. Here are 3 options:
+
+[Shows 3 flight options with clear pricing, airlines, and trade-offs]
+Option 1: Budget-friendly ($450) - 1 stop
+Option 2: Balanced ($650) - Direct flight
+Option 3: Premium ($890) - Direct + extra legroom
+
+Which interests you?`
+            },
+            shopping: {
+                name: 'PersonalShopper AI',
+                type: 'copilot',
+                description: `A shopping assistant that helps users find products matching their style and needs.
+
+Features:
+- Style preference learning without requiring account creation
+- Product recommendations based on browsing history (with consent)
+- Price tracking and deal alerts
+- Clear comparison tables
+
+UX Patterns:
+- Uses Copilot sidebar for non-intrusive suggestions
+- Progressive disclosure: shows 3 items initially, "Show more" option
+- Consistent card design matching platform
+- No pop-ups or aggressive CTAs
+
+Privacy:
+- Anonymous browsing mode available
+- No sharing of purchase history with third parties
+- Clear "Why we're showing this" explanations`,
+                trace: `User: I need a new laptop for design work
+Agent: I'm PersonalShopper, here to help! 💻
+
+Based on "design work," I'll focus on:
+• High-resolution displays
+• Good color accuracy
+• Sufficient RAM/GPU
+
+Your budget? (I'll keep this private)
+User: Around $2000
+
+Agent: Here are 3 great options:
+[Shows comparison table with key specs highlighted]
+
+💡 Why I picked these: All have 4K displays and dedicated GPUs - essential for design work.`
+            },
+            health: {
+                name: 'WellnessCoach AI',
+                type: 'agent',
+                description: `A health and wellness coaching agent that provides personalized fitness and nutrition guidance.
+
+Critical Features:
+- Clear disclaimers: "I'm not a medical professional"
+- References to evidence-based sources
+- Encourages professional consultation for serious concerns
+- No diagnosis or prescription suggestions
+
+UX Approach:
+- Calm, supportive tone (not clinical or robotic)
+- Celebrates small wins
+- Progressive goal-setting
+- Daily check-ins with opt-out option
+
+Data Sensitivity:
+- Health data encrypted at rest
+- No sharing with third-party apps without explicit consent
+- Easy data export and deletion
+- HIPAA-compliant practices`,
+                trace: `User: Help me start exercising
+Agent: I'm WellnessCoach! 🏃‍♀️ I'm here to support your fitness journey.
+
+Before we start - important note: I'm an AI wellness assistant, not a medical professional. For any health concerns, please consult your doctor.
+
+Tell me about your current activity level?
+User: Pretty sedentary, desk job
+
+Agent: No judgment! Let's start small. I recommend:
+Week 1: 10-min walks, 3x/week
+[Clear, achievable goal]
+
+Want me to send daily reminders? You can turn these off anytime in settings.`
+            },
+            finance: {
+                name: 'FinanceAdvisor Pro',
+                type: 'agent',
+                description: `A financial planning agent that helps users budget, save, and understand investment options.
+
+Compliance-First:
+- Clear disclosure: "For informational purposes only, not financial advice"
+- Suggests consulting licensed advisors for major decisions
+- No specific stock recommendations
+- Transparent about limitations
+
+Educational Focus:
+- Explains concepts in plain language
+- Shows trade-offs (risk vs. return)
+- Interactive calculators with clear assumptions
+- Links to authoritative sources (SEC, consumer.gov)
+
+Security:
+- Read-only access to financial accounts
+- No ability to execute transactions
+- Two-factor authentication required
+- Session timeout after 10 minutes of inactivity`,
+                trace: `User: Should I invest in stocks?
+Agent: I'm FinanceAdvisor Pro 💼 - here to help you understand your options.
+
+Important: I provide educational information, not personalized financial advice. For investment decisions, consider consulting a licensed financial advisor.
+
+Let's explore the basics:
+Stocks can be part of a diversified portfolio, but they come with risks...
+
+[Provides educational content with clear sources]
+
+Would you like to learn about:
+1. Risk tolerance assessment
+2. Diversification basics
+3. Low-cost index funds
+
+Your choice!`
+            }
+        };
+
+        // State Management
+        let evaluationHistory = [];
+        let currentEvaluation = null;
+
+        // Load a template
+        function loadTemplate(templateKey) {
+            const template = TEMPLATES[templateKey];
+            document.getElementById('featureName').value = template.name;
+            document.getElementById('featureType').value = template.type;
+            document.getElementById('featureDescription').value = template.description;
+            document.getElementById('interactionTrace').value = template.trace || '';
+        }
+
+        // Clear form
+        function clearForm() {
+            document.getElementById('featureName').value = '';
+            document.getElementById('featureDescription').value = '';
+            document.getElementById('interactionTrace').value = '';
+            document.getElementById('scoreCard').style.display = 'none';
+            document.getElementById('issuesCard').style.display = 'none';
+        }
+
+        // Evaluate Feature (Simulated LLM Judge)
+        async function evaluateFeature() {
+            const featureName = document.getElementById('featureName').value.trim();
+            const featureType = document.getElementById('featureType').value;
+            const description = document.getElementById('featureDescription').value.trim();
+            const trace = document.getElementById('interactionTrace').value.trim();
+
+            if (!featureName || !description) {
+                alert('Please provide at least a feature name and description');
+                return;
+            }
+
+            // Show loading
+            showLoading('Evaluating against platform principles...');
+
+            // Simulate processing time
+            await new Promise(resolve => setTimeout(resolve, 2000));
+
+            // Run evaluation
+            const evaluation = runEvaluation(featureName, featureType, description, trace);
+            currentEvaluation = evaluation;
+
+            // Add to history
+            evaluationHistory.unshift(evaluation);
+            updateHistory();
+            updateStats();
+
+            // Display results
+            displayResults(evaluation);
+
+            hideLoading();
+        }
+
+        // Simulated Evaluation Engine
+        function runEvaluation(featureName, featureType, description, trace) {
+            const lowerDesc = description.toLowerCase();
+            const lowerTrace = trace.toLowerCase();
+            const combinedText = lowerDesc + ' ' + lowerTrace;
+
+            const principleScores = {};
+            const issues = [];
+
+            // UX Signature Evaluation
+            let uxScore = 70;
+            if (combinedText.includes('progressive') || combinedText.includes('show more') || combinedText.includes('initially')) {
+                uxScore += 10;
+            }
+            if (combinedText.includes('copilot') || combinedText.includes('sidebar') || combinedText.includes('non-intrusive')) {
+                uxScore += 10;
+            }
+            if (combinedText.includes('consistent') || combinedText.includes('design language') || combinedText.includes('card')) {
+                uxScore += 5;
+            }
+            if (combinedText.includes('wall of text') || combinedText.includes('popup') || combinedText.includes('aggressive')) {
+                uxScore -= 20;
+                issues.push({
+                    severity: 'warning',
+                    principle: 'UX Signature',
+                    title: 'Potentially Intrusive Patterns Detected',
+                    description: 'The feature may use UI patterns that disrupt user flow (popups, aggressive CTAs).',
+                    remediation: 'Use progressive disclosure and Copilot sidebar patterns. Avoid modal dialogs unless critical.'
+                });
+            }
+            principleScores['ux-signature'] = Math.min(100, uxScore);
+
+            // Handoff Integrity
+            let handoffScore = 75;
+            if (combinedText.includes('intent') || combinedText.includes('context') || combinedText.includes('continuity')) {
+                handoffScore += 15;
+            }
+            if (combinedText.includes('handoff') || combinedText.includes('transfer') || combinedText.includes('preserv')) {
+                handoffScore += 10;
+            }
+            if (!combinedText.includes('privacy') && !combinedText.includes('data protection')) {
+                handoffScore -= 15;
+                issues.push({
+                    severity: 'warning',
+                    principle: 'Handoff Integrity',
+                    title: 'Privacy During Handoff Not Addressed',
+                    description: 'No mention of how user data is protected when transferring between agents.',
+                    remediation: 'Specify how context is preserved while maintaining privacy. Use encrypted handoff tokens.'
+                });
+            }
+            principleScores['handoff-integrity'] = Math.min(100, handoffScore);
+
+            // Grounding Fidelity
+            let groundingScore = 70;
+            if (combinedText.includes('data') && (combinedText.includes('accurate') || combinedText.includes('source'))) {
+                groundingScore += 15;
+            }
+            if (combinedText.includes('citation') || combinedText.includes('reference') || combinedText.includes('evidence')) {
+                groundingScore += 10;
+            }
+            if (!combinedText.includes('hallucin') && combinedText.length > 200) {
+                groundingScore += 5;
+            }
+            if (combinedText.includes('makes up') || combinedText.includes('fabricat')) {
+                groundingScore -= 25;
+                issues.push({
+                    severity: 'critical',
+                    principle: 'Grounding Fidelity',
+                    title: 'Risk of Hallucination Detected',
+                    description: 'Feature may generate information not grounded in provided data.',
+                    remediation: 'Implement strict grounding constraints. Cite sources for all factual claims. Use retrieval-augmented generation (RAG).'
+                });
+            }
+            principleScores['grounding-fidelity'] = Math.min(100, groundingScore);
+
+            // Transparency
+            let transparencyScore = 65;
+            if (combinedText.includes('i\'m') || combinedText.includes('i am') || combinedText.includes('agent')) {
+                transparencyScore += 15;
+            }
+            if (combinedText.includes('capability') || combinedText.includes('limitation') || combinedText.includes('can\'t')) {
+                transparencyScore += 15;
+            }
+            if (combinedText.includes('disclaimer') || combinedText.includes('not a professional') || combinedText.includes('not medical')) {
+                transparencyScore += 10;
+            }
+            if (!combinedText.includes('i\'m') && !combinedText.includes('agent') && !combinedText.includes('assistant')) {
+                issues.push({
+                    severity: 'critical',
+                    principle: 'Transparency',
+                    title: 'Agent Identity Not Disclosed',
+                    description: 'The feature does not clearly identify itself as an AI agent. Users may confuse it for human support.',
+                    remediation: 'Start interactions with: "I\'m [AgentName], your AI assistant for [purpose]." Make AI identity unmistakable.'
+                });
+                transparencyScore -= 20;
+            }
+            principleScores['transparency'] = Math.min(100, transparencyScore);
+
+            // Privacy
+            let privacyScore = 60;
+            if (combinedText.includes('data minimization') || combinedText.includes('only necessary')) {
+                privacyScore += 15;
+            }
+            if (combinedText.includes('consent') || combinedText.includes('permission') || combinedText.includes('is that okay')) {
+                privacyScore += 15;
+            }
+            if (combinedText.includes('retention') || combinedText.includes('delete') || combinedText.includes('clear data')) {
+                privacyScore += 10;
+            }
+            if (combinedText.includes('collects all') || combinedText.includes('tracks everything')) {
+                privacyScore -= 25;
+                issues.push({
+                    severity: 'critical',
+                    principle: 'Privacy First',
+                    title: 'Excessive Data Collection',
+                    description: 'Feature appears to collect more data than necessary for its function.',
+                    remediation: 'Apply data minimization principle. Collect only what\'s essential. Request just-in-time consent with clear explanations.'
+                });
+            }
+            if (!combinedText.includes('consent') && !combinedText.includes('permission')) {
+                issues.push({
+                    severity: 'warning',
+                    principle: 'Privacy First',
+                    title: 'No Explicit Consent Mechanism',
+                    description: 'The feature doesn\'t clearly ask for user permission before accessing sensitive data.',
+                    remediation: 'Implement just-in-time consent requests. Explain why each permission is needed before asking.'
+                });
+                privacyScore -= 10;
+            }
+            principleScores['privacy'] = Math.min(100, privacyScore);
+
+            // Error Recovery
+            let errorScore = 70;
+            if (combinedText.includes('fallback') || combinedText.includes('backup') || combinedText.includes('alternative')) {
+                errorScore += 15;
+            }
+            if (combinedText.includes('graceful') || combinedText.includes('degradation')) {
+                errorScore += 10;
+            }
+            if (combinedText.includes('error message') || combinedText.includes('clear error')) {
+                errorScore += 5;
+            }
+            if (combinedText.includes('crash') || combinedText.includes('breaks')) {
+                errorScore -= 20;
+                issues.push({
+                    severity: 'warning',
+                    principle: 'Error Recovery',
+                    title: 'Poor Error Handling',
+                    description: 'Feature may not handle errors gracefully, potentially breaking user experience.',
+                    remediation: 'Implement graceful degradation. Provide clear, actionable error messages. Always offer fallback options.'
+                });
+            }
+            principleScores['error-recovery'] = Math.min(100, errorScore);
+
+            // Calculate weighted overall score
+            let overallScore = 0;
+            for (const [key, score] of Object.entries(principleScores)) {
+                overallScore += score * PRINCIPLES[key].weight;
+            }
+
+            // Add quality bonuses
+            if (description.length > 500) overallScore += 2; // Detailed description
+            if (trace.length > 200) overallScore += 2; // Interaction trace provided
+            if (combinedText.includes('example:') || combinedText.includes('for instance:')) overallScore += 1;
+
+            overallScore = Math.min(100, Math.round(overallScore));
+
+            // Generate additional suggestions if score is high
+            if (overallScore >= 85 && issues.length === 0) {
+                issues.push({
+                    severity: 'info',
+                    principle: 'General',
+                    title: 'Excellent Platform Alignment! 🎉',
+                    description: 'This feature demonstrates strong adherence to platform principles. Consider it for "Platform Certified" badge.',
+                    remediation: 'Continue monitoring real-world usage. Collect user feedback on clarity and helpfulness.'
+                });
+            }
+
+            return {
+                featureName,
+                featureType,
+                overallScore,
+                principleScores,
+                issues,
+                timestamp: new Date().toISOString(),
+                description: description.substring(0, 200)
+            };
+        }
+
+        // Display Results
+        function displayResults(evaluation) {
+            const scoreCard = document.getElementById('scoreCard');
+            const issuesCard = document.getElementById('issuesCard');
+
+            scoreCard.style.display = 'block';
+            issuesCard.style.display = 'block';
+
+            // Animate score circle
+            const score = evaluation.overallScore;
+            const circle = document.getElementById('scoreCircle');
+            const circumference = 2 * Math.PI * 70;
+            const offset = circumference - (score / 100) * circumference;
+
+            circle.style.strokeDashoffset = offset;
+
+            // Set color based on score
+            let color, statusClass, statusText, statusIcon;
+            if (score >= 85) {
+                color = '#10b981';
+                statusClass = 'excellent';
+                statusText = 'Platform Certified';
+                statusIcon = '✓';
+            } else if (score >= 70) {
+                color = '#3b82f6';
+                statusClass = 'good';
+                statusText = 'Good Standing';
+                statusIcon = '✓';
+            } else if (score >= 50) {
+                color = '#f59e0b';
+                statusClass = 'needs-work';
+                statusText = 'Needs Improvement';
+                statusIcon = '⚠';
+            } else {
+                color = '#dc2626';
+                statusClass = 'critical';
+                statusText = 'Critical Issues';
+                statusIcon = '✕';
+            }
+
+            circle.style.stroke = color;
+            document.getElementById('scoreValue').textContent = score;
+            document.getElementById('scoreValue').style.color = color;
+
+            const statusEl = document.getElementById('scoreStatus');
+            statusEl.className = `score-status ${statusClass}`;
+            statusEl.innerHTML = `<span>${statusIcon}</span><span>${statusText}</span>`;
+
+            // Display principle scores
+            const principleScoresEl = document.getElementById('principleScores');
+            principleScoresEl.innerHTML = '<h3 style="font-size: 0.9em; margin-bottom: 12px; color: #6b7280; text-align: left;">Principle Breakdown</h3>';
+
+            for (const [key, score] of Object.entries(evaluation.principleScores)) {
+                const principle = PRINCIPLES[key];
+                let scoreColor;
+                if (score >= 85) scoreColor = '#10b981';
+                else if (score >= 70) scoreColor = '#3b82f6';
+                else if (score >= 50) scoreColor = '#f59e0b';
+                else scoreColor = '#dc2626';
+
+                const item = document.createElement('div');
+                item.className = 'principle-score-item';
+                item.innerHTML = `
+                    <span class="name">${principle.name}</span>
+                    <span class="score" style="color: ${scoreColor}">${score}</span>
+                `;
+                principleScoresEl.appendChild(item);
+            }
+
+            // Display issues
+            const issuesListEl = document.getElementById('issuesList');
+            issuesListEl.innerHTML = '';
+
+            if (evaluation.issues.length === 0) {
+                issuesListEl.innerHTML = '<div class="empty-state" style="padding: 30px;"><p>No issues found! 🎉</p></div>';
+                document.getElementById('issueCount').textContent = 'No Issues';
+            } else {
+                document.getElementById('issueCount').textContent = `${evaluation.issues.length} ${evaluation.issues.length === 1 ? 'Issue' : 'Issues'}`;
+                
+                evaluation.issues.forEach(issue => {
+                    const issueEl = document.createElement('div');
+                    issueEl.className = `issue-item ${issue.severity}`;
+                    
+                    let icon;
+                    if (issue.severity === 'critical') icon = '🚨';
+                    else if (issue.severity === 'warning') icon = '⚠️';
+                    else icon = '💡';
+
+                    issueEl.innerHTML = `
+                        <div class="issue-header">
+                            <span class="issue-icon">${icon}</span>
+                            <span class="issue-title">${issue.title}</span>
+                        </div>
+                        <div class="issue-description">${issue.description}</div>
+                        <div class="issue-remediation">
+                            <strong>✅ Remediation:</strong>
+                            ${issue.remediation}
+                        </div>
+                    `;
+                    issuesListEl.appendChild(issueEl);
+                });
+            }
+
+            // Scroll to results
+            scoreCard.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+
+        // Update history list
+        function updateHistory() {
+            const historyList = document.getElementById('historyList');
+            historyList.innerHTML = '';
+
+            if (evaluationHistory.length === 0) {
+                historyList.innerHTML = `
+                    <div class="empty-state">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
+                        </svg>
+                        <h3>No evaluations yet</h3>
+                        <p>Start by evaluating your first feature</p>
+                    </div>
+                `;
+                return;
+            }
+
+            evaluationHistory.slice(0, 10).forEach((evaluation, index) => {
+                const item = document.createElement('div');
+                item.className = 'history-item';
+                
+                let scoreColor;
+                if (evaluation.overallScore >= 85) scoreColor = '#10b981';
+                else if (evaluation.overallScore >= 70) scoreColor = '#3b82f6';
+                else if (evaluation.overallScore >= 50) scoreColor = '#f59e0b';
+                else scoreColor = '#dc2626';
+
+                const timeAgo = getTimeAgo(new Date(evaluation.timestamp));
+
+                item.innerHTML = `
+                    <div class="history-item-header">
+                        <span class="history-item-name">${evaluation.featureName}</span>
+                        <span class="history-item-score" style="color: ${scoreColor}">${evaluation.overallScore}</span>
+                    </div>
+                    <div class="history-item-meta">${evaluation.featureType} • ${timeAgo}</div>
+                `;
+
+                item.onclick = () => {
+                    currentEvaluation = evaluation;
+                    displayResults(evaluation);
+                };
+
+                historyList.appendChild(item);
+            });
+        }
+
+        // Update session stats
+        function updateStats() {
+            document.getElementById('totalEvals').textContent = evaluationHistory.length;
+            
+            if (evaluationHistory.length > 0) {
+                const avgScore = evaluationHistory.reduce((sum, e) => sum + e.overallScore, 0) / evaluationHistory.length;
+                document.getElementById('avgScore').textContent = Math.round(avgScore);
+                
+                const certified = evaluationHistory.filter(e => e.overallScore >= 85).length;
+                document.getElementById('certifiedCount').textContent = certified;
+            }
+        }
+
+        // Export report
+        function exportReport(format) {
+            if (!currentEvaluation) return;
+
+            if (format === 'json') {
+                const dataStr = JSON.stringify(currentEvaluation, null, 2);
+                downloadFile(`${currentEvaluation.featureName}-report.json`, dataStr, 'application/json');
+            } else if (format === 'markdown') {
+                const md = generateMarkdownReport(currentEvaluation);
+                downloadFile(`${currentEvaluation.featureName}-report.md`, md, 'text/markdown');
+            }
+        }
+
+        function generateMarkdownReport(evaluation) {
+            let md = `# Platform Coherence Report: ${evaluation.featureName}\n\n`;
+            md += `**Date:** ${new Date(evaluation.timestamp).toLocaleString()}\n`;
+            md += `**Type:** ${evaluation.featureType}\n`;
+            md += `**Overall Score:** ${evaluation.overallScore}/100\n\n`;
+
+            md += `## Principle Scores\n\n`;
+            for (const [key, score] of Object.entries(evaluation.principleScores)) {
+                const principle = PRINCIPLES[key];
+                md += `- **${principle.name}:** ${score}/100\n`;
+            }
+
+            md += `\n## Issues & Recommendations\n\n`;
+            if (evaluation.issues.length === 0) {
+                md += `No issues found! This feature demonstrates excellent platform alignment.\n`;
+            } else {
+                evaluation.issues.forEach((issue, i) => {
+                    md += `### ${i + 1}. ${issue.title} [${issue.severity.toUpperCase()}]\n\n`;
+                    md += `**Principle:** ${issue.principle}\n\n`;
+                    md += `${issue.description}\n\n`;
+                    md += `**Remediation:** ${issue.remediation}\n\n`;
+                });
+            }
+
+            return md;
+        }
+
+        function downloadFile(filename, content, mimeType) {
+            const blob = new Blob([content], { type: mimeType });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+
+        // Helper functions
+        function getTimeAgo(date) {
+            const seconds = Math.floor((new Date() - date) / 1000);
+            if (seconds < 60) return 'Just now';
+            if (seconds < 3600) return `${Math.floor(seconds / 60)}m ago`;
+            if (seconds < 86400) return `${Math.floor(seconds / 3600)}h ago`;
+            return `${Math.floor(seconds / 86400)}d ago`;
+        }
+
+        function showLoading(message) {
+            const overlay = document.createElement('div');
+            overlay.className = 'loading-overlay';
+            overlay.id = 'loadingOverlay';
+            overlay.innerHTML = `
+                <div class="loading-content">
+                    <div class="spinner"></div>
+                    <div class="loading-text">${message}</div>
+                </div>
+            `;
+            document.body.appendChild(overlay);
+        }
+
+        function hideLoading() {
+            const overlay = document.getElementById('loadingOverlay');
+            if (overlay) {
+                overlay.remove();
+            }
+        }
+
+        // Initialize
+        window.addEventListener('load', () => {
+            console.log('🎯 Agent Scorecard initialized');
+            console.log('Platform Principles loaded:', Object.keys(PRINCIPLES).length);
+        });
+    </script>
+</body>
+</html>

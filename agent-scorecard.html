@@ -481,6 +481,103 @@
             color: #047857;
         }
 
+        /* Platform Gravity */
+        .platform-gravity-card {
+            background: linear-gradient(135deg, #8B5CF6 0%, #6D28D9 100%);
+            color: white;
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 20px;
+        }
+
+        .platform-gravity-card h3 {
+            font-size: 1.1em;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .gravity-score {
+            font-size: 3em;
+            font-weight: 700;
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .gravity-label {
+            text-align: center;
+            font-size: 1.1em;
+            font-weight: 600;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .gravity-metrics {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .gravity-metric {
+            text-align: center;
+            background: rgba(255, 255, 255, 0.15);
+            padding: 15px;
+            border-radius: 8px;
+        }
+
+        .gravity-metric-value {
+            font-size: 1.8em;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .gravity-metric-label {
+            font-size: 0.85em;
+            opacity: 0.9;
+        }
+
+        .platform-recommendation {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+            font-size: 0.95em;
+            line-height: 1.6;
+        }
+
+        .platform-recommendation strong {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 1.05em;
+        }
+
+        .capability-matches {
+            background: #FEF3C7;
+            border-left: 4px solid #F59E0B;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+            color: #78350F;
+        }
+
+        .capability-matches strong {
+            display: block;
+            margin-bottom: 10px;
+            color: #92400E;
+        }
+
+        .capability-item {
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(245, 158, 11, 0.2);
+        }
+
+        .capability-item:last-child {
+            border-bottom: none;
+        }
+
         /* History Panel */
         .history-list {
             display: flex;
@@ -690,6 +787,14 @@
                 </div>
             </div>
 
+            <div class="principle-section">
+                <h3>Strategic Assessment</h3>
+                <div class="principle-item" data-principle="platform-gravity">
+                    <div class="name">🚀 Platform Gravity</div>
+                    <div class="description">Should this be a platform-level capability?</div>
+                </div>
+            </div>
+
             <div class="stats-summary">
                 <h3>Session Stats</h3>
                 <div class="stat-row">
@@ -703,6 +808,10 @@
                 <div class="stat-row">
                     <span class="label">Copilot Certified</span>
                     <span class="value" id="certifiedCount">0</span>
+                </div>
+                <div class="stat-row">
+                    <span class="label">Platform Candidates</span>
+                    <span class="value" id="platformCandidates">0</span>
                 </div>
             </div>
         </div>
@@ -886,8 +995,34 @@
                     { id: 'clear-errors', name: 'Clear Error Messages', weight: 0.3 },
                     { id: 'fallback-options', name: 'Fallback Options', weight: 0.3 }
                 ]
+            },
+            'platform-gravity': {
+                name: 'Platform Gravity',
+                weight: 0, // Not included in coherence score
+                checks: [
+                    { id: 'ubiquity', name: 'Universal Need', weight: 0.35 },
+                    { id: 'complexity-burden', name: 'Complexity Burden', weight: 0.35 },
+                    { id: 'interoperability', name: 'Interoperability Value', weight: 0.3 }
+                ]
             }
         };
+
+        // Platform Capabilities Registry
+        const PLATFORM_CAPABILITIES = [
+            { name: 'Authentication', keywords: ['auth', 'login', 'sso', 'identity', 'signin'] },
+            { name: 'Payment Processing', keywords: ['payment', 'checkout', 'billing', 'transaction', 'credit card'] },
+            { name: 'Document Intelligence', keywords: ['ocr', 'pdf parse', 'document extract', 'receipt scan', 'text recognition'] },
+            { name: 'Search & Retrieval', keywords: ['search', 'query', 'retrieve', 'find', 'lookup'] },
+            { name: 'Calendar Integration', keywords: ['calendar', 'schedule', 'appointment', 'meeting', 'availability'] },
+            { name: 'Email Integration', keywords: ['email', 'inbox', 'send mail', 'message'] },
+            { name: 'File Storage', keywords: ['file upload', 'storage', 'cloud storage', 'save file'] },
+            { name: 'User Preferences', keywords: ['preference', 'settings', 'remember', 'user profile'] },
+            { name: 'Notifications', keywords: ['notify', 'alert', 'push notification', 'reminder'] },
+            { name: 'Translation', keywords: ['translate', 'language', 'multilingual'] },
+            { name: 'Voice Synthesis', keywords: ['text to speech', 'tts', 'voice', 'audio generation'] },
+            { name: 'Image Generation', keywords: ['image gen', 'create image', 'dall-e', 'picture'] },
+            { name: 'Data Encryption', keywords: ['encrypt', 'secure', 'cipher', 'crypto'] }
+        ];
 
         // Feature Templates
         const TEMPLATES = {
@@ -1103,6 +1238,87 @@ Your choice!`
             hideLoading();
         }
 
+        // Platform Gravity Assessment
+        function assessPlatformGravity(text) {
+            const lowerText = text.toLowerCase();
+            
+            // Check for matches with existing platform capabilities
+            const capabilityMatches = [];
+            PLATFORM_CAPABILITIES.forEach(capability => {
+                const matches = capability.keywords.filter(keyword => lowerText.includes(keyword));
+                if (matches.length > 0) {
+                    capabilityMatches.push({
+                        capability: capability.name,
+                        keywords: matches
+                    });
+                }
+            });
+
+            // Ubiquity Score (Universal Need)
+            let ubiquityScore = 50;
+            const universalKeywords = ['all', 'every', 'universal', 'common', 'standard', 'typical', 'most', 'many agents', 'multiple teams'];
+            universalKeywords.forEach(keyword => {
+                if (lowerText.includes(keyword)) ubiquityScore += 10;
+            });
+            if (lowerText.includes('specific') || lowerText.includes('niche') || lowerText.includes('specialized')) {
+                ubiquityScore -= 20;
+            }
+            ubiquityScore = Math.min(100, Math.max(0, ubiquityScore));
+
+            // Complexity Burden Score
+            let complexityScore = 40;
+            const complexityKeywords = ['security', 'compliance', 'encrypt', 'authenticate', 'regulate', 'complex logic', 'state management', 'scale', 'infrastructure'];
+            complexityKeywords.forEach(keyword => {
+                if (lowerText.includes(keyword)) complexityScore += 12;
+            });
+            if (lowerText.includes('simple') || lowerText.includes('straightforward') || lowerText.includes('basic')) {
+                complexityScore -= 15;
+            }
+            complexityScore = Math.min(100, Math.max(0, complexityScore));
+
+            // Interoperability Score
+            let interopScore = 45;
+            const interopKeywords = ['api', 'share', 'reuse', 'integrate', 'connect', 'cross-agent', 'other agents', 'multiple features'];
+            interopKeywords.forEach(keyword => {
+                if (lowerText.includes(keyword)) interopScore += 12;
+            });
+            if (lowerText.includes('standalone') || lowerText.includes('isolated') || lowerText.includes('independent')) {
+                interopScore -= 15;
+            }
+            interopScore = Math.min(100, Math.max(0, interopScore));
+
+            // Overall Gravity Score
+            const gravityScore = Math.round(
+                ubiquityScore * 0.35 + 
+                complexityScore * 0.35 + 
+                interopScore * 0.3
+            );
+
+            // Determine recommendation
+            let recommendation = '';
+            let label = '';
+            if (gravityScore >= 75) {
+                label = 'High Gravity - Platform Candidate';
+                recommendation = 'This capability should be considered for platform-level implementation. Multiple agents would benefit from a shared, well-maintained solution.';
+            } else if (gravityScore >= 50) {
+                label = 'Medium Gravity - Monitor';
+                recommendation = 'This capability shows some platform potential. Monitor for similar requests from other teams before promoting to platform level.';
+            } else {
+                label = 'Low Gravity - Feature Level';
+                recommendation = 'This capability is appropriately scoped as a feature-level implementation. It serves a specialized use case.';
+            }
+
+            return {
+                score: gravityScore,
+                label,
+                recommendation,
+                ubiquity: ubiquityScore,
+                complexity: complexityScore,
+                interoperability: interopScore,
+                capabilityMatches
+            };
+        }
+
         // Simulated Evaluation Engine
         function runEvaluation(featureName, featureType, description, trace) {
             const lowerDesc = description.toLowerCase();
@@ -1257,6 +1473,10 @@ Your choice!`
             }
             principleScores['error-recovery'] = Math.min(100, errorScore);
 
+            // Platform Gravity Assessment (not included in coherence score)
+            const gravityAssessment = assessPlatformGravity(combinedText);
+            principleScores['platform-gravity'] = gravityAssessment.score;
+
             // Calculate weighted overall score
             let overallScore = 0;
             for (const [key, score] of Object.entries(principleScores)) {
@@ -1287,18 +1507,72 @@ Your choice!`
                 overallScore,
                 principleScores,
                 issues,
+                gravityAssessment,
                 timestamp: new Date().toISOString(),
                 description: description.substring(0, 200)
             };
         }
 
         // Display Results
+        function displayPlatformGravity(gravity) {
+            const resultsPanel = document.querySelector('.results-panel');
+            
+            // Remove old gravity card if exists
+            const oldCard = document.querySelector('.platform-gravity-card');
+            if (oldCard) oldCard.remove();
+
+            const gravityCard = document.createElement('div');
+            gravityCard.className = 'platform-gravity-card animate-in';
+            gravityCard.innerHTML = `
+                <h3>🚀 Platform Gravity Assessment</h3>
+                <div class="gravity-score">${gravity.score}<span style="font-size: 0.4em;">/100</span></div>
+                <div class="gravity-label">${gravity.label}</div>
+                
+                <div class="gravity-metrics">
+                    <div class="gravity-metric">
+                        <div class="gravity-metric-value">${gravity.ubiquity}</div>
+                        <div class="gravity-metric-label">Ubiquity</div>
+                    </div>
+                    <div class="gravity-metric">
+                        <div class="gravity-metric-value">${gravity.complexity}</div>
+                        <div class="gravity-metric-label">Complexity</div>
+                    </div>
+                    <div class="gravity-metric">
+                        <div class="gravity-metric-value">${gravity.interoperability}</div>
+                        <div class="gravity-metric-label">Interop</div>
+                    </div>
+                </div>
+                
+                <div class="platform-recommendation">
+                    <strong>💡 Recommendation:</strong>
+                    ${gravity.recommendation}
+                </div>
+                
+                ${gravity.capabilityMatches.length > 0 ? `
+                    <div class="capability-matches">
+                        <strong>⚠️ Existing Platform Capabilities Detected:</strong>
+                        ${gravity.capabilityMatches.map(match => `
+                            <div class="capability-item">
+                                <strong>${match.capability}</strong> - Consider using instead of reimplementing
+                                <div style="font-size: 0.9em; opacity: 0.8; margin-top: 4px;">Matched: ${match.keywords.join(', ')}</div>
+                            </div>
+                        `).join('')}
+                    </div>
+                ` : ''}
+            `;
+            
+            resultsPanel.insertBefore(gravityCard, resultsPanel.firstChild);
+        }
+
         function displayResults(evaluation) {
             const scoreCard = document.getElementById('scoreCard');
             const issuesCard = document.getElementById('issuesCard');
 
             scoreCard.style.display = 'block';
             issuesCard.style.display = 'block';
+
+            // Display Platform Gravity first
+            displayPlatformGravity(evaluation.gravityAssessment);
 
             // Animate score circle
             const score = evaluation.overallScore;
@@ -1456,6 +1730,9 @@ Your choice!`
                 
                 const certified = evaluationHistory.filter(e => e.overallScore >= 85).length;
                 document.getElementById('certifiedCount').textContent = certified;
+                
+                const platformCandidates = evaluationHistory.filter(e => e.gravityAssessment && e.gravityAssessment.score >= 75).length;
+                document.getElementById('platformCandidates').textContent = platformCandidates;
             }
         }
 

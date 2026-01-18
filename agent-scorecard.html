@@ -900,6 +900,114 @@
         .export-btn:hover {
             background: #e5e7eb;
         }
+
+        /* Logic Trace */
+        .logic-trace-section {
+            margin-top: 20px;
+            border-top: 2px solid #f3f4f6;
+            padding-top: 20px;
+        }
+
+        .logic-trace-toggle {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(135deg, #F3E8FF 0%, #E9D5FF 100%);
+            border: 2px solid #C4B5FD;
+            border-radius: 8px;
+            font-size: 0.9em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            color: #5B21B6;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .logic-trace-toggle:hover {
+            background: linear-gradient(135deg, #E9D5FF 0%, #DDD6FE 100%);
+            transform: translateY(-1px);
+            box-shadow: 0 2px 8px rgba(139, 92, 246, 0.2);
+        }
+
+        .logic-trace-content {
+            display: none;
+            margin-top: 15px;
+            background: #1e293b;
+            border-radius: 8px;
+            padding: 20px;
+            font-family: 'Consolas', 'Monaco', monospace;
+            font-size: 0.85em;
+            color: #e2e8f0;
+            line-height: 1.8;
+            box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        .logic-trace-content.visible {
+            display: block;
+            animation: slideIn 0.3s ease-out;
+        }
+
+        .trace-header {
+            color: #a78bfa;
+            font-weight: 700;
+            font-size: 1.1em;
+            margin-bottom: 15px;
+            border-bottom: 1px solid #475569;
+            padding-bottom: 10px;
+        }
+
+        .trace-step {
+            margin-bottom: 12px;
+            padding-left: 10px;
+            border-left: 3px solid #475569;
+        }
+
+        .trace-step-label {
+            color: #94a3b8;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .trace-step-content {
+            color: #cbd5e1;
+            padding-left: 15px;
+        }
+
+        .trace-highlight {
+            color: #fbbf24;
+            font-weight: 600;
+        }
+
+        .trace-success {
+            color: #10b981;
+            font-weight: 600;
+        }
+
+        .trace-warning {
+            color: #f59e0b;
+            font-weight: 600;
+        }
+
+        .trace-info {
+            color: #60a5fa;
+            font-weight: 600;
+        }
+
+        .trace-conclusion {
+            margin-top: 15px;
+            padding: 12px;
+            background: #0f172a;
+            border-radius: 6px;
+            border-left: 4px solid #a78bfa;
+        }
+
+        .trace-conclusion-label {
+            color: #a78bfa;
+            font-weight: 700;
+            margin-bottom: 6px;
+        }
     </style>
 </head>
 <body>
@@ -1093,6 +1201,14 @@
 
                                 <div class="principle-scores" id="principleScores"></div>
                                 <div id="gravityAssessmentSection"></div>
+
+                                <div class="logic-trace-section">
+                                    <button class="logic-trace-toggle" onclick="toggleLogicTrace()">
+                                        <span id="traceToggleIcon">🔍</span>
+                                        <span id="traceToggleText">View Logic Trace</span>
+                                    </button>
+                                    <div class="logic-trace-content" id="logicTraceContent"></div>
+                                </div>
 
                                 <div class="export-options">
                                     <button class="export-btn" onclick="exportReport('json')">📄 Export JSON</button>
@@ -1363,6 +1479,23 @@ Your choice!`
         let evaluationHistory = [];
         let currentEvaluation = null;
 
+        // Toggle Logic Trace visibility
+        function toggleLogicTrace() {
+            const content = document.getElementById('logicTraceContent');
+            const icon = document.getElementById('traceToggleIcon');
+            const text = document.getElementById('traceToggleText');
+            
+            if (content.classList.contains('visible')) {
+                content.classList.remove('visible');
+                icon.textContent = '🔍';
+                text.textContent = 'View Logic Trace';
+            } else {
+                content.classList.add('visible');
+                icon.textContent = '🔼';
+                text.textContent = 'Hide Logic Trace';
+            }
+        }
+
         // Load a template
         function loadTemplate(templateKey) {
             const template = TEMPLATES[templateKey];
@@ -1492,6 +1625,50 @@ Your choice!`
                 complexity: complexityScore,
                 interoperability: interopScore,
                 capabilityMatches
+            };
+        }
+
+        // Generate Logic Trace
+        function generateLogicTrace(data) {
+            const { featureName, description, combinedText, principleScores, gravityAssessment, overallScore, issues } = data;
+            
+            // Step 1: Evidence Retrieval
+            const triggeredPrinciples = [];
+            for (const [key, score] of Object.entries(principleScores)) {
+                if (key !== 'platform-gravity' && score < 100) {
+                    triggeredPrinciples.push(PRINCIPLES[key].name);
+                }
+            }
+
+            // Step 2: Cross-Agent Intersection
+            const capabilityOverlaps = gravityAssessment.capabilityMatches.map(match => {
+                return `${match.capability} (matched: ${match.keywords.join(', ')})`;
+            });
+
+            // Step 3: Confidence calculation
+            const criticalIssues = issues.filter(i => i.severity === 'critical').length;
+            const warningIssues = issues.filter(i => i.severity === 'warning').length;
+            const confidence = Math.round(100 - (criticalIssues * 15) - (warningIssues * 5));
+
+            // Step 4: Strategic recommendation
+            let strategicRec = '';
+            if (gravityAssessment.score >= 75) {
+                strategicRec = 'PROMOTE TO PLATFORM - Multiple agents would benefit from shared implementation.';
+            } else if (gravityAssessment.score >= 50) {
+                strategicRec = 'MONITOR - Shows platform potential. Track adoption patterns before promoting.';
+            } else {
+                strategicRec = 'KEEP AS FEATURE - Appropriately scoped for specialized use case.';
+            }
+
+            return {
+                triggeredPrinciples,
+                capabilityOverlaps,
+                confidence,
+                strategicRec,
+                gravityScore: gravityAssessment.score,
+                coherenceScore: overallScore,
+                criticalIssues,
+                warningIssues
             };
         }
 
@@ -1689,6 +1866,80 @@ Your choice!`
             };
         }
 
+        // Display Logic Trace
+        function displayLogicTrace(trace, featureName) {
+            const traceContent = document.getElementById('logicTraceContent');
+            
+            traceContent.innerHTML = `
+                <div class="trace-header">[Logic Trace: Project 'Gravity']</div>
+                
+                <div class="trace-step">
+                    <div class="trace-step-label">Step 1: Parsed Feature Spec</div>
+                    <div class="trace-step-content">"${featureName}"</div>
+                </div>
+
+                <div class="trace-step">
+                    <div class="trace-step-label">Step 2: Evidence Retrieval (Grounding)</div>
+                    <div class="trace-step-content">
+                        Scanning Principle Registry...<br>
+                        ${trace.triggeredPrinciples.length > 0 ? 
+                            `<span class="trace-highlight">Triggered:</span> ${trace.triggeredPrinciples.slice(0, 3).map(p => `'${p}'`).join(', ')}` : 
+                            '<span class="trace-success">All principles satisfied ✓</span>'
+                        }
+                    </div>
+                </div>
+
+                <div class="trace-step">
+                    <div class="trace-step-label">Step 3: Cross-Agent Intersection (Redundancy Check)</div>
+                    <div class="trace-step-content">
+                        ${trace.capabilityOverlaps.length > 0 ? 
+                            `<span class="trace-warning">Found ${trace.capabilityOverlaps.length} existing platform capability overlap(s):</span><br>${trace.capabilityOverlaps.map(o => `• ${o}`).join('<br>')}` : 
+                            '<span class="trace-info">No redundancy detected with existing platform capabilities.</span>'
+                        }
+                    </div>
+                </div>
+
+                <div class="trace-step">
+                    <div class="trace-step-label">Step 4: Analyzed Coherence</div>
+                    <div class="trace-step-content">
+                        Coherence Score: <span class="trace-highlight">${trace.coherenceScore}/100</span><br>
+                        ${trace.criticalIssues > 0 ? `<span class="trace-warning">Critical issues detected: ${trace.criticalIssues}</span><br>` : ''}
+                        ${trace.warningIssues > 0 ? `<span class="trace-info">Warnings: ${trace.warningIssues}</span>` : ''}
+                        ${trace.criticalIssues === 0 && trace.warningIssues === 0 ? '<span class="trace-success">No major issues detected ✓</span>' : ''}
+                    </div>
+                </div>
+
+                <div class="trace-step">
+                    <div class="trace-step-label">Step 5: Calculated Gravity (Strategic Reasoning)</div>
+                    <div class="trace-step-content">
+                        Platform Gravity Score: <span class="trace-highlight">${trace.gravityScore}/100</span><br>
+                        ${trace.gravityScore >= 75 ? 
+                            '<span class="trace-success">High demand potential across ecosystem</span>' : 
+                            trace.gravityScore >= 50 ? 
+                            '<span class="trace-info">Moderate platform potential - monitor adoption</span>' : 
+                            '<span class="trace-info">Domain-specific scope - appropriate as feature</span>'
+                        }
+                    </div>
+                </div>
+
+                <div class="trace-step">
+                    <div class="trace-step-label">Step 6: Human-In-The-Loop Assessment</div>
+                    <div class="trace-step-content">
+                        <span class="trace-info">Confidence:</span> <span class="trace-highlight">${trace.confidence}%</span><br>
+                        ${trace.confidence < 80 ? 
+                            '<span class="trace-warning">⚠ Human review recommended for final decision</span>' : 
+                            '<span class="trace-success">High confidence - automated recommendation reliable</span>'
+                        }
+                    </div>
+                </div>
+
+                <div class="trace-conclusion">
+                    <div class="trace-conclusion-label">CONCLUSION:</div>
+                    <div style="color: #e2e8f0; font-size: 1.05em;">${trace.strategicRec}</div>
+                </div>
+            `;
+        }
+
         // Display Results
         function displayPlatformGravity(gravity) {
             const gravitySection = document.getElementById('gravityAssessmentSection');
@@ -1837,6 +2088,9 @@ Your choice!`
 
             // Add Platform Gravity at the end
             displayPlatformGravity(evaluation.gravityAssessment);
+
+            // Display Logic Trace
+            displayLogicTrace(evaluation.logicTrace, evaluation.featureName);
 
             // Display issues
             const issuesListEl = document.getElementById('issuesList');

@@ -1526,25 +1526,30 @@ Your choice!`
                 return;
             }
 
-            // Show loading
-            showLoading('Evaluating against platform principles...');
+            try {
+                // Show loading
+                showLoading('Evaluating against platform principles...');
 
-            // Simulate processing time
-            await new Promise(resolve => setTimeout(resolve, 2000));
+                // Simulate processing time
+                await new Promise(resolve => setTimeout(resolve, 2000));
 
-            // Run evaluation
-            const evaluation = runEvaluation(featureName, featureType, description, trace);
-            currentEvaluation = evaluation;
+                // Run evaluation
+                const evaluation = runEvaluation(featureName, featureType, description, trace);
+                currentEvaluation = evaluation;
 
-            // Add to history
-            evaluationHistory.unshift(evaluation);
-            updateHistory();
-            updateStats();
+                // Add to history
+                evaluationHistory.unshift(evaluation);
+                updateHistory();
+                updateStats();
 
-            // Display results
-            displayResults(evaluation);
-
-            hideLoading();
+                // Display results
+                displayResults(evaluation);
+            } catch (error) {
+                console.error('Evaluation error:', error);
+                alert('An error occurred during evaluation. Please check the console for details.');
+            } finally {
+                hideLoading();
+            }
         }
 
         // Platform Gravity Assessment

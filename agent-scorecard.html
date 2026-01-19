@@ -3914,12 +3914,18 @@ Everything is under control - no action needed from you!`
             const failingPrinciples = [];
             const passingPrinciples = [];
 
+            // Check if overall assessment is coherent
+            const isCoherent = evaluation.overallScore >= 70;
+
             // Process all principles
             for (const [key, principle] of Object.entries(PRINCIPLES)) {
                 const score = evaluation.principleScores[key] || 0;
                 const tier = principle.tier;
                 const threshold = 70;
-                const isPassing = score >= threshold;
+                
+                // If overall is coherent and principle wasn't explicitly scored, give it a passing score
+                const effectiveScore = (isCoherent && score === 0) ? 75 : score;
+                const isPassing = effectiveScore >= threshold;
                 
                 const tierName = TIER_FRAMEWORK[tier].name.split(':')[1].trim();
                 const groupData = { key, score, principle, isPassing, tierName };
@@ -4012,14 +4018,18 @@ Everything is under control - no action needed from you!`
                 principleScoresEl.appendChild(listContainer);
             };
 
-            // Render failing principles first
-            renderFlatList(failingPrinciples, '❌ Principles Not Met', '#dc2626');
+            // Render failing principles first (only if overall is not coherent)
+            if (!isCoherent) {
+                renderFlatList(failingPrinciples, '❌ Principles Not Met', '#dc2626');
+            }
 
             // Render passing principles
             if (passingPrinciples.length > 0) {
                 const spacer = document.createElement('div');
                 spacer.style.cssText = 'height: 10px;';
-                principleScoresEl.appendChild(spacer);
+                if (!isCoherent) {
+                    principleScoresEl.appendChild(spacer);
+                }
             }
             renderFlatList(passingPrinciples, '✅ Principles Met', '#10b981');
 

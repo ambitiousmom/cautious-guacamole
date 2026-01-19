@@ -1416,19 +1416,19 @@
         const TIER_FRAMEWORK = {
             'tier1': {
                 name: 'Tier 1: Foundational DNA',
-                description: 'Non-negotiable platform capabilities. Agents must leverage these via APIs—never reimplement authentication, consent, or handoff logic.',
+                description: 'Non-negotiable platform capabilities. Agents must leverage these via DA Platform.',
                 color: '#DC2626',
                 icon: '🏗️'
             },
             'tier2': {
                 name: 'Tier 2: Adaptive Bridge',
-                description: 'Hybrid capabilities. Platform provides infrastructure; agents customize for their domain (e.g., platform grounding + your data sources).',
+                description: 'Hybrid - Platform provides infrastructure; agents customize for their domain',
                 color: '#F59E0B',
                 icon: '🌉'
             },
             'tier3': {
                 name: 'Tier 3: Vertical Nuance',
-                description: 'Full agent autonomy. Implement domain-specific business logic, workflows, tone, and UX tailored to your vertical.',
+                description: 'Full autonomy - Implement domain-specific business logic, workflows, tone, and UX tailored to your vertical.',
                 color: '#10B981',
                 icon: '🎯'
             },
@@ -1443,15 +1443,14 @@
         // Platform Principles Schema with Tier Assignments
         const PRINCIPLES = {
             // TIER 1: Foundational DNA (Platform-Exclusive)
-            'handoff-orchestration': {
-                name: 'Handoff Protocol & Orchestration',
+            'intent-detection': {
+                name: 'Intent Detection',
                 tier: 'tier1',
-                weight: 0.10,
+                weight: 0.07,
                 checks: [
-                    { id: 'context-preservation', name: 'Context Preservation', weight: 0.3 },
-                    { id: 'seamless-transfer', name: 'Seamless Transfer', weight: 0.2 },
-                    { id: 'multi-agent-routing', name: 'Multi-Agent Routing', weight: 0.3 },
-                    { id: 'task-orchestration', name: 'Task Orchestration', weight: 0.2 }
+                    { id: 'intent-classification', name: 'Intent Classification', weight: 0.4 },
+                    { id: 'context-understanding', name: 'Context Understanding', weight: 0.3 },
+                    { id: 'ambiguity-resolution', name: 'Ambiguity Resolution', weight: 0.3 }
                 ]
             },
             'reasoning-framework': {
@@ -1474,14 +1473,14 @@
                     { id: 'step-visualization', name: 'Step Visualization', weight: 0.3 }
                 ]
             },
-            'identity-auth': {
-                name: 'Identity & Auth',
+            'chain-of-thought': {
+                name: 'Chain of Thought',
                 tier: 'tier1',
-                weight: 0.10,
+                weight: 0.07,
                 checks: [
-                    { id: 'sso-integration', name: 'SSO Integration', weight: 0.4 },
-                    { id: 'rbac-enforcement', name: 'RBAC Enforcement', weight: 0.3 },
-                    { id: 'token-management', name: 'Token Management', weight: 0.3 }
+                    { id: 'reasoning-steps', name: 'Reasoning Steps', weight: 0.4 },
+                    { id: 'thought-transparency', name: 'Thought Transparency', weight: 0.3 },
+                    { id: 'step-by-step', name: 'Step-by-Step Logic', weight: 0.3 }
                 ]
             },
             'response-ux': {
@@ -1514,6 +1513,27 @@
                     { id: 'video-support', name: 'Video Support', weight: 0.4 }
                 ]
             },
+            'handoff-orchestration': {
+                name: 'Handoff Protocol & Orchestration',
+                tier: 'tier1',
+                weight: 0.10,
+                checks: [
+                    { id: 'context-preservation', name: 'Context Preservation', weight: 0.3 },
+                    { id: 'seamless-transfer', name: 'Seamless Transfer', weight: 0.2 },
+                    { id: 'multi-agent-routing', name: 'Multi-Agent Routing', weight: 0.3 },
+                    { id: 'task-orchestration', name: 'Task Orchestration', weight: 0.2 }
+                ]
+            },
+            'identity-auth': {
+                name: 'Identity & Auth',
+                tier: 'tier1',
+                weight: 0.10,
+                checks: [
+                    { id: 'sso-integration', name: 'SSO Integration', weight: 0.4 },
+                    { id: 'rbac-enforcement', name: 'RBAC Enforcement', weight: 0.3 },
+                    { id: 'token-management', name: 'Token Management', weight: 0.3 }
+                ]
+            },
             'rai-content-safety': {
                 name: 'RAI & Content Safety',
                 tier: 'tier1',
@@ -1522,26 +1542,6 @@
                     { id: 'content-filtering', name: 'Content Filtering', weight: 0.4 },
                     { id: 'harm-prevention', name: 'Harm Prevention', weight: 0.3 },
                     { id: 'rai-guardrails', name: 'RAI Guardrails', weight: 0.3 }
-                ]
-            },
-            'chain-of-thought': {
-                name: 'Chain of Thought',
-                tier: 'tier1',
-                weight: 0.07,
-                checks: [
-                    { id: 'reasoning-steps', name: 'Reasoning Steps', weight: 0.4 },
-                    { id: 'thought-transparency', name: 'Thought Transparency', weight: 0.3 },
-                    { id: 'step-by-step', name: 'Step-by-Step Logic', weight: 0.3 }
-                ]
-            },
-            'intent-detection': {
-                name: 'Intent Detection',
-                tier: 'tier1',
-                weight: 0.07,
-                checks: [
-                    { id: 'intent-classification', name: 'Intent Classification', weight: 0.4 },
-                    { id: 'context-understanding', name: 'Context Understanding', weight: 0.3 },
-                    { id: 'ambiguity-resolution', name: 'Ambiguity Resolution', weight: 0.3 }
                 ]
             },
             

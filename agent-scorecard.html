@@ -893,8 +893,7 @@
             flex-direction: column;
             gap: 15px;
             overflow-y: auto;
-            max-height: calc(100vh - 40px);
-            min-height: 0;
+            min-height: 800px;
         }
 
         .history-panel .card {
@@ -1358,26 +1357,8 @@
                         </div>
                     </div>
 
-                    <!-- Right Sidebar: History + Results -->
+                    <!-- Right Sidebar: Results + History -->
                     <div class="right-sidebar">
-                        <!-- History Panel -->
-                        <div class="history-panel">
-                            <div class="card">
-                                <div class="card-header">
-                                    <h3>Evaluation History</h3>
-                                </div>
-                                <div class="history-list" id="historyList">
-                                    <div class="empty-state">
-                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                            <path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
-                                        </svg>
-                                        <h3>No evaluations yet</h3>
-                                        <p>Start by evaluating your first agent</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
                         <!-- Results Panel -->
                         <div class="results-panel">
                             <!-- Assessment Scores Card -->
@@ -1404,6 +1385,24 @@
                             <!-- Principle Breakdown Card -->
                             <div class="card" id="principleCard" style="display: none;">
                                 <div class="principle-scores" id="principleScores"></div>
+                            </div>
+                        </div>
+
+                        <!-- History Panel -->
+                        <div class="history-panel">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h3>Evaluation History</h3>
+                                </div>
+                                <div class="history-list" id="historyList">
+                                    <div class="empty-state">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
+                                        </svg>
+                                        <h3>No evaluations yet</h3>
+                                        <p>Start by evaluating your first agent</p>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -2115,6 +2114,12 @@ Want me to create automatic buy orders?`
         }
 
         function onDescriptionChange() {
+            // Clear hidden data when user types
+            const textarea = document.getElementById('featureDescription');
+            if (textarea.value.trim().length > 0) {
+                textarea.removeAttribute('data-hidden-content');
+            }
+            
             // Debounce the live check
             clearTimeout(liveCheckTimeout);
             liveCheckTimeout = setTimeout(performLiveCheck, 500);
@@ -2678,7 +2683,9 @@ Need me to update anything or send delegation notes?`
         // Clear form
         function clearForm() {
             document.getElementById('featureName').value = '';
-            document.getElementById('featureDescription').value = '';
+            const textarea = document.getElementById('featureDescription');
+            textarea.value = '';
+            textarea.removeAttribute('data-hidden-content');
             document.getElementById('scoreCard').style.display = 'none';
             document.getElementById('principleCard').style.display = 'none';
             document.getElementById('liveFeedback').style.display = 'none';
@@ -2688,7 +2695,9 @@ Need me to update anything or send delegation notes?`
         // Evaluate Feature (Simulated LLM Judge)
         async function evaluateFeature() {
             const featureName = document.getElementById('featureName').value.trim();
-            const description = document.getElementById('featureDescription').value.trim();
+            const textarea = document.getElementById('featureDescription');
+            // Use hidden data if available (from agent profile), otherwise use visible text
+            const description = (textarea.getAttribute('data-hidden-content') || textarea.value).trim();
 
             if (!featureName || !description) {
                 alert('Please provide at least a feature name and description');
@@ -3383,14 +3392,30 @@ Need me to update anything or send delegation notes?`
             const principleScoresEl = document.getElementById('principleScores');
             principleScoresEl.innerHTML = '<h3 style="font-size: 0.9em; margin-bottom: 12px; color: #6b7280; text-align: left;">Principle Breakdown</h3>';
 
-            const PASS_THRESHOLD = 70; // 70% threshold for pass
+            // Get threshold from sliders (convert 50-100 range to 0-100 percentage)
+            const getThreshold = (principleKey) => {
+                const sliderMap = {
+                    'ux-signature': 'ux',
+                    'handoff-integrity': 'handoff',
+                    'grounding-fidelity': 'grounding',
+                    'transparency': 'transparency',
+                    'privacy': 'privacy',
+                    'error-recovery': 'error',
+                    'steerability': 'steerability'
+                };
+                const sliderId = sliderMap[principleKey];
+                if (!sliderId) return 70; // default
+                const sliderValue = parseInt(document.getElementById(`slider-${sliderId}`).value);
+                return sliderValue; // Already in 0-100 range
+            };
             
             // Coherence Principles
             for (const [key, score] of Object.entries(evaluation.principleScores)) {
                 const principle = PRINCIPLES[key];
                 if (key === 'platform-gravity') continue; // Skip platform gravity in main loop
                 
-                const isPassing = score >= PASS_THRESHOLD;
+                const threshold = getThreshold(key);
+                const isPassing = score >= threshold;
                 const icon = isPassing ? '✓' : '✗';
                 const iconClass = isPassing ? 'pass' : 'fail';
 
@@ -3417,8 +3442,11 @@ Need me to update anything or send delegation notes?`
                 { label: 'Memory & Context', value: gravity.memory || 70 }
             ];
             
+            // Use gravity slider as threshold for all gravity factors
+            const gravityThreshold = parseInt(document.getElementById('slider-gravity').value);
+            
             gravityMetrics.forEach(metric => {
-                const isPassing = metric.value >= PASS_THRESHOLD;
+                const isPassing = metric.value >= gravityThreshold;
                 const icon = isPassing ? '✓' : '✗';
                 const iconClass = isPassing ? 'pass' : 'fail';
                 

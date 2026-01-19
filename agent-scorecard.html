@@ -3422,7 +3422,7 @@ Need me to update anything or send delegation notes?`
                 
                 const threshold = getThreshold(key);
                 const isPassing = score >= threshold;
-                const icon = isPassing ? '✅' : '❌';
+                const icon = isPassing ? '✓' : '✗';
                 const iconClass = isPassing ? 'pass' : 'fail';
 
                 const item = document.createElement('div');
@@ -3453,7 +3453,7 @@ Need me to update anything or send delegation notes?`
             
             gravityMetrics.forEach(metric => {
                 const isPassing = metric.value >= gravityThreshold;
-                const icon = isPassing ? '✅' : '❌';
+                const icon = isPassing ? '✓' : '✗';
                 const iconClass = isPassing ? 'pass' : 'fail';
                 
                 const item = document.createElement('div');

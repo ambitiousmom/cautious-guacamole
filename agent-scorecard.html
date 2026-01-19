@@ -3997,40 +3997,8 @@ Everything is under control - no action needed from you!`
             }
             renderFlatList(passingPrinciples, '✅ Principles Met', '#10b981');
 
-            // Add Platform Gravity Breakdown
-            const gravitySection = document.createElement('div');
-            gravitySection.style.cssText = 'margin-top: 20px; padding-top: 20px; border-top: 2px solid #f3f4f6;';
-            gravitySection.innerHTML = '<h3 style="font-size: 0.9em; margin-bottom: 12px; color: #7C3AED; font-weight: 600; text-align: left;">Platform Gravity Factors</h3>';
-            
-            const gravity = evaluation.gravityAssessment;
-            const gravityMetrics = [
-                { label: 'Universal Need', value: gravity.ubiquity },
-                { label: 'Complexity Burden', value: gravity.complexity },
-                { label: 'Interoperability', value: gravity.interoperability },
-                { label: 'Steerability Support', value: gravity.steerability || 70 },
-                { label: 'Memory & Context', value: gravity.memory || 70 }
-            ];
-            
-            // Use fixed 70% threshold for gravity factors (no user adjustment)
-            const gravityThreshold = 70;
-            
-            gravityMetrics.forEach(metric => {
-                const isPassing = metric.value >= gravityThreshold;
-                const icon = isPassing 
-                    ? '<svg width="24" height="24" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><path d="M30 52 L42 64 L70 36" stroke="#10b981" stroke-width="8" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>'
-                    : '<svg width="24" height="24" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><path d="M35 35 L65 65 M65 35 L35 65" stroke="#ef4444" stroke-width="8" stroke-linecap="round"/></svg>';
-                const iconClass = isPassing ? 'pass' : 'fail';
-                
-                const item = document.createElement('div');
-                item.className = 'principle-score-item';
-                item.innerHTML = `
-                    <span class="name">${metric.label}</span>
-                    <div class="principle-icon ${iconClass}">${icon}</div>
-                `;
-                gravitySection.appendChild(item);
-            });
-            
-            principleScoresEl.appendChild(gravitySection);
+            // Display Platform Gravity Assessment
+            displayPlatformGravity(evaluation.gravityAssessment);
 
             // Scroll to results
             scoreCard.scrollIntoView({ behavior: 'smooth', block: 'start' });

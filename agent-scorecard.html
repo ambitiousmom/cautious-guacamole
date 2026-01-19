@@ -2897,7 +2897,7 @@ Everything is under control - no action needed from you!`
         // Initialize event listeners when page loads
         document.addEventListener('DOMContentLoaded', function() {
             // Display tier framework on page load
-            displayTierPrinciples();
+            renderTierPrinciples();
         });
 
         // Clear form
@@ -4063,6 +4063,9 @@ Everything is under control - no action needed from you!`
         // Update history list
         function updateHistory() {
             const dropdown = document.getElementById('historyDropdown');
+            
+            // Element doesn't exist in current layout, skip history update
+            if (!dropdown) return;
             
             if (evaluationHistory.length === 0) {
                 dropdown.innerHTML = '<option value="">No evaluations yet</option>';

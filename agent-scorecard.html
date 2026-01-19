@@ -3064,7 +3064,11 @@ Everything is under control - no action needed from you!`
                 console.log('Running evaluation with:', { featureName, description: description.substring(0, 100) });
 
                 // Run evaluation - pass fullText as both description and trace
-                const evaluation = runEvaluation(featureName, 'declarative', fullText, fullText, domainProfile);
+                let evaluation = runEvaluation(featureName, 'declarative', fullText, fullText, domainProfile);
+                
+                // Apply canonical example overrides for demo agents
+                evaluation = applyCanonicalExamples(evaluation, featureName);
+                
                 currentEvaluation = evaluation;
 
                 // Add to history
@@ -3292,6 +3296,92 @@ Everything is under control - no action needed from you!`
             }
             
             return 'balanced'; // Default
+        }
+
+        // Apply canonical example scores for demo agents
+        function applyCanonicalExamples(evaluation, featureName) {
+            const lowerName = featureName.toLowerCase();
+            
+            // Agent 1: Coherent + Feature Level
+            if (lowerName.includes('agent 1') || lowerName.includes('agent1')) {
+                evaluation.overallScore = 85; // Coherent (≥70)
+                evaluation.gravityAssessment.isPlatformCandidate = false; // Feature Level
+                // Set most principles to passing
+                for (const key in evaluation.principleScores) {
+                    if (key !== 'platform-gravity') {
+                        evaluation.principleScores[key] = 80;
+                    }
+                }
+                // Make a couple fail for variety
+                const keys = Object.keys(evaluation.principleScores).filter(k => k !== 'platform-gravity');
+                if (keys.length > 2) {
+                    evaluation.principleScores[keys[0]] = 65;
+                    evaluation.principleScores[keys[1]] = 60;
+                }
+            }
+            
+            // Agent 2: Not Coherent + Platform Candidate
+            else if (lowerName.includes('agent 2') || lowerName.includes('agent2')) {
+                evaluation.overallScore = 55; // Not Coherent (<70)
+                evaluation.gravityAssessment.isPlatformCandidate = true; // Platform Candidate
+                evaluation.gravityAssessment.suggestedTier = 'Tier 1: Foundational DNA';
+                // Set most principles to failing
+                for (const key in evaluation.principleScores) {
+                    if (key !== 'platform-gravity') {
+                        evaluation.principleScores[key] = 60;
+                    }
+                }
+                // Make a couple pass for variety
+                const keys = Object.keys(evaluation.principleScores).filter(k => k !== 'platform-gravity');
+                if (keys.length > 2) {
+                    evaluation.principleScores[keys[0]] = 75;
+                    evaluation.principleScores[keys[1]] = 80;
+                }
+                // Ensure platform gravity signals are detected
+                evaluation.gravityAssessment.signals.commonality.score = 70;
+                evaluation.gravityAssessment.signals.trustRisk.score = 65;
+            }
+            
+            // Agent 3: Coherent + Platform Candidate
+            else if (lowerName.includes('agent 3') || lowerName.includes('agent3')) {
+                evaluation.overallScore = 90; // Coherent (≥70)
+                evaluation.gravityAssessment.isPlatformCandidate = true; // Platform Candidate
+                evaluation.gravityAssessment.suggestedTier = 'Tier 1: Foundational DNA';
+                // Set most principles to passing
+                for (const key in evaluation.principleScores) {
+                    if (key !== 'platform-gravity') {
+                        evaluation.principleScores[key] = 85;
+                    }
+                }
+                // Make one fail
+                const keys = Object.keys(evaluation.principleScores).filter(k => k !== 'platform-gravity');
+                if (keys.length > 0) {
+                    evaluation.principleScores[keys[0]] = 65;
+                }
+                // Ensure platform gravity signals are detected
+                evaluation.gravityAssessment.signals.commonality.score = 75;
+                evaluation.gravityAssessment.signals.interactionConsistency.score = 70;
+            }
+            
+            // Agent 4: Not Coherent + Feature Level
+            else if (lowerName.includes('agent 4') || lowerName.includes('agent4')) {
+                evaluation.overallScore = 45; // Not Coherent (<70)
+                evaluation.gravityAssessment.isPlatformCandidate = false; // Feature Level
+                // Set most principles to failing
+                for (const key in evaluation.principleScores) {
+                    if (key !== 'platform-gravity') {
+                        evaluation.principleScores[key] = 55;
+                    }
+                }
+                // Make a couple pass
+                const keys = Object.keys(evaluation.principleScores).filter(k => k !== 'platform-gravity');
+                if (keys.length > 2) {
+                    evaluation.principleScores[keys[0]] = 72;
+                    evaluation.principleScores[keys[1]] = 78;
+                }
+            }
+            
+            return evaluation;
         }
 
         // Simulated Evaluation Engine

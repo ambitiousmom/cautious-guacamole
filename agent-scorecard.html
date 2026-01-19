@@ -1391,14 +1391,10 @@
                                 <div class="card-header">
                                     <h3>Evaluation History</h3>
                                 </div>
-                                <div class="history-list" id="historyList">
-                                    <div class="empty-state">
-                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                            <path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
-                                        </svg>
-                                        <h3>No evaluations yet</h3>
-                                        <p>Start by evaluating your first agent</p>
-                                    </div>
+                                <div class="form-group" style="margin-bottom: 0;">
+                                    <select id="historyDropdown" style="padding: 12px; font-size: 0.9em;">
+                                        <option value="">No evaluations yet</option>
+                                    </select>
                                 </div>
                             </div>
                         </div>
@@ -3482,45 +3478,38 @@ Need me to update anything or send delegation notes?`
             const historyList = document.getElementById('historyList');
             historyList.innerHTML = '';
 
+            const dropdown = document.getElementById('historyDropdown');
+            
             if (evaluationHistory.length === 0) {
-                historyList.innerHTML = `
-                    <div class="empty-state">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
-                        </svg>
-                        <h3>No evaluations yet</h3>
-                        <p>Start by evaluating your first feature</p>
-                    </div>
-                `;
+                dropdown.innerHTML = '<option value="">No evaluations yet</option>';
                 return;
             }
 
+            dropdown.innerHTML = '<option value="">Select an evaluation...</option>';
+            
             evaluationHistory.slice(0, 10).forEach((evaluation, index) => {
-                const item = document.createElement('div');
-                item.className = 'history-item';
+                const option = document.createElement('option');
+                option.value = index;
                 
                 // Binary assessment
                 const isCoherent = evaluation.overallScore >= 70;
-                const scoreIcon = isCoherent ? '✅' : '❌';
-                const scoreColor = isCoherent ? '#10b981' : '#ef4444';
-
+                const icon = isCoherent ? '✓' : '✗';
                 const timeAgo = getTimeAgo(new Date(evaluation.timestamp));
-
-                item.innerHTML = `
-                    <div class="history-item-header">
-                        <span class="history-item-name">${evaluation.featureName}</span>
-                        <span class="history-item-score" style="color: ${scoreColor}; font-size: 1.3em;">${scoreIcon}</span>
-                    </div>
-                    <div class="history-item-meta">${evaluation.featureType} • ${timeAgo}</div>
-                `;
-
-                item.onclick = () => {
+                
+                option.textContent = `${icon} ${evaluation.featureName} • ${timeAgo}`;
+                option.style.fontSize = '0.95em';
+                
+                dropdown.appendChild(option);
+            });
+            
+            dropdown.onchange = (e) => {
+                const selectedIndex = e.target.value;
+                if (selectedIndex !== '') {
+                    const evaluation = evaluationHistory[selectedIndex];
                     currentEvaluation = evaluation;
                     displayResults(evaluation);
-                };
-
-                historyList.appendChild(item);
-            });
+                }
+            };
         }
 
         // Update session stats

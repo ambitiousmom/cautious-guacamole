@@ -3816,35 +3816,38 @@ Everything is under control - no action needed from you!`
             const principleScoresEl = document.getElementById('principleScores');
             principleScoresEl.innerHTML = '<h3 style="font-size: 0.9em; margin-bottom: 15px; color: #6b7280; text-align: left;">Principle Assessment by Tier</h3>';
 
-            // Group principles by tier
-            const tierGroups = {
-                'tier1': [],
-                'tier2': [],
-                'tier3': [],
-                'tier4': []
-            };
+            // Group ALL principles by tier and status
+            const failingTierGroups = { 'tier1': [], 'tier2': [], 'tier3': [], 'tier4': [] };
+            const passingTierGroups = { 'tier1': [], 'tier2': [], 'tier3': [], 'tier4': [] };
 
-            for (const [key, score] of Object.entries(evaluation.principleScores)) {
-                if (key === 'platform-gravity') continue;
-                const principle = PRINCIPLES[key];
-                if (!principle) continue;
-                
+            // Process all principles
+            for (const [key, principle] of Object.entries(PRINCIPLES)) {
+                const score = evaluation.principleScores[key] || 0;
                 const tier = principle.tier;
-                if (tierGroups[tier]) {
-                    tierGroups[tier].push({ key, score, principle });
+                const threshold = 70;
+                const isPassing = score >= threshold;
+                
+                const groupData = { key, score, principle, isPassing };
+                
+                if (isPassing) {
+                    if (passingTierGroups[tier]) {
+                        passingTierGroups[tier].push(groupData);
+                    }
+                } else {
+                    if (failingTierGroups[tier]) {
+                        failingTierGroups[tier].push(groupData);
+                    }
                 }
             }
 
-            // Render each tier group
-            Object.keys(tierGroups).forEach(tierKey => {
-                const tierData = TIER_FRAMEWORK[tierKey];
-                const principles = tierGroups[tierKey];
-                
+            // Helper function to render tier group
+            const renderTierGroup = (tierKey, principles, showStatus) => {
                 if (principles.length === 0) return;
 
+                const tierData = TIER_FRAMEWORK[tierKey];
                 const tierSection = document.createElement('div');
                 tierSection.style.cssText = `
-                    margin-bottom: 15px;
+                    margin-bottom: 12px;
                     border-left: 3px solid ${tierData.color};
                     padding-left: 12px;
                     background: #fafafa;
@@ -3861,9 +3864,7 @@ Everything is under control - no action needed from you!`
                 tierSection.appendChild(tierHeader);
 
                 // Add principles for this tier
-                principles.forEach(({ key, score, principle }) => {
-                    const threshold = 70; // Standard threshold
-                    const isPassing = score >= threshold;
+                principles.forEach(({ principle, isPassing }) => {
                     const icon = isPassing 
                         ? '<svg width="20" height="20" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><path d="M30 52 L42 64 L70 36" stroke="#10b981" stroke-width="10" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>'
                         : '<svg width="20" height="20" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><path d="M35 35 L65 65 M65 35 L35 65" stroke="#ef4444" stroke-width="10" stroke-linecap="round"/></svg>';
@@ -3881,16 +3882,39 @@ Everything is under control - no action needed from you!`
                     `;
                     item.innerHTML = `
                         <span style="font-size: 0.8em; color: #4b5563; font-weight: 500;">${principle.name}</span>
-                        <div style="display: flex; align-items: center; gap: 6px;">
-                            <span style="font-size: 0.75em; color: #6b7280; font-weight: 600;">${score}%</span>
-                            <div>${icon}</div>
-                        </div>
+                        <div>${icon}</div>
                     `;
                     tierSection.appendChild(item);
                 });
 
                 principleScoresEl.appendChild(tierSection);
-            });
+            };
+
+            // Render failing principles first
+            const hasFailingPrinciples = Object.values(failingTierGroups).some(g => g.length > 0);
+            if (hasFailingPrinciples) {
+                const failHeader = document.createElement('div');
+                failHeader.style.cssText = 'font-size: 0.85em; font-weight: 600; color: #dc2626; margin-bottom: 10px; margin-top: 5px;';
+                failHeader.textContent = '❌ Principles Not Met';
+                principleScoresEl.appendChild(failHeader);
+                
+                ['tier1', 'tier2', 'tier3', 'tier4'].forEach(tierKey => {
+                    renderTierGroup(tierKey, failingTierGroups[tierKey], false);
+                });
+            }
+
+            // Render passing principles
+            const hasPassingPrinciples = Object.values(passingTierGroups).some(g => g.length > 0);
+            if (hasPassingPrinciples) {
+                const passHeader = document.createElement('div');
+                passHeader.style.cssText = 'font-size: 0.85em; font-weight: 600; color: #10b981; margin-bottom: 10px; margin-top: 15px;';
+                passHeader.textContent = '✅ Principles Met';
+                principleScoresEl.appendChild(passHeader);
+                
+                ['tier1', 'tier2', 'tier3', 'tier4'].forEach(tierKey => {
+                    renderTierGroup(tierKey, passingTierGroups[tierKey], true);
+                });
+            }
 
             // Add Platform Gravity Breakdown
             const gravitySection = document.createElement('div');

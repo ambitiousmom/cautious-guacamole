@@ -2174,14 +2174,15 @@ Want me to create automatic buy orders?`
             document.getElementById('domainHint').textContent = profile.description;
             
             // Define fixed vs variable principles and minimum requirements
+            // Each principle is scored 0-100 individually
             const principleConfig = {
-                'ux-signature': { fixed: true, minReq: '100%', label: 'UX Signature' },
-                'handoff-integrity': { fixed: true, minReq: '100%', label: 'Handoff Integrity' },
-                'grounding-fidelity': { fixed: false, minReq: '50%', label: 'Grounding Fidelity' },
-                'transparency': { fixed: true, minReq: '100%', label: 'Transparency' },
-                'privacy': { fixed: true, minReq: '100%', label: 'Privacy First' },
-                'error-recovery': { fixed: false, minReq: '50%', label: 'Error Recovery' },
-                'steerability': { fixed: false, minReq: '50%', label: 'Steerability' }
+                'ux-signature': { fixed: true, minReq: '100', label: 'UX Signature' },
+                'handoff-integrity': { fixed: true, minReq: '100', label: 'Handoff Integrity' },
+                'grounding-fidelity': { fixed: false, minReq: '50', label: 'Grounding Fidelity' },
+                'transparency': { fixed: true, minReq: '100', label: 'Transparency' },
+                'privacy': { fixed: true, minReq: '100', label: 'Privacy First' },
+                'error-recovery': { fixed: false, minReq: '50', label: 'Error Recovery' },
+                'steerability': { fixed: false, minReq: '50', label: 'Steerability' }
             };
             
             // Update weights display listbox
@@ -2204,7 +2205,7 @@ Want me to create automatic buy orders?`
                     </div>
                     <div class="weight-item-value">
                         <span>${percentage}%</span>
-                        <span class="weight-min-req">(min ${config.minReq})</span>
+                        <span class="weight-min-req">(min required: ${config.minReq}/100)</span>
                     </div>
                 `;
                 weightsDisplay.appendChild(weightItem);

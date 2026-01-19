@@ -2692,10 +2692,18 @@ Need me to update anything or send delegation notes?`
         // Initialize event listeners when page loads
         document.addEventListener('DOMContentLoaded', function() {
             document.getElementById('featureDescription').addEventListener('input', onDescriptionChange);
-            document.getElementById('interactionTrace').addEventListener('input', onDescriptionChange);
             
-            // Apply default domain profile
-            applyDomainProfile();
+            // Initialize slider event listeners
+            const sliders = ['grounding', 'error', 'steerability', 'gravity'];
+            sliders.forEach(id => {
+                const slider = document.getElementById(`slider-${id}`);
+                const label = document.getElementById(`label-${id}`);
+                if (slider && label) {
+                    slider.addEventListener('input', function() {
+                        label.textContent = `(Variable: ${this.value}%)`;
+                    });
+                }
+            });
         });
 
         // Clear form
@@ -2722,15 +2730,14 @@ Need me to update anything or send delegation notes?`
                 // Show loading
                 showLoading('Evaluating against platform principles...');
 
-                // Get selected domain profile
-                const domain = document.getElementById('domainProfile').value;
-                const domainProfile = DOMAIN_PROFILES[domain];
+                // Use general domain profile (sliders will override during scoring)
+                const domainProfile = DOMAIN_PROFILES.general;
 
                 // Simulate processing time
                 await new Promise(resolve => setTimeout(resolve, 2000));
 
-                // Run evaluation with domain profile
-                const evaluation = runEvaluation(featureName, featureType, description, trace, domainProfile);
+                // Run evaluation - pass description as both description and trace
+                const evaluation = runEvaluation(featureName, 'declarative', description, description, domainProfile);
                 currentEvaluation = evaluation;
 
                 // Add to history

@@ -1251,9 +1251,10 @@
                 <div class="content-grid">
                     <!-- Input Panel -->
                     <div class="input-panel">
+                        <!-- Agent Specification Card -->
                         <div class="card">
                             <div class="card-header">
-                            <h3>Agent Specification</h3>
+                                <h3>Agent Specification</h3>
                             </div>
 
                             <div class="quick-templates">
@@ -1290,7 +1291,6 @@
                                     <div id="liveScorePreview" class="live-score-preview" style="display: none;"></div>
                                 </div>
                             </div>
-
                         </div>
 
                         <!-- Coherence Principles Card -->
@@ -1303,40 +1303,45 @@
                             <div style="padding: 0 20px 20px 20px;">
                                 <div class="form-group">
                                     <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 4px;">
-                        <label style="margin: 0; flex: 0 0 auto;">🎨 UX Signature (Consistent design language) - <span style="color: #9ca3af;">Fixed</span></label>
-                        <input type="range" id="slider-ux" min="50" max="100" value="100" disabled style="flex: 1; opacity: 0.5;">
-                    </div>
+                                        <label style="margin: 0; flex: 0 0 auto;">🎨 UX Signature (Consistent design language) - <span style="color: #9ca3af;">Fixed</span></label>
+                                        <input type="range" id="slider-ux" min="50" max="100" value="100" disabled style="flex: 1; opacity: 0.5;">
+                                    </div>
+                                </div>
                                 <div class="form-group">
                                     <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 4px;">
-                        <label style="margin: 0; flex: 0 0 auto;">🔄 Handoff Integrity (Intent preservation) - <span style="color: #9ca3af;">Fixed</span></label>
-                        <input type="range" id="slider-handoff" min="50" max="100" value="100" disabled style="flex: 1; opacity: 0.5;">
-                    </div>
+                                        <label style="margin: 0; flex: 0 0 auto;">🔄 Handoff Integrity (Intent preservation) - <span style="color: #9ca3af;">Fixed</span></label>
+                                        <input type="range" id="slider-handoff" min="50" max="100" value="100" disabled style="flex: 1; opacity: 0.5;">
+                                    </div>
+                                </div>
                                 <div class="form-group">
                                     <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 4px;">
-                        <label style="margin: 0; flex: 0 0 auto;">📊 Grounding Fidelity (Data accuracy) - <span style="color: #10b981;">Variable</span></label>
-                        <input type="range" id="slider-grounding" min="50" max="100" value="70" style="flex: 1;">
-                    </div>
+                                        <label style="margin: 0; flex: 0 0 auto;">📊 Grounding Fidelity (Data accuracy) - <span style="color: #10b981;">Variable</span></label>
+                                        <input type="range" id="slider-grounding" min="50" max="100" value="70" style="flex: 1;">
+                                    </div>
+                                </div>
                                 <div class="form-group">
                                     <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 4px;">
-                        <label style="margin: 0; flex: 0 0 auto;">👁️ Transparency (Clear agent identity) - <span style="color: #9ca3af;">Fixed</span></label>
-                        <input type="range" id="slider-transparency" min="50" max="100" value="100" disabled style="flex: 1; opacity: 0.5;">
-                    </div>
+                                        <label style="margin: 0; flex: 0 0 auto;">👁️ Transparency (Clear agent identity) - <span style="color: #9ca3af;">Fixed</span></label>
+                                        <input type="range" id="slider-transparency" min="50" max="100" value="100" disabled style="flex: 1; opacity: 0.5;">
+                                    </div>
+                                </div>
                                 <div class="form-group">
                                     <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 4px;">
-                        <label style="margin: 0; flex: 0 0 auto;">🔒 Privacy First (Data minimization) - <span style="color: #9ca3af;">Fixed</span></label>
-                        <input type="range" id="slider-privacy" min="50" max="100" value="100" disabled style="flex: 1; opacity: 0.5;">
-                    </div>
+                                        <label style="margin: 0; flex: 0 0 auto;">🔒 Privacy First (Data minimization) - <span style="color: #9ca3af;">Fixed</span></label>
+                                        <input type="range" id="slider-privacy" min="50" max="100" value="100" disabled style="flex: 1; opacity: 0.5;">
+                                    </div>
+                                </div>
                                 <div class="form-group">
                                     <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 4px;">
-                        <label style="margin: 0; flex: 0 0 auto;">⚡ Error Recovery (Graceful degradation) - <span style="color: #10b981;">Variable</span></label>
-                        <input type="range" id="slider-error" min="50" max="100" value="70" style="flex: 1;">
-                    </div>
+                                        <label style="margin: 0; flex: 0 0 auto;">⚡ Error Recovery (Graceful degradation) - <span style="color: #10b981;">Variable</span></label>
+                                        <input type="range" id="slider-error" min="50" max="100" value="70" style="flex: 1;">
+                                    </div>
+                                </div>
                                 <div class="form-group">
                                     <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 4px;">
-                                        <label style="margin: 0; flex: 0 0 auto;">🎯 Steerability</label>
+                                        <label style="margin: 0; flex: 0 0 auto;">🎯 Steerability (Real-time adaptability) - <span style="color: #10b981;">Variable</span></label>
                                         <input type="range" id="slider-steerability" min="50" max="100" value="70" style="flex: 1;">
                                     </div>
-                                    <div style="font-size: 0.8em; color: #9ca3af; margin-top: 4px;">Real-time adaptability</div>
                                 </div>
                             </div>
                         </div>
@@ -1359,10 +1364,6 @@
                             </div>
                         </div>
                     </div>
-                    </div>
-                    </div>
-                    </div>
-                    </div> <!-- END input-panel -->
 
                     <!-- Right Sidebar: Results + History -->
                     <div class="right-sidebar" style="border: 3px solid red;">
@@ -1413,6 +1414,8 @@
                             </div>
                         </div>
                     </div>
+                </div>
+            </div>
                 </div>
             </div>
         </div>

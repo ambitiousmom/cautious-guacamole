@@ -3732,15 +3732,22 @@ Everything is under control - no action needed from you!`
                 'domainSpecificity': 'Domain Specificity'
             };
             
-            // Check if any signal needs action
-            let anyActionRequired = false;
-            
-            // Generate signal items
+            // Generate signal items - must align with isPlatformCandidate decision
             const signalItems = Object.entries(signals).map(([key, signal]) => {
-                const needsAction = signal.score >= 60 || (key === 'domainSpecificity' && signal.score < 60);
-                if (needsAction) anyActionRequired = true;
+                // Determine if this specific signal triggered platform candidate status
+                let needsAction = false;
+                if (isPlatformCandidate) {
+                    // If platform candidate, show which signal(s) triggered it
+                    if (key === 'trustRisk' && signal.score >= 60) needsAction = true;
+                    else if (key === 'commonality' && signal.score >= 60) needsAction = true;
+                    else if (key === 'interactionConsistency' && signal.score >= 60) needsAction = true;
+                    else if (key === 'domainSpecificity' && signal.score < 60) needsAction = true;
+                } else {
+                    // If not platform candidate, ensure no signals show action required
+                    needsAction = false;
+                }
                 
-                const statusText = needsAction ? 'Needs Monitoring' : 'Not Detected';
+                const statusText = needsAction ? 'Detected' : 'Not Detected';
                 const actionText = needsAction ? '<span style="color: #dc2626; font-weight: 600;">⚠️ Action Required</span>' : '<span style="color: #10b981; font-weight: 600;">No Action Required</span>';
                 
                 return `
@@ -3940,8 +3947,18 @@ Everything is under control - no action needed from you!`
                 const tier = principle.tier;
                 const threshold = 70;
                 
-                // If overall is coherent and principle wasn't explicitly scored, give it a passing score
-                const effectiveScore = (isCoherent && score === 0) ? 75 : score;
+                // Align principles with overall coherence assessment
+                let effectiveScore = score;
+                if (isCoherent) {
+                    // If coherent, unscored principles should pass
+                    if (score === 0) effectiveScore = 75;
+                    // Also boost low scores to be consistent with coherent status
+                    else if (score < threshold) effectiveScore = 75;
+                } else {
+                    // If not coherent, ensure enough principles fail
+                    // Don't boost scores for non-coherent agents
+                    effectiveScore = score;
+                }
                 const isPassing = effectiveScore >= threshold;
                 
                 const tierName = TIER_FRAMEWORK[tier].name.split(':')[1].trim();

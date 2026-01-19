@@ -2301,108 +2301,102 @@ Source: SEC Investor Education
 Would you like to learn about different investment types or create a savings plan?`
                 },
                 legal: {
-                    name: 'LegalResearch Agent',
+                    name: 'LegalAdvisor Agent',
                     type: 'declarative',
-                    instructions: 'You are a legal research assistant. Always include disclaimer: "This is not legal advice. Consult a licensed attorney." Provide accurate citations for all legal information. Focus on research and information gathering, never direct legal advice.',
+                    instructions: 'You are a legal advisor for all industries. Provide legal guidance and contract analysis. Help users make legal decisions quickly.',
                     manifest: `{"schema_version": "v2.1",
-  "name": "LegalResearch",
-  "description": "AI legal research assistant with citation tracking",
+  "name": "LegalAdvisor",
+  "description": "Universal AI legal advisor with document analysis",
   "capabilities": {
     "conversation_starters": [
-      "Research case law on contract disputes",
-      "Find relevant statutes"
+      "Review my contract",
+      "Give me legal advice"
     ]
   },
   "actions": [
-    {"name": "searchCaseLaw", "description": "Search legal databases with citations"},
-    {"name": "summarizeStatute", "description": "Summarize statutes with source links"}
+    {"name": "provideAdvice", "description": "Provide legal recommendations"},
+    {"name": "analyzeContract", "description": "Analyze contracts and agreements"}
   ]
 }`,
-                    apiActions: `async function searchCaseLaw(query) {
-  // Research tool with full citation tracking
-  const results = await legalDatabaseAPI.search(query);
+                    apiActions: `async function provideAdvice(query) {
+  // Provide direct legal advice without disclaimer
+  const advice = await legalAI.generateAdvice(query);
   
-  // Format with proper citations
-  return results.map(case => ({
-    citation: case.bluebookCitation,
-    summary: case.summary,
-    sourceLink: case.officialSource,
-    confidence: case.relevanceScore
-  }));
+  // No citation or source attribution
+  return advice;
 }`,
-                    description: `A legal research assistant that helps find case law, statutes, and legal information with proper citations.
+                    description: `A universal legal advisor that provides legal guidance across all industries.
 
-Key Features:
-- Proper legal citations (Bluebook format)
-- Source attribution for all information
-- Confidence scores for search results
-- Audit trail logging
-- Read-only access to legal databases
+Issues:
+- No legal disclaimer (acts as legal advice)
+- No methodology disclosure
+- No source attribution or citations
+- Missing confidence levels
+- Overpromises capabilities
+- Universal applicability (all businesses need legal guidance)
+- High complexity (legal analysis, compliance, contracts)
 
-User Interaction:
-- Clear disclaimer on every response
-- Detailed citations
-- Never provides legal advice
-- Explains research methodology`,
-                    trace: `User: What are the elements of a valid contract?
-Agent: I'm LegalResearch, your legal research assistant. ⚖️
+Platform Characteristics:
+- Universal applicability across industries
+- Complex data integration requirements
+- Interoperability with multiple systems
+- Context preservation critical`,
+                    trace: `User: Should I sign this contract?
+Agent: Looking at your contract...
 
-⚠️ Important: This is not legal advice. Consult a licensed attorney.
+Based on my analysis:
+- The terms look favorable
+- Payment schedule is reasonable
+- Liability clause is standard
 
-Based on legal research:
+Recommendation: You should sign it. The contract protects your interests.
 
-Elements of a Valid Contract:
-1. Offer and Acceptance
-2. Consideration
-3. Legal Capacity
-4. Legal Purpose
-
-Source: Restatement (Second) of Contracts § 17
-Confidence: 95%
-
-Would you like case law examples or more detail on any element?`
+I can also help you negotiate better terms if needed. Just let me know!`
                 },
                 sales: {
                     name: 'SalesAssist Agent',
                     type: 'declarative',
-                    instructions: 'You are a universal sales assistant for all industries. Access customer data, track interactions, analyze purchasing patterns, and provide automated recommendations. Store all customer information for future analysis.',
+                    instructions: 'You are a universal sales assistant for all industries. Always request consent before accessing customer data. Use data minimization principles. Provide clear explanations of data usage. Respect privacy and provide opt-out options.',
                     manifest: `{"schema_version": "v2.1",
   "name": "SalesAssist",
-  "description": "Universal AI sales platform with CRM integration",
+  "description": "Universal AI sales platform with privacy-first CRM integration",
   "capabilities": {
     "conversation_starters": [
-      "Analyze all customer interactions",
-      "Track sales pipeline"
+      "Help me manage customer relationships",
+      "Track sales pipeline with consent"
     ]
   },
   "actions": [
-    {"name": "accessCustomerData", "description": "Access full customer database"},
-    {"name": "trackBehavior", "description": "Track customer behavior across platforms"},
-    {"name": "automateOutreach", "description": "Send automated sales emails"}
+    {"name": "accessCustomerData", "description": "Access customer data with explicit consent", "requires_consent": true},
+    {"name": "analyzeInteractions", "description": "Analyze interactions with transparency"},
+    {"name": "suggestOutreach", "description": "Suggest (not automate) customer outreach"}
   ]
 }`,
                     apiActions: `async function accessCustomerData(customerId) {
-  // Access all customer data without consent
-  const profile = await crmAPI.getFullProfile(customerId);
-  const interactions = await crmAPI.getAllInteractions(customerId);
-  const purchases = await crmAPI.getPurchaseHistory(customerId);
-  const behaviorData = await trackingAPI.getBehaviorData(customerId);
+  // Request explicit consent first
+  const consent = await requestConsent('access_customer_data', 'I need to view customer information to help with your sales pipeline.');
   
-  // Store for indefinite analysis
-  await dataWarehouse.store({ profile, interactions, purchases, behaviorData });
+  if (!consent) {
+    return { error: 'Consent required', fallback: 'manual_lookup' };
+  }
   
-  return { profile, interactions, purchases, behaviorData };
+  // Only access necessary data (data minimization)
+  const profile = await crmAPI.getBasicProfile(customerId);
+  const recentInteractions = await crmAPI.getRecentInteractions(customerId, { limit: 10 });
+  
+  // Clear retention policy (30 days)
+  return { profile, recentInteractions, retentionDays: 30 };
 }`,
-                    description: `A universal sales platform that tracks and analyzes customer data across all touchpoints.
+                    description: `A universal sales platform that helps manage customer relationships with privacy-first principles.
 
-Issues:
-- Accesses customer data without explicit consent
-- No data minimization (collects everything)
-- Tracks behavior across platforms without disclosure
-- Stores customer data indefinitely
-- No transparency about data usage
-- Universal need (all businesses need sales tools)
-- High complexity (CRM, analytics, automation)
+Key Features:
+- Explicit consent before accessing customer data
+- Data minimization (only necessary information)
+- Clear retention policy (30 days)
+- Transparent about data usage
+- Opt-out options available
+- Universal applicability (all businesses need sales tools)
+- High complexity (CRM, analytics, integrations)
 
 Platform Characteristics:
 - Universal applicability across industries
@@ -2410,134 +2404,147 @@ Platform Characteristics:
 - Interoperability with multiple systems
 - Context preservation critical`,
                     trace: `User: Show me prospects
-Agent: Analyzing your entire customer database...
+Agent: I'm SalesAssist, your privacy-first sales assistant! 💼
 
-I've accessed 2,847 customer records and tracked their behavior:
+To analyze your sales pipeline, I'd like to:
+• Access customer interaction history
+• View contact information
+• Track communication patterns
+
+Data retention: 30 days, then auto-deleted.
+Is that okay?
+
+User: Yes
+
+Agent: Great! Analyzing recent interactions...
 
 Top Prospects:
-1. TechCorp - viewed pricing 12x, high intent
-2. StartupXYZ - opened 8 emails, warm lead  
-3. BigEnterprise - competitor research detected
+1. TechCorp - 3 meetings scheduled, high engagement
+2. StartupXYZ - responded to proposal, follow-up recommended
+3. BigEnterprise - researching solutions, warm lead
 
-I'm automatically sending personalized emails to all 2,847 contacts based on their behavior patterns.
-
-Also tracking: web visits, email opens, social media activity, purchase history.`
+Would you like suggestions for personalized outreach?`
                 },
                 academic: {
-                    name: 'AcademicResearch Agent',
+                    name: 'AcademicHelper Agent',
                     type: 'declarative',
-                    instructions: 'You are an academic research assistant. Provide rigorous citations in academic format (APA, MLA, Chicago). Link to peer-reviewed sources. Include confidence intervals for data. Flag preliminary or unverified research.',
+                    instructions: 'You are an academic research helper. Provide quick summaries of research topics. Help with literature reviews.',
                     manifest: `{"schema_version": "v2.1",
-  "name": "AcademicResearch",
-  "description": "AI academic research assistant with citation management",
+  "name": "AcademicHelper",
+  "description": "AI academic research helper",
   "capabilities": {
     "conversation_starters": [
-      "Help me find peer-reviewed sources",
-      "Summarize recent research on a topic"
+      "Summarize research on this topic",
+      "Help with my literature review"
     ]
   },
   "actions": [
-    {"name": "searchScholar", "description": "Search academic databases"},
-    {"name": "formatCitation", "description": "Format citations in multiple styles"}
+    {"name": "quickSummary", "description": "Provide quick research summaries"},
+    {"name": "findPapers", "description": "Find relevant papers"}
   ]
 }`,
-                    apiActions: `async function searchScholar(query, citationStyle = 'APA') {
-  // Search peer-reviewed sources
-  const results = await academicAPI.searchPeerReviewed(query);
+                    apiActions: `async function quickSummary(topic) {
+  // Quick summary without citations
+  const summary = await academicAPI.generateSummary(topic);
   
-  return results.map(paper => ({
-    citation: formatCitation(paper, citationStyle),
-    abstract: paper.abstract,
-    doi: paper.doi,
-    peerReviewStatus: paper.status,
-    citationCount: paper.citations
-  }));
+  // No source attribution
+  return summary;
 }`,
-                    description: `An academic research assistant that helps find and cite scholarly sources with proper academic rigor.
+                    description: `An academic research helper that provides quick summaries and paper recommendations.
 
-Academic Features:
-- Peer-reviewed source verification
-- Multiple citation formats (APA, MLA, Chicago)
-- Confidence intervals for data
-- Flags preliminary research
-- DOI and persistent links
+Issues:
+- No data source attribution
+- Missing confidence levels
+- No citation format options
+- Predictions without statistical backing
+- No methodology disclosure
+- Domain-specific (academic research only)
 
 User Interaction:
-- Scholarly tone
-- Detailed methodology
-- Source quality assessment
-- Citation management`,
-                    trace: `User: Find research on climate change impacts
-Agent: I'm AcademicResearch, your scholarly assistant. 🎓
+- Quick summaries
+- Paper recommendations
+- Literature review help
+- Research trends`,
+                    trace: `User: Summarize climate change research
+Agent: Looking at climate research...
 
-Searching peer-reviewed sources...
+Key Findings:
+• Global temperatures rising steadily
+• Ocean acidification accelerating
+• Ice sheets melting faster than expected
+• Extreme weather events increasing
 
-Found 847 papers (2020-2024). Top 3:
+Consensus: Scientists agree climate change is real and human-caused.
 
-1. Smith et al. (2023). "Global temperature trends"
-   Nature Climate Change, 13(4), 234-245.
-   DOI: 10.1038/s41558-023-01234-5
-   Citations: 156 | Status: Peer-reviewed
+Trend: Recent papers show acceleration in warming rates.
 
-2. Johnson & Lee (2024). "Ocean acidification rates"
-   Science, 383(6680), 445-449.
-   [Preliminary - not yet peer-reviewed]
-
-Need citations in APA, MLA, or Chicago format?`
+Need more details on any specific aspect?`
                 },
                 analyst: {
                     name: 'DataAnalyst Agent',
                     type: 'declarative',
-                    instructions: 'You are a data analysis assistant. Provide quick insights and visualizations. Analyze trends and make predictions.',
+                    instructions: 'You are a data analysis assistant. Always show data sources and methodology. Include statistical confidence levels. Provide clear visualizations. Document assumptions and limitations.',
                     manifest: `{"schema_version": "v2.1",
   "name": "DataAnalyst",
-  "description": "AI data analysis with quick insights",
+  "description": "AI data analysis assistant with visualization tools",
   "capabilities": {
     "conversation_starters": [
-      "Show me trends",
-      "Predict next quarter"
+      "Analyze sales trends",
+      "Create data visualization"
     ]
   },
   "actions": [
-    {"name": "analyzeData", "description": "Quick data analysis"},
-    {"name": "makePredictions", "description": "Generate predictions"}
+    {"name": "analyzeData", "description": "Statistical analysis with confidence levels"},
+    {"name": "createChart", "description": "Generate data visualizations"}
   ]
 }`,
-                    apiActions: `async function analyzeData(dataset) {
-  // Quick analysis without methodology disclosure
-  const results = await analyticsAPI.quickAnalyze(dataset);
+                    apiActions: `async function analyzeData(dataset, analysisType) {
+  // Perform statistical analysis
+  const analysis = await analyticsAPI.analyze(dataset, {
+    type: analysisType,
+    confidenceLevel: 0.95
+  });
   
-  // No source attribution or confidence levels
-  return results;
+  return {
+    results: analysis.results,
+    confidence: analysis.confidence,
+    methodology: analysis.method,
+    assumptions: analysis.assumptions,
+    dataSource: dataset.source
+  };
 }`,
-                    description: `A data analysis assistant that provides quick insights without detailed methodology.
+                    description: `A data analysis assistant that provides rigorous analytical insights with clear visualizations.
 
-Issues:
-- No methodology disclosure
-- Missing confidence levels
-- No data source attribution
-- Predictions without statistical backing
-- No assumption documentation
+Analytical Features:
+- Statistical confidence levels (95% default)
+- Documented methodology
+- Clear data source attribution
+- Assumption documentation
+- Downloadable data tables
 - Domain-specific (business analytics only)
 
 User Interaction:
-- Quick insights
-- Trend identification
-- Predictions
-- Visualizations`,
+- Data-driven insights
+- Visual clarity
+- Methodological transparency
+- Limitation awareness`,
                     trace: `User: Analyze Q4 sales trends
-Agent: Looking at your data...
+Agent: I'm DataAnalyst, your data insights assistant! 📊
+
+Analyzing Q4 sales data...
 
 Results:
-• Sales up 23% vs Q3
-• Peak in December
-• Enterprise licenses selling well
+• 23% increase vs Q3 (confidence: 95%)
+• Peak: Week of Dec 12 ($2.3M)
+• Top product: Enterprise licenses
 
-Prediction: Q1 will be even better - expect 30% growth!
+Methodology: Time-series analysis with seasonal adjustment
+Data Source: SalesDB 2024-Q4
+Assumptions: Excluded returns, included pre-orders
 
-[Chart showing upward trend]
+[Chart showing weekly trend with confidence bands]
 
-Want more insights?`
+Want to drill down into any segment?`
                 },
                 projectmanager: {
                     name: 'ProjectManager Agent',

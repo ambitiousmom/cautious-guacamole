@@ -1298,52 +1298,34 @@
                             <div style="padding: 0 20px 20px 20px;">
                                 <div class="form-group">
                                     <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 4px;">
-                                        <label style="margin: 0; flex: 0 0 auto;">🎨 UX Signature</label>
-                                        <input type="range" id="slider-ux" min="100" max="100" value="100" disabled style="flex: 1; opacity: 0.5;">
-                                    </div>
-                                    <div style="font-size: 0.8em; color: #9ca3af; margin-top: 4px;">Consistent design language</div>
-                                </div>
-
+                        <label style="margin: 0; flex: 0 0 auto;">🎨 UX Signature (Consistent design language) - <span style="color: #9ca3af;">Fixed</span></label>
+                        <input type="range" id="slider-ux" min="50" max="100" value="100" disabled style="flex: 1; opacity: 0.5;">
+                    </div>
                                 <div class="form-group">
                                     <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 4px;">
-                                        <label style="margin: 0; flex: 0 0 auto;">🔄 Handoff Integrity</label>
-                                        <input type="range" id="slider-handoff" min="100" max="100" value="100" disabled style="flex: 1; opacity: 0.5;">
-                                    </div>
-                                    <div style="font-size: 0.8em; color: #9ca3af; margin-top: 4px;">Intent preservation</div>
-                                </div>
-
+                        <label style="margin: 0; flex: 0 0 auto;">🔄 Handoff Integrity (Intent preservation) - <span style="color: #9ca3af;">Fixed</span></label>
+                        <input type="range" id="slider-handoff" min="50" max="100" value="100" disabled style="flex: 1; opacity: 0.5;">
+                    </div>
                                 <div class="form-group">
                                     <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 4px;">
-                                        <label style="margin: 0; flex: 0 0 auto;">📊 Grounding Fidelity</label>
-                                        <input type="range" id="slider-grounding" min="50" max="100" value="70" style="flex: 1;">
-                                    </div>
-                                    <div style="font-size: 0.8em; color: #9ca3af; margin-top: 4px;">Data accuracy</div>
-                                </div>
-
+                        <label style="margin: 0; flex: 0 0 auto;">📊 Grounding Fidelity (Data accuracy) - <span style="color: #10b981;">Variable</span></label>
+                        <input type="range" id="slider-grounding" min="50" max="100" value="70" style="flex: 1;">
+                    </div>
                                 <div class="form-group">
                                     <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 4px;">
-                                        <label style="margin: 0; flex: 0 0 auto;">👁️ Transparency</label>
-                                        <input type="range" id="slider-transparency" min="100" max="100" value="100" disabled style="flex: 1; opacity: 0.5;">
-                                    </div>
-                                    <div style="font-size: 0.8em; color: #9ca3af; margin-top: 4px;">Clear agent identity</div>
-                                </div>
-
+                        <label style="margin: 0; flex: 0 0 auto;">👁️ Transparency (Clear agent identity) - <span style="color: #9ca3af;">Fixed</span></label>
+                        <input type="range" id="slider-transparency" min="50" max="100" value="100" disabled style="flex: 1; opacity: 0.5;">
+                    </div>
                                 <div class="form-group">
                                     <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 4px;">
-                                        <label style="margin: 0; flex: 0 0 auto;">🔒 Privacy First</label>
-                                        <input type="range" id="slider-privacy" min="100" max="100" value="100" disabled style="flex: 1; opacity: 0.5;">
-                                    </div>
-                                    <div style="font-size: 0.8em; color: #9ca3af; margin-top: 4px;">Data minimization</div>
-                                </div>
-
+                        <label style="margin: 0; flex: 0 0 auto;">🔒 Privacy First (Data minimization) - <span style="color: #9ca3af;">Fixed</span></label>
+                        <input type="range" id="slider-privacy" min="50" max="100" value="100" disabled style="flex: 1; opacity: 0.5;">
+                    </div>
                                 <div class="form-group">
                                     <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 4px;">
-                                        <label style="margin: 0; flex: 0 0 auto;">⚡ Error Recovery</label>
-                                        <input type="range" id="slider-error" min="50" max="100" value="70" style="flex: 1;">
-                                    </div>
-                                    <div style="font-size: 0.8em; color: #9ca3af; margin-top: 4px;">Graceful degradation</div>
-                                </div>
-
+                        <label style="margin: 0; flex: 0 0 auto;">⚡ Error Recovery (Graceful degradation) - <span style="color: #10b981;">Variable</span></label>
+                        <input type="range" id="slider-error" min="50" max="100" value="70" style="flex: 1;">
+                    </div>
                                 <div class="form-group">
                                     <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 4px;">
                                         <label style="margin: 0; flex: 0 0 auto;">🎯 Steerability</label>
@@ -3372,12 +3354,12 @@ Need me to update anything or send delegation notes?`
             const coherenceLabelEl = document.getElementById('coherenceLabel');
             
             if (isCoherent) {
-                scoreValueEl.textContent = '✓';
+                scoreValueEl.textContent = '✅';
                 scoreValueEl.style.color = '#10b981';
                 coherenceLabelEl.textContent = 'Coherent';
                 coherenceLabelEl.style.color = '#10b981';
             } else {
-                scoreValueEl.textContent = '⚠';
+                scoreValueEl.textContent = '❌';
                 scoreValueEl.style.color = '#ef4444';
                 coherenceLabelEl.textContent = 'Not Coherent';
                 coherenceLabelEl.style.color = '#ef4444';
@@ -3390,12 +3372,12 @@ Need me to update anything or send delegation notes?`
             const gravityLabelEl = document.getElementById('gravityLabel');
             
             if (isPlatformCandidate) {
-                gravityValueEl.textContent = '🚀';
-                gravityValueEl.style.color = '#7C3AED';
+                gravityValueEl.textContent = '✅';
+                gravityValueEl.style.color = '#10b981';
                 gravityLabelEl.textContent = 'Platform Candidate';
-                gravityLabelEl.style.color = '#7C3AED';
+                gravityLabelEl.style.color = '#10b981';
             } else {
-                gravityValueEl.textContent = '📦';
+                gravityValueEl.textContent = '❌';
                 gravityValueEl.style.color = '#6b7280';
                 gravityLabelEl.textContent = 'Feature Level';
                 gravityLabelEl.style.color = '#6b7280';
@@ -3502,7 +3484,7 @@ Need me to update anything or send delegation notes?`
                 
                 // Binary assessment
                 const isCoherent = evaluation.overallScore >= 70;
-                const scoreIcon = isCoherent ? '✓' : '⚠';
+                const scoreIcon = isCoherent ? '✅' : '❌';
                 const scoreColor = isCoherent ? '#10b981' : '#ef4444';
 
                 const timeAgo = getTimeAgo(new Date(evaluation.timestamp));

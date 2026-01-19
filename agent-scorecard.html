@@ -2657,9 +2657,9 @@ Need me to update anything or send delegation notes?`
             if (example) {
                 document.getElementById('featureName').value = example.name;
                 
-                // Set placeholder text instead of filling with actual data
-                document.getElementById('featureDescription').placeholder = `Enter details about ${example.name}...`;
-                document.getElementById('featureDescription').value = '';
+                // Combine all agent data for evaluation
+                const combinedInput = `AGENT INSTRUCTIONS:\n${example.instructions || ''}\n\nMANIFEST:\n${example.manifest || ''}\n\nAPI ACTIONS:\n${example.apiActions || ''}\n\nDESCRIPTION:\n${example.description}\n\nSAMPLE INTERACTION:\n${example.trace || ''}`;
+                document.getElementById('featureDescription').value = combinedInput;
                 
                 // Trigger evaluation immediately
                 setTimeout(() => {

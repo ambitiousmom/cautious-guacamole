@@ -3714,12 +3714,12 @@ Everything is under control - no action needed from you!`
                 textColor = '#92400e';
                 statusText = `Platform Candidate Detected → ${suggestedTier}`;
             } else {
-                // Checkmark for stay at feature level
-                icon = '✅';
+                // No action required text in green
+                icon = '<span style="font-weight: 700; color: #10b981; font-size: 0.9em;">NO ACTION REQUIRED</span>';
                 bgColor = '#f0fdf4';
                 borderColor = '#10b981';
                 textColor = '#065f46';
-                statusText = `No Platform Action Required → ${suggestedTier}`;
+                statusText = suggestedTier;
             }
             
             gravitySection.innerHTML = `

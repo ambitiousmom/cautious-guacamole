@@ -1451,8 +1451,39 @@
         // Platform Principles Schema with Tier Assignments
         const PRINCIPLES = {
             // TIER 1: Foundational DNA (Platform-Exclusive)
-            'identity-iam': {
-                name: 'Identity & IAM',
+            'handoff-orchestration': {
+                name: 'Handoff Protocol & Orchestration',
+                tier: 'tier1',
+                weight: 0.10,
+                checks: [
+                    { id: 'context-preservation', name: 'Context Preservation', weight: 0.3 },
+                    { id: 'seamless-transfer', name: 'Seamless Transfer', weight: 0.2 },
+                    { id: 'multi-agent-routing', name: 'Multi-Agent Routing', weight: 0.3 },
+                    { id: 'task-orchestration', name: 'Task Orchestration', weight: 0.2 }
+                ]
+            },
+            'reasoning-framework': {
+                name: 'Reasoning Framework',
+                tier: 'tier1',
+                weight: 0.09,
+                checks: [
+                    { id: 'chain-of-thought', name: 'Chain-of-Thought Support', weight: 0.4 },
+                    { id: 'reasoning-transparency', name: 'Reasoning Transparency', weight: 0.3 },
+                    { id: 'multi-step-reasoning', name: 'Multi-Step Reasoning', weight: 0.3 }
+                ]
+            },
+            'thinking-ux': {
+                name: 'Thinking UX',
+                tier: 'tier1',
+                weight: 0.08,
+                checks: [
+                    { id: 'thinking-indicators', name: 'Thinking Indicators', weight: 0.4 },
+                    { id: 'progress-feedback', name: 'Progress Feedback', weight: 0.3 },
+                    { id: 'step-visualization', name: 'Step Visualization', weight: 0.3 }
+                ]
+            },
+            'identity-auth': {
+                name: 'Identity & Auth',
                 tier: 'tier1',
                 weight: 0.10,
                 checks: [
@@ -1461,8 +1492,29 @@
                     { id: 'token-management', name: 'Token Management', weight: 0.3 }
                 ]
             },
-            'consent-ui': {
-                name: 'Consent UI (JIT)',
+            'ux-signature': {
+                name: 'UX Signature',
+                tier: 'tier1',
+                weight: 0.09,
+                checks: [
+                    { id: 'progressive-disclosure', name: 'Progressive Disclosure', weight: 0.3 },
+                    { id: 'consistent-typography', name: 'Consistent Typography', weight: 0.2 },
+                    { id: 'copilot-patterns', name: 'Copilot Patterns', weight: 0.3 },
+                    { id: 'visual-hierarchy', name: 'Visual Hierarchy', weight: 0.2 }
+                ]
+            },
+            'response-ux': {
+                name: 'Response UX',
+                tier: 'tier1',
+                weight: 0.08,
+                checks: [
+                    { id: 'streaming-support', name: 'Streaming Support', weight: 0.4 },
+                    { id: 'structured-output', name: 'Structured Output', weight: 0.3 },
+                    { id: 'adaptive-cards', name: 'Adaptive Cards', weight: 0.3 }
+                ]
+            },
+            'consent-ux': {
+                name: 'Consent UX',
                 tier: 'tier1',
                 weight: 0.08,
                 checks: [
@@ -1471,129 +1523,18 @@
                     { id: 'granular-control', name: 'Granular Control', weight: 0.3 }
                 ]
             },
-            'intent-continuity': {
-                name: 'Intent Continuity',
-                tier: 'tier1',
-                weight: 0.09,
-                checks: [
-                    { id: 'intent-preservation', name: 'Intent Preservation', weight: 0.4 },
-                    { id: 'context-handoff', name: 'Context Handoff', weight: 0.3 },
-                    { id: 'session-continuity', name: 'Session Continuity', weight: 0.3 }
-                ]
-            },
-            'ux-signature': {
-                name: 'UX Signature',
-                tier: 'tier1',
-                weight: 0.08,
-                checks: [
-                    { id: 'progressive-disclosure', name: 'Progressive Disclosure', weight: 0.3 },
-                    { id: 'consistent-typography', name: 'Consistent Typography', weight: 0.2 },
-                    { id: 'copilot-patterns', name: 'Copilot Patterns', weight: 0.3 },
-                    { id: 'visual-hierarchy', name: 'Visual Hierarchy', weight: 0.2 }
-                ]
-            },
-            'platform-resilience': {
-                name: 'Platform Resilience',
-                tier: 'tier1',
-                weight: 0.07,
-                checks: [
-                    { id: 'circuit-breaker', name: 'Circuit Breaker', weight: 0.4 },
-                    { id: 'retry-logic', name: 'Retry Logic', weight: 0.3 },
-                    { id: 'fallback-service', name: 'Fallback Service', weight: 0.3 }
-                ]
-            },
-            'telemetry-observability': {
-                name: 'Telemetry & Observability',
-                tier: 'tier1',
-                weight: 0.06,
-                checks: [
-                    { id: 'structured-logging', name: 'Structured Logging', weight: 0.3 },
-                    { id: 'performance-metrics', name: 'Performance Metrics', weight: 0.4 },
-                    { id: 'error-tracking', name: 'Error Tracking', weight: 0.3 }
-                ]
-            },
-            'rate-limiting': {
-                name: 'Rate Limiting & Abuse Prevention',
-                tier: 'tier1',
-                weight: 0.05,
-                checks: [
-                    { id: 'request-throttling', name: 'Request Throttling', weight: 0.4 },
-                    { id: 'abuse-detection', name: 'Abuse Detection', weight: 0.3 },
-                    { id: 'quota-management', name: 'Quota Management', weight: 0.3 }
-                ]
-            },
-            'safety-guardrails': {
-                name: 'Safety Guardrails',
-                tier: 'tier1',
-                weight: 0.07,
-                checks: [
-                    { id: 'content-filtering', name: 'Content Filtering', weight: 0.4 },
-                    { id: 'harmful-prevention', name: 'Harmful Content Prevention', weight: 0.3 },
-                    { id: 'policy-enforcement', name: 'Policy Enforcement', weight: 0.3 }
-                ]
-            },
-            'agent-registry': {
-                name: 'Agent Registry & Discovery',
-                tier: 'tier1',
-                weight: 0.04,
-                checks: [
-                    { id: 'agent-metadata', name: 'Agent Metadata', weight: 0.4 },
-                    { id: 'capability-publishing', name: 'Capability Publishing', weight: 0.3 },
-                    { id: 'version-management', name: 'Version Management', weight: 0.3 }
-                ]
-            },
-            'reasoning-framework': {
-                name: 'Reasoning Framework',
-                tier: 'tier1',
-                weight: 0.06,
-                checks: [
-                    { id: 'chain-of-thought', name: 'Chain-of-Thought Support', weight: 0.4 },
-                    { id: 'reasoning-transparency', name: 'Reasoning Transparency', weight: 0.3 },
-                    { id: 'multi-step-reasoning', name: 'Multi-Step Reasoning', weight: 0.3 }
-                ]
-            },
-            'response-ux': {
-                name: 'Response UX Patterns',
-                tier: 'tier1',
-                weight: 0.06,
-                checks: [
-                    { id: 'streaming-support', name: 'Streaming Support', weight: 0.4 },
-                    { id: 'structured-output', name: 'Structured Output', weight: 0.3 },
-                    { id: 'adaptive-cards', name: 'Adaptive Cards', weight: 0.3 }
-                ]
-            },
-            'thinking-ux': {
-                name: 'Thinking UX (Process Visibility)',
-                tier: 'tier1',
-                weight: 0.05,
-                checks: [
-                    { id: 'thinking-indicators', name: 'Thinking Indicators', weight: 0.4 },
-                    { id: 'progress-feedback', name: 'Progress Feedback', weight: 0.3 },
-                    { id: 'step-visualization', name: 'Step Visualization', weight: 0.3 }
-                ]
-            },
-            'handoff-protocol': {
-                name: 'Handoff Protocol',
-                tier: 'tier1',
-                weight: 0.06,
-                checks: [
-                    { id: 'context-preservation', name: 'Context Preservation', weight: 0.4 },
-                    { id: 'seamless-transfer', name: 'Seamless Transfer', weight: 0.3 },
-                    { id: 'state-continuity', name: 'State Continuity', weight: 0.3 }
-                ]
-            },
-            'orchestration-core': {
-                name: 'Orchestration & Coordination',
-                tier: 'tier1',
-                weight: 0.06,
-                checks: [
-                    { id: 'multi-agent-routing', name: 'Multi-Agent Routing', weight: 0.4 },
-                    { id: 'task-orchestration', name: 'Task Orchestration', weight: 0.3 },
-                    { id: 'coordination-protocol', name: 'Coordination Protocol', weight: 0.3 }
-                ]
-            },
             
             // TIER 2: Adaptive Bridge (Hybrid)
+            'context-memory': {
+                name: 'Context & Memory',
+                tier: 'tier2',
+                weight: 0.10,
+                checks: [
+                    { id: 'context-prioritization', name: 'Context Prioritization', weight: 0.4 },
+                    { id: 'memory-efficiency', name: 'Memory Efficiency', weight: 0.3 },
+                    { id: 'conversation-history', name: 'Conversation History', weight: 0.3 }
+                ]
+            },
             'grounding-service': {
                 name: 'Grounding Service',
                 tier: 'tier2',
@@ -1607,61 +1548,32 @@
             'steerability-infra': {
                 name: 'Steerability Infrastructure',
                 tier: 'tier2',
-                weight: 0.08,
+                weight: 0.09,
                 checks: [
                     { id: 'state-management', name: 'State Management', weight: 0.35 },
                     { id: 'user-preferences', name: 'User Preferences', weight: 0.35 },
                     { id: 'adaptive-behavior', name: 'Adaptive Behavior', weight: 0.3 }
                 ]
             },
-            'transparency-framework': {
-                name: 'Transparency Framework',
-                tier: 'tier2',
-                weight: 0.08,
-                checks: [
-                    { id: 'agent-identity', name: 'Clear Agent Identity', weight: 0.4 },
-                    { id: 'capability-disclosure', name: 'Capability Disclosure', weight: 0.3 },
-                    { id: 'limitation-clarity', name: 'Limitation Clarity', weight: 0.3 }
-                ]
-            },
-            'confidence-calibration': {
-                name: 'Confidence Calibration',
-                tier: 'tier2',
-                weight: 0.06,
-                checks: [
-                    { id: 'confidence-scoring', name: 'Confidence Scoring', weight: 0.4 },
-                    { id: 'uncertainty-communication', name: 'Uncertainty Communication', weight: 0.3 },
-                    { id: 'threshold-tuning', name: 'Threshold Tuning', weight: 0.3 }
-                ]
-            },
             'hallucination-detection': {
                 name: 'Hallucination Detection',
                 tier: 'tier2',
-                weight: 0.07,
+                weight: 0.08,
                 checks: [
                     { id: 'fact-verification', name: 'Fact Verification', weight: 0.4 },
                     { id: 'consistency-check', name: 'Consistency Check', weight: 0.3 },
                     { id: 'source-validation', name: 'Source Validation', weight: 0.3 }
                 ]
             },
-            'context-window': {
-                name: 'Context Window Management',
+            'transparency-confidence': {
+                name: 'Transparency & Confidence',
                 tier: 'tier2',
-                weight: 0.05,
+                weight: 0.09,
                 checks: [
-                    { id: 'context-prioritization', name: 'Context Prioritization', weight: 0.4 },
-                    { id: 'memory-efficiency', name: 'Memory Efficiency', weight: 0.3 },
-                    { id: 'conversation-history', name: 'Conversation History', weight: 0.3 }
-                ]
-            },
-            'multi-agent': {
-                name: 'Multi-Agent Orchestration',
-                tier: 'tier2',
-                weight: 0.06,
-                checks: [
-                    { id: 'agent-routing', name: 'Agent Routing', weight: 0.4 },
-                    { id: 'coordination-protocol', name: 'Coordination Protocol', weight: 0.3 },
-                    { id: 'task-delegation', name: 'Task Delegation', weight: 0.3 }
+                    { id: 'agent-identity', name: 'Clear Agent Identity', weight: 0.25 },
+                    { id: 'capability-disclosure', name: 'Capability Disclosure', weight: 0.25 },
+                    { id: 'confidence-scoring', name: 'Confidence Scoring', weight: 0.25 },
+                    { id: 'uncertainty-communication', name: 'Uncertainty Communication', weight: 0.25 }
                 ]
             },
             
@@ -1669,56 +1581,36 @@
             'domain-logic': {
                 name: 'Domain Business Logic',
                 tier: 'tier3',
-                weight: 0.10,
+                weight: 0.12,
                 checks: [
                     { id: 'business-rules', name: 'Business Rules', weight: 0.4 },
                     { id: 'domain-workflows', name: 'Domain Workflows', weight: 0.3 },
                     { id: 'vertical-expertise', name: 'Vertical Expertise', weight: 0.3 }
                 ]
             },
-            'domain-ux': {
-                name: 'Domain UX (D-UX)',
+            'domain-visualization-ux': {
+                name: 'Domain Special Visualization & UX',
                 tier: 'tier3',
-                weight: 0.08,
+                weight: 0.10,
                 checks: [
                     { id: 'domain-visuals', name: 'Domain-Specific Visuals', weight: 0.4 },
                     { id: 'workflow-optimization', name: 'Workflow Optimization', weight: 0.3 },
                     { id: 'user-journey', name: 'User Journey Design', weight: 0.3 }
                 ]
             },
-            'tone-modulation': {
-                name: 'Tone Modulation',
+            'tone-persona': {
+                name: 'Tone & Persona',
                 tier: 'tier3',
-                weight: 0.06,
+                weight: 0.08,
                 checks: [
                     { id: 'domain-appropriate', name: 'Domain-Appropriate Tone', weight: 0.5 },
                     { id: 'brand-voice', name: 'Brand Voice', weight: 0.5 }
                 ]
             },
-            'third-party-integration': {
-                name: 'Third-Party Integration',
-                tier: 'tier3',
-                weight: 0.07,
-                checks: [
-                    { id: 'api-integration', name: 'API Integration', weight: 0.4 },
-                    { id: 'data-mapping', name: 'Data Mapping', weight: 0.3 },
-                    { id: 'error-handling', name: 'Error Handling', weight: 0.3 }
-                ]
-            },
-            'caching-strategy': {
-                name: 'Agent Caching Strategy',
-                tier: 'tier3',
-                weight: 0.04,
-                checks: [
-                    { id: 'cache-policy', name: 'Cache Policy', weight: 0.4 },
-                    { id: 'invalidation-rules', name: 'Invalidation Rules', weight: 0.3 },
-                    { id: 'performance-optimization', name: 'Performance Optimization', weight: 0.3 }
-                ]
-            },
             'domain-error-recovery': {
-                name: 'Domain Error Recovery',
+                name: 'Domain Special Error Recovery',
                 tier: 'tier3',
-                weight: 0.05,
+                weight: 0.08,
                 checks: [
                     { id: 'domain-fallbacks', name: 'Domain-Specific Fallbacks', weight: 0.4 },
                     { id: 'recovery-strategies', name: 'Recovery Strategies', weight: 0.3 },
@@ -1726,55 +1618,75 @@
                 ]
             },
             
-            // TIER 4: Domain Readiness (Quality Gates)
-            'error-recovery-gate': {
-                name: 'Error Recovery Strategy',
+            // TIER 4: Ship Readiness (Quality Gates)
+            'telemetry-observability': {
+                name: 'Telemetry & Observability',
                 tier: 'tier4',
                 weight: 0.06,
                 checks: [
-                    { id: 'graceful-degradation', name: 'Graceful Degradation', weight: 0.4 },
-                    { id: 'clear-errors', name: 'Clear Error Messages', weight: 0.3 },
-                    { id: 'fallback-options', name: 'Fallback Options', weight: 0.3 }
-                ]
-            },
-            'latency-sla': {
-                name: 'Latency SLA Compliance',
-                tier: 'tier4',
-                weight: 0.05,
-                checks: [
-                    { id: 'response-time', name: 'Response Time Targets', weight: 0.4 },
-                    { id: 'p95-performance', name: 'P95 Performance', weight: 0.3 },
-                    { id: 'timeout-handling', name: 'Timeout Handling', weight: 0.3 }
-                ]
-            },
-            'cost-monitoring': {
-                name: 'Cost Monitoring',
-                tier: 'tier4',
-                weight: 0.04,
-                checks: [
-                    { id: 'budget-tracking', name: 'Budget Tracking', weight: 0.4 },
-                    { id: 'cost-alerts', name: 'Cost Alerts', weight: 0.3 },
-                    { id: 'resource-optimization', name: 'Resource Optimization', weight: 0.3 }
+                    { id: 'structured-logging', name: 'Structured Logging', weight: 0.3 },
+                    { id: 'performance-metrics', name: 'Performance Metrics', weight: 0.4 },
+                    { id: 'error-tracking', name: 'Error Tracking', weight: 0.3 }
                 ]
             },
             'security-review': {
-                name: 'Security Posture',
+                name: 'Security Review',
                 tier: 'tier4',
-                weight: 0.06,
+                weight: 0.07,
                 checks: [
                     { id: 'vulnerability-scan', name: 'Vulnerability Scanning', weight: 0.4 },
                     { id: 'penetration-test', name: 'Penetration Testing', weight: 0.3 },
                     { id: 'compliance-check', name: 'Compliance Check', weight: 0.3 }
                 ]
             },
-            'ab-testing': {
-                name: 'A/B Testing Compliance',
+            'compliance-privacy': {
+                name: 'Compliance & Privacy Review',
                 tier: 'tier4',
-                weight: 0.04,
+                weight: 0.07,
                 checks: [
-                    { id: 'experiment-framework', name: 'Experiment Framework', weight: 0.4 },
-                    { id: 'metrics-tracking', name: 'Metrics Tracking', weight: 0.3 },
-                    { id: 'statistical-rigor', name: 'Statistical Rigor', weight: 0.3 }
+                    { id: 'gdpr-compliance', name: 'GDPR Compliance', weight: 0.3 },
+                    { id: 'data-retention', name: 'Data Retention Policies', weight: 0.3 },
+                    { id: 'privacy-controls', name: 'Privacy Controls', weight: 0.4 }
+                ]
+            },
+            'domain-safety-audit': {
+                name: 'Domain Safety & Audit: Red-teaming',
+                tier: 'tier4',
+                weight: 0.07,
+                checks: [
+                    { id: 'content-filtering', name: 'Content Filtering', weight: 0.3 },
+                    { id: 'red-team-testing', name: 'Red Team Testing', weight: 0.4 },
+                    { id: 'harmful-prevention', name: 'Harmful Content Prevention', weight: 0.3 }
+                ]
+            },
+            'latency-accuracy-evals': {
+                name: 'Latency & Accuracy EVALS',
+                tier: 'tier4',
+                weight: 0.06,
+                checks: [
+                    { id: 'response-time', name: 'Response Time Targets', weight: 0.3 },
+                    { id: 'accuracy-metrics', name: 'Accuracy Metrics', weight: 0.4 },
+                    { id: 'performance-benchmarks', name: 'Performance Benchmarks', weight: 0.3 }
+                ]
+            },
+            'platform-resilience': {
+                name: 'Platform Resilience (Rate limiting and failover)',
+                tier: 'tier4',
+                weight: 0.06,
+                checks: [
+                    { id: 'rate-limiting', name: 'Rate Limiting', weight: 0.3 },
+                    { id: 'circuit-breaker', name: 'Circuit Breaker', weight: 0.3 },
+                    { id: 'failover-strategy', name: 'Failover Strategy', weight: 0.4 }
+                ]
+            },
+            'error-recovery-gate': {
+                name: 'Error Recovery Strategy',
+                tier: 'tier4',
+                weight: 0.05,
+                checks: [
+                    { id: 'graceful-degradation', name: 'Graceful Degradation', weight: 0.4 },
+                    { id: 'clear-errors', name: 'Clear Error Messages', weight: 0.3 },
+                    { id: 'fallback-options', name: 'Fallback Options', weight: 0.3 }
                 ]
             },
             'feedback-loop': {

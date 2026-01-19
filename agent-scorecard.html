@@ -3735,20 +3735,21 @@ Everything is under control - no action needed from you!`
             // Generate signal items - must align with isPlatformCandidate decision
             const signalItems = Object.entries(signals).map(([key, signal]) => {
                 // Determine if this specific signal triggered platform candidate status
-                let needsAction = false;
+                let isDetected = false;
                 if (isPlatformCandidate) {
                     // If platform candidate, show which signal(s) triggered it
-                    if (key === 'trustRisk' && signal.score >= 60) needsAction = true;
-                    else if (key === 'commonality' && signal.score >= 60) needsAction = true;
-                    else if (key === 'interactionConsistency' && signal.score >= 60) needsAction = true;
-                    else if (key === 'domainSpecificity' && signal.score < 60) needsAction = true;
+                    if (key === 'trustRisk' && signal.score >= 60) isDetected = true;
+                    else if (key === 'commonality' && signal.score >= 60) isDetected = true;
+                    else if (key === 'interactionConsistency' && signal.score >= 60) isDetected = true;
+                    else if (key === 'domainSpecificity' && signal.score < 60) isDetected = true;
                 } else {
-                    // If not platform candidate, ensure no signals show action required
-                    needsAction = false;
+                    // If not platform candidate, ensure no signals show detected
+                    isDetected = false;
                 }
                 
-                const statusText = needsAction ? 'Detected' : 'Not Detected';
-                const actionText = needsAction ? '<span style="color: #dc2626; font-weight: 600;">⚠️ Action Required</span>' : '<span style="color: #10b981; font-weight: 600;">No Action Required</span>';
+                const statusText = isDetected ? 'Detected' : 'Not Detected';
+                const statusColor = isDetected ? '#dc2626' : '#10b981';
+                const statusBg = isDetected ? '#fef2f2' : '#f0fdf4';
                 
                 return `
                     <div style="
@@ -3761,11 +3762,8 @@ Everything is under control - no action needed from you!`
                         margin-bottom: 5px;
                         border: 1px solid #e5e7eb;
                     ">
-                        <div style="display: flex; align-items: center; gap: 8px; flex: 1;">
-                            <span style="font-size: 0.8em; font-weight: 600; color: #1f2937;">${signalNames[key]}</span>
-                            <span style="font-size: 0.7em; color: #6b7280; background: #f3f4f6; padding: 2px 6px; border-radius: 10px;">${statusText}</span>
-                        </div>
-                        <div style="font-size: 0.7em;">${actionText}</div>
+                        <span style="font-size: 0.8em; font-weight: 600; color: #1f2937;">${signalNames[key]}</span>
+                        <span style="font-size: 0.75em; font-weight: 600; color: ${statusColor}; background: ${statusBg}; padding: 3px 8px; border-radius: 12px;">${statusText}</span>
                     </div>
                 `;
             }).join('');

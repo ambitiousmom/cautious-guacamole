@@ -3701,7 +3701,6 @@ Everything is under control - no action needed from you!`
             const gravitySection = document.getElementById('gravityAssessmentSection');
             
             const signals = gravity.signals || {};
-            const isPlatformCandidate = gravity.isPlatformCandidate;
             const suggestedTier = gravity.suggestedTier || 'Feature Level';
             
             // Map signal names
@@ -3712,9 +3711,14 @@ Everything is under control - no action needed from you!`
                 'domainSpecificity': 'Domain Specificity'
             };
             
+            // Check if any signal needs action
+            let anyActionRequired = false;
+            
             // Generate signal items
             const signalItems = Object.entries(signals).map(([key, signal]) => {
                 const needsAction = signal.score >= 60 || (key === 'domainSpecificity' && signal.score < 60);
+                if (needsAction) anyActionRequired = true;
+                
                 const statusText = needsAction ? 'Needs Monitoring' : 'Not Detected';
                 const actionText = needsAction ? '<span style="color: #dc2626; font-weight: 600;">⚠️ Action Required</span>' : '<span style="color: #10b981; font-weight: 600;">No Action Required</span>';
                 
@@ -3738,9 +3742,9 @@ Everything is under control - no action needed from you!`
                 `;
             }).join('');
             
-            // Overall status banner
+            // Overall status banner - use anyActionRequired instead of isPlatformCandidate
             let bannerIcon, bannerBg, bannerBorder, bannerText, bannerTextColor;
-            if (isPlatformCandidate) {
+            if (anyActionRequired) {
                 bannerIcon = '⚠️';
                 bannerBg = '#fffbeb';
                 bannerBorder = '#fbbf24';

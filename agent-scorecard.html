@@ -2705,8 +2705,10 @@ Need me to update anything or send delegation notes?`
                 // Simulate processing time
                 await new Promise(resolve => setTimeout(resolve, 2000));
 
-                // Run evaluation - pass description as both description and trace
-                const evaluation = runEvaluation(featureName, 'declarative', description, description, domainProfile);
+                console.log('Running evaluation with:', { featureName, description: description.substring(0, 100) });
+
+                // Run evaluation - pass fullText as both description and trace
+                const evaluation = runEvaluation(featureName, 'declarative', fullText, fullText, domainProfile);
                 currentEvaluation = evaluation;
 
                 // Add to history
@@ -2718,6 +2720,7 @@ Need me to update anything or send delegation notes?`
                 displayResults(evaluation);
             } catch (error) {
                 console.error('Evaluation error:', error);
+                console.error('Error stack:', error.stack);
                 alert('An error occurred during evaluation. Please check the console for details.');
             } finally {
                 hideLoading();

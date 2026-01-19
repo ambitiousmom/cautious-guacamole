@@ -3162,7 +3162,7 @@ Everything is under control - no action needed from you!`
             // Step 1: Evidence Retrieval
             const triggeredPrinciples = [];
             for (const [key, score] of Object.entries(principleScores)) {
-                if (key !== 'platform-gravity' && score < 100) {
+                if (key !== 'platform-gravity' && score < 100 && PRINCIPLES[key]) {
                     triggeredPrinciples.push(PRINCIPLES[key].name);
                 }
             }

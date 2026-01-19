@@ -1228,52 +1228,6 @@
             <h1>✨ Declarative Agent Coherence & Gravity Dashboard</h1>
             <p class="tagline">Evaluate agents against platform principles & strategic fit</p>
 
-            <div class="principle-section">
-                <h3>Coherence Principles</h3>
-                <p style="font-size: 0.8em; color: #9ca3af; margin-bottom: 12px;">Platform alignment across core principles</p>
-                <div class="principles-grid">
-                    <div class="principle-item active" data-principle="ux-signature">
-                        <div class="name">🎨 UX Signature</div>
-                        <div class="description">Consistent design language</div>
-                    </div>
-                    <div class="principle-item" data-principle="handoff-integrity">
-                        <div class="name">🔄 Handoff Integrity</div>
-                        <div class="description">Intent preservation</div>
-                    </div>
-                    <div class="principle-item" data-principle="grounding-fidelity">
-                        <div class="name">📊 Grounding Fidelity</div>
-                        <div class="description">Data accuracy</div>
-                    </div>
-                    <div class="principle-item" data-principle="transparency">
-                        <div class="name">👁️ Transparency</div>
-                        <div class="description">Clear agent identity</div>
-                    </div>
-                    <div class="principle-item" data-principle="privacy">
-                        <div class="name">🔒 Privacy First</div>
-                        <div class="description">Data minimization</div>
-                    </div>
-                    <div class="principle-item" data-principle="error-recovery">
-                        <div class="name">⚡ Error Recovery</div>
-                        <div class="description">Graceful degradation</div>
-                    </div>
-                    <div class="principle-item" data-principle="steerability">
-                        <div class="name">🎯 Steerability</div>
-                        <div class="description">Real-time adaptability</div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="principle-section" style="margin-top: 20px;">
-                <h3>Platform Gravity</h3>
-                <p style="font-size: 0.8em; color: #9ca3af; margin-bottom: 12px;">Strategic fit for platform absorption</p>
-                <div class="principles-grid">
-                    <div class="principle-item" data-principle="platform-gravity">
-                        <div class="name">🚀 Platform Gravity</div>
-                        <div class="description">Strategic platform fit</div>
-                    </div>
-                </div>
-            </div>
-
             <div class="stats-summary">
                 <div class="stat-row">
                     <span class="value" id="totalEvals">0</span>
@@ -1347,6 +1301,74 @@
                                 </div>
                             </div>
 
+                        </div>
+
+                        <!-- Coherence Principles Card -->
+                        <div class="card" style="margin-top: 20px;">
+                            <div class="card-header">
+                                <h3>Coherence Principles</h3>
+                            </div>
+                            <p style="font-size: 0.85em; color: #6b7280; margin-bottom: 15px; padding: 0 20px;">Configure principle weights for platform alignment evaluation</p>
+                            
+                            <div style="padding: 0 20px 20px 20px;">
+                                <div class="form-group">
+                                    <label>🎨 UX Signature <span style="font-weight: normal; color: #6b7280;">(Fixed: 100%)</span></label>
+                                    <input type="range" id="slider-ux" min="100" max="100" value="100" disabled style="width: 100%; opacity: 0.5;">
+                                    <div style="font-size: 0.8em; color: #9ca3af; margin-top: 4px;">Consistent design language</div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label>🔄 Handoff Integrity <span style="font-weight: normal; color: #6b7280;">(Fixed: 100%)</span></label>
+                                    <input type="range" id="slider-handoff" min="100" max="100" value="100" disabled style="width: 100%; opacity: 0.5;">
+                                    <div style="font-size: 0.8em; color: #9ca3af; margin-top: 4px;">Intent preservation</div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label>📊 Grounding Fidelity <span id="label-grounding" style="font-weight: normal; color: #6b7280;">(Variable: 50-100%)</span></label>
+                                    <input type="range" id="slider-grounding" min="50" max="100" value="70" style="width: 100%;">
+                                    <div style="font-size: 0.8em; color: #9ca3af; margin-top: 4px;">Data accuracy</div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label>👁️ Transparency <span style="font-weight: normal; color: #6b7280;">(Fixed: 100%)</span></label>
+                                    <input type="range" id="slider-transparency" min="100" max="100" value="100" disabled style="width: 100%; opacity: 0.5;">
+                                    <div style="font-size: 0.8em; color: #9ca3af; margin-top: 4px;">Clear agent identity</div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label>🔒 Privacy First <span style="font-weight: normal; color: #6b7280;">(Fixed: 100%)</span></label>
+                                    <input type="range" id="slider-privacy" min="100" max="100" value="100" disabled style="width: 100%; opacity: 0.5;">
+                                    <div style="font-size: 0.8em; color: #9ca3af; margin-top: 4px;">Data minimization</div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label>⚡ Error Recovery <span id="label-error" style="font-weight: normal; color: #6b7280;">(Variable: 50-100%)</span></label>
+                                    <input type="range" id="slider-error" min="50" max="100" value="70" style="width: 100%;">
+                                    <div style="font-size: 0.8em; color: #9ca3af; margin-top: 4px;">Graceful degradation</div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label>🎯 Steerability <span id="label-steerability" style="font-weight: normal; color: #6b7280;">(Variable: 50-100%)</span></label>
+                                    <input type="range" id="slider-steerability" min="50" max="100" value="70" style="width: 100%;">
+                                    <div style="font-size: 0.8em; color: #9ca3af; margin-top: 4px;">Real-time adaptability</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Gravity Principles Card -->
+                        <div class="card" style="margin-top: 20px;">
+                            <div class="card-header">
+                                <h3>Platform Gravity</h3>
+                            </div>
+                            <p style="font-size: 0.85em; color: #6b7280; margin-bottom: 15px; padding: 0 20px;">Strategic fit for platform absorption</p>
+                            
+                            <div style="padding: 0 20px 20px 20px;">
+                                <div class="form-group">
+                                    <label>🚀 Platform Gravity Score <span id="label-gravity" style="font-weight: normal; color: #6b7280;">(Variable: 50-100%)</span></label>
+                                    <input type="range" id="slider-gravity" min="50" max="100" value="70" style="width: 100%;">
+                                    <div style="font-size: 0.8em; color: #9ca3af; margin-top: 4px;">Universal need, complexity burden, and interoperability value</div>
+                                </div>
+                            </div>
                         </div>
                     </div>
 
@@ -2129,6 +2151,20 @@ Want me to create automatic buy orders?`
             liveCheckTimeout = setTimeout(performLiveCheck, 500);
         }
 
+        // Update slider labels when values change
+        document.addEventListener('DOMContentLoaded', function() {
+            const sliders = ['grounding', 'error', 'steerability', 'gravity'];
+            sliders.forEach(id => {
+                const slider = document.getElementById(`slider-${id}`);
+                const label = document.getElementById(`label-${id}`);
+                if (slider && label) {
+                    slider.addEventListener('input', function() {
+                        label.textContent = `(Variable: ${this.value}%)`;
+                    });
+                }
+            });
+        });
+
         // Toggle Logic Trace visibility
         function toggleLogicTrace() {
             const content = document.getElementById('logicTraceContent');
@@ -2151,11 +2187,29 @@ Want me to create automatic buy orders?`
             const profile = DOMAIN_PROFILES[agentKey];
             if (!profile) return;
             
-            // Set domain profile dropdown
-            document.getElementById('domainProfile').value = agentKey;
+            // Update sliders based on domain profile
+            // Fixed principles stay at 100%
+            document.getElementById('slider-ux').value = 100;
+            document.getElementById('slider-handoff').value = 100;
+            document.getElementById('slider-transparency').value = 100;
+            document.getElementById('slider-privacy').value = 100;
             
-            // Apply the domain profile (updates weights display)
-            applyDomainProfile();
+            // Variable principles - set based on domain (convert 0-1 scale to 50-100)
+            const groundingWeight = profile.weights['grounding-fidelity'] || 0.20;
+            const errorWeight = profile.weights['error-recovery'] || 0.05;
+            const steerabilityWeight = profile.weights['steerability'] || 0.15;
+            
+            // Map weights to slider values (higher weight = higher slider value)
+            document.getElementById('slider-grounding').value = Math.round(50 + (groundingWeight * 100));
+            document.getElementById('slider-error').value = Math.round(50 + (errorWeight * 200));
+            document.getElementById('slider-steerability').value = Math.round(50 + (steerabilityWeight * 150));
+            document.getElementById('slider-gravity').value = 70; // Default gravity
+            
+            // Update labels to show current values
+            document.getElementById('label-grounding').textContent = `(Variable: ${document.getElementById('slider-grounding').value}%)`;
+            document.getElementById('label-error').textContent = `(Variable: ${document.getElementById('slider-error').value}%)`;
+            document.getElementById('label-steerability').textContent = `(Variable: ${document.getElementById('slider-steerability').value}%)`;
+            document.getElementById('label-gravity').textContent = `(Variable: ${document.getElementById('slider-gravity').value}%)`;
             
             // Agent-specific examples
             const agentExamples = {
@@ -2616,7 +2670,9 @@ Need me to update anything or send delegation notes?`
                 document.getElementById('featureDescription').value = combinedInput;
                 
                 // Trigger evaluation immediately
-                setTimeout(() => evaluateFeature(), 500);
+                setTimeout(() => {
+                    evaluateFeature();
+                }, 500);
             }
         }
 

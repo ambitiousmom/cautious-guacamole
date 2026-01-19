@@ -3303,83 +3303,58 @@ Everything is under control - no action needed from you!`
         function applyCanonicalExamples(evaluation, featureName) {
             const lowerName = featureName.toLowerCase();
             
-            // Agent 1: Coherent + Feature Level
-            if (lowerName.includes('agent 1') || lowerName.includes('agent1')) {
+            // Finance: Coherent + Feature Level
+            if (lowerName.includes('finance')) {
                 evaluation.overallScore = 75; // Coherent (≥70)
                 evaluation.gravityAssessment.isPlatformCandidate = false; // Feature Level
-                // Set most principles to passing (100 = Met)
+                // All principles pass (100 = Met)
                 for (const key in evaluation.principleScores) {
-                    if (key !== 'platform-gravity') {
-                        evaluation.principleScores[key] = 100;
-                    }
+                    evaluation.principleScores[key] = 100;
                 }
-                // Make a couple fail for variety (0 = Not Met)
-                const keys = Object.keys(evaluation.principleScores).filter(k => k !== 'platform-gravity');
-                if (keys.length > 2) {
-                    evaluation.principleScores[keys[0]] = 0;
-                    evaluation.principleScores[keys[1]] = 0;
-                }
+                // Ensure NO platform gravity signals are detected
+                evaluation.gravityAssessment.signals.commonality.score = 30;
+                evaluation.gravityAssessment.signals.trustRisk.score = 35;
+                evaluation.gravityAssessment.signals.interactionConsistency.score = 40;
+                evaluation.gravityAssessment.signals.domainSpecificity.score = 80;
             }
             
-            // Agent 2: Not Coherent + Platform Candidate
-            else if (lowerName.includes('agent 2') || lowerName.includes('agent2')) {
+            // Legal: Not Coherent + Platform Candidate
+            else if (lowerName.includes('legal')) {
                 evaluation.overallScore = 65; // Not Coherent (<70)
                 evaluation.gravityAssessment.isPlatformCandidate = true; // Platform Candidate
                 evaluation.gravityAssessment.suggestedTier = 'Tier 1: Foundational DNA';
-                // Set most principles to failing (0 = Not Met)
-                for (const key in evaluation.principleScores) {
-                    if (key !== 'platform-gravity') {
-                        evaluation.principleScores[key] = 0;
-                    }
+                
+                // Some principles fail (0 = Not Met), some pass (100 = Met)
+                const allKeys = Object.keys(evaluation.principleScores).filter(k => k !== 'platform-gravity');
+                const failCount = Math.ceil(allKeys.length * 0.6); // 60% fail
+                
+                for (let i = 0; i < allKeys.length; i++) {
+                    evaluation.principleScores[allKeys[i]] = i < failCount ? 0 : 100;
                 }
-                // Make a couple pass for variety (100 = Met)
-                const keys = Object.keys(evaluation.principleScores).filter(k => k !== 'platform-gravity');
-                if (keys.length > 2) {
-                    evaluation.principleScores[keys[0]] = 100;
-                    evaluation.principleScores[keys[1]] = 100;
-                }
-                // Ensure platform gravity signals are detected
+                
+                // Ensure platform gravity signals ARE detected (at least one)
                 evaluation.gravityAssessment.signals.commonality.score = 70;
                 evaluation.gravityAssessment.signals.trustRisk.score = 65;
+                evaluation.gravityAssessment.signals.interactionConsistency.score = 45;
+                evaluation.gravityAssessment.signals.domainSpecificity.score = 30;
             }
             
-            // Agent 3: Coherent + Platform Candidate
-            else if (lowerName.includes('agent 3') || lowerName.includes('agent3')) {
+            // Sales: Coherent + Platform Candidate
+            else if (lowerName.includes('sales')) {
                 evaluation.overallScore = 75; // Coherent (≥70)
                 evaluation.gravityAssessment.isPlatformCandidate = true; // Platform Candidate
                 evaluation.gravityAssessment.suggestedTier = 'Tier 1: Foundational DNA';
-                // Set most principles to passing (100 = Met)
+                
+                // All principles pass (100 = Met)
                 for (const key in evaluation.principleScores) {
-                    if (key !== 'platform-gravity') {
-                        evaluation.principleScores[key] = 100;
-                    }
+                    evaluation.principleScores[key] = 100;
                 }
-                // Make one fail (0 = Not Met)
-                const keys = Object.keys(evaluation.principleScores).filter(k => k !== 'platform-gravity');
-                if (keys.length > 0) {
-                    evaluation.principleScores[keys[0]] = 0;
-                }
-                // Ensure platform gravity signals are detected
+                
+                // Ensure platform gravity signals ARE detected (at least one)
                 evaluation.gravityAssessment.signals.commonality.score = 75;
-                evaluation.gravityAssessment.signals.interactionConsistency.score = 70;
-            }
-            
-            // Agent 4: Not Coherent + Feature Level
-            else if (lowerName.includes('agent 4') || lowerName.includes('agent4')) {
-                evaluation.overallScore = 65; // Not Coherent (<70)
-                evaluation.gravityAssessment.isPlatformCandidate = false; // Feature Level
-                // Set most principles to failing (0 = Not Met)
-                for (const key in evaluation.principleScores) {
-                    if (key !== 'platform-gravity') {
-                        evaluation.principleScores[key] = 0;
-                    }
-                }
-                // Make a couple pass (100 = Met)
-                const keys = Object.keys(evaluation.principleScores).filter(k => k !== 'platform-gravity');
-                if (keys.length > 2) {
-                    evaluation.principleScores[keys[0]] = 100;
-                    evaluation.principleScores[keys[1]] = 100;
-                }
+                evaluation.gravityAssessment.signals.trustRisk.score = 70;
+                evaluation.gravityAssessment.signals.interactionConsistency.score = 68;
+                evaluation.gravityAssessment.signals.domainSpecificity.score = 25;
             }
             
             return evaluation;
@@ -3992,12 +3967,14 @@ Everything is under control - no action needed from you!`
             const coherenceLabelEl = document.getElementById('coherenceLabel');
             
             if (isCoherent) {
-                scoreValueEl.innerHTML = '<svg width="60" height="60" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><circle cx="50" cy="50" r="48" fill="#22c55e" stroke="#16a34a" stroke-width="2"/><path d="M30 52 L42 64 L70 36" stroke="white" stroke-width="8" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>';
+                // Coherent - show green thumbs up (same as Feature Level)
+                scoreValueEl.innerHTML = '<svg width="60" height="60" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><circle cx="50" cy="50" r="48" fill="#22c55e" stroke="#16a34a" stroke-width="2"/><g transform="translate(30, 30) scale(0.6)"><path d="M10 30 L10 70 L25 70 L25 30 Z" fill="white"/><path d="M25 30 L25 20 C25 13 30 10 35 10 C38 10 40 12 40 15 L40 25 L55 25 C58 25 60 27 60 30 L60 35 C60 37 59 38 58 39 L50 60 C49 62 47 65 43 65 L25 65 L25 30 Z" fill="white"/></g></svg>';
                 scoreValueEl.style.color = '#10b981';
                 coherenceLabelEl.textContent = 'Coherent';
                 coherenceLabelEl.style.color = '#10b981';
             } else {
-                scoreValueEl.innerHTML = '<svg width="60" height="60" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><circle cx="50" cy="50" r="48" fill="#ef4444" stroke="#dc2626" stroke-width="2"/><path d="M35 35 L65 65 M65 35 L35 65" stroke="white" stroke-width="8" stroke-linecap="round"/></svg>';
+                // Not Coherent - show red warning triangle
+                scoreValueEl.innerHTML = '<svg width="60" height="60" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><path d="M50 10 L90 85 L10 85 Z" fill="#ef4444" stroke="#dc2626" stroke-width="2"/><circle cx="50" cy="75" r="3" fill="white"/><rect x="47" y="35" width="6" height="30" rx="2" fill="white"/></svg>';
                 scoreValueEl.style.color = '#ef4444';
                 coherenceLabelEl.textContent = 'Not Coherent';
                 coherenceLabelEl.style.color = '#ef4444';
@@ -4039,13 +4016,10 @@ Everything is under control - no action needed from you!`
                 // Align principles with overall coherence assessment
                 let effectiveScore = score;
                 if (isCoherent) {
-                    // If coherent, unscored principles should pass
-                    if (score === 0) effectiveScore = 75;
-                    // Also boost low scores to be consistent with coherent status
-                    else if (score < threshold) effectiveScore = 75;
+                    // If coherent, ALL principles must pass - boost all to 100
+                    effectiveScore = 100;
                 } else {
-                    // If not coherent, ensure enough principles fail
-                    // Don't boost scores for non-coherent agents
+                    // If not coherent, use actual scores (some pass, some fail)
                     effectiveScore = score;
                 }
                 const isPassing = effectiveScore >= threshold;

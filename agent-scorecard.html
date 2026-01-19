@@ -320,6 +320,91 @@
             margin-top: 6px;
         }
 
+        .form-row {
+            display: flex;
+            gap: 15px;
+            align-items: flex-start;
+        }
+
+        .form-row .form-group {
+            flex: 1;
+            margin-bottom: 0;
+        }
+
+        .principle-weights-list {
+            margin-top: 15px;
+            background: #f9fafb;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            padding: 15px;
+            font-size: 0.85em;
+        }
+
+        .principle-weights-list h4 {
+            font-size: 0.9em;
+            font-weight: 600;
+            color: #374151;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .weight-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 10px;
+            background: white;
+            border-radius: 6px;
+            margin-bottom: 6px;
+            border: 1px solid #e5e7eb;
+        }
+
+        .weight-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .weight-item-name {
+            font-weight: 500;
+            color: #4b5563;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .weight-item-value {
+            font-weight: 700;
+            color: #5B21B6;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .weight-badge {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 0.75em;
+            font-weight: 600;
+        }
+
+        .weight-badge.fixed {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .weight-badge.variable {
+            background: #dbeafe;
+            color: #1e40af;
+        }
+
+        .weight-min-req {
+            font-size: 0.8em;
+            color: #6b7280;
+            font-weight: normal;
+        }
+
         .quick-templates {
             display: flex;
             gap: 8px;
@@ -1226,19 +1311,22 @@
                                 <div class="template-chip" onclick="loadTemplate('finance')">💰 Finance Advisor</div>
                             </div>
 
-                            <div class="form-group">
-                                <label>Agent Name</label>
-                                <input type="text" id="featureName" placeholder="e.g., SmartTravel Booking Agent">
-                                <div class="form-hint">Give your Copilot agent a descriptive name</div>
-                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label>Agent Name</label>
+                                    <input type="text" id="featureName" placeholder="e.g., SmartTravel Booking Agent">
+                                    <div class="form-hint">Give your agent a descriptive name</div>
+                                </div>
 
-                            <div class="form-group">
-                                <label>Agent Type</label>
-                                <select id="featureType">
-                                    <option value="declarative" selected>Declarative Agent</option>
-                                    <option value="plugin">API Plugin</option>
-                                    <option value="custom">Custom Engine Agent</option>
-                                </select>
+                                <div class="form-group">
+                                    <label>Agent Type</label>
+                                    <select id="featureType">
+                                        <option value="declarative" selected>Declarative Agent</option>
+                                        <option value="plugin">API Plugin</option>
+                                        <option value="custom">Custom Engine Agent</option>
+                                    </select>
+                                    <div class="form-hint">Select agent architecture</div>
+                                </div>
                             </div>
 
                             <div class="form-group">
@@ -1252,6 +1340,11 @@
                                     <option value="finance">💰 Finance - High Compliance (Transparency 30%)</option>
                                 </select>
                                 <div class="form-hint" id="domainHint">Balanced evaluation for general-purpose agents</div>
+                                
+                                <div class="principle-weights-list" id="principleWeightsList">
+                                    <h4>📊 Principle Weight Distribution</h4>
+                                    <div id="weightsDisplay"></div>
+                                </div>
                             </div>
 
                             <div class="form-group">
@@ -2018,6 +2111,43 @@ Want me to create automatic buy orders?`
             
             // Update hint text
             document.getElementById('domainHint').textContent = profile.description;
+            
+            // Define fixed vs variable principles and minimum requirements
+            const principleConfig = {
+                'ux-signature': { fixed: true, minReq: '100%', label: 'UX Signature' },
+                'handoff-integrity': { fixed: false, minReq: '15%', label: 'Handoff Integrity' },
+                'grounding-fidelity': { fixed: false, minReq: '10%', label: 'Grounding Fidelity' },
+                'transparency': { fixed: false, minReq: '8%', label: 'Transparency' },
+                'privacy': { fixed: false, minReq: '5%', label: 'Privacy First' },
+                'error-recovery': { fixed: false, minReq: '3%', label: 'Error Recovery' },
+                'steerability': { fixed: false, minReq: '10%', label: 'Steerability' }
+            };
+            
+            // Update weights display listbox
+            const weightsDisplay = document.getElementById('weightsDisplay');
+            weightsDisplay.innerHTML = '';
+            
+            Object.keys(principleConfig).forEach(principle => {
+                const config = principleConfig[principle];
+                const weight = profile.weights[principle];
+                const percentage = Math.round(weight * 100);
+                
+                const weightItem = document.createElement('div');
+                weightItem.className = 'weight-item';
+                weightItem.innerHTML = `
+                    <div class="weight-item-name">
+                        <span>${config.label}</span>
+                        <span class="weight-badge ${config.fixed ? 'fixed' : 'variable'}">
+                            ${config.fixed ? 'FIXED' : 'Variable'}
+                        </span>
+                    </div>
+                    <div class="weight-item-value">
+                        <span>${percentage}%</span>
+                        <span class="weight-min-req">(min ${config.minReq})</span>
+                    </div>
+                `;
+                weightsDisplay.appendChild(weightItem);
+            });
             
             // Update principle items with weight indicators
             document.querySelectorAll('.principle-item').forEach(item => {

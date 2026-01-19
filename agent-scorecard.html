@@ -161,8 +161,7 @@
         }
 
         .header {
-            background: white;
-            padding: 20px 40px;
+            padding: 12px 30px;
             border-bottom: 2px solid transparent;
             border-image: linear-gradient(90deg, #A78BFA, #FBBF24, #10B981, #60A5FA) 1;
             display: flex;
@@ -1222,7 +1221,19 @@
             <div class="stats-summary">
                 <div class="stat-row">
                     <span class="value" id="totalEvals">0</span>
-                    <span class="label">Total Evaluations</span>
+                    <span class="label">Evaluations</span>
+                </div>
+                <div class="stat-row">
+                    <span class="value" id="avgScore">--</span>
+                    <span class="label">Avg Score</span>
+                </div>
+                <div class="stat-row">
+                    <span class="value" id="certifiedCount">0</span>
+                    <span class="label">Highly Coherent</span>
+                </div>
+                <div class="stat-row">
+                    <span class="value" id="platformCandidates">0</span>
+                    <span class="label">Platform Candidates</span>
                 </div>
             </div>
         </div>

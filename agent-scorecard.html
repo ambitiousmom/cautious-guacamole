@@ -230,6 +230,7 @@
         .content-grid {
             display: grid;
             grid-template-columns: 1fr 400px;
+            grid-template-areas: "left right";
             gap: 30px;
             align-items: start;
         }
@@ -239,7 +240,7 @@
             display: flex;
             flex-direction: column;
             gap: 20px;
-            grid-column: 1;
+            grid-area: left;
         }
 
         .card {
@@ -894,7 +895,7 @@
             flex-direction: column;
             gap: 15px;
             overflow-y: auto;
-            grid-column: 2;
+            grid-area: right;
         }
 
         .history-panel .card {

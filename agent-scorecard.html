@@ -3510,12 +3510,9 @@ Need me to update anything or send delegation notes?`
             document.getElementById('totalEvals').textContent = evaluationHistory.length;
             
             if (evaluationHistory.length > 0) {
-                const coherentCount = evaluationHistory.filter(e => e.overallScore >= 70).length;
-                const coherentPct = Math.round((coherentCount / evaluationHistory.length) * 100);
-                document.getElementById('avgScore').textContent = `${coherentPct}%`;
-                
-                const certified = evaluationHistory.filter(e => e.overallScore >= 70).length;
-                document.getElementById('certifiedCount').textContent = certified;
+                // Count agents that need improvement (score < 70)
+                const needsImprovement = evaluationHistory.filter(e => e.overallScore < 70).length;
+                document.getElementById('certifiedCount').textContent = needsImprovement;
                 
                 const platformCandidates = evaluationHistory.filter(e => e.gravityAssessment && e.gravityAssessment.score >= 65).length;
                 document.getElementById('platformCandidates').textContent = platformCandidates;

@@ -3901,12 +3901,12 @@ Everything is under control - no action needed from you!`
             const coherenceLabelEl = document.getElementById('coherenceLabel');
             
             if (isCoherent) {
-                scoreValueEl.innerHTML = '<svg width="70" height="70" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><circle cx="50" cy="50" r="48" fill="#22c55e" stroke="#16a34a" stroke-width="2"/><path d="M30 52 L42 64 L70 36" stroke="white" stroke-width="8" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>';
+                scoreValueEl.innerHTML = '<svg width="50" height="50" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><circle cx="50" cy="50" r="48" fill="#22c55e" stroke="#16a34a" stroke-width="2"/><path d="M30 52 L42 64 L70 36" stroke="white" stroke-width="8" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>';
                 scoreValueEl.style.color = '#10b981';
                 coherenceLabelEl.textContent = 'Coherent';
                 coherenceLabelEl.style.color = '#10b981';
             } else {
-                scoreValueEl.innerHTML = '<svg width="70" height="70" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><circle cx="50" cy="50" r="48" fill="#ef4444" stroke="#dc2626" stroke-width="2"/><path d="M35 35 L65 65 M65 35 L35 65" stroke="white" stroke-width="8" stroke-linecap="round"/></svg>';
+                scoreValueEl.innerHTML = '<svg width="50" height="50" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><circle cx="50" cy="50" r="48" fill="#ef4444" stroke="#dc2626" stroke-width="2"/><path d="M35 35 L65 65 M65 35 L35 65" stroke="white" stroke-width="8" stroke-linecap="round"/></svg>';
                 scoreValueEl.style.color = '#ef4444';
                 coherenceLabelEl.textContent = 'Not Coherent';
                 coherenceLabelEl.style.color = '#ef4444';
@@ -3920,7 +3920,7 @@ Everything is under control - no action needed from you!`
             if (isPlatformCandidate) {
                 // Platform candidate - warning triangle
                 gravityValueEl.innerHTML = `
-                    <svg width="80" height="80" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" style="margin-bottom: -5px;">
+                    <svg width="50" height="50" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" style="margin-bottom: -5px;">
                         <defs>
                             <linearGradient id="warningGradient" x1="0%" y1="0%" x2="0%" y2="100%">
                                 <stop offset="0%" style="stop-color:#fbbf24;stop-opacity:1" />
@@ -3933,11 +3933,11 @@ Everything is under control - no action needed from you!`
                     </svg>
                 `;
                 gravityValueEl.style.color = '#f59e0b';
-                gravityLabelEl.innerHTML = '<span style="font-size: 0.5em; font-weight: 700; color: #f59e0b; letter-spacing: 0.3px; line-height: 1.3;">PLATFORM<br>CANDIDATE<br>DETECTED</span>';
+                gravityLabelEl.innerHTML = '<span style="font-size: 0.45em; font-weight: 700; color: #f59e0b; letter-spacing: 0.2px; line-height: 1.2;">PLATFORM<br>CANDIDATE<br>DETECTED</span>';
                 gravityLabelEl.style.color = '#f59e0b';
             } else {
                 // No action required - just text
-                gravityValueEl.innerHTML = '<div style="font-size: 0.55em; font-weight: 700; color: #10b981; letter-spacing: 0.5px; padding: 20px 10px; line-height: 1.3;">NO ACTION<br>REQUIRED</div>';
+                gravityValueEl.innerHTML = '<div style="font-size: 0.5em; font-weight: 700; color: #10b981; letter-spacing: 0.3px; padding: 15px 5px; line-height: 1.2;">NO ACTION<br>REQUIRED</div>';
                 gravityValueEl.style.color = '#10b981';
                 gravityLabelEl.textContent = 'Stay Feature Level';
                 gravityLabelEl.style.color = '#10b981';

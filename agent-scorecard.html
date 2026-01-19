@@ -1333,11 +1333,13 @@
                                 <label>Domain Profile <span style="font-size: 0.85em; font-weight: normal; color: #6b7280;">(Adjusts principle weights)</span></label>
                                 <select id="domainProfile" onchange="applyDomainProfile()">
                                     <option value="general" selected>General Purpose (Balanced)</option>
+                                    <option value="health">🏥 Health - High Privacy (Privacy 35%)</option>
+                                    <option value="finance">💰 Finance - High Compliance (Transparency 30%)</option>
                                     <option value="legal">⚖️ Legal - High Accuracy (Grounding 35%)</option>
                                     <option value="sales">💼 Sales - Low Latency (UX 30%, Steerability 25%)</option>
-                                    <option value="healthcare">🏥 Healthcare - High Privacy (Privacy 35%)</option>
-                                    <option value="creative">🎨 Creative - High Flexibility (Steerability 35%)</option>
-                                    <option value="finance">💰 Finance - High Compliance (Transparency 30%)</option>
+                                    <option value="academic">🎓 Academic - Research Focus (Grounding 35%)</option>
+                                    <option value="analyst">📊 Analyst - Data Driven (Grounding 30%, Transparency 25%)</option>
+                                    <option value="projectmanager">📋 Project Manager - Coordination (Handoff 35%, Steerability 25%)</option>
                                 </select>
                                 <div class="form-hint" id="domainHint">Balanced evaluation for general-purpose agents</div>
                                 
@@ -1636,8 +1638,8 @@ async function getUserCalendar(userId) {
                     'Prioritize conversation flow over perfection'
                 ]
             },
-            healthcare: {
-                name: 'Healthcare (High Privacy)',
+            health: {
+                name: 'Health (High Privacy)',
                 emoji: '🏥',
                 weights: {
                     'privacy': 0.35,                 // ⬆️ HIPAA compliance
@@ -1663,25 +1665,81 @@ async function getUserCalendar(userId) {
                     'Log all data access for audit'
                 ]
             },
-            creative: {
-                name: 'Creative (High Flexibility)',
-                emoji: '🎨',
+            academic: {
+                name: 'Academic (Research Focus)',
+                emoji: '🎓',
                 weights: {
-                    'steerability': 0.35,            // ⬆️ User control important
-                    'ux-signature': 0.25,
-                    'transparency': 0.15,
-                    'grounding-fidelity': 0.08,      // ⬇️ Hallucination acceptable
+                    'grounding-fidelity': 0.35,      // ⬆️ Research accuracy
+                    'transparency': 0.25,            // ⬆️ Source attribution
+                    'steerability': 0.15,            // Academic exploration
+                    'ux-signature': 0.10,
                     'handoff-integrity': 0.08,
                     'privacy': 0.05,
-                    'error-recovery': 0.04
+                    'error-recovery': 0.02
                 },
-                allowHallucination: true,
-                description: 'Encourages creativity and exploration. Factual accuracy less critical.',
+                thresholds: {
+                    'grounding-fidelity': 90,        // Academic rigor required
+                    'transparency': 88
+                },
+                description: 'Emphasizes research accuracy, citations, and academic rigor. Peer-review standards.',
                 recommendations: [
-                    'Provide multiple creative variations',
-                    'Allow unconstrained generation',
-                    'Focus on user satisfaction over correctness',
-                    'Implement iterative refinement'
+                    'Provide complete citations in academic format',
+                    'Include confidence intervals for data',
+                    'Link to peer-reviewed sources',
+                    'Support multiple citation styles (APA, MLA, Chicago)',
+                    'Flag preliminary or unverified research'
+                ]
+            },
+            analyst: {
+                name: 'Analyst (Data Driven)',
+                emoji: '📊',
+                weights: {
+                    'grounding-fidelity': 0.30,      // ⬆️ Data accuracy
+                    'transparency': 0.25,            // ⬆️ Methodology disclosure
+                    'ux-signature': 0.20,            // Clear data visualization
+                    'steerability': 0.12,
+                    'handoff-integrity': 0.08,
+                    'privacy': 0.03,
+                    'error-recovery': 0.02
+                },
+                thresholds: {
+                    'grounding-fidelity': 85,        // Data integrity critical
+                    'transparency': 80,
+                    'ux-signature': 75
+                },
+                description: 'Optimizes for data accuracy, analytical rigor, and clear visual communication.',
+                recommendations: [
+                    'Show data sources and methodology',
+                    'Include statistical confidence levels',
+                    'Use clear charts and visualizations',
+                    'Provide downloadable data tables',
+                    'Document assumptions and limitations'
+                ]
+            },
+            projectmanager: {
+                name: 'Project Manager (Coordination)',
+                emoji: '📋',
+                weights: {
+                    'handoff-integrity': 0.35,       // ⬆️ Context preservation critical
+                    'steerability': 0.25,            // ⬆️ Adaptive planning
+                    'ux-signature': 0.20,            // Clear communication
+                    'transparency': 0.10,
+                    'grounding-fidelity': 0.05,
+                    'privacy': 0.03,
+                    'error-recovery': 0.02
+                },
+                thresholds: {
+                    'handoff-integrity': 90,         // Seamless coordination
+                    'steerability': 85,
+                    'ux-signature': 80
+                },
+                description: 'Prioritizes coordination, context handoffs, and adaptive project management.',
+                recommendations: [
+                    'Maintain detailed task context across sessions',
+                    'Support multiple project views (Gantt, Kanban)',
+                    'Enable seamless delegation and handoffs',
+                    'Track dependencies and blockers',
+                    'Provide status summaries and progress updates'
                 ]
             },
             finance: {

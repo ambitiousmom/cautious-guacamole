@@ -2316,44 +2316,8 @@ Want me to create automatic buy orders?`
             // Apply the domain profile (updates weights display)
             applyDomainProfile();
             
-            // Set agent name based on profile
-            const agentNames = {
-                'health': 'Health & Wellness Agent',
-                'finance': 'Financial Advisory Agent',
-                'legal': 'Legal Research Agent',
-                'sales': 'Sales Support Agent',
-                'academic': 'Academic Research Agent',
-                'analyst': 'Data Analysis Agent',
-                'projectmanager': 'Project Management Agent'
-            };
-            
-            document.getElementById('featureName').value = agentNames[agentKey] || profile.name;
-            document.getElementById('featureType').value = 'declarative';
-            
-            // Set description based on agent type
-            const descriptions = {
-                'health': 'A health and wellness agent that provides personalized fitness plans and nutrition guidance. Prioritizes user privacy (HIPAA compliance) and medical disclaimers. Requires explicit consent for health data access.',
-                'finance': 'A financial advisory agent that helps with budgeting, investment analysis, and portfolio management. Emphasizes regulatory compliance, transparent disclaimers, and secure financial data handling.',
-                'legal': 'A legal research agent that provides accurate legal information with proper citations. Focuses on accuracy, source attribution, and audit trails. Never provides direct legal advice.',
-                'sales': 'A sales support agent optimized for fast, conversational interactions. Prioritizes user experience and responsiveness while maintaining transparency about capabilities and limitations.',
-                'academic': 'An academic research agent for scholarly work and literature review. Emphasizes research accuracy, proper citations (APA/MLA/Chicago), and peer-reviewed sources.',
-                'analyst': 'A data analysis agent for business intelligence and reporting. Focuses on data accuracy, methodology transparency, and clear visualizations with statistical confidence levels.',
-                'projectmanager': 'A project management agent for task coordination and planning. Prioritizes context preservation, seamless handoffs, and adaptive planning across team members.'
-            };
-            
-            document.getElementById('featureDescription').value = descriptions[agentKey] || profile.description;
-            
-            // Set agent instructions based on profile recommendations
-            if (profile.recommendations && profile.recommendations.length > 0) {
-                const instructions = `You are a ${agentNames[agentKey]}. Key principles:\n\n` + 
-                    profile.recommendations.slice(0, 3).map((rec, i) => `${i + 1}. ${rec}`).join('\n');
-                document.getElementById('agentInstructions').value = instructions;
-            }
-            
-            // Clear other fields
-            document.getElementById('manifestJson').value = '';
-            document.getElementById('apiActions').value = '';
-            document.getElementById('interactionTrace').value = '';
+            // Keep all example inputs in the form fields - only update the domain profile and weights
+            // No form fields are modified, preserving the default examples
             
             // Trigger live check
             performLiveCheck();

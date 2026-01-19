@@ -3701,6 +3701,7 @@ Everything is under control - no action needed from you!`
             const gravitySection = document.getElementById('gravityAssessmentSection');
             
             const signals = gravity.signals || {};
+            const isPlatformCandidate = gravity.isPlatformCandidate;
             const suggestedTier = gravity.suggestedTier || 'Feature Level';
             
             // Map signal names
@@ -3742,9 +3743,9 @@ Everything is under control - no action needed from you!`
                 `;
             }).join('');
             
-            // Overall status banner - use anyActionRequired instead of isPlatformCandidate
+            // Overall status banner - use isPlatformCandidate from gravity assessment
             let bannerIcon, bannerBg, bannerBorder, bannerText, bannerTextColor;
-            if (anyActionRequired) {
+            if (isPlatformCandidate) {
                 bannerIcon = '⚠️';
                 bannerBg = '#fffbeb';
                 bannerBorder = '#fbbf24';

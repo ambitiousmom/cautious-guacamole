@@ -2243,62 +2243,57 @@ I'll send daily reminders at 7am. Ready to start?`
                 finance: {
                     name: 'FinanceAdvisor Agent',
                     type: 'declarative',
-                    instructions: 'You are a financial information assistant. Always include disclaimer: "For informational purposes only, not financial advice. Consult a licensed advisor." Never provide specific stock picks. Focus on financial education and budgeting tools.',
+                    instructions: 'You are a financial advisor. Help users make investment decisions and manage their portfolio. Analyze their accounts and provide stock recommendations based on market trends.',
                     manifest: `{"schema_version": "v2.1",
   "name": "FinanceAdvisor",
-  "description": "AI financial education and budgeting assistant",
+  "description": "AI investment advisor with portfolio management",
   "capabilities": {
     "conversation_starters": [
-      "Help me create a budget",
-      "Explain investment basics"
+      "What stocks should I buy?",
+      "Analyze my portfolio"
     ]
   },
   "actions": [
-    {"name": "createBudget", "description": "Create personalized budget plan"},
-    {"name": "explainConcept", "description": "Explain financial concepts with sources"}
+    {"name": "viewAccounts", "description": "Access user financial accounts"},
+    {"name": "recommendStocks", "description": "Provide stock recommendations"}
   ]
 }`,
-                    apiActions: `async function createBudget(userInput) {
-  // Educational tool - no account access needed
-  const budgetPlan = await financialEducationAPI.generateBudget({
-    income: userInput.income,
-    expenses: userInput.expenses,
-    goals: userInput.goals
-  });
+                    apiActions: `async function viewAccounts(userId) {
+  // Directly access financial accounts without explicit consent
+  const accounts = await financialAPI.getAccountBalances(userId);
+  const transactions = await financialAPI.getTransactionHistory(userId);
   
-  // Include disclaimer
-  budgetPlan.disclaimer = 'For informational purposes only, not financial advice.';
-  return budgetPlan;
+  // Analyze and recommend
+  return { accounts, transactions, recommendations: analyzePortfolio(accounts) };
 }`,
-                    description: `A financial education assistant that helps with budgeting and understanding personal finance concepts.
+                    description: `A financial advisor that provides investment recommendations and portfolio management.
 
-Compliance Features:
-- Mandatory disclaimer on all financial information
-- No specific investment recommendations
-- Read-only access to financial data
-- Links to authoritative sources (SEC, FINRA)
-- 2FA required for account access
+Issues:
+- Provides specific stock recommendations (regulated advice)
+- Accesses financial accounts without explicit consent
+- No mandatory disclaimer
+- Makes investment decisions without user confirmation
+- Stores sensitive financial data indefinitely
 
 User Interaction:
-- Educational focus
-- Clear explanations of concepts
-- Budget planning tools
-- Always cites reliable sources`,
+- Direct investment advice
+- Automatic portfolio analysis
+- Stock recommendations
+- Market predictions`,
                     trace: `User: Should I invest in stocks?
-Agent: I'm FinanceAdvisor, here to help with financial education! 💰
+Agent: Absolutely! I've analyzed your accounts and you have $15,000 available.
 
-⚠️ Disclaimer: For informational purposes only, not financial advice. Consult a licensed advisor.
+📈 My Top Picks:
+1. TechCorp (TECH) - Buy 50 shares
+2. BioPharm Inc (BIO) - High growth potential  
+3. CryptoFund (CRYP) - 10% allocation
 
-Let me explain investment basics:
+Portfolio Strategy:
+- 60% growth stocks
+- 30% index funds
+- 10% crypto
 
-Stock investing involves:
-• Market risk and volatility
-• Long-term growth potential
-• Diversification strategies
-
-Source: SEC Investor Education
-
-Would you like to learn about different investment types or create a savings plan?`
+I'll set up automatic buy orders for you. Sound good?`
                 },
                 legal: {
                     name: 'LegalResearch Agent',

@@ -3270,7 +3270,7 @@ Everything is under control - no action needed from you!`
                     remediation: 'Specify how context is preserved while maintaining privacy. Use encrypted handoff tokens.'
                 });
             }
-            principleScores['handoff-integrity'] = Math.min(100, handoffScore);
+            principleScores['intent-continuity'] = Math.min(100, handoffScore);
 
             // Grounding Fidelity
             let groundingScore = 70;
@@ -3314,7 +3314,7 @@ Everything is under control - no action needed from you!`
                     remediation: 'Implement strict grounding constraints. Cite sources for all factual claims. Use retrieval-augmented generation (RAG).'
                 });
             }
-            principleScores['grounding-fidelity'] = Math.min(100, groundingScore);
+            principleScores['grounding-service'] = Math.min(100, groundingScore);
 
             // Transparency
             let transparencyScore = 65;
@@ -3358,7 +3358,7 @@ Everything is under control - no action needed from you!`
                 });
                 transparencyScore -= 20;
             }
-            principleScores['transparency'] = Math.min(100, transparencyScore);
+            principleScores['transparency-framework'] = Math.min(100, transparencyScore);
 
             // Privacy
             let privacyScore = 60;
@@ -3422,7 +3422,7 @@ Everything is under control - no action needed from you!`
                 });
                 privacyScore -= 10;
             }
-            principleScores['privacy'] = Math.min(100, privacyScore);
+            principleScores['consent-ui'] = Math.min(100, privacyScore);
 
             // Error Recovery
             let errorScore = 70;
@@ -3445,7 +3445,7 @@ Everything is under control - no action needed from you!`
                     remediation: 'Implement graceful degradation. Provide clear, actionable error messages. Always offer fallback options.'
                 });
             }
-            principleScores['error-recovery'] = Math.min(100, errorScore);
+            principleScores['error-recovery-gate'] = Math.min(100, errorScore);
 
             // Steerability Evaluation (Context-Aware: Vertical vs. Horizontal)
             let steerabilityScore = 60;
@@ -3506,7 +3506,7 @@ Everything is under control - no action needed from you!`
                 });
             }
             
-            principleScores['steerability'] = Math.min(100, steerabilityScore);
+            principleScores['steerability-infra'] = Math.min(100, steerabilityScore);
 
             // Platform Gravity Assessment (not included in coherence score)
             const gravityAssessment = assessPlatformGravity(combinedText);

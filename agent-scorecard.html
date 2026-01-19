@@ -3918,14 +3918,26 @@ Everything is under control - no action needed from you!`
             const gravityLabelEl = document.getElementById('gravityLabel');
             
             if (isPlatformCandidate) {
-                // Platform candidate - show warning with text
-                gravityValueEl.innerHTML = '<div style="text-align: center;"><div style="font-size: 2.5em; margin-bottom: 3px;">⚠️</div><div style="font-size: 0.55em; font-weight: 700; color: #f59e0b; letter-spacing: 0.3px; line-height: 1.2;">PLATFORM<br>CANDIDATE<br>DETECTED</div></div>';
+                // Platform candidate - warning triangle
+                gravityValueEl.innerHTML = `
+                    <svg width="80" height="80" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" style="margin-bottom: -5px;">
+                        <defs>
+                            <linearGradient id="warningGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                                <stop offset="0%" style="stop-color:#fbbf24;stop-opacity:1" />
+                                <stop offset="100%" style="stop-color:#f59e0b;stop-opacity:1" />
+                            </linearGradient>
+                        </defs>
+                        <path d="M50 15 L85 80 L15 80 Z" fill="url(#warningGradient)" stroke="none"/>
+                        <circle cx="50" cy="72" r="3" fill="#78350f"/>
+                        <rect x="47" y="40" width="6" height="22" rx="2" fill="#78350f"/>
+                    </svg>
+                `;
                 gravityValueEl.style.color = '#f59e0b';
-                gravityLabelEl.textContent = 'Platform Candidate';
+                gravityLabelEl.innerHTML = '<span style="font-size: 0.9em; font-weight: 700; color: #f59e0b;">PLATFORM<br>CANDIDATE<br>DETECTED</span>';
                 gravityLabelEl.style.color = '#f59e0b';
             } else {
-                // No action required - plain green text
-                gravityValueEl.innerHTML = '<div style="font-size: 0.75em; font-weight: 700; color: #10b981; letter-spacing: 0.5px; text-align: center; line-height: 1.3; padding: 15px 5px;">NO ACTION<br>REQUIRED</div>';
+                // No action required - just text
+                gravityValueEl.innerHTML = '<div style="font-size: 1em; font-weight: 700; color: #10b981; letter-spacing: 1px; padding: 20px 10px;">NO ACTION<br>REQUIRED</div>';
                 gravityValueEl.style.color = '#10b981';
                 gravityLabelEl.textContent = 'Stay Feature Level';
                 gravityLabelEl.style.color = '#10b981';

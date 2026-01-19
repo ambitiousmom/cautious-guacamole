@@ -1229,7 +1229,8 @@
             <p class="tagline">Evaluate agents against platform principles & strategic fit</p>
 
             <div class="principle-section">
-                <h3>Evaluation Framework</h3>
+                <h3>Coherence Principles</h3>
+                <p style="font-size: 0.8em; color: #9ca3af; margin-bottom: 12px;">Platform alignment across core principles</p>
                 <div class="principles-grid">
                     <div class="principle-item active" data-principle="ux-signature">
                         <div class="name">🎨 UX Signature</div>
@@ -1255,13 +1256,20 @@
                         <div class="name">⚡ Error Recovery</div>
                         <div class="description">Graceful degradation</div>
                     </div>
-                    <div class="principle-item" data-principle="platform-gravity">
-                        <div class="name">🚀 Platform Gravity</div>
-                        <div class="description">Strategic platform fit</div>
-                    </div>
                     <div class="principle-item" data-principle="steerability">
                         <div class="name">🎯 Steerability</div>
                         <div class="description">Real-time adaptability</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="principle-section" style="margin-top: 20px;">
+                <h3>Platform Gravity</h3>
+                <p style="font-size: 0.8em; color: #9ca3af; margin-bottom: 12px;">Strategic fit for platform absorption</p>
+                <div class="principles-grid">
+                    <div class="principle-item" data-principle="platform-gravity">
+                        <div class="name">🚀 Platform Gravity</div>
+                        <div class="description">Strategic platform fit</div>
                     </div>
                 </div>
             </div>
@@ -1312,6 +1320,9 @@
                                 <div class="template-chip" onclick="loadAgentProfile('academic')">🎓 Academic</div>
                                 <div class="template-chip" onclick="loadAgentProfile('analyst')">📊 Analyst</div>
                                 <div class="template-chip" onclick="loadAgentProfile('projectmanager')">📋 Project Manager</div>
+                                <button class="btn btn-secondary" onclick="clearForm()" style="margin-left: 8px;">
+                                    🔄 Reset
+                                </button>
                             </div>
 
                             <div class="form-row">
@@ -1326,54 +1337,16 @@
                                     <div class="form-hint" style="margin-top: 4px; margin-bottom: 6px;">Select agent architecture</div>
                                     <select id="featureType">
                                         <option value="declarative" selected>Declarative Agent</option>
-                                        <option value="plugin">API Plugin</option>
-                                        <option value="custom">Custom Engine Agent</option>
+                                        <option value="plugin">Not Applicable</option>
+                                        <option value="custom">Not Applicable</option>
                                     </select>
                                 </div>
                             </div>
 
                             <div class="form-group">
-                                <label>Domain Profile <span style="font-size: 0.85em; font-weight: normal; color: #6b7280;">(Auto-populated by agent selection)</span></label>
-                                <select id="domainProfile" onchange="applyDomainProfile()">
-                                    <option value="general" selected>General Purpose (Balanced)</option>
-                                    <option value="health">🏥 Health - High Privacy (Privacy 35%)</option>
-                                    <option value="finance">💰 Finance - High Compliance (Transparency 30%)</option>
-                                    <option value="legal">⚖️ Legal - High Accuracy (Grounding 35%)</option>
-                                    <option value="sales">💼 Sales - Low Latency (UX 30%, Steerability 25%)</option>
-                                    <option value="academic">🎓 Academic - Research Focus (Grounding 35%)</option>
-                                    <option value="analyst">📊 Analyst - Data Driven (Grounding 30%, Transparency 25%)</option>
-                                    <option value="projectmanager">📋 Project Manager - Coordination (Handoff 35%, Steerability 25%)</option>
-                                </select>
-                                
-                                <div class="principle-weights-list" id="principleWeightsList">
-                                    <h4>📊 Principle Weight Distribution <span style="font-weight: normal; font-size: 0.85em; color: #6b7280;">(totals 100%)</span></h4>
-                                    <div class="form-hint" id="domainHint" style="margin-top: -8px; margin-bottom: 12px;">Balanced evaluation for general-purpose agents</div>
-                                    <div id="weightsDisplay"></div>
-                                </div>
-                            </div>
-
-                            <div class="form-group">
-                                <label>Agent Instructions</label>
-                                <div class="form-hint">The system prompt that defines your agent's behavior</div>
-                                <textarea id="agentInstructions" placeholder="System prompt for your agent..." style="min-height: 80px;"></textarea>
-                            </div>
-
-                            <div class="form-group">
-                                <label>Manifest JSON</label>
-                                <div class="form-hint">Declarative agent manifest (JSON format)</div>
-                                <textarea id="manifestJson" placeholder="Agent manifest configuration..." style="min-height: 150px; font-family: 'Consolas', 'Monaco', monospace;"></textarea>
-                            </div>
-
-                            <div class="form-group">
-                                <label>API Actions / Code</label>
-                                <div class="form-hint">API actions, plugin functions, or custom code</div>
-                                <textarea id="apiActions" placeholder="API actions, plugin code, or custom functions..." style="min-height: 120px; font-family: 'Consolas', 'Monaco', monospace;"></textarea>
-                            </div>
-
-                            <div class="form-group">
-                                <label>Description & Behavior</label>
-                                <div class="form-hint">Be specific about user interactions, data handling, and UI patterns</div>
-                                <textarea id="featureDescription" placeholder="Describe how the agent works, what data it uses, how it interacts with users, UI patterns, and any special considerations..."></textarea>
+                                <label>Agent Details</label>
+                                <div class="form-hint">Provide agent instructions, manifest, code, behavior description, and sample interactions</div>
+                                <textarea id="featureDescription" placeholder="Describe your agent's functionality, behavior, data handling, and user interactions..." style="min-height: 400px;"></textarea>
                                 
                                 <!-- Live Feedback Panel -->
                                 <div id="liveFeedback" class="live-feedback" style="display: none;">
@@ -1386,26 +1359,6 @@
                                 </div>
                             </div>
 
-                            <div style="display: flex; gap: 12px; margin-top: 20px;">
-                                <button class="btn btn-secondary" onclick="clearForm()">
-                                    🔄 Reset
-                                </button>
-                                <button class="btn btn-primary" onclick="evaluateFeature()">
-                                    ▶️ Evaluate
-                                </button>
-                            </div>
-                        </div>
-
-                        <div class="card">
-                            <div class="card-header">
-                                <h3>Interaction Trace (Optional)</h3>
-                            </div>
-
-                            <div class="form-group">
-                                <label>Sample Interaction Log</label>
-                                <div class="form-hint">Paste a sample conversation or interaction flow</div>
-                                <textarea id="interactionTrace" placeholder="User: [User's question or request]&#10;Agent: [Agent's response]&#10;User: [Follow-up]&#10;Agent: [Further interaction]&#10;..."></textarea>
-                            </div>
                         </div>
                     </div>
 
@@ -2083,8 +2036,7 @@ Want me to create automatic buy orders?`
 
         function performLiveCheck() {
             const description = document.getElementById('featureDescription').value;
-            const trace = document.getElementById('interactionTrace').value;
-            const combinedText = description + ' ' + trace;
+            const combinedText = description;
 
             if (combinedText.trim().length < 20) {
                 document.getElementById('liveFeedback').style.display = 'none';
@@ -2149,89 +2101,6 @@ Want me to create automatic buy orders?`
             updatePrincipleIndicators(principleStatus);
         }
 
-        // Apply domain profile weights
-        function applyDomainProfile() {
-            const domain = document.getElementById('domainProfile').value;
-            const profile = DOMAIN_PROFILES[domain];
-            
-            // Update hint text
-            document.getElementById('domainHint').textContent = profile.description;
-            
-            // Define fixed vs variable principles and minimum requirements
-            // Each principle is scored 0-100 individually
-            const principleConfig = {
-                'ux-signature': { fixed: true, minReq: '100', label: 'UX Signature' },
-                'handoff-integrity': { fixed: true, minReq: '100', label: 'Handoff Integrity' },
-                'grounding-fidelity': { fixed: false, minReq: '50', label: 'Grounding Fidelity' },
-                'transparency': { fixed: true, minReq: '100', label: 'Transparency' },
-                'privacy': { fixed: true, minReq: '100', label: 'Privacy First' },
-                'error-recovery': { fixed: false, minReq: '50', label: 'Error Recovery' },
-                'steerability': { fixed: false, minReq: '50', label: 'Steerability' }
-            };
-            
-            // Update weights display listbox
-            const weightsDisplay = document.getElementById('weightsDisplay');
-            weightsDisplay.innerHTML = '';
-            
-            Object.keys(principleConfig).forEach(principle => {
-                const config = principleConfig[principle];
-                const weight = profile.weights[principle];
-                const percentage = Math.round(weight * 100);
-                
-                const weightItem = document.createElement('div');
-                weightItem.className = 'weight-item';
-                weightItem.innerHTML = `
-                    <div class="weight-item-name">
-                        <span>${config.label}</span>
-                        <span class="weight-badge ${config.fixed ? 'fixed' : 'variable'}">
-                            ${config.fixed ? 'FIXED' : 'Variable'}
-                        </span>
-                    </div>
-                    <div class="weight-item-value">
-                        <span>${percentage}%</span>
-                        <span class="weight-min-req">(min required: ${config.minReq}/100)</span>
-                    </div>
-                `;
-                weightsDisplay.appendChild(weightItem);
-            });
-            
-            // Update principle items with weight indicators
-            document.querySelectorAll('.principle-item').forEach(item => {
-                const principle = item.dataset.principle;
-                const nameElement = item.querySelector('.name');
-                
-                // Remove existing weight indicator
-                const existingIndicator = nameElement.querySelector('.principle-weight-indicator');
-                if (existingIndicator) {
-                    existingIndicator.remove();
-                }
-                
-                // Add weight indicator if not platform-gravity
-                if (principle !== 'platform-gravity' && profile.weights[principle]) {
-                    const weight = profile.weights[principle];
-                    const indicator = document.createElement('span');
-                    indicator.className = 'principle-weight-indicator';
-                    
-                    // Color code by weight: >25% = critical (red), 20-25% = high (orange), 10-19% = normal (green), <10% = low (gray)
-                    if (weight >= 0.25) {
-                        indicator.classList.add('weight-critical');
-                        indicator.title = `Critical: ${Math.round(weight * 100)}% weight in ${profile.name}`;
-                    } else if (weight >= 0.20) {
-                        indicator.classList.add('weight-high');
-                        indicator.title = `High: ${Math.round(weight * 100)}% weight in ${profile.name}`;
-                    } else if (weight >= 0.10) {
-                        indicator.classList.add('weight-normal');
-                        indicator.title = `Normal: ${Math.round(weight * 100)}% weight in ${profile.name}`;
-                    } else {
-                        indicator.classList.add('weight-low');
-                        indicator.title = `Low: ${Math.round(weight * 100)}% weight in ${profile.name}`;
-                    }
-                    
-                    nameElement.appendChild(indicator);
-                }
-            });
-        }
-
         function updatePrincipleIndicators(status) {
             document.querySelectorAll('.principle-item').forEach(item => {
                 const principle = item.dataset.principle;
@@ -2289,7 +2158,7 @@ Want me to create automatic buy orders?`
             }
         }
 
-        // Load agent profile with principle weights
+        // Load agent profile and trigger evaluation
         function loadAgentProfile(agentKey) {
             const profile = DOMAIN_PROFILES[agentKey];
             if (!profile) return;
@@ -2754,15 +2623,14 @@ Need me to update anything or send delegation notes?`
             if (example) {
                 document.getElementById('featureName').value = example.name;
                 document.getElementById('featureType').value = example.type;
-                document.getElementById('agentInstructions').value = example.instructions;
-                document.getElementById('manifestJson').value = example.manifest;
-                document.getElementById('apiActions').value = example.apiActions;
-                document.getElementById('featureDescription').value = example.description;
-                document.getElementById('interactionTrace').value = example.trace;
+                
+                // Combine all inputs into one field
+                const combinedInput = `AGENT INSTRUCTIONS:\n${example.instructions}\n\nMANIFEST:\n${example.manifest}\n\nAPI ACTIONS:\n${example.apiActions}\n\nDESCRIPTION:\n${example.description}\n\nSAMPLE INTERACTION:\n${example.trace}`;
+                document.getElementById('featureDescription').value = combinedInput;
+                
+                // Trigger evaluation immediately
+                setTimeout(() => evaluateFeature(), 500);
             }
-            
-            // Trigger live check
-            performLiveCheck();
         }
 
         // Load a template
@@ -2770,11 +2638,10 @@ Need me to update anything or send delegation notes?`
             const template = TEMPLATES[templateKey];
             document.getElementById('featureName').value = template.name;
             document.getElementById('featureType').value = template.type;
-            document.getElementById('agentInstructions').value = template.instructions || '';
-            document.getElementById('manifestJson').value = template.manifest || '';
-            document.getElementById('apiActions').value = template.apiActions || '';
-            document.getElementById('featureDescription').value = template.description;
-            document.getElementById('interactionTrace').value = template.trace || '';
+            
+            // Combine all inputs into one field
+            const combinedInput = `AGENT INSTRUCTIONS:\n${template.instructions || ''}\n\nMANIFEST:\n${template.manifest || ''}\n\nAPI ACTIONS:\n${template.apiActions || ''}\n\nDESCRIPTION:\n${template.description}\n\nSAMPLE INTERACTION:\n${template.trace || ''}`;
+            document.getElementById('featureDescription').value = combinedInput;
             
             // Trigger live check after loading template
             performLiveCheck();
@@ -2792,13 +2659,9 @@ Need me to update anything or send delegation notes?`
         // Clear form
         function clearForm() {
             document.getElementById('featureName').value = '';
-            document.getElementById('agentInstructions').value = 'You are a helpful AI assistant. Be concise, accurate, and always cite sources when providing factual information.';
-            document.getElementById('manifestJson').value = '{"schema_version": "v2.1",\n  "name": "ExampleAgent",\n  "description": "A helpful AI assistant",\n  "capabilities": {\n    "conversation_starters": [\n      "Help me get started"\n    ]\n  },\n  "actions": []\n}';
-            document.getElementById('apiActions').value = '// Example: API action definition\nasync function getUserCalendar(userId) {\n  // Request consent before accessing\n  const consent = await requestPermission(\'Calendar.Read\');\n  if (!consent) return fallbackOptions();\n  \n  return await graph.calendar.getEvents(userId);\n}';
             document.getElementById('featureDescription').value = '';
-            document.getElementById('interactionTrace').value = '';
             document.getElementById('scoreCard').style.display = 'none';
-            document.getElementById('issuesCard').style.display = 'none';
+            document.getElementById('principleCard').style.display = 'none';
             document.getElementById('liveFeedback').style.display = 'none';
             updatePrincipleIndicators({});
         }
@@ -2808,7 +2671,6 @@ Need me to update anything or send delegation notes?`
             const featureName = document.getElementById('featureName').value.trim();
             const featureType = document.getElementById('featureType').value;
             const description = document.getElementById('featureDescription').value.trim();
-            const trace = document.getElementById('interactionTrace').value.trim();
 
             if (!featureName || !description) {
                 alert('Please provide at least a feature name and description');

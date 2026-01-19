@@ -1396,32 +1396,21 @@
                         <div class="results-panel">
                             <!-- Assessment Scores Card -->
                             <div class="card score-card" id="scoreCard" style="display: none;">
-                                <h3 style="font-size: 1.05em; font-weight: 600; color: #1f2937; margin-bottom: 15px; text-align: center;">Assessment Scores</h3>
+                                <h3 style="font-size: 1.05em; font-weight: 600; color: #1f2937; margin-bottom: 20px; text-align: center;">Assessment Scores</h3>
                                 
-                                <div style="display: flex; gap: 25px; justify-content: center;">
-                                    <!-- Coherence Score Circle -->
+                                <div style="display: flex; gap: 40px; justify-content: center; align-items: center;">
+                                    <!-- Coherence Score -->
                                     <div style="text-align: center;">
-                                        <div class="score-circle">
-                                            <svg width="120" height="120">
-                                                <circle cx="60" cy="60" r="50" fill="none" stroke="#e5e7eb" stroke-width="10"/>
-                            </svg>
-                            <div class="score-value" id="scoreValue" style="font-size: 3em;">--</div>
-                        </div>
-                        <div class="score-label">Coherence</div>
-                        <div class="score-status" id="scoreStatus" style="display: none;">
-                            <span></span>
-                        </div>
-                        <div style="font-size: 0.85em; color: #6b7280; margin-top: 8px; font-weight: 600;" id="coherenceLabel">Platform Alignment</div>
-                                            <svg width="120" height="120">
-                                                <circle cx="60" cy="60" r="50" fill="none" stroke="#e5e7eb" stroke-width="10"/>
-                                                <circle id="gravityCircle" cx="60" cy="60" r="50" fill="none" stroke="#7C3AED" stroke-width="10" 
-                                                        stroke-dasharray="314" stroke-dashoffset="314" stroke-linecap="round" transform="rotate(-90 60 60)" style="transition: stroke-dashoffset 1s ease, stroke 0.3s ease"/>
-                                            </svg>
-                                            <div class="score-value" id="gravityValue">--</div>
-                                        </div>
-                                        <div class="score-label">Platform Gravity</div>
-                                        <div class="gravity-status" id="gravityStatus">Medium Gravity</div>
-                                        <div style="font-size: 0.7em; color: #6b7280; margin-top: 8px; line-height: 1.3;">Lower = Feature Level<br/>Higher = Platform</div>
+                                        <div style="font-size: 4em; margin-bottom: 10px;" id="scoreValue">--</div>
+                                        <div style="font-size: 0.9em; font-weight: 600; color: #6b7280;">Coherence</div>
+                                        <div style="font-size: 0.75em; color: #9ca3af; margin-top: 5px;" id="coherenceLabel">Platform Alignment</div>
+                                    </div>
+
+                                    <!-- Platform Gravity Score -->
+                                    <div style="text-align: center;">
+                                        <div style="font-size: 4em; margin-bottom: 10px;" id="gravityValue">--</div>
+                                        <div style="font-size: 0.9em; font-weight: 600; color: #6b7280;">Platform Gravity</div>
+                                        <div style="font-size: 0.75em; color: #9ca3af; margin-top: 5px;" id="gravityLabel">Strategic Fit</div>
                                     </div>
                                 </div>
                             </div>

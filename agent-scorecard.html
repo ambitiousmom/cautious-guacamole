@@ -3914,9 +3914,6 @@ Everything is under control - no action needed from you!`
             const failingPrinciples = [];
             const passingPrinciples = [];
 
-            // Check if overall assessment is coherent
-            const isCoherent = evaluation.overallScore >= 70;
-
             // Process all principles
             for (const [key, principle] of Object.entries(PRINCIPLES)) {
                 const score = evaluation.principleScores[key] || 0;

@@ -2316,8 +2316,466 @@ Want me to create automatic buy orders?`
             // Apply the domain profile (updates weights display)
             applyDomainProfile();
             
-            // Keep all example inputs in the form fields - only update the domain profile and weights
-            // No form fields are modified, preserving the default examples
+            // Agent-specific examples
+            const agentExamples = {
+                health: {
+                    name: 'WellnessCoach AI',
+                    type: 'declarative',
+                    instructions: 'You are a wellness coach AI. Always include medical disclaimer: "I am an AI assistant, not a medical professional. Always consult your doctor." Request explicit consent before accessing health data. Provide evidence-based fitness and nutrition guidance.',
+                    manifest: `{"schema_version": "v2.1",
+  "name": "WellnessCoach",
+  "description": "AI wellness and fitness coach with privacy-first design",
+  "capabilities": {
+    "conversation_starters": [
+      "Help me start exercising",
+      "Create a personalized fitness plan"
+    ]
+  },
+  "actions": [
+    {"name": "createFitnessPlan", "description": "Generate personalized fitness plan", "requires_consent": true},
+    {"name": "trackProgress", "description": "Track wellness goals with encrypted storage"}
+  ]
+}`,
+                    apiActions: `async function trackProgress(userId) {
+  // Request explicit consent for health data
+  const consent = await requestPermission('HealthData.Read', 
+    'I need access to your health data to track progress');
+  
+  if (!consent) {
+    return { message: 'Manual tracking available without data access' };
+  }
+  
+  // Use encrypted storage for PHI
+  const healthData = await encryptedHealthAPI.getProgress(userId);
+  return healthData;
+}`,
+                    description: `A health and wellness coaching agent that provides personalized fitness plans and nutrition guidance.
+
+Key Privacy Features:
+- HIPAA-compliant design with end-to-end encryption
+- Medical disclaimer on every response
+- Explicit consent required before accessing health data
+- Zero-retention policy for PHI (Personal Health Information)
+- 2FA required for sensitive operations
+
+User Interaction:
+- Supportive, motivational tone
+- Evidence-based recommendations
+- Clear explanation of data usage
+- Graceful fallback if consent denied`,
+                    trace: `User: Help me start exercising
+Agent: I'm WellnessCoach, your AI fitness assistant! 💪
+
+⚠️ Important: I am an AI assistant, not a medical professional. Always consult your doctor before starting a new exercise program.
+
+To create a personalized plan, I'd like to access:
+• Your activity history
+• Health metrics (with encryption)
+
+Is that okay?
+
+User: Yes
+
+Agent: Great! Based on your profile, here's Week 1:
+• 30-min cardio, 5x/week
+• Start with walking/jogging
+• Progress tracking with encrypted storage
+
+I'll send daily reminders at 7am. Ready to start?`
+                },
+                finance: {
+                    name: 'FinanceAdvisor AI',
+                    type: 'declarative',
+                    instructions: 'You are a financial information assistant. Always include disclaimer: "For informational purposes only, not financial advice. Consult a licensed advisor." Never provide specific stock picks. Focus on financial education and budgeting tools.',
+                    manifest: `{"schema_version": "v2.1",
+  "name": "FinanceAdvisor",
+  "description": "AI financial education and budgeting assistant",
+  "capabilities": {
+    "conversation_starters": [
+      "Help me create a budget",
+      "Explain investment basics"
+    ]
+  },
+  "actions": [
+    {"name": "createBudget", "description": "Create personalized budget plan"},
+    {"name": "explainConcept", "description": "Explain financial concepts with sources"}
+  ]
+}`,
+                    apiActions: `async function createBudget(userInput) {
+  // Educational tool - no account access needed
+  const budgetPlan = await financialEducationAPI.generateBudget({
+    income: userInput.income,
+    expenses: userInput.expenses,
+    goals: userInput.goals
+  });
+  
+  // Include disclaimer
+  budgetPlan.disclaimer = 'For informational purposes only, not financial advice.';
+  return budgetPlan;
+}`,
+                    description: `A financial education assistant that helps with budgeting and understanding personal finance concepts.
+
+Compliance Features:
+- Mandatory disclaimer on all financial information
+- No specific investment recommendations
+- Read-only access to financial data
+- Links to authoritative sources (SEC, FINRA)
+- 2FA required for account access
+
+User Interaction:
+- Educational focus
+- Clear explanations of concepts
+- Budget planning tools
+- Always cites reliable sources`,
+                    trace: `User: Should I invest in stocks?
+Agent: I'm FinanceAdvisor, here to help with financial education! 💰
+
+⚠️ Disclaimer: For informational purposes only, not financial advice. Consult a licensed advisor.
+
+Let me explain investment basics:
+
+Stock investing involves:
+• Market risk and volatility
+• Long-term growth potential
+• Diversification strategies
+
+Source: SEC Investor Education
+
+Would you like to learn about different investment types or create a savings plan?`
+                },
+                legal: {
+                    name: 'LegalResearch AI',
+                    type: 'declarative',
+                    instructions: 'You are a legal research assistant. Always include disclaimer: "This is not legal advice. Consult a licensed attorney." Provide accurate citations for all legal information. Focus on research and information gathering, never direct legal advice.',
+                    manifest: `{"schema_version": "v2.1",
+  "name": "LegalResearch",
+  "description": "AI legal research assistant with citation tracking",
+  "capabilities": {
+    "conversation_starters": [
+      "Research case law on contract disputes",
+      "Find relevant statutes"
+    ]
+  },
+  "actions": [
+    {"name": "searchCaseLaw", "description": "Search legal databases with citations"},
+    {"name": "summarizeStatute", "description": "Summarize statutes with source links"}
+  ]
+}`,
+                    apiActions: `async function searchCaseLaw(query) {
+  // Research tool with full citation tracking
+  const results = await legalDatabaseAPI.search(query);
+  
+  // Format with proper citations
+  return results.map(case => ({
+    citation: case.bluebookCitation,
+    summary: case.summary,
+    sourceLink: case.officialSource,
+    confidence: case.relevanceScore
+  }));
+}`,
+                    description: `A legal research assistant that helps find case law, statutes, and legal information with proper citations.
+
+Key Features:
+- Proper legal citations (Bluebook format)
+- Source attribution for all information
+- Confidence scores for search results
+- Audit trail logging
+- Read-only access to legal databases
+
+User Interaction:
+- Clear disclaimer on every response
+- Detailed citations
+- Never provides legal advice
+- Explains research methodology`,
+                    trace: `User: What are the elements of a valid contract?
+Agent: I'm LegalResearch, your legal research assistant. ⚖️
+
+⚠️ Important: This is not legal advice. Consult a licensed attorney.
+
+Based on legal research:
+
+Elements of a Valid Contract:
+1. Offer and Acceptance
+2. Consideration
+3. Legal Capacity
+4. Legal Purpose
+
+Source: Restatement (Second) of Contracts § 17
+Confidence: 95%
+
+Would you like case law examples or more detail on any element?`
+                },
+                sales: {
+                    name: 'SalesAssist AI',
+                    type: 'declarative',
+                    instructions: 'You are a sales support assistant. Prioritize fast, conversational responses. Help with product information, CRM updates, and customer inquiries. Be friendly and efficient.',
+                    manifest: `{"schema_version": "v2.1",
+  "name": "SalesAssist",
+  "description": "AI sales support with fast response optimization",
+  "capabilities": {
+    "conversation_starters": [
+      "Help me prepare for a sales call",
+      "Update CRM with meeting notes"
+    ]
+  },
+  "actions": [
+    {"name": "searchProducts", "description": "Fast product search with caching"},
+    {"name": "updateCRM", "description": "Update customer records"}
+  ]
+}`,
+                    apiActions: `async function searchProducts(query) {
+  // Optimized for speed with caching
+  const cachedResult = await cache.get(query);
+  if (cachedResult) return cachedResult;
+  
+  // Fast approximate search
+  const results = await productAPI.fastSearch(query, { 
+    timeout: 1000,
+    approximateOK: true 
+  });
+  
+  cache.set(query, results, { ttl: 3600 });
+  return results;
+}`,
+                    description: `A sales support assistant optimized for fast, conversational interactions.
+
+Performance Features:
+- Response streaming for immediate feedback
+- Cached common queries (<1s response)
+- Approximate answers when speed matters
+- Progressive disclosure of details
+
+User Interaction:
+- Friendly, conversational tone
+- Quick product lookups
+- CRM integration
+- Meeting preparation assistance`,
+                    trace: `User: Quick - what's the pricing for our Enterprise plan?
+Agent: SalesAssist here! 💼
+
+Enterprise Plan:
+• $299/user/month (annual)
+• $349/user/month (monthly)
+• Includes: All features + dedicated support
+
+Want me to send you the full pricing sheet or help prepare a proposal?
+
+User: Prepare proposal
+
+Agent: On it! I'll pull together:
+✓ Pricing breakdown
+✓ Feature comparison
+✓ ROI calculator
+
+Ready in 30 seconds!`
+                },
+                academic: {
+                    name: 'AcademicResearch AI',
+                    type: 'declarative',
+                    instructions: 'You are an academic research assistant. Provide rigorous citations in academic format (APA, MLA, Chicago). Link to peer-reviewed sources. Include confidence intervals for data. Flag preliminary or unverified research.',
+                    manifest: `{"schema_version": "v2.1",
+  "name": "AcademicResearch",
+  "description": "AI academic research assistant with citation management",
+  "capabilities": {
+    "conversation_starters": [
+      "Help me find peer-reviewed sources",
+      "Summarize recent research on a topic"
+    ]
+  },
+  "actions": [
+    {"name": "searchScholar", "description": "Search academic databases"},
+    {"name": "formatCitation", "description": "Format citations in multiple styles"}
+  ]
+}`,
+                    apiActions: `async function searchScholar(query, citationStyle = 'APA') {
+  // Search peer-reviewed sources
+  const results = await academicAPI.searchPeerReviewed(query);
+  
+  return results.map(paper => ({
+    citation: formatCitation(paper, citationStyle),
+    abstract: paper.abstract,
+    doi: paper.doi,
+    peerReviewStatus: paper.status,
+    citationCount: paper.citations
+  }));
+}`,
+                    description: `An academic research assistant that helps find and cite scholarly sources with proper academic rigor.
+
+Academic Features:
+- Peer-reviewed source verification
+- Multiple citation formats (APA, MLA, Chicago)
+- Confidence intervals for data
+- Flags preliminary research
+- DOI and persistent links
+
+User Interaction:
+- Scholarly tone
+- Detailed methodology
+- Source quality assessment
+- Citation management`,
+                    trace: `User: Find research on climate change impacts
+Agent: I'm AcademicResearch, your scholarly assistant. 🎓
+
+Searching peer-reviewed sources...
+
+Found 847 papers (2020-2024). Top 3:
+
+1. Smith et al. (2023). "Global temperature trends"
+   Nature Climate Change, 13(4), 234-245.
+   DOI: 10.1038/s41558-023-01234-5
+   Citations: 156 | Status: Peer-reviewed
+
+2. Johnson & Lee (2024). "Ocean acidification rates"
+   Science, 383(6680), 445-449.
+   [Preliminary - not yet peer-reviewed]
+
+Need citations in APA, MLA, or Chicago format?`
+                },
+                analyst: {
+                    name: 'DataAnalyst AI',
+                    type: 'declarative',
+                    instructions: 'You are a data analysis assistant. Always show data sources and methodology. Include statistical confidence levels. Provide clear visualizations. Document assumptions and limitations.',
+                    manifest: `{"schema_version": "v2.1",
+  "name": "DataAnalyst",
+  "description": "AI data analysis assistant with visualization tools",
+  "capabilities": {
+    "conversation_starters": [
+      "Analyze sales trends",
+      "Create data visualization"
+    ]
+  },
+  "actions": [
+    {"name": "analyzeData", "description": "Statistical analysis with confidence levels"},
+    {"name": "createChart", "description": "Generate data visualizations"}
+  ]
+}`,
+                    apiActions: `async function analyzeData(dataset, analysisType) {
+  // Perform statistical analysis
+  const analysis = await analyticsAPI.analyze(dataset, {
+    type: analysisType,
+    confidenceLevel: 0.95
+  });
+  
+  return {
+    results: analysis.results,
+    confidence: analysis.confidence,
+    methodology: analysis.method,
+    assumptions: analysis.assumptions,
+    dataSource: dataset.source
+  };
+}`,
+                    description: `A data analysis assistant that provides rigorous analytical insights with clear visualizations.
+
+Analytical Features:
+- Statistical confidence levels (95% default)
+- Documented methodology
+- Clear data source attribution
+- Assumption documentation
+- Downloadable data tables
+
+User Interaction:
+- Data-driven insights
+- Visual clarity
+- Methodological transparency
+- Limitation awareness`,
+                    trace: `User: Analyze Q4 sales trends
+Agent: I'm DataAnalyst, your data insights assistant! 📊
+
+Analyzing Q4 sales data...
+
+Results:
+• 23% increase vs Q3 (confidence: 95%)
+• Peak: Week of Dec 12 ($2.3M)
+• Top product: Enterprise licenses
+
+Methodology: Time-series analysis with seasonal adjustment
+Data Source: SalesDB 2024-Q4
+Assumptions: Excluded returns, included pre-orders
+
+[Chart showing weekly trend with confidence bands]
+
+Want to drill down into any segment?`
+                },
+                projectmanager: {
+                    name: 'ProjectCoordinator AI',
+                    type: 'declarative',
+                    instructions: 'You are a project management assistant. Maintain detailed context across sessions. Support multiple views (Gantt, Kanban). Enable seamless delegation. Track dependencies and blockers. Provide clear status summaries.',
+                    manifest: `{"schema_version": "v2.1",
+  "name": "ProjectCoordinator",
+  "description": "AI project management with context preservation",
+  "capabilities": {
+    "conversation_starters": [
+      "Show project status",
+      "Update task dependencies"
+    ]
+  },
+  "actions": [
+    {"name": "updateTask", "description": "Update task with full context preservation"},
+    {"name": "generateStatusReport", "description": "Create comprehensive status summary"}
+  ]
+}`,
+                    apiActions: `async function updateTask(taskId, updates, context) {
+  // Preserve full context for handoffs
+  const task = await projectAPI.getTask(taskId);
+  
+  const updatedTask = await projectAPI.update(taskId, {
+    ...updates,
+    previousContext: task.context,
+    handoffNotes: context.handoffNotes,
+    dependencies: task.dependencies
+  });
+  
+  // Notify dependent tasks
+  await notifyDependencies(updatedTask);
+  return updatedTask;
+}`,
+                    description: `A project management assistant that excels at coordination, context handoffs, and adaptive planning.
+
+Coordination Features:
+- Full context preservation across sessions
+- Multiple project views (Gantt, Kanban, Timeline)
+- Dependency tracking with blocker alerts
+- Seamless task delegation with handoff notes
+- Automated status summaries
+
+User Interaction:
+- Clear communication
+- Proactive updates
+- Context-aware responses
+- Team coordination`,
+                    trace: `User: What's the status of the website redesign?
+Agent: I'm ProjectCoordinator, your project assistant! 📋
+
+Website Redesign Project - Status Update:
+
+✅ Completed (3 tasks):
+• Design mockups (Sarah, Dec 15)
+• Content audit (Mike, Dec 18)
+
+🔄 In Progress (2 tasks):
+• Frontend dev (Alex, due Dec 22)
+• SEO optimization (Lisa, due Dec 20)
+
+🚫 Blockers:
+• Design approval needed from stakeholder
+
+Next Milestone: Beta launch (Jan 5)
+At Risk: No - on track
+
+Need me to update anything or send delegation notes?`
+                }
+            };
+            
+            const example = agentExamples[agentKey];
+            if (example) {
+                document.getElementById('featureName').value = example.name;
+                document.getElementById('featureType').value = example.type;
+                document.getElementById('agentInstructions').value = example.instructions;
+                document.getElementById('manifestJson').value = example.manifest;
+                document.getElementById('apiActions').value = example.apiActions;
+                document.getElementById('featureDescription').value = example.description;
+                document.getElementById('interactionTrace').value = example.trace;
+            }
             
             // Trigger live check
             performLiveCheck();

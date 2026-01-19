@@ -1354,12 +1354,13 @@
 
                             <div class="form-group">
                                 <label>Agent Instructions</label>
-                                <textarea id="agentInstructions" placeholder="System prompt for your agent..." style="min-height: 80px;">You are a helpful AI assistant. Be concise, accurate, and always cite sources when providing factual information.</textarea>
                                 <div class="form-hint">The system prompt that defines your agent's behavior</div>
+                                <textarea id="agentInstructions" placeholder="System prompt for your agent..." style="min-height: 80px;">You are a helpful AI assistant. Be concise, accurate, and always cite sources when providing factual information.</textarea>
                             </div>
 
                             <div class="form-group">
                                 <label>Manifest JSON</label>
+                                <div class="form-hint">Declarative agent manifest (JSON format)</div>
                                 <textarea id="manifestJson" placeholder="Agent manifest configuration..." style="min-height: 150px; font-family: 'Consolas', 'Monaco', monospace;">{"schema_version": "v2.1",
   "name": "ExampleAgent",
   "description": "A helpful AI assistant",
@@ -1370,11 +1371,11 @@
   },
   "actions": []
 }</textarea>
-                                <div class="form-hint">Declarative agent manifest (JSON format)</div>
                             </div>
 
                             <div class="form-group">
                                 <label>API Actions / Code</label>
+                                <div class="form-hint">API actions, plugin functions, or custom code</div>
                                 <textarea id="apiActions" placeholder="API actions, plugin code, or custom functions..." style="min-height: 120px; font-family: 'Consolas', 'Monaco', monospace;">// Example: API action definition
 async function getUserCalendar(userId) {
   // Request consent before accessing
@@ -1383,13 +1384,12 @@ async function getUserCalendar(userId) {
   
   return await graph.calendar.getEvents(userId);
 }</textarea>
-                                <div class="form-hint">API actions, plugin functions, or custom code</div>
                             </div>
 
                             <div class="form-group">
                                 <label>Description & Behavior</label>
-                                <textarea id="featureDescription" placeholder="Describe how the feature works, what data it uses, how it interacts with users...&#10;&#10;Example: This agent helps users book travel by analyzing their preferences and budget. It requests access to calendar and location data, then presents personalized options. The agent clearly identifies itself and explains why it needs each permission."></textarea>
                                 <div class="form-hint">Be specific about user interactions, data handling, and UI patterns</div>
+                                <textarea id="featureDescription" placeholder="Describe how the feature works, what data it uses, how it interacts with users...&#10;&#10;Example: This agent helps users book travel by analyzing their preferences and budget. It requests access to calendar and location data, then presents personalized options. The agent clearly identifies itself and explains why it needs each permission."></textarea>
                                 
                                 <!-- Live Feedback Panel -->
                                 <div id="liveFeedback" class="live-feedback" style="display: none;">
@@ -1419,8 +1419,8 @@ async function getUserCalendar(userId) {
 
                             <div class="form-group">
                                 <label>Sample Interaction Log</label>
-                                <textarea id="interactionTrace" placeholder="User: Book me a flight to Paris&#10;Agent: I'm your SmartTravel assistant. To find the best options, I'll need access to:&#10;  • Your calendar (to find available dates)&#10;  • Your location (for departure airport)&#10;Is that okay?&#10;User: Yes&#10;Agent: [Shows 3 options with clear pricing and trade-offs]"></textarea>
                                 <div class="form-hint">Paste a sample conversation or interaction flow</div>
+                                <textarea id="interactionTrace" placeholder="User: Book me a flight to Paris&#10;Agent: I'm your SmartTravel assistant. To find the best options, I'll need access to:&#10;  • Your calendar (to find available dates)&#10;  • Your location (for departure airport)&#10;Is that okay?&#10;User: Yes&#10;Agent: [Shows 3 options with clear pricing and trade-offs]"></textarea>
                             </div>
                         </div>
                     </div>

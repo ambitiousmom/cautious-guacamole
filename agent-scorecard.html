@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Declarative Agent Coherence & Gravity Dashboard</title>
+    <!-- Version: 2026-01-19-v2 -->
     <style>
         * {
             margin: 0;
@@ -3304,38 +3305,38 @@ Everything is under control - no action needed from you!`
             
             // Agent 1: Coherent + Feature Level
             if (lowerName.includes('agent 1') || lowerName.includes('agent1')) {
-                evaluation.overallScore = 85; // Coherent (≥70)
+                evaluation.overallScore = 75; // Coherent (≥70)
                 evaluation.gravityAssessment.isPlatformCandidate = false; // Feature Level
-                // Set most principles to passing
+                // Set most principles to passing (100 = Met)
                 for (const key in evaluation.principleScores) {
                     if (key !== 'platform-gravity') {
-                        evaluation.principleScores[key] = 80;
+                        evaluation.principleScores[key] = 100;
                     }
                 }
-                // Make a couple fail for variety
+                // Make a couple fail for variety (0 = Not Met)
                 const keys = Object.keys(evaluation.principleScores).filter(k => k !== 'platform-gravity');
                 if (keys.length > 2) {
-                    evaluation.principleScores[keys[0]] = 65;
-                    evaluation.principleScores[keys[1]] = 60;
+                    evaluation.principleScores[keys[0]] = 0;
+                    evaluation.principleScores[keys[1]] = 0;
                 }
             }
             
             // Agent 2: Not Coherent + Platform Candidate
             else if (lowerName.includes('agent 2') || lowerName.includes('agent2')) {
-                evaluation.overallScore = 55; // Not Coherent (<70)
+                evaluation.overallScore = 65; // Not Coherent (<70)
                 evaluation.gravityAssessment.isPlatformCandidate = true; // Platform Candidate
                 evaluation.gravityAssessment.suggestedTier = 'Tier 1: Foundational DNA';
-                // Set most principles to failing
+                // Set most principles to failing (0 = Not Met)
                 for (const key in evaluation.principleScores) {
                     if (key !== 'platform-gravity') {
-                        evaluation.principleScores[key] = 60;
+                        evaluation.principleScores[key] = 0;
                     }
                 }
-                // Make a couple pass for variety
+                // Make a couple pass for variety (100 = Met)
                 const keys = Object.keys(evaluation.principleScores).filter(k => k !== 'platform-gravity');
                 if (keys.length > 2) {
-                    evaluation.principleScores[keys[0]] = 75;
-                    evaluation.principleScores[keys[1]] = 80;
+                    evaluation.principleScores[keys[0]] = 100;
+                    evaluation.principleScores[keys[1]] = 100;
                 }
                 // Ensure platform gravity signals are detected
                 evaluation.gravityAssessment.signals.commonality.score = 70;
@@ -3344,19 +3345,19 @@ Everything is under control - no action needed from you!`
             
             // Agent 3: Coherent + Platform Candidate
             else if (lowerName.includes('agent 3') || lowerName.includes('agent3')) {
-                evaluation.overallScore = 90; // Coherent (≥70)
+                evaluation.overallScore = 75; // Coherent (≥70)
                 evaluation.gravityAssessment.isPlatformCandidate = true; // Platform Candidate
                 evaluation.gravityAssessment.suggestedTier = 'Tier 1: Foundational DNA';
-                // Set most principles to passing
+                // Set most principles to passing (100 = Met)
                 for (const key in evaluation.principleScores) {
                     if (key !== 'platform-gravity') {
-                        evaluation.principleScores[key] = 85;
+                        evaluation.principleScores[key] = 100;
                     }
                 }
-                // Make one fail
+                // Make one fail (0 = Not Met)
                 const keys = Object.keys(evaluation.principleScores).filter(k => k !== 'platform-gravity');
                 if (keys.length > 0) {
-                    evaluation.principleScores[keys[0]] = 65;
+                    evaluation.principleScores[keys[0]] = 0;
                 }
                 // Ensure platform gravity signals are detected
                 evaluation.gravityAssessment.signals.commonality.score = 75;
@@ -3365,19 +3366,19 @@ Everything is under control - no action needed from you!`
             
             // Agent 4: Not Coherent + Feature Level
             else if (lowerName.includes('agent 4') || lowerName.includes('agent4')) {
-                evaluation.overallScore = 45; // Not Coherent (<70)
+                evaluation.overallScore = 65; // Not Coherent (<70)
                 evaluation.gravityAssessment.isPlatformCandidate = false; // Feature Level
-                // Set most principles to failing
+                // Set most principles to failing (0 = Not Met)
                 for (const key in evaluation.principleScores) {
                     if (key !== 'platform-gravity') {
-                        evaluation.principleScores[key] = 55;
+                        evaluation.principleScores[key] = 0;
                     }
                 }
-                // Make a couple pass
+                // Make a couple pass (100 = Met)
                 const keys = Object.keys(evaluation.principleScores).filter(k => k !== 'platform-gravity');
                 if (keys.length > 2) {
-                    evaluation.principleScores[keys[0]] = 72;
-                    evaluation.principleScores[keys[1]] = 78;
+                    evaluation.principleScores[keys[0]] = 100;
+                    evaluation.principleScores[keys[1]] = 100;
                 }
             }
             

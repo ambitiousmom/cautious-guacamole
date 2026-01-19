@@ -3812,47 +3812,85 @@ Everything is under control - no action needed from you!`
                 gravityLabelEl.style.color = '#10b981';
             }
 
-            // Display principle scores
+            // Display principle scores grouped by tier
             const principleScoresEl = document.getElementById('principleScores');
-            principleScoresEl.innerHTML = '<h3 style="font-size: 0.9em; margin-bottom: 12px; color: #6b7280; text-align: left;">Principle Breakdown</h3>';
+            principleScoresEl.innerHTML = '<h3 style="font-size: 0.9em; margin-bottom: 15px; color: #6b7280; text-align: left;">Principle Assessment by Tier</h3>';
 
-            // Get threshold from sliders (convert 50-100 range to 0-100 percentage)
-            const getThreshold = (principleKey) => {
-                const sliderMap = {
-                    'ux-signature': 'ux',
-                    'handoff-integrity': 'handoff',
-                    'grounding-fidelity': 'grounding',
-                    'transparency': 'transparency',
-                    'privacy': 'privacy',
-                    'error-recovery': 'error',
-                    'steerability': 'steerability'
-                };
-                const sliderId = sliderMap[principleKey];
-                if (!sliderId) return 70; // default
-                const sliderValue = parseInt(document.getElementById(`slider-${sliderId}`).value);
-                return sliderValue; // Already in 0-100 range
+            // Group principles by tier
+            const tierGroups = {
+                'tier1': [],
+                'tier2': [],
+                'tier3': [],
+                'tier4': []
             };
-            
-            // Coherence Principles
-            for (const [key, score] of Object.entries(evaluation.principleScores)) {
-                const principle = PRINCIPLES[key];
-                if (key === 'platform-gravity') continue; // Skip platform gravity in main loop
-                
-                const threshold = getThreshold(key);
-                const isPassing = score >= threshold;
-                const icon = isPassing 
-                    ? '<svg width="24" height="24" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><path d="M30 52 L42 64 L70 36" stroke="#10b981" stroke-width="8" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>'
-                    : '<svg width="24" height="24" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><path d="M35 35 L65 65 M65 35 L35 65" stroke="#ef4444" stroke-width="8" stroke-linecap="round"/></svg>';
-                const iconClass = isPassing ? 'pass' : 'fail';
 
-                const item = document.createElement('div');
-                item.className = 'principle-score-item';
-                item.innerHTML = `
-                    <span class="name">${principle.name}</span>
-                    <div class="principle-icon ${iconClass}">${icon}</div>
-                `;
-                principleScoresEl.appendChild(item);
+            for (const [key, score] of Object.entries(evaluation.principleScores)) {
+                if (key === 'platform-gravity') continue;
+                const principle = PRINCIPLES[key];
+                if (!principle) continue;
+                
+                const tier = principle.tier;
+                if (tierGroups[tier]) {
+                    tierGroups[tier].push({ key, score, principle });
+                }
             }
+
+            // Render each tier group
+            Object.keys(tierGroups).forEach(tierKey => {
+                const tierData = TIER_FRAMEWORK[tierKey];
+                const principles = tierGroups[tierKey];
+                
+                if (principles.length === 0) return;
+
+                const tierSection = document.createElement('div');
+                tierSection.style.cssText = `
+                    margin-bottom: 15px;
+                    border-left: 3px solid ${tierData.color};
+                    padding-left: 12px;
+                    background: #fafafa;
+                    padding: 10px 10px 10px 12px;
+                    border-radius: 4px;
+                `;
+
+                const tierHeader = document.createElement('div');
+                tierHeader.style.cssText = 'display: flex; align-items: center; gap: 6px; margin-bottom: 8px;';
+                tierHeader.innerHTML = `
+                    <span style="font-size: 0.9em;">${tierData.icon}</span>
+                    <span style="font-size: 0.8em; font-weight: 700; color: #1f2937;">${tierData.name.split(':')[1].trim()}</span>
+                `;
+                tierSection.appendChild(tierHeader);
+
+                // Add principles for this tier
+                principles.forEach(({ key, score, principle }) => {
+                    const threshold = 70; // Standard threshold
+                    const isPassing = score >= threshold;
+                    const icon = isPassing 
+                        ? '<svg width="20" height="20" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><path d="M30 52 L42 64 L70 36" stroke="#10b981" stroke-width="10" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>'
+                        : '<svg width="20" height="20" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><path d="M35 35 L65 65 M65 35 L35 65" stroke="#ef4444" stroke-width="10" stroke-linecap="round"/></svg>';
+
+                    const item = document.createElement('div');
+                    item.style.cssText = `
+                        display: flex;
+                        justify-content: space-between;
+                        align-items: center;
+                        padding: 6px 8px;
+                        background: white;
+                        border-radius: 4px;
+                        margin-bottom: 4px;
+                        border: 1px solid #e5e7eb;
+                    `;
+                    item.innerHTML = `
+                        <span style="font-size: 0.8em; color: #4b5563; font-weight: 500;">${principle.name}</span>
+                        <div style="display: flex; align-items: center; gap: 6px;">
+                            <span style="font-size: 0.75em; color: #6b7280; font-weight: 600;">${score}%</span>
+                            <div>${icon}</div>
+                        </div>
+                    `;
+                    tierSection.appendChild(item);
+                });
+
+                principleScoresEl.appendChild(tierSection);
+            });
 
             // Add Platform Gravity Breakdown
             const gravitySection = document.createElement('div');

@@ -29,10 +29,10 @@
 
         /* Top Banner */
         .sidebar {
-            background: linear-gradient(135deg, #E9D5FF 0%, #DDD6FE 100%);
+            background: linear-gradient(white, white) padding-box, linear-gradient(90deg, #A78BFA, #FBBF24, #10B981, #60A5FA) border-box;
+            border: 1.5px solid transparent;
             color: #4C1D95;
             padding: 20px 30px;
-            border-bottom: 3px solid #C4B5FD;
             box-shadow: 0 4px 12px rgba(139, 92, 246, 0.08);
             flex-shrink: 0;
         }
@@ -150,6 +150,15 @@
             font-weight: 700;
             font-size: 1.8em;
             color: #7C3AED;
+            width: 60px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto;
+            border-radius: 50%;
+            border: 2px solid #A78BFA;
+            background: linear-gradient(135deg, #F3E8FF 0%, #E9D5FF 100%);
         }
 
         /* Main Content */
@@ -1225,7 +1234,7 @@
                 </div>
                 <div class="stat-row">
                     <span class="value" id="certifiedCount">0</span>
-                    <span class="label">Needs Improvement</span>
+                    <span class="label">Ecosystem Mismatch</span>
                 </div>
                 <div class="stat-row">
                     <span class="value" id="platformCandidates">0</span>
@@ -1351,7 +1360,7 @@
                         <div class="results-panel">
                             <!-- Assessment Scores Card -->
                             <div class="card score-card" id="scoreCard" style="display: none;">
-                                <h3 style="font-size: 1.05em; font-weight: 600; color: #1f2937; margin-bottom: 20px; text-align: center;">Assessment Scores</h3>
+                                <h3 id="scoreCardTitle" style="font-size: 1.05em; font-weight: 600; color: #1f2937; margin-bottom: 20px; text-align: center;">Assessment Scores</h3>
                                 
                                 <div style="display: flex; gap: 40px; justify-content: center; align-items: center;">
                                     <!-- Coherence Score -->
@@ -3340,6 +3349,9 @@ Need me to update anything or send delegation notes?`
         function displayResults(evaluation) {
             const scoreCard = document.getElementById('scoreCard');
             const principleCard = document.getElementById('principleCard');
+
+            // Update title with agent name
+            document.getElementById('scoreCardTitle').textContent = `Assessment Score for "${evaluation.featureName}"`;
 
             scoreCard.style.display = 'block';
             scoreCard.classList.add('animate-in');

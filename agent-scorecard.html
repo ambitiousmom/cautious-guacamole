@@ -3939,8 +3939,6 @@ Everything is under control - no action needed from you!`
 
             // Helper function to render flat list with expandable
             const renderFlatList = (principles, headerText, headerColor) => {
-                if (principles.length === 0) return;
-
                 const header = document.createElement('div');
                 header.style.cssText = `font-size: 0.85em; font-weight: 600; color: ${headerColor}; margin-bottom: 10px; margin-top: 5px;`;
                 header.textContent = headerText;
@@ -3953,6 +3951,22 @@ Everything is under control - no action needed from you!`
                     border-radius: 6px;
                     border: 1px solid #e5e7eb;
                 `;
+
+                // If no principles, show "None"
+                if (principles.length === 0) {
+                    const noneItem = document.createElement('div');
+                    noneItem.style.cssText = `
+                        padding: 8px;
+                        text-align: center;
+                        color: #9ca3af;
+                        font-size: 0.8em;
+                        font-style: italic;
+                    `;
+                    noneItem.textContent = 'None';
+                    listContainer.appendChild(noneItem);
+                    principleScoresEl.appendChild(listContainer);
+                    return;
+                }
 
                 const initialCount = Math.min(3, principles.length);
                 
@@ -4018,19 +4032,13 @@ Everything is under control - no action needed from you!`
                 principleScoresEl.appendChild(listContainer);
             };
 
-            // Render failing principles first (only if overall is not coherent)
-            if (!isCoherent) {
-                renderFlatList(failingPrinciples, '❌ Principles Not Met', '#dc2626');
-            }
+            // Always render failing principles section
+            renderFlatList(failingPrinciples, '❌ Principles Not Met', '#dc2626');
 
             // Render passing principles
-            if (passingPrinciples.length > 0) {
-                const spacer = document.createElement('div');
-                spacer.style.cssText = 'height: 10px;';
-                if (!isCoherent) {
-                    principleScoresEl.appendChild(spacer);
-                }
-            }
+            const spacer = document.createElement('div');
+            spacer.style.cssText = 'height: 10px;';
+            principleScoresEl.appendChild(spacer);
             renderFlatList(passingPrinciples, '✅ Principles Met', '#10b981');
 
             // Display Platform Gravity Assessment

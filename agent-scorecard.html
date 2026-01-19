@@ -2943,7 +2943,6 @@ Everything is under control - no action needed from you!`
                 // Add to history
                 evaluationHistory.unshift(evaluation);
                 updateHistory();
-                updateStats();
 
                 // Display results
                 displayResults(evaluation);
@@ -4097,30 +4096,6 @@ Everything is under control - no action needed from you!`
                     displayResults(evaluation);
                 }
             };
-        }
-
-        // Update session stats
-        function updateStats() {
-            // Stats elements were removed in layout refactor, skip update
-            const totalEvalsEl = document.getElementById('totalEvals');
-            if (!totalEvalsEl) return;
-            
-            totalEvalsEl.textContent = evaluationHistory.length;
-            
-            if (evaluationHistory.length > 0) {
-                // Count agents that need improvement (score < 70)
-                const needsImprovement = evaluationHistory.filter(e => e.overallScore < 70).length;
-                const certifiedCountEl = document.getElementById('certifiedCount');
-                if (certifiedCountEl) {
-                    certifiedCountEl.textContent = needsImprovement;
-                }
-                
-                const platformCandidates = evaluationHistory.filter(e => e.gravityAssessment && e.gravityAssessment.isPlatformCandidate).length;
-                const platformCandidatesEl = document.getElementById('platformCandidates');
-                if (platformCandidatesEl) {
-                    platformCandidatesEl.textContent = platformCandidates;
-                }
-            }
         }
 
         // Export report

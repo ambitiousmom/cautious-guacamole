@@ -3365,12 +3365,12 @@ Need me to update anything or send delegation notes?`
             const coherenceLabelEl = document.getElementById('coherenceLabel');
             
             if (isCoherent) {
-                scoreValueEl.textContent = '✅';
+                scoreValueEl.innerHTML = '<div style="width: 70px; height: 70px; border-radius: 50%; background: #10b981; display: flex; align-items: center; justify-content: center; margin: 0 auto;"><span style="color: white; font-size: 2.5em; font-weight: 300;">✓</span></div>';
                 scoreValueEl.style.color = '#10b981';
                 coherenceLabelEl.textContent = 'Coherent';
                 coherenceLabelEl.style.color = '#10b981';
             } else {
-                scoreValueEl.textContent = '❌';
+                scoreValueEl.innerHTML = '<div style="width: 70px; height: 70px; border-radius: 50%; background: #ef4444; display: flex; align-items: center; justify-content: center; margin: 0 auto;"><span style="color: white; font-size: 2.5em; font-weight: 300;">✗</span></div>';
                 scoreValueEl.style.color = '#ef4444';
                 coherenceLabelEl.textContent = 'Not Coherent';
                 coherenceLabelEl.style.color = '#ef4444';
@@ -3383,12 +3383,12 @@ Need me to update anything or send delegation notes?`
             const gravityLabelEl = document.getElementById('gravityLabel');
             
             if (isPlatformCandidate) {
-                gravityValueEl.textContent = '✅';
+                gravityValueEl.innerHTML = '<div style="width: 70px; height: 70px; border-radius: 50%; background: #10b981; display: flex; align-items: center; justify-content: center; margin: 0 auto;"><span style="color: white; font-size: 2.5em; font-weight: 300;">✓</span></div>';
                 gravityValueEl.style.color = '#10b981';
                 gravityLabelEl.textContent = 'Platform Candidate';
                 gravityLabelEl.style.color = '#10b981';
             } else {
-                gravityValueEl.textContent = '❌';
+                gravityValueEl.innerHTML = '<div style="width: 70px; height: 70px; border-radius: 50%; background: #ef4444; display: flex; align-items: center; justify-content: center; margin: 0 auto;"><span style="color: white; font-size: 2.5em; font-weight: 300;">✗</span></div>';
                 gravityValueEl.style.color = '#6b7280';
                 gravityLabelEl.textContent = 'Feature Level';
                 gravityLabelEl.style.color = '#6b7280';

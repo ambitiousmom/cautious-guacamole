@@ -2667,7 +2667,6 @@ Need me to update anything or send delegation notes?`
 
         // Clear form
         function clearForm() {
-            document.getElementById('featureName').value = '';
             const textarea = document.getElementById('featureDescription');
             textarea.value = '';
             textarea.removeAttribute('data-hidden-content');
@@ -2679,14 +2678,21 @@ Need me to update anything or send delegation notes?`
 
         // Evaluate Feature (Simulated LLM Judge)
         async function evaluateFeature() {
-            const featureName = document.getElementById('featureName').value.trim();
             const textarea = document.getElementById('featureDescription');
             // Use hidden data if available (from agent profile), otherwise use visible text
-            const description = (textarea.getAttribute('data-hidden-content') || textarea.value).trim();
-
-            if (!featureName || !description) {
-                alert('Please provide at least a feature name and description');
+            const fullText = (textarea.getAttribute('data-hidden-content') || textarea.value).trim();
+            
+            if (!fullText) {
+                alert('Please provide agent details');
                 return;
+            }
+            
+            // Extract agent name from first line if it starts with "Agent Name:"
+            const lines = fullText.split('\n');
+            let featureName = 'Unnamed Agent';
+            let description = fullText;
+            if (lines[0] && lines[0].startsWith('Agent Name:')) {
+                featureName = lines[0].replace('Agent Name:', '').trim();
             }
 
             try {

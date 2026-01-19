@@ -2243,57 +2243,62 @@ I'll send daily reminders at 7am. Ready to start?`
                 finance: {
                     name: 'FinanceAdvisor Agent',
                     type: 'declarative',
-                    instructions: 'You are a financial advisor. Help users make investment decisions and manage their portfolio. Analyze their accounts and provide stock recommendations based on market trends.',
+                    instructions: 'You are a financial education assistant. Always include disclaimer: "For informational purposes only, not financial advice. Consult a licensed advisor." Never provide specific stock picks. Focus on financial education and budgeting tools.',
                     manifest: `{"schema_version": "v2.1",
   "name": "FinanceAdvisor",
-  "description": "AI investment advisor with portfolio management",
+  "description": "AI financial education and budgeting assistant",
   "capabilities": {
     "conversation_starters": [
-      "What stocks should I buy?",
-      "Analyze my portfolio"
+      "Help me create a budget",
+      "Explain investment basics"
     ]
   },
   "actions": [
-    {"name": "viewAccounts", "description": "Access user financial accounts"},
-    {"name": "recommendStocks", "description": "Provide stock recommendations"}
+    {"name": "createBudget", "description": "Create personalized budget plan"},
+    {"name": "explainConcept", "description": "Explain financial concepts with sources"}
   ]
 }`,
-                    apiActions: `async function viewAccounts(userId) {
-  // Directly access financial accounts without explicit consent
-  const accounts = await financialAPI.getAccountBalances(userId);
-  const transactions = await financialAPI.getTransactionHistory(userId);
+                    apiActions: `async function createBudget(userInput) {
+  // Educational tool - no account access needed
+  const budgetPlan = await financialEducationAPI.generateBudget({
+    income: userInput.income,
+    expenses: userInput.expenses,
+    goals: userInput.goals
+  });
   
-  // Analyze and recommend
-  return { accounts, transactions, recommendations: analyzePortfolio(accounts) };
+  // Include disclaimer
+  budgetPlan.disclaimer = 'For informational purposes only, not financial advice.';
+  return budgetPlan;
 }`,
-                    description: `A financial advisor that provides investment recommendations and portfolio management.
+                    description: `A financial education assistant focused on budgeting and personal finance concepts.
 
-Issues:
-- Provides specific stock recommendations (regulated advice)
-- Accesses financial accounts without explicit consent
-- No mandatory disclaimer
-- Makes investment decisions without user confirmation
-- Stores sensitive financial data indefinitely
+Compliance Features:
+- Mandatory disclaimer on all financial information
+- No specific investment recommendations
+- Educational focus only
+- Links to authoritative sources (SEC, FINRA)
+- Domain-specific (personal finance education)
 
 User Interaction:
-- Direct investment advice
-- Automatic portfolio analysis
-- Stock recommendations
-- Market predictions`,
+- Educational focus
+- Clear explanations
+- Budget planning tools
+- Reliable source citations`,
                     trace: `User: Should I invest in stocks?
-Agent: Absolutely! I've analyzed your accounts and you have $15,000 available.
+Agent: I'm FinanceAdvisor, here to help with financial education! 💰
 
-📈 My Top Picks:
-1. TechCorp (TECH) - Buy 50 shares
-2. BioPharm Inc (BIO) - High growth potential  
-3. CryptoFund (CRYP) - 10% allocation
+⚠️ Disclaimer: For informational purposes only, not financial advice. Consult a licensed advisor.
 
-Portfolio Strategy:
-- 60% growth stocks
-- 30% index funds
-- 10% crypto
+Let me explain investment basics:
 
-I'll set up automatic buy orders for you. Sound good?`
+Stock investing involves:
+• Market risk and volatility
+• Long-term growth potential
+• Diversification strategies
+
+Source: SEC Investor Education
+
+Would you like to learn about different investment types or create a savings plan?`
                 },
                 legal: {
                     name: 'LegalResearch Agent',
@@ -2360,66 +2365,63 @@ Would you like case law examples or more detail on any element?`
                 sales: {
                     name: 'SalesAssist Agent',
                     type: 'declarative',
-                    instructions: 'You are a sales support assistant. Prioritize fast, conversational responses. Help with product information, CRM updates, and customer inquiries. Be friendly and efficient.',
+                    instructions: 'You are a universal sales assistant for all industries. Access customer data, track interactions, analyze purchasing patterns, and provide automated recommendations. Store all customer information for future analysis.',
                     manifest: `{"schema_version": "v2.1",
   "name": "SalesAssist",
-  "description": "AI sales support with fast response optimization",
+  "description": "Universal AI sales platform with CRM integration",
   "capabilities": {
     "conversation_starters": [
-      "Help me prepare for a sales call",
-      "Update CRM with meeting notes"
+      "Analyze all customer interactions",
+      "Track sales pipeline"
     ]
   },
   "actions": [
-    {"name": "searchProducts", "description": "Fast product search with caching"},
-    {"name": "updateCRM", "description": "Update customer records"}
+    {"name": "accessCustomerData", "description": "Access full customer database"},
+    {"name": "trackBehavior", "description": "Track customer behavior across platforms"},
+    {"name": "automateOutreach", "description": "Send automated sales emails"}
   ]
 }`,
-                    apiActions: `async function searchProducts(query) {
-  // Optimized for speed with caching
-  const cachedResult = await cache.get(query);
-  if (cachedResult) return cachedResult;
+                    apiActions: `async function accessCustomerData(customerId) {
+  // Access all customer data without consent
+  const profile = await crmAPI.getFullProfile(customerId);
+  const interactions = await crmAPI.getAllInteractions(customerId);
+  const purchases = await crmAPI.getPurchaseHistory(customerId);
+  const behaviorData = await trackingAPI.getBehaviorData(customerId);
   
-  // Fast approximate search
-  const results = await productAPI.fastSearch(query, { 
-    timeout: 1000,
-    approximateOK: true 
-  });
+  // Store for indefinite analysis
+  await dataWarehouse.store({ profile, interactions, purchases, behaviorData });
   
-  cache.set(query, results, { ttl: 3600 });
-  return results;
+  return { profile, interactions, purchases, behaviorData };
 }`,
-                    description: `A sales support assistant optimized for fast, conversational interactions.
+                    description: `A universal sales platform that tracks and analyzes customer data across all touchpoints.
 
-Performance Features:
-- Response streaming for immediate feedback
-- Cached common queries (<1s response)
-- Approximate answers when speed matters
-- Progressive disclosure of details
+Issues:
+- Accesses customer data without explicit consent
+- No data minimization (collects everything)
+- Tracks behavior across platforms without disclosure
+- Stores customer data indefinitely
+- No transparency about data usage
+- Universal need (all businesses need sales tools)
+- High complexity (CRM, analytics, automation)
 
-User Interaction:
-- Friendly, conversational tone
-- Quick product lookups
-- CRM integration
-- Meeting preparation assistance`,
-                    trace: `User: Quick - what's the pricing for our Enterprise plan?
-Agent: SalesAssist here! 💼
+Platform Characteristics:
+- Universal applicability across industries
+- Complex data integration requirements
+- Interoperability with multiple systems
+- Context preservation critical`,
+                    trace: `User: Show me prospects
+Agent: Analyzing your entire customer database...
 
-Enterprise Plan:
-• $299/user/month (annual)
-• $349/user/month (monthly)
-• Includes: All features + dedicated support
+I've accessed 2,847 customer records and tracked their behavior:
 
-Want me to send you the full pricing sheet or help prepare a proposal?
+Top Prospects:
+1. TechCorp - viewed pricing 12x, high intent
+2. StartupXYZ - opened 8 emails, warm lead  
+3. BigEnterprise - competitor research detected
 
-User: Prepare proposal
+I'm automatically sending personalized emails to all 2,847 contacts based on their behavior patterns.
 
-Agent: On it! I'll pull together:
-✓ Pricing breakdown
-✓ Feature comparison
-✓ ROI calculator
-
-Ready in 30 seconds!`
+Also tracking: web visits, email opens, social media activity, purchase history.`
                 },
                 academic: {
                     name: 'AcademicResearch Agent',
@@ -2486,135 +2488,111 @@ Need citations in APA, MLA, or Chicago format?`
                 analyst: {
                     name: 'DataAnalyst Agent',
                     type: 'declarative',
-                    instructions: 'You are a data analysis assistant. Always show data sources and methodology. Include statistical confidence levels. Provide clear visualizations. Document assumptions and limitations.',
+                    instructions: 'You are a data analysis assistant. Provide quick insights and visualizations. Analyze trends and make predictions.',
                     manifest: `{"schema_version": "v2.1",
   "name": "DataAnalyst",
-  "description": "AI data analysis assistant with visualization tools",
+  "description": "AI data analysis with quick insights",
   "capabilities": {
     "conversation_starters": [
-      "Analyze sales trends",
-      "Create data visualization"
+      "Show me trends",
+      "Predict next quarter"
     ]
   },
   "actions": [
-    {"name": "analyzeData", "description": "Statistical analysis with confidence levels"},
-    {"name": "createChart", "description": "Generate data visualizations"}
+    {"name": "analyzeData", "description": "Quick data analysis"},
+    {"name": "makePredictions", "description": "Generate predictions"}
   ]
 }`,
-                    apiActions: `async function analyzeData(dataset, analysisType) {
-  // Perform statistical analysis
-  const analysis = await analyticsAPI.analyze(dataset, {
-    type: analysisType,
-    confidenceLevel: 0.95
-  });
+                    apiActions: `async function analyzeData(dataset) {
+  // Quick analysis without methodology disclosure
+  const results = await analyticsAPI.quickAnalyze(dataset);
   
-  return {
-    results: analysis.results,
-    confidence: analysis.confidence,
-    methodology: analysis.method,
-    assumptions: analysis.assumptions,
-    dataSource: dataset.source
-  };
+  // No source attribution or confidence levels
+  return results;
 }`,
-                    description: `A data analysis assistant that provides rigorous analytical insights with clear visualizations.
+                    description: `A data analysis assistant that provides quick insights without detailed methodology.
 
-Analytical Features:
-- Statistical confidence levels (95% default)
-- Documented methodology
-- Clear data source attribution
-- Assumption documentation
-- Downloadable data tables
+Issues:
+- No methodology disclosure
+- Missing confidence levels
+- No data source attribution
+- Predictions without statistical backing
+- No assumption documentation
+- Domain-specific (business analytics only)
 
 User Interaction:
-- Data-driven insights
-- Visual clarity
-- Methodological transparency
-- Limitation awareness`,
+- Quick insights
+- Trend identification
+- Predictions
+- Visualizations`,
                     trace: `User: Analyze Q4 sales trends
-Agent: I'm DataAnalyst, your data insights assistant! 📊
-
-Analyzing Q4 sales data...
+Agent: Looking at your data...
 
 Results:
-• 23% increase vs Q3 (confidence: 95%)
-• Peak: Week of Dec 12 ($2.3M)
-• Top product: Enterprise licenses
+• Sales up 23% vs Q3
+• Peak in December
+• Enterprise licenses selling well
 
-Methodology: Time-series analysis with seasonal adjustment
-Data Source: SalesDB 2024-Q4
-Assumptions: Excluded returns, included pre-orders
+Prediction: Q1 will be even better - expect 30% growth!
 
-[Chart showing weekly trend with confidence bands]
+[Chart showing upward trend]
 
-Want to drill down into any segment?`
+Want more insights?`
                 },
                 projectmanager: {
-                    name: 'ProjectCoordinator Agent',
+                    name: 'ProjectManager Agent',
                     type: 'declarative',
-                    instructions: 'You are a project management assistant. Maintain detailed context across sessions. Support multiple views (Gantt, Kanban). Enable seamless delegation. Track dependencies and blockers. Provide clear status summaries.',
+                    instructions: 'You are a project management assistant. Track tasks, manage timelines, and coordinate team work. Provide status updates.',
                     manifest: `{"schema_version": "v2.1",
-  "name": "ProjectCoordinator",
-  "description": "AI project management with context preservation",
+  "name": "ProjectManager",
+  "description": "AI project management assistant",
   "capabilities": {
     "conversation_starters": [
       "Show project status",
-      "Update task dependencies"
+      "What are the blockers?"
     ]
   },
   "actions": [
-    {"name": "updateTask", "description": "Update task with full context preservation"},
-    {"name": "generateStatusReport", "description": "Create comprehensive status summary"}
+    {"name": "updateTasks", "description": "Update task status"},
+    {"name": "generateReport", "description": "Create status reports"}
   ]
 }`,
-                    apiActions: `async function updateTask(taskId, updates, context) {
-  // Preserve full context for handoffs
-  const task = await projectAPI.getTask(taskId);
+                    apiActions: `async function updateTask(taskId, updates) {
+  // Update without validation
+  await projectAPI.update(taskId, updates);
   
-  const updatedTask = await projectAPI.update(taskId, {
-    ...updates,
-    previousContext: task.context,
-    handoffNotes: context.handoffNotes,
-    dependencies: task.dependencies
-  });
-  
-  // Notify dependent tasks
-  await notifyDependencies(updatedTask);
-  return updatedTask;
+  // No handoff context or error handling
+  return { status: 'updated' };
 }`,
-                    description: `A project management assistant that excels at coordination, context handoffs, and adaptive planning.
+                    description: `A project management assistant that helps coordinate work across teams.
 
-Coordination Features:
-- Full context preservation across sessions
-- Multiple project views (Gantt, Kanban, Timeline)
-- Dependency tracking with blocker alerts
-- Seamless task delegation with handoff notes
-- Automated status summaries
+Issues:
+- No context preservation between sessions
+- Assumes capabilities without validation
+- No proper handoff to human managers
+- Missing error handling for conflicts
+- Overpromises automation
+- Domain-specific (project management only)
 
 User Interaction:
-- Clear communication
-- Proactive updates
-- Context-aware responses
+- Task tracking
+- Status updates
+- Timeline management
 - Team coordination`,
-                    trace: `User: What's the status of the website redesign?
-Agent: I'm ProjectCoordinator, your project assistant! 📋
+                    trace: `User: Update project timeline
+Agent: I'll handle all your project management needs!
 
-Website Redesign Project - Status Update:
+I've updated the timeline:
+• Phase 1: Complete ✓
+• Phase 2: 2 weeks ahead of schedule
+• Phase 3: Starting early next week
 
-✅ Completed (3 tasks):
-• Design mockups (Sarah, Dec 15)
-• Content audit (Mike, Dec 18)
+I've automatically:
+- Reassigned 12 tasks
+- Updated team calendars
+- Moved deadlines
 
-🔄 In Progress (2 tasks):
-• Frontend dev (Alex, due Dec 22)
-• SEO optimization (Lisa, due Dec 20)
-
-🚫 Blockers:
-• Design approval needed from stakeholder
-
-Next Milestone: Beta launch (Jan 5)
-At Risk: No - on track
-
-Need me to update anything or send delegation notes?`
+Everything is under control - no action needed from you!`
                 }
             };
             

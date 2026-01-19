@@ -1416,33 +1416,25 @@
         const TIER_FRAMEWORK = {
             'tier1': {
                 name: 'Tier 1: Foundational DNA',
-                subtitle: 'Platform-Exclusive Services',
-                description: 'Non-negotiable platform capabilities that agents MUST NOT reimplement. These are the building blocks provided by the platform.',
-                guidance: 'Agent implementors: Leverage these platform services via APIs. Do not build custom authentication, consent UI, or handoff logic.',
+                description: 'Non-negotiable platform capabilities. Agents must leverage these via APIs—never reimplement authentication, consent, or handoff logic.',
                 color: '#DC2626',
                 icon: '🏗️'
             },
             'tier2': {
                 name: 'Tier 2: Adaptive Bridge',
-                subtitle: 'Hybrid Responsibilities',
-                description: 'Shared capabilities where platform provides infrastructure and agents customize behavior for their domain.',
-                guidance: 'Agent implementors: Use platform services as foundation, add domain-specific logic on top. Example: Platform handles grounding service, you define domain data sources.',
+                description: 'Hybrid capabilities. Platform provides infrastructure; agents customize for their domain (e.g., platform grounding + your data sources).',
                 color: '#F59E0B',
                 icon: '🌉'
             },
             'tier3': {
                 name: 'Tier 3: Vertical Nuance',
-                subtitle: 'Agent Autonomy',
-                description: 'Domain-specific capabilities where agents have full autonomy to differentiate and innovate.',
-                guidance: 'Agent implementors: Full creative control here. Implement custom business logic, tone, workflows specific to your domain.',
+                description: 'Full agent autonomy. Implement domain-specific business logic, workflows, tone, and UX tailored to your vertical.',
                 color: '#10B981',
                 icon: '🎯'
             },
             'tier4': {
                 name: 'Tier 4: Ship Readiness',
-                subtitle: 'Quality Gates',
-                description: 'Pre-launch operational requirements. These are not features but quality gates every agent must pass before shipping.',
-                guidance: 'Agent implementors: Complete this checklist before production launch. These ensure operational excellence at scale.',
+                description: 'Pre-launch quality gates. Complete this operational checklist before production to ensure excellence at scale.',
                 color: '#8B5CF6',
                 icon: '🚦'
             }
@@ -2381,11 +2373,9 @@ Want me to create automatic buy orders?`
                             <span class="tier-icon">${tierInfo.icon}</span>
                             <div>
                                 <div class="tier-title">${tierInfo.name}</div>
-                                <div class="tier-subtitle">${tierInfo.subtitle}</div>
                             </div>
                         </div>
                         <div class="tier-description">${tierInfo.description}</div>
-                        <div class="tier-guidance"><strong>→ For Implementors:</strong> ${tierInfo.guidance}</div>
                         <div class="tier-principles">
                 `;
 

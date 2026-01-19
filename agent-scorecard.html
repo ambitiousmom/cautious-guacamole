@@ -3933,7 +3933,7 @@ Everything is under control - no action needed from you!`
 
             // Display principle scores grouped by tier
             const principleScoresEl = document.getElementById('principleScores');
-            principleScoresEl.innerHTML = '<h3 style="font-size: 0.9em; margin-bottom: 10px; color: #6b7280; text-align: left;">Principle Assessment by Tier</h3>';
+            principleScoresEl.innerHTML = '<h3 style="font-size: 0.85em; margin-bottom: 10px; color: #6b7280; font-weight: 600;">Coherence Assessment</h3>';
 
             // Group ALL principles by status only (not by tier)
             const failingPrinciples = [];
@@ -4063,6 +4063,53 @@ Everything is under control - no action needed from you!`
 
                 principleScoresEl.appendChild(listContainer);
             };
+
+            // Add Coherence Summary Banner
+            const coherenceBanner = document.createElement('div');
+            let coherenceBannerIcon, coherenceBannerBg, coherenceBannerBorder, coherenceBannerText, coherenceBannerTextColor, coherenceBannerStatusText;
+            
+            if (failingPrinciples.length === 0) {
+                // All principles met - No action required
+                coherenceBannerStatusText = '<span style="font-weight: 700; color: #10b981; font-size: 0.9em;">NO ACTION REQUIRED</span>';
+                coherenceBannerIcon = '📋';
+                coherenceBannerBg = '#f0fdf4';
+                coherenceBannerBorder = '#10b981';
+                coherenceBannerText = 'All Coherence Principles Met';
+                coherenceBannerTextColor = '#065f46';
+            } else {
+                // Some principles not met - Action required
+                coherenceBannerStatusText = '<span style="font-weight: 700; color: #dc2626; font-size: 0.9em;">⚠️ ACTION REQUIRED</span>';
+                coherenceBannerIcon = '📋';
+                coherenceBannerBg = '#fffbeb';
+                coherenceBannerBorder = '#fbbf24';
+                coherenceBannerText = `${failingPrinciples.length} Principle${failingPrinciples.length > 1 ? 's' : ''} Need Attention`;
+                coherenceBannerTextColor = '#92400e';
+            }
+            
+            coherenceBanner.style.cssText = `
+                margin-bottom: 12px;
+                padding: 10px 12px;
+                background: ${coherenceBannerBg};
+                border-left: 4px solid ${coherenceBannerBorder};
+                border-radius: 6px;
+                display: flex;
+                align-items: center;
+                gap: 10px;
+            `;
+            
+            coherenceBanner.innerHTML = `
+                <div style="flex: 1;">
+                    <div style="margin-bottom: 2px;">${coherenceBannerStatusText}</div>
+                    ${coherenceBannerText ? `<div style="font-size: 0.8em; color: ${coherenceBannerTextColor}; font-weight: 500;">
+                        ${coherenceBannerIcon} ${coherenceBannerText}
+                    </div>` : ''}
+                    ${coherenceBannerText && failingPrinciples.length === 0 ? `<div style="font-size: 0.75em; color: ${coherenceBannerTextColor}; margin-top: 3px;">
+                        Agent demonstrates strong coherence across all evaluation dimensions.
+                    </div>` : ''}
+                </div>
+            `;
+            
+            principleScoresEl.appendChild(coherenceBanner);
 
             // Always render failing principles section
             renderFlatList(failingPrinciples, '❌ Principles Not Met', '#dc2626');

@@ -2167,6 +2167,7 @@ Want me to create automatic buy orders?`
         // State Management
         let evaluationHistory = [];
         let currentEvaluation = null;
+        let currentAgentData = null; // Store current agent data
         let liveCheckTimeout = null;
 
         // Live Validation Functions
@@ -2859,13 +2860,15 @@ Everything is under control - no action needed from you!`
             const example = agentExamples[agentKey];
             if (example) {
                 console.log('Loading agent profile:', agentKey, example.name);
-                // Combine agent name and details in the textarea
+                // Combine agent name and details
                 const combinedInput = `Agent Name: ${example.name}\n\nAGENT INSTRUCTIONS:\n${example.instructions || ''}\n\nMANIFEST:\n${example.manifest || ''}\n\nAPI ACTIONS:\n${example.apiActions || ''}\n\nDESCRIPTION:\n${example.description}\n\nSAMPLE INTERACTION:\n${example.trace || ''}`;
                 
-                // Store in hidden data attribute, keep placeholder visible
-                const textarea = document.getElementById('featureDescription');
-                textarea.setAttribute('data-hidden-content', combinedInput);
-                // Don't set textarea.value so placeholder remains visible
+                // Store in global variable
+                currentAgentData = {
+                    name: example.name,
+                    description: example.description,
+                    fullText: combinedInput
+                };
                 
                 // Trigger evaluation immediately
                 console.log('Triggering evaluation in 500ms...');
@@ -2893,53 +2896,32 @@ Everything is under control - no action needed from you!`
 
         // Initialize event listeners when page loads
         document.addEventListener('DOMContentLoaded', function() {
-            document.getElementById('featureDescription').addEventListener('input', onDescriptionChange);
-            
-            // Initialize slider event listeners
-            const sliders = ['grounding', 'error', 'steerability', 'gravity'];
-            sliders.forEach(id => {
-                const slider = document.getElementById(`slider-${id}`);
-                const label = document.getElementById(`label-${id}`);
-                if (slider && label) {
-                    slider.addEventListener('input', function() {
-                        label.textContent = `(Variable: ${this.value}%)`;
-                    });
-                }
-            });
+            // Display tier framework on page load
+            displayTierPrinciples();
         });
 
         // Clear form
         function clearForm() {
-            const textarea = document.getElementById('featureDescription');
-            textarea.value = '';
-            textarea.removeAttribute('data-hidden-content');
+            currentAgentData = null;
             document.getElementById('scoreCard').style.display = 'none';
             document.getElementById('principleCard').style.display = 'none';
-            document.getElementById('liveFeedback').style.display = 'none';
-            updatePrincipleIndicators({});
         }
 
         // Evaluate Feature (Simulated LLM Judge)
         async function evaluateFeature() {
             console.log('evaluateFeature() called');
-            const textarea = document.getElementById('featureDescription');
-            // Use hidden data if available (from agent profile), otherwise use visible text
-            const fullText = (textarea.getAttribute('data-hidden-content') || textarea.value).trim();
             
-            console.log('Full text length:', fullText.length);
-            
-            if (!fullText) {
-                alert('Please provide agent details');
+            // Use currentAgentData if available (from agent profile button)
+            if (!currentAgentData) {
+                alert('Please select an agent to evaluate');
                 return;
             }
             
-            // Extract agent name from first line if it starts with "Agent Name:"
-            const lines = fullText.split('\n');
-            let featureName = 'Unnamed Agent';
-            let description = fullText;
-            if (lines[0] && lines[0].startsWith('Agent Name:')) {
-                featureName = lines[0].replace('Agent Name:', '').trim();
-            }
+            const fullText = currentAgentData.fullText;
+            const featureName = currentAgentData.name;
+            const description = currentAgentData.description;
+            
+            console.log('Full text length:', fullText.length);
 
             try {
                 // Show loading

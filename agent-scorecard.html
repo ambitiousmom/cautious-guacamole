@@ -2990,9 +2990,6 @@ Everything is under control - no action needed from you!`
                 // Use general domain profile (sliders will override during scoring)
                 const domainProfile = DOMAIN_PROFILES.general;
 
-                // Simulate processing time
-                await new Promise(resolve => setTimeout(resolve, 2000));
-
                 console.log('Running evaluation with:', { featureName, description: description.substring(0, 100) });
 
                 // Run evaluation - pass fullText as both description and trace

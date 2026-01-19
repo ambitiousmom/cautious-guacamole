@@ -3066,7 +3066,22 @@ Everything is under control - no action needed from you!`
         function assessPlatformGravity(text) {
             const lowerText = text.toLowerCase();
             
-            // Check for matches with existing platform capabilities
+            // Initialize gravity signals
+            const signals = {
+                commonality: { score: 0, label: '', decision: '', question: 'Are >2 agents building similar custom logic?' },
+                trustRisk: { score: 0, label: '', decision: '', question: 'Is the agent handling a sensitive "Microsoft-level" concern (Privacy/Auth)?' },
+                interactionConsistency: { score: 0, label: '', decision: '', question: 'Does this feature change how the "Copilot Voice" or UX feels?' },
+                domainSpecificity: { score: 0, label: '', decision: '', question: 'Is the logic useless outside of its specific vertical (e.g., Legal Citations)?' }
+            };
+
+            // 1. COMMONALITY - Check if >2 agents might need this
+            const commonalityKeywords = ['universal', 'common', 'standard', 'all agents', 'multiple agents', 'every agent', 'shared', 'reusable', 'cross-agent', 'duplicate logic'];
+            let commonalityCount = 0;
+            commonalityKeywords.forEach(keyword => {
+                if (lowerText.includes(keyword)) commonalityCount += 15;
+            });
+            
+            // Check for platform capability matches (indicates commonality)
             const capabilityMatches = [];
             PLATFORM_CAPABILITIES.forEach(capability => {
                 const matches = capability.keywords.filter(keyword => lowerText.includes(keyword));
@@ -3075,82 +3090,120 @@ Everything is under control - no action needed from you!`
                         capability: capability.name,
                         keywords: matches
                     });
+                    commonalityCount += 20;
                 }
             });
 
-            // Ubiquity Score (Universal Need)
-            let ubiquityScore = 50;
-            const universalKeywords = ['all', 'every', 'universal', 'common', 'standard', 'typical', 'most', 'many agents', 'multiple teams', 'across all industries', 'universal applicability'];
-            universalKeywords.forEach(keyword => {
-                if (lowerText.includes(keyword)) ubiquityScore += 10;
-            });
-            // Check for explicit platform indicators
-            if (lowerText.includes('universal applicability') || lowerText.includes('across all industries') || lowerText.includes('across industries')) {
-                ubiquityScore += 25;
-            }
-            if (lowerText.includes('specific') || lowerText.includes('niche') || lowerText.includes('specialized') || lowerText.includes('domain-specific')) {
-                ubiquityScore -= 20;
-            }
-            ubiquityScore = Math.min(100, Math.max(0, ubiquityScore));
-
-            // Complexity Burden Score
-            let complexityScore = 40;
-            const complexityKeywords = ['security', 'compliance', 'encrypt', 'authenticate', 'regulate', 'complex logic', 'state management', 'scale', 'infrastructure', 'complex data integration', 'integration requirements', 'crm integration'];
-            complexityKeywords.forEach(keyword => {
-                if (lowerText.includes(keyword)) complexityScore += 12;
-            });
-            // Check for explicit complexity indicators
-            if (lowerText.includes('complex data integration') || lowerText.includes('integration requirements') || lowerText.includes('multiple crm systems')) {
-                complexityScore += 20;
-            }
-            if (lowerText.includes('simple') || lowerText.includes('straightforward') || lowerText.includes('basic')) {
-                complexityScore -= 15;
-            }
-            complexityScore = Math.min(100, Math.max(0, complexityScore));
-
-            // Interoperability Score
-            let interopScore = 45;
-            const interopKeywords = ['api', 'share', 'reuse', 'integrate', 'connect', 'cross-agent', 'other agents', 'multiple features', 'interoperability', 'multiple systems', 'cross-system'];
-            interopKeywords.forEach(keyword => {
-                if (lowerText.includes(keyword)) interopScore += 12;
-            });
-            // Check for explicit interoperability indicators
-            if (lowerText.includes('interoperability with multiple systems') || lowerText.includes('cross-platform') || lowerText.includes('multiple crm')) {
-                interopScore += 20;
-            }
-            if (lowerText.includes('standalone') || lowerText.includes('isolated') || lowerText.includes('independent') || lowerText.includes('domain-specific')) {
-                interopScore -= 15;
-            }
-            interopScore = Math.min(100, Math.max(0, interopScore));
-
-            // Overall Gravity Score
-            const gravityScore = Math.round(
-                ubiquityScore * 0.35 + 
-                complexityScore * 0.35 + 
-                interopScore * 0.3
-            );
-
-            // Determine recommendation
-            let recommendation = '';
-            let label = '';
-            if (gravityScore >= 75) {
-                label = 'High Gravity - Platform Candidate';
-                recommendation = 'This capability should be considered for platform-level implementation. Multiple agents would benefit from a shared, well-maintained solution.';
-            } else if (gravityScore >= 50) {
-                label = 'Medium Gravity - Monitor';
-                recommendation = 'This capability shows some platform potential. Monitor for similar requests from other teams before promoting to platform level.';
+            signals.commonality.score = Math.min(100, commonalityCount);
+            if (signals.commonality.score >= 60) {
+                signals.commonality.label = 'High Gravity';
+                signals.commonality.decision = '→ Absorb to Tier 1';
+            } else if (signals.commonality.score >= 30) {
+                signals.commonality.label = 'Medium';
+                signals.commonality.decision = '→ Monitor for patterns';
             } else {
-                label = 'Low Gravity - Feature Level';
-                recommendation = 'This capability is appropriately scoped as a feature-level implementation. It serves a specialized use case.';
+                signals.commonality.label = 'Low';
+                signals.commonality.decision = '→ Stay at feature level';
+            }
+
+            // 2. TRUST RISK - Microsoft-level concerns (Privacy, Auth, Security)
+            const trustKeywords = ['privacy', 'authentication', 'authorization', 'security', 'compliance', 'gdpr', 'consent', 'pii', 'personal data', 'encrypt', 'sso', 'identity', 'access control', 'audit', 'credential'];
+            let trustCount = 0;
+            trustKeywords.forEach(keyword => {
+                if (lowerText.includes(keyword)) trustCount += 12;
+            });
+
+            signals.trustRisk.score = Math.min(100, trustCount);
+            if (signals.trustRisk.score >= 60) {
+                signals.trustRisk.label = 'Critical Gravity';
+                signals.trustRisk.decision = '→ Immediate Absorption (Tier 1)';
+            } else if (signals.trustRisk.score >= 30) {
+                signals.trustRisk.label = 'Medium';
+                signals.trustRisk.decision = '→ Platform review required';
+            } else {
+                signals.trustRisk.label = 'Low Risk';
+                signals.trustRisk.decision = '→ Agent-level acceptable';
+            }
+
+            // 3. INTERACTION CONSISTENCY - Copilot Voice/UX changes
+            const uxKeywords = ['user experience', 'ux pattern', 'interaction', 'conversation flow', 'tone', 'personality', 'voice', 'copilot experience', 'chat interface', 'ui component', 'visual design', 'brand', 'consistent experience'];
+            let uxCount = 0;
+            uxKeywords.forEach(keyword => {
+                if (lowerText.includes(keyword)) uxCount += 12;
+            });
+
+            signals.interactionConsistency.score = Math.min(100, uxCount);
+            if (signals.interactionConsistency.score >= 60) {
+                signals.interactionConsistency.label = 'High Gravity';
+                signals.interactionConsistency.decision = '→ Move to Tier 2 (Socket)';
+            } else if (signals.interactionConsistency.score >= 30) {
+                signals.interactionConsistency.label = 'Medium';
+                signals.interactionConsistency.decision = '→ Define shared patterns';
+            } else {
+                signals.interactionConsistency.label = 'Low';
+                signals.interactionConsistency.decision = '→ Agent customization OK';
+            }
+
+            // 4. DOMAIN SPECIFICITY - Vertical-specific logic
+            const domainKeywords = ['legal', 'medical', 'finance', 'sales', 'healthcare', 'industry-specific', 'vertical', 'specialized', 'domain-specific', 'niche', 'custom workflow', 'business rules', 'specialized knowledge'];
+            let domainCount = 0;
+            domainKeywords.forEach(keyword => {
+                if (lowerText.includes(keyword)) domainCount += 12;
+            });
+
+            signals.domainSpecificity.score = Math.min(100, domainCount);
+            if (signals.domainSpecificity.score >= 60) {
+                signals.domainSpecificity.label = 'Low Gravity';
+                signals.domainSpecificity.decision = '→ Stay in Tier 3 (Nuance)';
+            } else if (signals.domainSpecificity.score >= 30) {
+                signals.domainSpecificity.label = 'Medium';
+                signals.domainSpecificity.decision = '→ Evaluate generalizability';
+            } else {
+                signals.domainSpecificity.label = 'High Gravity';
+                signals.domainSpecificity.decision = '→ Consider platformization';
+            }
+
+            // BINARY DECISION: Platform Candidate or Not
+            let isPlatformCandidate = false;
+            let suggestedTier = '';
+            let recommendation = '';
+            
+            // Critical trust concerns = immediate platform candidate
+            if (signals.trustRisk.score >= 60) {
+                isPlatformCandidate = true;
+                suggestedTier = 'Tier 1: Foundational DNA';
+                recommendation = '⚠️ <strong>Platform Candidate - Tier 1</strong><br>This agent handles Microsoft-level trust concerns (Privacy/Auth/Security). Must be absorbed into Tier 1 platform for consistency and compliance.';
+            }
+            // High commonality = platform candidate
+            else if (signals.commonality.score >= 60) {
+                isPlatformCandidate = true;
+                suggestedTier = 'Tier 1: Foundational DNA';
+                recommendation = '🔺 <strong>Platform Candidate - Tier 1</strong><br>Multiple agents need similar logic. Strong candidate for platform absorption to avoid duplicate implementations.';
+            }
+            // High UX consistency needs = Tier 2 candidate
+            else if (signals.interactionConsistency.score >= 60) {
+                isPlatformCandidate = true;
+                suggestedTier = 'Tier 2: Adaptive Bridge';
+                recommendation = '🌉 <strong>Platform Candidate - Tier 2</strong><br>This affects Copilot UX consistency. Move to Tier 2 (Adaptive Bridge) for shared infrastructure with agent customization.';
+            }
+            // High domain specificity = stay at feature level
+            else if (signals.domainSpecificity.score >= 60) {
+                isPlatformCandidate = false;
+                suggestedTier = 'Tier 3: Vertical Nuance';
+                recommendation = '✅ <strong>Stay Feature Level - Tier 3</strong><br>This logic is domain-specific with limited reuse. Appropriately scoped at agent level (Tier 3 Vertical Nuance).';
+            }
+            // Default: not a platform candidate
+            else {
+                isPlatformCandidate = false;
+                suggestedTier = 'Feature Level';
+                recommendation = '📋 <strong>Stay Feature Level</strong><br>No strong platform signals detected. Monitor for patterns before considering platformization.';
             }
 
             return {
-                score: gravityScore,
-                label,
+                isPlatformCandidate,
+                suggestedTier,
                 recommendation,
-                ubiquity: ubiquityScore,
-                complexity: complexityScore,
-                interoperability: interopScore,
+                signals,
                 capabilityMatches
             };
         }
@@ -3510,7 +3563,7 @@ Everything is under control - no action needed from you!`
 
             // Platform Gravity Assessment (not included in coherence score)
             const gravityAssessment = assessPlatformGravity(combinedText);
-            principleScores['platform-gravity'] = gravityAssessment.score;
+            principleScores['platform-gravity'] = gravityAssessment.isPlatformCandidate ? 100 : 0;
 
             // Calculate weighted overall score using domain profile weights
             let overallScore = 0;
@@ -3646,36 +3699,51 @@ Everything is under control - no action needed from you!`
         function displayPlatformGravity(gravity) {
             const gravitySection = document.getElementById('gravityAssessmentSection');
             
+            const signals = gravity.signals || {};
+            
             gravitySection.innerHTML = `
                 <div class="platform-gravity-section">
-                    <h3>🚀 Platform Gravity Assessment</h3>
+                    <h3 style="font-size: 1em; margin-bottom: 15px; color: #6b7280; font-weight: 600;">🎯 Gravity Assessment Framework</h3>
                     
-                    <div class="gravity-metrics">
-                        <div class="gravity-metric">
-                            <div class="gravity-metric-label">Ubiquity</div>
-                            <div class="gravity-metric-bar">
-                                <div class="gravity-metric-fill" style="width: ${gravity.ubiquity}%"></div>
-                                <div class="gravity-metric-value">${gravity.ubiquity}</div>
-                            </div>
-                        </div>
-                        <div class="gravity-metric">
-                            <div class="gravity-metric-label">Complexity</div>
-                            <div class="gravity-metric-bar">
-                                <div class="gravity-metric-fill" style="width: ${gravity.complexity}%"></div>
-                                <div class="gravity-metric-value">${gravity.complexity}</div>
-                            </div>
-                        </div>
-                        <div class="gravity-metric">
-                            <div class="gravity-metric-label">Interop</div>
-                            <div class="gravity-metric-bar">
-                                <div class="gravity-metric-fill" style="width: ${gravity.interoperability}%"></div>
-                                <div class="gravity-metric-value">${gravity.interoperability}</div>
-                            </div>
-                        </div>
+                    <div style="display: flex; flex-direction: column; gap: 12px; margin-bottom: 15px;">
+                        ${Object.entries(signals).map(([key, signal]) => {
+                            const colorMap = {
+                                'commonality': '#DC2626',
+                                'trustRisk': '#F59E0B',
+                                'interactionConsistency': '#10B981',
+                                'domainSpecificity': '#8B5CF6'
+                            };
+                            const iconMap = {
+                                'commonality': '👥',
+                                'trustRisk': '🔒',
+                                'interactionConsistency': '💬',
+                                'domainSpecificity': '🎯'
+                            };
+                            const nameMap = {
+                                'commonality': 'Commonality',
+                                'trustRisk': 'Trust Risk',
+                                'interactionConsistency': 'Interaction Consistency',
+                                'domainSpecificity': 'Domain Specificity'
+                            };
+                            
+                            return `
+                                <div style="background: #fafafa; padding: 12px; border-radius: 6px; border-left: 3px solid ${colorMap[key]};">
+                                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+                                        <div style="display: flex; align-items: center; gap: 8px;">
+                                            <span style="font-size: 1.2em;">${iconMap[key]}</span>
+                                            <span style="font-size: 0.85em; font-weight: 700; color: #1f2937;">${nameMap[key]}</span>
+                                        </div>
+                                        <span style="font-size: 0.75em; padding: 2px 8px; background: ${colorMap[key]}; color: white; border-radius: 10px; font-weight: 600;">${signal.label}</span>
+                                    </div>
+                                    <div style="font-size: 0.75em; color: #6b7280; margin-bottom: 6px;">${signal.question}</div>
+                                    <div style="font-size: 0.8em; color: #059669; font-weight: 600;">→ ${signal.decision}</div>
+                                </div>
+                            `;
+                        }).join('')}
                     </div>
                     
                     <div class="platform-recommendation">
-                        <strong>💡 Recommendation:</strong>
+                        <strong>💡 Final Recommendation:</strong>
                         ${gravity.recommendation}
                     </div>
                     
@@ -3793,22 +3861,22 @@ Everything is under control - no action needed from you!`
             }
 
             // Binary Gravity Assessment
-            const gravityScore = evaluation.gravityAssessment.score;
-            const isPlatformCandidate = gravityScore >= 65;
+            const isPlatformCandidate = evaluation.gravityAssessment.isPlatformCandidate;
+            const suggestedTier = evaluation.gravityAssessment.suggestedTier || 'Feature Level';
             const gravityValueEl = document.getElementById('gravityValue');
             const gravityLabelEl = document.getElementById('gravityLabel');
             
             if (isPlatformCandidate) {
-                // Platform level - show yellow warning triangle
+                // Platform candidate - show yellow warning triangle
                 gravityValueEl.innerHTML = '<svg width="70" height="70" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><path d="M50 10 L90 85 L10 85 Z" fill="#fbbf24" stroke="#f59e0b" stroke-width="2"/><circle cx="50" cy="75" r="3" fill="#92400e"/><rect x="47" y="35" width="6" height="30" rx="2" fill="#92400e"/></svg>';
                 gravityValueEl.style.color = '#fbbf24';
-                gravityLabelEl.textContent = 'Platform Input Needed';
+                gravityLabelEl.innerHTML = `Platform Candidate<br><span style="font-size: 0.7em; opacity: 0.8;">${suggestedTier}</span>`;
                 gravityLabelEl.style.color = '#fbbf24';
             } else {
                 // Feature level - show green checkmark
                 gravityValueEl.innerHTML = '<svg width="70" height="70" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><circle cx="50" cy="50" r="48" fill="#22c55e" stroke="#16a34a" stroke-width="2"/><path d="M30 52 L42 64 L70 36" stroke="white" stroke-width="8" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>';
                 gravityValueEl.style.color = '#10b981';
-                gravityLabelEl.textContent = 'Stay Feature Level';
+                gravityLabelEl.innerHTML = `Stay Feature Level<br><span style="font-size: 0.7em; opacity: 0.8;">${suggestedTier}</span>`;
                 gravityLabelEl.style.color = '#10b981';
             }
 

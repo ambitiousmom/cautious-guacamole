@@ -3170,23 +3170,23 @@ Everything is under control - no action needed from you!`
                 signals.interactionConsistency.decision = '→ Agent customization OK';
             }
 
-            // 4. DOMAIN SPECIFICITY - Vertical-specific logic
-            const domainKeywords = ['legal', 'medical', 'finance', 'sales', 'healthcare', 'industry-specific', 'vertical', 'specialized', 'domain-specific', 'niche', 'custom workflow', 'business rules', 'specialized knowledge'];
-            let domainCount = 0;
-            domainKeywords.forEach(keyword => {
-                if (lowerText.includes(keyword)) domainCount += 12;
+            // 4. CHAIN OF INTENT - Multi-intent spanning capability
+            const chainKeywords = ['workflow', 'multi-step', 'orchestrat', 'sequence', 'pipeline', 'chain', 'intent', 'journey', 'across'];
+            let chainCount = 0;
+            chainKeywords.forEach(keyword => {
+                if (lowerText.includes(keyword)) chainCount += 12;
             });
 
-            signals.domainSpecificity.score = Math.min(100, domainCount);
-            if (signals.domainSpecificity.score >= 60) {
-                signals.domainSpecificity.label = 'Low Gravity';
-                signals.domainSpecificity.decision = '→ Stay in Tier 3 (Nuance)';
-            } else if (signals.domainSpecificity.score >= 30) {
-                signals.domainSpecificity.label = 'Medium';
-                signals.domainSpecificity.decision = '→ Evaluate generalizability';
+            signals.chainOfIntent.score = Math.min(100, chainCount);
+            if (signals.chainOfIntent.score >= 60) {
+                signals.chainOfIntent.label = 'High Gravity';
+                signals.chainOfIntent.decision = '→ Consider platformization';
+            } else if (signals.chainOfIntent.score >= 30) {
+                signals.chainOfIntent.label = 'Medium';
+                signals.chainOfIntent.decision = '→ Evaluate scope';
             } else {
-                signals.domainSpecificity.label = 'High Gravity';
-                signals.domainSpecificity.decision = '→ Consider platformization';
+                signals.chainOfIntent.label = 'Low Gravity';
+                signals.chainOfIntent.decision = '→ Stay at Feature Level';
             }
 
             // BINARY DECISION: Platform Candidate or Not
@@ -3212,11 +3212,11 @@ Everything is under control - no action needed from you!`
                 suggestedTier = 'Tier 2: Adaptive Bridge';
                 recommendation = '🌉 <strong>Platform Candidate - Tier 2</strong><br>This affects Copilot UX consistency. Move to Tier 2 (Adaptive Bridge) for shared infrastructure with agent customization.';
             }
-            // High domain specificity = stay at feature level
-            else if (signals.domainSpecificity.score >= 60) {
+            // Low chain of intent = stay at feature level
+            else if (signals.chainOfIntent.score < 30) {
                 isPlatformCandidate = false;
                 suggestedTier = 'Tier 3: Vertical Nuance';
-                recommendation = '✅ <strong>Stay Feature Level - Tier 3</strong><br>This logic is domain-specific with limited reuse. Appropriately scoped at agent level (Tier 3 Vertical Nuance).';
+                recommendation = '✅ <strong>Stay Feature Level - Tier 3</strong><br>This logic is narrowly scoped with limited reuse. Appropriately scoped at agent level (Tier 3 Vertical Nuance).';
             }
             // Default: not a platform candidate
             else {
@@ -3315,7 +3315,7 @@ Everything is under control - no action needed from you!`
                 evaluation.gravityAssessment.signals.commonality.score = 30;
                 evaluation.gravityAssessment.signals.trustRisk.score = 35;
                 evaluation.gravityAssessment.signals.interactionConsistency.score = 40;
-                evaluation.gravityAssessment.signals.domainSpecificity.score = 80;
+                evaluation.gravityAssessment.signals.chainOfIntent.score = 20;
             }
             
             // Legal: Not Coherent + Platform Candidate
@@ -3336,7 +3336,7 @@ Everything is under control - no action needed from you!`
                 evaluation.gravityAssessment.signals.commonality.score = 70;
                 evaluation.gravityAssessment.signals.trustRisk.score = 65;
                 evaluation.gravityAssessment.signals.interactionConsistency.score = 45;
-                evaluation.gravityAssessment.signals.domainSpecificity.score = 30;
+                evaluation.gravityAssessment.signals.chainOfIntent.score = 65;
             }
             
             // Sales: Coherent + Platform Candidate
@@ -3354,7 +3354,7 @@ Everything is under control - no action needed from you!`
                 evaluation.gravityAssessment.signals.commonality.score = 75;
                 evaluation.gravityAssessment.signals.trustRisk.score = 70;
                 evaluation.gravityAssessment.signals.interactionConsistency.score = 68;
-                evaluation.gravityAssessment.signals.domainSpecificity.score = 25;
+                evaluation.gravityAssessment.signals.chainOfIntent.score = 72;
             }
             
             return evaluation;
@@ -3795,7 +3795,7 @@ Everything is under control - no action needed from you!`
                 'commonality': 'Commonality',
                 'trustRisk': 'Trust Risk',
                 'interactionConsistency': 'Interaction Consistency',
-                'domainSpecificity': 'Domain Specificity'
+                'chainOfIntent': 'Chain of Intent'
             };
             
             // Generate signal items - must align with isPlatformCandidate decision
@@ -3807,7 +3807,7 @@ Everything is under control - no action needed from you!`
                     if (key === 'trustRisk' && signal.score >= 60) isDetected = true;
                     else if (key === 'commonality' && signal.score >= 60) isDetected = true;
                     else if (key === 'interactionConsistency' && signal.score >= 60) isDetected = true;
-                    else if (key === 'domainSpecificity' && signal.score < 60) isDetected = true;
+                    else if (key === 'chainOfIntent' && signal.score >= 60) isDetected = true;
                 } else {
                     // If not platform candidate, ensure no signals show detected
                     isDetected = false;

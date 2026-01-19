@@ -1404,22 +1404,14 @@
                                         <div class="score-circle">
                                             <svg width="120" height="120">
                                                 <circle cx="60" cy="60" r="50" fill="none" stroke="#e5e7eb" stroke-width="10"/>
-                                                <circle id="scoreCircle" cx="60" cy="60" r="50" fill="none" stroke="#10b981" stroke-width="10" 
-                                                        stroke-dasharray="314" stroke-dashoffset="314" stroke-linecap="round" transform="rotate(-90 60 60)"/>
-                                            </svg>
-                                            <div class="score-value" id="scoreValue">--</div>
-                                        </div>
-                                        <div class="score-label">Coherence</div>
-                                        <div class="score-status excellent" id="scoreStatus">
-                                            <span>✓</span>
-                                            <span>Highly Coherent</span>
-                                        </div>
-                                        <div style="font-size: 0.7em; color: #6b7280; margin-top: 8px; line-height: 1.3;">Platform alignment<br/>Higher = Better</div>
-                                    </div>
-
-                                    <!-- Platform Gravity Circle -->
-                                    <div style="text-align: center;">
-                                        <div class="score-circle">
+                            </svg>
+                            <div class="score-value" id="scoreValue" style="font-size: 3em;">--</div>
+                        </div>
+                        <div class="score-label">Coherence</div>
+                        <div class="score-status" id="scoreStatus" style="display: none;">
+                            <span></span>
+                        </div>
+                        <div style="font-size: 0.85em; color: #6b7280; margin-top: 8px; font-weight: 600;" id="coherenceLabel">Platform Alignment</div>
                                             <svg width="120" height="120">
                                                 <circle cx="60" cy="60" r="50" fill="none" stroke="#e5e7eb" stroke-width="10"/>
                                                 <circle id="gravityCircle" cx="60" cy="60" r="50" fill="none" stroke="#7C3AED" stroke-width="10" 
@@ -3374,56 +3366,43 @@ Need me to update anything or send delegation notes?`
             principleCard.style.display = 'block';
             principleCard.classList.add('animate-in');
 
-            // Animate coherence score circle
+            // Binary Coherence Assessment
             const score = evaluation.overallScore;
-            const circle = document.getElementById('scoreCircle');
-            const circumference = 2 * Math.PI * 50;
-            const offset = circumference - (score / 100) * circumference;
-            circle.style.strokeDashoffset = offset;
-
-            // Animate gravity score circle
-            const gravityScore = evaluation.gravityAssessment.score;
-            const gravityCircle = document.getElementById('gravityCircle');
-            const gravityOffset = circumference - (gravityScore / 100) * circumference;
-            gravityCircle.style.strokeDashoffset = gravityOffset;
+            const isCoherent = score >= 70;
+            const scoreValueEl = document.getElementById('scoreValue');
+            const coherenceLabelEl = document.getElementById('coherenceLabel');
             
-            // Set gravity circle value and color (inverted: low gravity = good = green)
-            document.getElementById('gravityValue').textContent = gravityScore;
-            let gravityColor = '#7C3AED'; // Purple default
-            if (gravityScore >= 70) gravityColor = '#dc2626'; // Red (high gravity - bad, needs platform)
-            else if (gravityScore >= 40) gravityColor = '#f59e0b'; // Yellow (medium gravity)
-            else gravityColor = '#10b981'; // Green (low gravity - good, feature-level)
-            gravityCircle.style.stroke = gravityColor;
-            
-            // Update gravity status label
-            document.getElementById('gravityStatus').textContent = evaluation.gravityAssessment.label;
-
-            // Set color based on score (red/yellow/green scale)
-            let color, statusClass, statusText, statusIcon;
-            if (score >= 85) {
-                color = '#10b981'; // Green
-                statusClass = 'excellent';
-                statusText = 'Highly Coherent';
-                statusIcon = '✓';
-            } else if (score >= 70) {
-                color = '#84cc16'; // Light green
-                statusClass = 'good';
-                statusText = 'Good Standing';
-                statusIcon = '✓';
-            } else if (score >= 50) {
-                color = '#f59e0b'; // Yellow
-                statusClass = 'needs-work';
-                statusText = 'Needs Improvement';
-                statusIcon = '⚠';
+            if (isCoherent) {
+                scoreValueEl.textContent = '✓';
+                scoreValueEl.style.color = '#10b981';
+                coherenceLabelEl.textContent = 'Coherent';
+                coherenceLabelEl.style.color = '#10b981';
             } else {
-                color = '#dc2626'; // Red
-                statusClass = 'critical';
-                statusText = 'Critical Issues';
-                statusIcon = '✕';
+                scoreValueEl.textContent = '⚠';
+                scoreValueEl.style.color = '#ef4444';
+                coherenceLabelEl.textContent = 'Not Coherent';
+                coherenceLabelEl.style.color = '#ef4444';
             }
 
-            circle.style.stroke = color;
-            document.getElementById('scoreValue').textContent = score;
+            // Binary Gravity Assessment
+            const gravityScore = evaluation.gravityAssessment.score;
+            const isPlatformCandidate = gravityScore >= 65;
+            const gravityValueEl = document.getElementById('gravityValue');
+            const gravityLabelEl = document.getElementById('gravityLabel');
+            
+            if (isPlatformCandidate) {
+                gravityValueEl.textContent = '🚀';
+                gravityValueEl.style.color = '#7C3AED';
+                gravityLabelEl.textContent = 'Platform Candidate';
+                gravityLabelEl.style.color = '#7C3AED';
+            } else {
+                gravityValueEl.textContent = '📦';
+                gravityValueEl.style.color = '#6b7280';
+                gravityLabelEl.textContent = 'Feature Level';
+                gravityLabelEl.style.color = '#6b7280';
+            }
+
+            // No circle animation needed - binary display only
             document.getElementById('scoreValue').style.color = color;
 
             const statusEl = document.getElementById('scoreStatus');
@@ -3512,18 +3491,17 @@ Need me to update anything or send delegation notes?`
                 const item = document.createElement('div');
                 item.className = 'history-item';
                 
-                let scoreColor;
-                if (evaluation.overallScore >= 85) scoreColor = '#10b981';
-                else if (evaluation.overallScore >= 70) scoreColor = '#3b82f6';
-                else if (evaluation.overallScore >= 50) scoreColor = '#f59e0b';
-                else scoreColor = '#dc2626';
+                // Binary assessment
+                const isCoherent = evaluation.overallScore >= 70;
+                const scoreIcon = isCoherent ? '✓' : '⚠';
+                const scoreColor = isCoherent ? '#10b981' : '#ef4444';
 
                 const timeAgo = getTimeAgo(new Date(evaluation.timestamp));
 
                 item.innerHTML = `
                     <div class="history-item-header">
                         <span class="history-item-name">${evaluation.featureName}</span>
-                        <span class="history-item-score" style="color: ${scoreColor}">${evaluation.overallScore}</span>
+                        <span class="history-item-score" style="color: ${scoreColor}; font-size: 1.3em;">${scoreIcon}</span>
                     </div>
                     <div class="history-item-meta">${evaluation.featureType} • ${timeAgo}</div>
                 `;
@@ -3542,13 +3520,14 @@ Need me to update anything or send delegation notes?`
             document.getElementById('totalEvals').textContent = evaluationHistory.length;
             
             if (evaluationHistory.length > 0) {
-                const avgScore = evaluationHistory.reduce((sum, e) => sum + e.overallScore, 0) / evaluationHistory.length;
-                document.getElementById('avgScore').textContent = Math.round(avgScore);
+                const coherentCount = evaluationHistory.filter(e => e.overallScore >= 70).length;
+                const coherentPct = Math.round((coherentCount / evaluationHistory.length) * 100);
+                document.getElementById('avgScore').textContent = `${coherentPct}%`;
                 
-                const certified = evaluationHistory.filter(e => e.overallScore >= 85).length;
+                const certified = evaluationHistory.filter(e => e.overallScore >= 70).length;
                 document.getElementById('certifiedCount').textContent = certified;
                 
-                const platformCandidates = evaluationHistory.filter(e => e.gravityAssessment && e.gravityAssessment.score >= 75).length;
+                const platformCandidates = evaluationHistory.filter(e => e.gravityAssessment && e.gravityAssessment.score >= 65).length;
                 document.getElementById('platformCandidates').textContent = platformCandidates;
             }
         }

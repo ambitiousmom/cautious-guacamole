@@ -1571,6 +1571,26 @@
                     { id: 'step-visualization', name: 'Step Visualization', weight: 0.3 }
                 ]
             },
+            'handoff-protocol': {
+                name: 'Handoff Protocol',
+                tier: 'tier1',
+                weight: 0.06,
+                checks: [
+                    { id: 'context-preservation', name: 'Context Preservation', weight: 0.4 },
+                    { id: 'seamless-transfer', name: 'Seamless Transfer', weight: 0.3 },
+                    { id: 'state-continuity', name: 'State Continuity', weight: 0.3 }
+                ]
+            },
+            'orchestration-core': {
+                name: 'Orchestration & Coordination',
+                tier: 'tier1',
+                weight: 0.06,
+                checks: [
+                    { id: 'multi-agent-routing', name: 'Multi-Agent Routing', weight: 0.4 },
+                    { id: 'task-orchestration', name: 'Task Orchestration', weight: 0.3 },
+                    { id: 'coordination-protocol', name: 'Coordination Protocol', weight: 0.3 }
+                ]
+            },
             
             // TIER 2: Adaptive Bridge (Hybrid)
             'grounding-service': {

@@ -1291,21 +1291,6 @@
         <div class="sidebar">
             <h1>✨ Declarative Agent Coherence & Gravity Dashboard</h1>
             <p class="tagline">Evaluate agents against platform principles & strategic fit</p>
-
-            <div class="stats-summary">
-                <div class="stat-row">
-                    <span class="value" id="totalEvals">0</span>
-                    <span class="label">Evaluations</span>
-                </div>
-                <div class="stat-row">
-                    <span class="value" id="certifiedCount">0</span>
-                    <span class="label">Ecosystem Mismatch</span>
-                </div>
-                <div class="stat-row">
-                    <span class="value" id="platformCandidates">0</span>
-                    <span class="label">Platform Candidates</span>
-                </div>
-            </div>
         </div>
 
         <!-- Main Content -->
@@ -1327,41 +1312,15 @@
                                 <div class="template-chip" onclick="loadAgentProfile('academic')">🎓 Academic</div>
                                 <div class="template-chip" onclick="loadAgentProfile('analyst')">📊 Analyst</div>
                                 <div class="template-chip" onclick="loadAgentProfile('projectmanager')">📋 Project Manager</div>
-                                <div class="template-chip" onclick="clearForm()" style="cursor: pointer;">🔄</div>
                             </div>
 
-                            <div class="form-group">
-                                <label>Agent Name & Details</label>
-                                <div class="form-hint">Provide agent name, instructions, manifest, code, behavior description, and sample interactions</div>
-                                <textarea id="featureDescription" placeholder="Agent Name: [Your agent name]&#10;&#10;Description: [Your agent's functionality, behavior, data handling, and user interactions...]" style="min-height: 120px;"></textarea>
-                                
-                                <!-- Live Feedback Panel -->
-                                <div id="liveFeedback" class="live-feedback" style="display: none;">
-                                    <div class="live-feedback-header">
-                                        <span>⚡</span>
-                                        <span>Live Principle Check</span>
-                                    </div>
-                                    <div id="liveFeedbackList" class="live-feedback-list"></div>
-                                    <div id="liveScorePreview" class="live-score-preview" style="display: none;"></div>
-                                </div>
-                            </div>
+                            <p style="font-size: 0.85em; color: #6b7280; line-height: 1.5; padding: 12px; background: #f9fafb; border-radius: 8px; margin-top: 10px;">
+                                💡 <strong>Note:</strong> Assume clicking on the agent button provides all the necessary documentation, json and code to the evaluator.
+                            </p>
                         </div>
 
-                        <!-- 4-Tier Framework Display -->
-                        <div class="card" style="margin-top: 8px; background: linear-gradient(white, white) padding-box, linear-gradient(135deg, #A78BFA, #FBBF24, #10B981, #60A5FA) border-box; border: 1.5px solid transparent; border-radius: 12px;">
-                            <div class="card-header">
-                                <h3>4-Tiers to fit your Agent into the Ecosystem!</h3>
-                            </div>
-                            <p style="font-size: 0.85em; color: #6b7280; margin-bottom: 15px; padding: 0 20px;">Platform vs Agent responsibility boundaries for building coherent ecosystems</p>
-                            
-                            <div id="tierPrinciplesDisplay" style="padding: 0 20px 20px 20px;"></div>
-                        </div>
-                    </div>
-
-                    <!-- Right Sidebar: Results + History -->
-                    <div class="right-sidebar" style="background: linear-gradient(white, white) padding-box, linear-gradient(135deg, #A78BFA, #FBBF24, #10B981, #60A5FA) border-box; border: 1.5px solid transparent; border-radius: 12px;">
-                        <!-- Results Panel -->
-                        <div class="results-panel">
+                        <!-- Assessment Results Section (moved from right sidebar) -->
+                        <div class="results-panel" style="margin-top: 15px;">
                             <!-- Assessment Scores Card -->
                             <div class="card score-card" id="scoreCard" style="display: none;">
                                 <h3 id="scoreCardTitle" style="font-size: 1.05em; font-weight: 600; color: #1f2937; margin-bottom: 20px; text-align: center;">Assessment Scores</h3>
@@ -1384,24 +1343,23 @@
                             </div>
 
                             <!-- Principle Breakdown Card -->
-                            <div class="card" id="principleCard" style="display: none;">
+                            <div class="card" id="principleCard" style="display: none; margin-top: 12px;">
                                 <div class="principle-scores" id="principleScores"></div>
                                 <div id="gravityAssessmentSection"></div>
                             </div>
                         </div>
+                    </div>
 
-                        <!-- History Panel -->
-                        <div class="history-panel">
-                            <div class="card">
-                                <div class="card-header">
-                                    <h3>Evaluation History</h3>
-                                </div>
-                                <div class="form-group" style="margin-bottom: 0;">
-                                    <select id="historyDropdown" style="padding: 12px; font-size: 0.9em;">
-                                        <option value="">No evaluations yet</option>
-                                    </select>
-                                </div>
+                    <!-- Right Sidebar: 4-Tier Framework -->
+                    <div class="right-sidebar" style="background: linear-gradient(white, white) padding-box, linear-gradient(135deg, #A78BFA, #FBBF24, #10B981, #60A5FA) border-box; border: 1.5px solid transparent; border-radius: 12px;">
+                        <!-- 4-Tier Framework Display -->
+                        <div class="card">
+                            <div class="card-header">
+                                <h3>4-Tiers to fit your Agent into the Ecosystem!</h3>
                             </div>
+                            <p style="font-size: 0.85em; color: #6b7280; margin-bottom: 15px;">Platform vs Agent responsibility boundaries for building coherent ecosystems</p>
+                            
+                            <div id="tierPrinciplesDisplay"></div>
                         </div>
                     </div>
                 </div>

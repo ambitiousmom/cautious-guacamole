@@ -1365,15 +1365,15 @@
                                 <div style="display: flex; gap: 40px; justify-content: center; align-items: center;">
                                     <!-- Coherence Score -->
                                     <div style="text-align: center;">
+                                        <div style="font-size: 0.9em; font-weight: 600; color: #6b7280; margin-bottom: 10px;">Coherence</div>
                                         <div style="font-size: 3em; margin-bottom: 10px; font-weight: 400; opacity: 0.9;" id="scoreValue">--</div>
-                                        <div style="font-size: 0.9em; font-weight: 600; color: #6b7280;">Coherence</div>
                                         <div style="font-size: 0.75em; color: #9ca3af; margin-top: 5px;" id="coherenceLabel">Platform Alignment</div>
                                     </div>
 
                                     <!-- Platform Gravity Score -->
                                     <div style="text-align: center;">
+                                        <div style="font-size: 0.9em; font-weight: 600; color: #6b7280; margin-bottom: 10px;">Platform Gravity</div>
                                         <div style="font-size: 3em; margin-bottom: 10px; font-weight: 400; opacity: 0.9;" id="gravityValue">--</div>
-                                        <div style="font-size: 0.9em; font-weight: 600; color: #6b7280;">Platform Gravity</div>
                                         <div style="font-size: 0.75em; color: #9ca3af; margin-top: 5px;" id="gravityLabel">Strategic Fit</div>
                                     </div>
                                 </div>
@@ -3382,13 +3382,13 @@ Need me to update anything or send delegation notes?`
                 // Platform level - show yellow warning triangle
                 gravityValueEl.innerHTML = '<svg width="70" height="70" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><path d="M50 10 L90 85 L10 85 Z" fill="#fbbf24" stroke="#f59e0b" stroke-width="2"/><circle cx="50" cy="75" r="3" fill="#92400e"/><rect x="47" y="35" width="6" height="30" rx="2" fill="#92400e"/></svg>';
                 gravityValueEl.style.color = '#fbbf24';
-                gravityLabelEl.textContent = 'Platform Candidate';
+                gravityLabelEl.textContent = 'Platform Input Needed';
                 gravityLabelEl.style.color = '#fbbf24';
             } else {
                 // Feature level - show green checkmark
                 gravityValueEl.innerHTML = '<svg width="70" height="70" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><circle cx="50" cy="50" r="48" fill="#22c55e" stroke="#16a34a" stroke-width="2"/><path d="M30 52 L42 64 L70 36" stroke="white" stroke-width="8" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>';
                 gravityValueEl.style.color = '#10b981';
-                gravityLabelEl.textContent = 'Feature Level';
+                gravityLabelEl.textContent = 'Stay Feature Level';
                 gravityLabelEl.style.color = '#10b981';
             }
 

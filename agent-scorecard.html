@@ -3422,7 +3422,9 @@ Need me to update anything or send delegation notes?`
                 
                 const threshold = getThreshold(key);
                 const isPassing = score >= threshold;
-                const icon = isPassing ? '✓' : '✗';
+                const icon = isPassing 
+                    ? '<svg width="24" height="24" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><path d="M30 52 L42 64 L70 36" stroke="#10b981" stroke-width="8" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>'
+                    : '<svg width="24" height="24" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><path d="M35 35 L65 65 M65 35 L35 65" stroke="#ef4444" stroke-width="8" stroke-linecap="round"/></svg>';
                 const iconClass = isPassing ? 'pass' : 'fail';
 
                 const item = document.createElement('div');
@@ -3453,7 +3455,9 @@ Need me to update anything or send delegation notes?`
             
             gravityMetrics.forEach(metric => {
                 const isPassing = metric.value >= gravityThreshold;
-                const icon = isPassing ? '✓' : '✗';
+                const icon = isPassing 
+                    ? '<svg width="24" height="24" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><path d="M30 52 L42 64 L70 36" stroke="#10b981" stroke-width="8" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>'
+                    : '<svg width="24" height="24" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><path d="M35 35 L65 65 M65 35 L35 65" stroke="#ef4444" stroke-width="8" stroke-linecap="round"/></svg>';
                 const iconClass = isPassing ? 'pass' : 'fail';
                 
                 const item = document.createElement('div');

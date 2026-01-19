@@ -306,7 +306,7 @@
             grid-template-columns: 1fr 380px;
             grid-template-areas: "left right";
             gap: 20px;
-            align-items: start;
+            align-items: stretch;
             width: 100%;
         }
 
@@ -1484,17 +1484,6 @@
                     { id: 'token-management', name: 'Token Management', weight: 0.3 }
                 ]
             },
-            'ux-signature': {
-                name: 'UX Signature',
-                tier: 'tier1',
-                weight: 0.09,
-                checks: [
-                    { id: 'progressive-disclosure', name: 'Progressive Disclosure', weight: 0.3 },
-                    { id: 'consistent-typography', name: 'Consistent Typography', weight: 0.2 },
-                    { id: 'copilot-patterns', name: 'Copilot Patterns', weight: 0.3 },
-                    { id: 'visual-hierarchy', name: 'Visual Hierarchy', weight: 0.2 }
-                ]
-            },
             'response-ux': {
                 name: 'Response UX',
                 tier: 'tier1',
@@ -1513,6 +1502,46 @@
                     { id: 'jit-consent', name: 'Just-in-Time Consent', weight: 0.4 },
                     { id: 'clear-permissions', name: 'Clear Permission Dialogs', weight: 0.3 },
                     { id: 'granular-control', name: 'Granular Control', weight: 0.3 }
+                ]
+            },
+            'multimodal-support': {
+                name: 'Multi-modal Support',
+                tier: 'tier1',
+                weight: 0.07,
+                checks: [
+                    { id: 'image-processing', name: 'Image Processing', weight: 0.3 },
+                    { id: 'voice-input', name: 'Voice Input', weight: 0.3 },
+                    { id: 'video-support', name: 'Video Support', weight: 0.4 }
+                ]
+            },
+            'rai-content-safety': {
+                name: 'RAI & Content Safety',
+                tier: 'tier1',
+                weight: 0.08,
+                checks: [
+                    { id: 'content-filtering', name: 'Content Filtering', weight: 0.4 },
+                    { id: 'harm-prevention', name: 'Harm Prevention', weight: 0.3 },
+                    { id: 'rai-guardrails', name: 'RAI Guardrails', weight: 0.3 }
+                ]
+            },
+            'chain-of-thought': {
+                name: 'Chain of Thought',
+                tier: 'tier1',
+                weight: 0.07,
+                checks: [
+                    { id: 'reasoning-steps', name: 'Reasoning Steps', weight: 0.4 },
+                    { id: 'thought-transparency', name: 'Thought Transparency', weight: 0.3 },
+                    { id: 'step-by-step', name: 'Step-by-Step Logic', weight: 0.3 }
+                ]
+            },
+            'intent-detection': {
+                name: 'Intent Detection',
+                tier: 'tier1',
+                weight: 0.07,
+                checks: [
+                    { id: 'intent-classification', name: 'Intent Classification', weight: 0.4 },
+                    { id: 'context-understanding', name: 'Context Understanding', weight: 0.3 },
+                    { id: 'ambiguity-resolution', name: 'Ambiguity Resolution', weight: 0.3 }
                 ]
             },
             

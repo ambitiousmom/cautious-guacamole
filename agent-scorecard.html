@@ -3863,29 +3863,69 @@ Everything is under control - no action needed from you!`
                 `;
                 tierSection.appendChild(tierHeader);
 
-                // Add principles for this tier
-                principles.forEach(({ principle, isPassing }) => {
-                    const icon = isPassing 
-                        ? '<svg width="20" height="20" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><path d="M30 52 L42 64 L70 36" stroke="#10b981" stroke-width="10" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>'
-                        : '<svg width="20" height="20" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><path d="M35 35 L65 65 M65 35 L35 65" stroke="#ef4444" stroke-width="10" stroke-linecap="round"/></svg>';
+                const principlesContainer = document.createElement('div');
 
-                    const item = document.createElement('div');
-                    item.style.cssText = `
-                        display: flex;
-                        justify-content: space-between;
-                        align-items: center;
-                        padding: 6px 8px;
+                // Add principles for this tier (initially show only 3)
+                const initialCount = Math.min(3, principles.length);
+                const renderPrinciples = (startIdx, endIdx) => {
+                    for (let i = startIdx; i < endIdx; i++) {
+                        const { principle, isPassing } = principles[i];
+                        const icon = isPassing 
+                            ? '<svg width="20" height="20" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><path d="M30 52 L42 64 L70 36" stroke="#10b981" stroke-width="10" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>'
+                            : '<svg width="20" height="20" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><path d="M35 35 L65 65 M65 35 L35 65" stroke="#ef4444" stroke-width="10" stroke-linecap="round"/></svg>';
+
+                        const item = document.createElement('div');
+                        item.style.cssText = `
+                            display: flex;
+                            justify-content: space-between;
+                            align-items: center;
+                            padding: 6px 8px;
+                            background: white;
+                            border-radius: 4px;
+                            margin-bottom: 4px;
+                            border: 1px solid #e5e7eb;
+                        `;
+                        item.innerHTML = `
+                            <span style="font-size: 0.8em; color: #4b5563; font-weight: 500;">${principle.name}</span>
+                            <div>${icon}</div>
+                        `;
+                        principlesContainer.appendChild(item);
+                    }
+                };
+
+                renderPrinciples(0, initialCount);
+                tierSection.appendChild(principlesContainer);
+
+                // Add "Click for More" button if there are more than 3 principles
+                if (principles.length > 3) {
+                    const moreBtn = document.createElement('div');
+                    moreBtn.style.cssText = `
+                        margin-top: 6px;
+                        padding: 4px 10px;
                         background: white;
+                        border: 1px solid #d1d5db;
                         border-radius: 4px;
-                        margin-bottom: 4px;
-                        border: 1px solid #e5e7eb;
+                        font-size: 0.75em;
+                        color: #6b7280;
+                        cursor: pointer;
+                        text-align: center;
+                        transition: all 0.2s;
                     `;
-                    item.innerHTML = `
-                        <span style="font-size: 0.8em; color: #4b5563; font-weight: 500;">${principle.name}</span>
-                        <div>${icon}</div>
-                    `;
-                    tierSection.appendChild(item);
-                });
+                    moreBtn.textContent = `Click for More (${principles.length - 3} more)`;
+                    moreBtn.onmouseover = () => {
+                        moreBtn.style.background = '#f3f4f6';
+                        moreBtn.style.borderColor = '#9ca3af';
+                    };
+                    moreBtn.onmouseout = () => {
+                        moreBtn.style.background = 'white';
+                        moreBtn.style.borderColor = '#d1d5db';
+                    };
+                    moreBtn.onclick = () => {
+                        renderPrinciples(initialCount, principles.length);
+                        moreBtn.remove();
+                    };
+                    tierSection.appendChild(moreBtn);
+                }
 
                 principleScoresEl.appendChild(tierSection);
             };

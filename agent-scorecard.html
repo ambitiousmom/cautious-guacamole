@@ -3901,12 +3901,12 @@ Everything is under control - no action needed from you!`
             const coherenceLabelEl = document.getElementById('coherenceLabel');
             
             if (isCoherent) {
-                scoreValueEl.innerHTML = '<svg width="70" height="70" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><circle cx="50" cy="50" r="48" fill="#22c55e" stroke="#16a34a" stroke-width="2"/><path d="M30 52 L42 64 L70 36" stroke="white" stroke-width="8" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>';
+                scoreValueEl.innerHTML = '<svg width="60" height="60" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><circle cx="50" cy="50" r="48" fill="#22c55e" stroke="#16a34a" stroke-width="2"/><path d="M30 52 L42 64 L70 36" stroke="white" stroke-width="8" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>';
                 scoreValueEl.style.color = '#10b981';
                 coherenceLabelEl.textContent = 'Coherent';
                 coherenceLabelEl.style.color = '#10b981';
             } else {
-                scoreValueEl.innerHTML = '<svg width="70" height="70" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><circle cx="50" cy="50" r="48" fill="#ef4444" stroke="#dc2626" stroke-width="2"/><path d="M35 35 L65 65 M65 35 L35 65" stroke="white" stroke-width="8" stroke-linecap="round"/></svg>';
+                scoreValueEl.innerHTML = '<svg width="60" height="60" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><circle cx="50" cy="50" r="48" fill="#ef4444" stroke="#dc2626" stroke-width="2"/><path d="M35 35 L65 65 M65 35 L35 65" stroke="white" stroke-width="8" stroke-linecap="round"/></svg>';
                 scoreValueEl.style.color = '#ef4444';
                 coherenceLabelEl.textContent = 'Not Coherent';
                 coherenceLabelEl.style.color = '#ef4444';
@@ -3919,13 +3919,13 @@ Everything is under control - no action needed from you!`
             
             if (isPlatformCandidate) {
                 // Platform candidate - show yellow warning triangle
-                gravityValueEl.innerHTML = '<svg width="70" height="70" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><path d="M50 10 L90 85 L10 85 Z" fill="#fbbf24" stroke="#f59e0b" stroke-width="2"/><circle cx="50" cy="75" r="3" fill="#92400e"/><rect x="47" y="35" width="6" height="30" rx="2" fill="#92400e"/></svg>';
+                gravityValueEl.innerHTML = '<svg width="60" height="60" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><path d="M50 10 L90 85 L10 85 Z" fill="#fbbf24" stroke="#f59e0b" stroke-width="2"/><circle cx="50" cy="75" r="3" fill="#92400e"/><rect x="47" y="35" width="6" height="30" rx="2" fill="#92400e"/></svg>';
                 gravityValueEl.style.color = '#fbbf24';
                 gravityLabelEl.textContent = 'Platform Candidate';
                 gravityLabelEl.style.color = '#fbbf24';
             } else {
                 // Feature level - show green thumbs up
-                gravityValueEl.innerHTML = '<svg width="70" height="70" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><path d="M30 45 L30 80 L45 80 L45 45 Z" fill="#22c55e"/><path d="M45 45 L45 35 C45 28 50 25 55 25 C58 25 60 27 60 30 L60 40 L75 40 C78 40 80 42 80 45 L80 50 C80 52 79 53 78 54 L70 75 C69 77 67 80 63 80 L45 80 L45 45 Z" fill="#22c55e" stroke="#16a34a" stroke-width="2"/></svg>';
+                gravityValueEl.innerHTML = '<svg width="60" height="60" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><circle cx="50" cy="50" r="48" fill="#22c55e" stroke="#16a34a" stroke-width="2"/><g transform="translate(30, 30) scale(0.6)"><path d="M10 30 L10 70 L25 70 L25 30 Z" fill="white"/><path d="M25 30 L25 20 C25 13 30 10 35 10 C38 10 40 12 40 15 L40 25 L55 25 C58 25 60 27 60 30 L60 35 C60 37 59 38 58 39 L50 60 C49 62 47 65 43 65 L25 65 L25 30 Z" fill="white"/></g></svg>';
                 gravityValueEl.style.color = '#10b981';
                 gravityLabelEl.textContent = 'Stay Feature Level';
                 gravityLabelEl.style.color = '#10b981';

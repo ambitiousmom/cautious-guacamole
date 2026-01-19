@@ -3701,19 +3701,20 @@ Everything is under control - no action needed from you!`
                 `;
             }).join('');
             
-            // Overall status banner - use isPlatformCandidate from gravity assessment
+            // Overall status banner - simplified messaging
             let bannerIcon, bannerBg, bannerBorder, bannerText, bannerTextColor;
+            
             if (isPlatformCandidate) {
                 bannerIcon = '<span style="font-weight: 700; color: #dc2626; font-size: 0.9em;">⚠️ ACTION REQUIRED</span>';
                 bannerBg = '#fffbeb';
                 bannerBorder = '#fbbf24';
-                bannerText = `Platform Candidate Detected → ${suggestedTier}`;
+                bannerText = 'Contact Platform Team';
                 bannerTextColor = '#92400e';
             } else {
                 bannerIcon = '<span style="font-weight: 700; color: #10b981; font-size: 0.9em;">NO ACTION REQUIRED</span>';
                 bannerBg = '#f0fdf4';
                 bannerBorder = '#10b981';
-                bannerText = '';
+                bannerText = 'Feature is appropriately scoped';
                 bannerTextColor = '#065f46';
             }
             
@@ -3735,7 +3736,6 @@ Everything is under control - no action needed from you!`
                         <span style="font-size: 1.2em;">${bannerIcon}</span>
                         <div>
                             ${bannerText ? `<div style="font-size: 0.8em; font-weight: 700; color: ${bannerTextColor};">${bannerText}</div>` : ''}
-                            ${gravity.recommendation ? `<div style="font-size: 0.7em; color: #6b7280; margin-top: 2px;">${gravity.recommendation}</div>` : ''}
                         </div>
                     </div>
                     

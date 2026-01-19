@@ -1297,44 +1297,58 @@
                             
                             <div style="padding: 0 20px 20px 20px;">
                                 <div class="form-group">
-                                    <label>🎨 UX Signature <span style="font-weight: normal; color: #6b7280;">(Fixed: 100%)</span></label>
-                                    <input type="range" id="slider-ux" min="100" max="100" value="100" disabled style="width: 100%; opacity: 0.5;">
+                                    <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 4px;">
+                                        <label style="margin: 0; flex: 0 0 auto;">🎨 UX Signature</label>
+                                        <input type="range" id="slider-ux" min="100" max="100" value="100" disabled style="flex: 1; opacity: 0.5;">
+                                    </div>
                                     <div style="font-size: 0.8em; color: #9ca3af; margin-top: 4px;">Consistent design language</div>
                                 </div>
 
                                 <div class="form-group">
-                                    <label>🔄 Handoff Integrity <span style="font-weight: normal; color: #6b7280;">(Fixed: 100%)</span></label>
-                                    <input type="range" id="slider-handoff" min="100" max="100" value="100" disabled style="width: 100%; opacity: 0.5;">
+                                    <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 4px;">
+                                        <label style="margin: 0; flex: 0 0 auto;">🔄 Handoff Integrity</label>
+                                        <input type="range" id="slider-handoff" min="100" max="100" value="100" disabled style="flex: 1; opacity: 0.5;">
+                                    </div>
                                     <div style="font-size: 0.8em; color: #9ca3af; margin-top: 4px;">Intent preservation</div>
                                 </div>
 
                                 <div class="form-group">
-                                    <label>📊 Grounding Fidelity <span id="label-grounding" style="font-weight: normal; color: #6b7280;">(Variable: 50-100%)</span></label>
-                                    <input type="range" id="slider-grounding" min="50" max="100" value="70" style="width: 100%;">
+                                    <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 4px;">
+                                        <label style="margin: 0; flex: 0 0 auto;">📊 Grounding Fidelity</label>
+                                        <input type="range" id="slider-grounding" min="50" max="100" value="70" style="flex: 1;">
+                                    </div>
                                     <div style="font-size: 0.8em; color: #9ca3af; margin-top: 4px;">Data accuracy</div>
                                 </div>
 
                                 <div class="form-group">
-                                    <label>👁️ Transparency <span style="font-weight: normal; color: #6b7280;">(Fixed: 100%)</span></label>
-                                    <input type="range" id="slider-transparency" min="100" max="100" value="100" disabled style="width: 100%; opacity: 0.5;">
+                                    <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 4px;">
+                                        <label style="margin: 0; flex: 0 0 auto;">👁️ Transparency</label>
+                                        <input type="range" id="slider-transparency" min="100" max="100" value="100" disabled style="flex: 1; opacity: 0.5;">
+                                    </div>
                                     <div style="font-size: 0.8em; color: #9ca3af; margin-top: 4px;">Clear agent identity</div>
                                 </div>
 
                                 <div class="form-group">
-                                    <label>🔒 Privacy First <span style="font-weight: normal; color: #6b7280;">(Fixed: 100%)</span></label>
-                                    <input type="range" id="slider-privacy" min="100" max="100" value="100" disabled style="width: 100%; opacity: 0.5;">
+                                    <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 4px;">
+                                        <label style="margin: 0; flex: 0 0 auto;">🔒 Privacy First</label>
+                                        <input type="range" id="slider-privacy" min="100" max="100" value="100" disabled style="flex: 1; opacity: 0.5;">
+                                    </div>
                                     <div style="font-size: 0.8em; color: #9ca3af; margin-top: 4px;">Data minimization</div>
                                 </div>
 
                                 <div class="form-group">
-                                    <label>⚡ Error Recovery <span id="label-error" style="font-weight: normal; color: #6b7280;">(Variable: 50-100%)</span></label>
-                                    <input type="range" id="slider-error" min="50" max="100" value="70" style="width: 100%;">
+                                    <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 4px;">
+                                        <label style="margin: 0; flex: 0 0 auto;">⚡ Error Recovery</label>
+                                        <input type="range" id="slider-error" min="50" max="100" value="70" style="flex: 1;">
+                                    </div>
                                     <div style="font-size: 0.8em; color: #9ca3af; margin-top: 4px;">Graceful degradation</div>
                                 </div>
 
                                 <div class="form-group">
-                                    <label>🎯 Steerability <span id="label-steerability" style="font-weight: normal; color: #6b7280;">(Variable: 50-100%)</span></label>
-                                    <input type="range" id="slider-steerability" min="50" max="100" value="70" style="width: 100%;">
+                                    <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 4px;">
+                                        <label style="margin: 0; flex: 0 0 auto;">🎯 Steerability</label>
+                                        <input type="range" id="slider-steerability" min="50" max="100" value="70" style="flex: 1;">
+                                    </div>
                                     <div style="font-size: 0.8em; color: #9ca3af; margin-top: 4px;">Real-time adaptability</div>
                                 </div>
                             </div>
@@ -1345,13 +1359,15 @@
                             <div class="card-header">
                                 <h3>Platform Gravity</h3>
                             </div>
-                            <p style="font-size: 0.85em; color: #6b7280; margin-bottom: 15px; padding: 0 20px;"><strong>👉 Drag slider to adjust weight</strong> - Strategic fit for platform absorption</p>
+                            <p style="font-size: 0.85em; color: #6b7280; margin-bottom: 15px; padding: 0 20px;">Strategic fit principles detected automatically</p>
                             
                             <div style="padding: 0 20px 20px 20px;">
-                                <div class="form-group">
-                                    <label>🚀 Platform Gravity Score <span id="label-gravity" style="font-weight: normal; color: #6b7280;">(Variable: 50-100%)</span></label>
-                                    <input type="range" id="slider-gravity" min="50" max="100" value="70" style="width: 100%;">
-                                    <div style="font-size: 0.8em; color: #9ca3af; margin-top: 4px;">Universal need, complexity burden, and interoperability value</div>
+                                <div style="font-size: 0.85em; color: #374151; line-height: 1.8;">
+                                    <div style="padding: 8px 0; border-bottom: 1px solid #f3f4f6;">🌍 Universal Need</div>
+                                    <div style="padding: 8px 0; border-bottom: 1px solid #f3f4f6;">⚙️ Complexity Burden</div>
+                                    <div style="padding: 8px 0; border-bottom: 1px solid #f3f4f6;">🔗 Interoperability Value</div>
+                                    <div style="padding: 8px 0; border-bottom: 1px solid #f3f4f6;">🎯 Steerability Support</div>
+                                    <div style="padding: 8px 0;">💾 Memory & Context</div>
                                 </div>
                             </div>
                         </div>
@@ -3416,7 +3432,7 @@ Need me to update anything or send delegation notes?`
                 
                 const threshold = getThreshold(key);
                 const isPassing = score >= threshold;
-                const icon = isPassing ? '✓' : '✗';
+                const icon = isPassing ? '✅' : '❌';
                 const iconClass = isPassing ? 'pass' : 'fail';
 
                 const item = document.createElement('div');
@@ -3442,12 +3458,12 @@ Need me to update anything or send delegation notes?`
                 { label: 'Memory & Context', value: gravity.memory || 70 }
             ];
             
-            // Use gravity slider as threshold for all gravity factors
-            const gravityThreshold = parseInt(document.getElementById('slider-gravity').value);
+            // Use fixed 70% threshold for gravity factors (no user adjustment)
+            const gravityThreshold = 70;
             
             gravityMetrics.forEach(metric => {
                 const isPassing = metric.value >= gravityThreshold;
-                const icon = isPassing ? '✓' : '✗';
+                const icon = isPassing ? '✅' : '❌';
                 const iconClass = isPassing ? 'pass' : 'fail';
                 
                 const item = document.createElement('div');

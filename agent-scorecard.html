@@ -1317,23 +1317,23 @@
                             <div class="form-row">
                                 <div class="form-group">
                                     <label>Agent Name</label>
+                                    <div class="form-hint" style="margin-top: 4px; margin-bottom: 6px;">Give your agent a descriptive name</div>
                                     <input type="text" id="featureName" placeholder="e.g., SmartTravel Booking Agent">
-                                    <div class="form-hint">Give your agent a descriptive name</div>
                                 </div>
 
                                 <div class="form-group">
                                     <label>Agent Type</label>
+                                    <div class="form-hint" style="margin-top: 4px; margin-bottom: 6px;">Select agent architecture</div>
                                     <select id="featureType">
                                         <option value="declarative" selected>Declarative Agent</option>
                                         <option value="plugin">API Plugin</option>
                                         <option value="custom">Custom Engine Agent</option>
                                     </select>
-                                    <div class="form-hint">Select agent architecture</div>
                                 </div>
                             </div>
 
                             <div class="form-group">
-                                <label>Domain Profile <span style="font-size: 0.85em; font-weight: normal; color: #6b7280;">(Adjusts principle weights)</span></label>
+                                <label>Domain Profile <span style="font-size: 0.85em; font-weight: normal; color: #6b7280;">(Auto-populated by agent selection)</span></label>
                                 <select id="domainProfile" onchange="applyDomainProfile()">
                                     <option value="general" selected>General Purpose (Balanced)</option>
                                     <option value="health">🏥 Health - High Privacy (Privacy 35%)</option>
@@ -1344,10 +1344,10 @@
                                     <option value="analyst">📊 Analyst - Data Driven (Grounding 30%, Transparency 25%)</option>
                                     <option value="projectmanager">📋 Project Manager - Coordination (Handoff 35%, Steerability 25%)</option>
                                 </select>
-                                <div class="form-hint" id="domainHint">Balanced evaluation for general-purpose agents</div>
                                 
                                 <div class="principle-weights-list" id="principleWeightsList">
-                                    <h4>📊 Principle Weight Distribution</h4>
+                                    <h4>📊 Principle Weight Distribution <span style="font-weight: normal; font-size: 0.85em; color: #6b7280;">(totals 100%)</span></h4>
+                                    <div class="form-hint" id="domainHint" style="margin-top: -8px; margin-bottom: 12px;">Balanced evaluation for general-purpose agents</div>
                                     <div id="weightsDisplay"></div>
                                 </div>
                             </div>

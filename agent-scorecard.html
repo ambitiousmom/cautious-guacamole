@@ -3919,13 +3919,13 @@ Everything is under control - no action needed from you!`
             
             if (isPlatformCandidate) {
                 // Platform candidate - show warning with text
-                gravityValueEl.innerHTML = '<div style="text-align: center;"><div style="font-size: 2em; margin-bottom: 5px;">⚠️</div><div style="font-size: 0.65em; font-weight: 700; color: #f59e0b; letter-spacing: 0.5px;">PLATFORM CANDIDATE<br>DETECTED</div></div>';
+                gravityValueEl.innerHTML = '<div style="text-align: center;"><div style="font-size: 2.5em; margin-bottom: 3px;">⚠️</div><div style="font-size: 0.55em; font-weight: 700; color: #f59e0b; letter-spacing: 0.3px; line-height: 1.2;">PLATFORM<br>CANDIDATE<br>DETECTED</div></div>';
                 gravityValueEl.style.color = '#f59e0b';
                 gravityLabelEl.textContent = 'Platform Candidate';
                 gravityLabelEl.style.color = '#f59e0b';
             } else {
                 // No action required - plain green text
-                gravityValueEl.innerHTML = '<div style="font-size: 0.65em; font-weight: 600; color: #10b981; letter-spacing: 0.3px; text-align: center; line-height: 1.3;">NO ACTION<br>REQUIRED</div>';
+                gravityValueEl.innerHTML = '<div style="font-size: 0.75em; font-weight: 700; color: #10b981; letter-spacing: 0.5px; text-align: center; line-height: 1.3; padding: 15px 5px;">NO ACTION<br>REQUIRED</div>';
                 gravityValueEl.style.color = '#10b981';
                 gravityLabelEl.textContent = 'Stay Feature Level';
                 gravityLabelEl.style.color = '#10b981';

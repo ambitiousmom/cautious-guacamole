@@ -3402,13 +3402,6 @@ Need me to update anything or send delegation notes?`
                 gravityLabelEl.style.color = '#6b7280';
             }
 
-            // No circle animation needed - binary display only
-            document.getElementById('scoreValue').style.color = color;
-
-            const statusEl = document.getElementById('scoreStatus');
-            statusEl.className = `score-status ${statusClass}`;
-            statusEl.innerHTML = `<span>${statusIcon}</span><span>${statusText}</span>`;
-
             // Display principle scores
             const principleScoresEl = document.getElementById('principleScores');
             principleScoresEl.innerHTML = '<h3 style="font-size: 0.9em; margin-bottom: 12px; color: #6b7280; text-align: left;">Principle Breakdown</h3>';

@@ -2961,9 +2961,9 @@ Everything is under control - no action needed from you!`
             
             // Initialize gravity signals
             const signals = {
-                commonality: { score: 0, label: '', decision: '', question: 'Are >2 agents building similar custom logic?' },
-                trustRisk: { score: 0, label: '', decision: '', question: 'Is the agent handling a sensitive "Microsoft-level" concern (Privacy/Auth)?' },
-                interactionConsistency: { score: 0, label: '', decision: '', question: 'Does this feature change how the "Copilot Voice" or UX feels?' },
+                commonality: { score: 0, label: '', decision: '', question: 'Is this capability needed across multiple agents?' },
+                trustRisk: { score: 0, label: '', decision: '', question: 'Does this involve contracts or dependencies between agents?' },
+                interactionConsistency: { score: 0, label: '', decision: '', question: 'Does this involve significant resource or token management?' },
                 chainOfIntent: { score: 0, label: '', decision: '', question: 'Does this capability span multiple user intents or workflows?' }
             };
 
@@ -3659,9 +3659,9 @@ Everything is under control - no action needed from you!`
             
             // Map signal names
             const signalNames = {
-                'commonality': 'Commonality',
-                'trustRisk': 'Trust Risk',
-                'interactionConsistency': 'Semantic Interoperability',
+                'commonality': 'Ubiquity and Reusability',
+                'trustRisk': 'Inter-Agent Contracts',
+                'interactionConsistency': 'Resource & Token Allocations',
                 'chainOfIntent': 'Chain of Intent'
             };
             

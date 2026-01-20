@@ -3676,15 +3676,19 @@ Everything is under control - no action needed from you!`
             };
             
             // Generate signal items - must align with isPlatformCandidate decision
+            // Only ONE signal should show as detected (the one that triggered the decision)
             const signalItems = Object.entries(signals).map(([key, signal]) => {
                 // Determine if this specific signal triggered platform candidate status
                 let isDetected = false;
                 if (isPlatformCandidate) {
-                    // If platform candidate, show which signal(s) triggered it
-                    if (key === 'trustRisk' && signal.score >= 60) isDetected = true;
-                    else if (key === 'commonality' && signal.score >= 60) isDetected = true;
-                    else if (key === 'interactionConsistency' && signal.score >= 60) isDetected = true;
-                    else if (key === 'chainOfIntent' && signal.score >= 60) isDetected = true;
+                    // Match the decision logic - only first trigger shows as detected
+                    if (key === 'trustRisk' && signal.score >= 60) {
+                        isDetected = true;
+                    } else if (key === 'commonality' && signal.score >= 60 && signals.trustRisk.score < 60) {
+                        isDetected = true;
+                    } else if (key === 'interactionConsistency' && signal.score >= 60 && signals.trustRisk.score < 60 && signals.commonality.score < 60) {
+                        isDetected = true;
+                    }
                 } else {
                     // If not platform candidate, ensure no signals show detected
                     isDetected = false;

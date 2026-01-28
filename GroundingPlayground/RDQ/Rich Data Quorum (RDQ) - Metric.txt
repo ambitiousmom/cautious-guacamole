@@ -1,0 +1,680 @@
+Rich Data Quorum (RDQ) - Metric 
+
+ 
+
+Why? 
+
+The Places data consumer landscape has evolved. Copilot search is now a high priority consumer scenario in addition to the traditional search scenarios. End users of copilot search are looking to leverage the product to respond to highly complex queries which involve several in-depth factors/constraints. E.g. “I have a 2 kids. I am vegan but rest of my family is not. I am looking to celebrate my 10th wedding anniversary with family. It happens to be on a school night. Help me find restaurants for this occasion near my home.” 
+
+With the rebased Corpus we expect to have a high quality, single source of Places base data. This will help us find restaurants that are open on the said day and time near the user’s location. 
+
+Beyond that, to address all the other inferred constraints like ‘kid-friendly’, ‘fancy enough for an anniversary celebration’, and ‘menu has vegan options’ we must be able to enrich the Places entity information with sufficient rich content that captures as many details about the entity as possible. 
+
+What? 
+
+We need a metric that can be leveraged in the following ways: 
+
+To measure the richness of our current corpus. This should help us analyze where we are lacking so we can find ways to address the gaps. This should allow us to measure whether a certain investment/change helped improve the richness and by how much. Be able to slice this by region, by segment and by top entities. 
+
+To evaluate individual sources of data and understand the value it is adding to our corpus. E.g. Take booking.com feed and answer questions like what value does it add? a.k.a. if we didn’t have that source what would be the loss in the richness of our corpus? The impact, as measured by this metric at data level should ultimately align with what we might learn from doing an end user facing reverse flight by dropping that data source. 
+
+Analyze potential third party data sources and project the value they could add so we can prioritize which data sources we want to license data from and how much we are willing to pay for it. 
+
+This metric should consider the following factors: 
+
+How fresh is the content we have gathered? What is a good bar to set on freshness for various types of content? 
+
+Freshness is very critical for some content, e.g. menus for restaurants, images for hotels, etc. When we get into web documents, this becomes even more complicated given the unstructured nature of the content. 
+
+How many entities were we able to attach rich content to (with ability to slice in various ways)? 
+
+The expectation is that top entities should have higher enrichment coverage with lot more richness of content. 
+
+Amount of rich content we were able to attach to entities – e.g. number of urls, number of reviews, number of photos. What is a good bar to set on numbers for various types of content? 
+
+Richness of the content we were able to attach to entities – How many varied pieces of information we were able to gather about a given entity (via web sites, via photos, via reviews etc.)? What is a good bar to set on this based on the popularity and type of the entity? 
+
+How much of the content associated with the entity is spammy/inappropriate vs. accurate appropriate and coming from reliable sources aka. business owner, genuine user etc.? NOTE: From Data gathering perspective we will ensure that the data is associated with the correct entity and isn’t obviously spammy/broken links etc. Beyond that we will classify the content via metadata tags (like – sourced from business owner vs. sourced from users, webpagetype=article/aggregator/primary web site) for use by downstream customers. 
+
+Additional Notes:  
+
+Relevance of the content to the entity itself is a very important aspect as well. This will be covered by precision of matching. 
+
+This metric itself cuts across Urls (we mine data from), Reviews and Photos. It all cuts across web sourced and non-web sourced content. This follows that how we measure “richness” or “freshness” etc. might be different. 
+
+ 
+
+How? 
+
+ 
+
+ 
+
+RDQ Richness Measurement 
+ 
+
+Design Principles 
+
+Generality first: Avoid domain-specific assumptions or ontologies in the foundational layer. 
+
+Layered metrics: Establish foundational (lower-level) metrics first and then build higher-level metrics as needed. 
+
+Agnostic architecture: The metric should work well for any text document, or text-based enrichment content like business descriptions, reviews, etc. 
+
+We want to start with measuring richness just on the data collection we have and then move to using external sources to validate and identify gaps later. 
+
+We should also meet the RDQ Metric Principles as outlined here: 
+RDQ Metric Principles.docx 
+
+ 
+Terminology 
+
+Enrichment content type: Content types, like images, reviews, urls, amenities, etc. 
+
+Facets: Descriptors/aspects of a business, like ambiance, cuisine type, service, etc. 
+
+ 
+
+Building the metric in layers 
+
+Layer – 1: Counts and histograms (or fitting the curve) 
+
+Counts/histograms for Enrichment content types like how many images and reviews we have in our corpus for a business entity to measure the Coverage.  
+
+This also includes creating histograms on review length as a quick measure of total number of tokens/words present. More tokens usually mean more content - though not always more useful or richer content.  
+
+In addition to measuring the count of Enrichment Content types, we are also measuring the Freshness of Reviews, URLs, and Image, counting how many entities meet certain threshold criteria.  
+ 
+Both measures, Coverage and Freshness, have thresholds defined such as count of URLs that are < 3 months old or count of entities with > 5 URLs, and will be expanded to additional Enrichment content types as needed.  
+
+Link to dashboard: RDQ Metric 
+ 
+
+Layer – 2: Identify information richness/diversity 
+ 
+
+We will start measuring richness by taking a look at the facets we have for an entity and comparing them to the top 10 facets Google displays for that entity. To start, we will be taking a look at reviews, while we continue to expand the capabilities to measure additional Enrichment Content types.  
+ 
+
+Details can be found here: C4.25 Bing Places RDQ Richness - OnePager.docx 
+
+ 
+
+Approaches: 
+
+Entropy: Using something like Shannon Entropy which measures unpredictability: if a few words dominate, entropy is low; if many words are evenly distributed, entropy is high. This uses entropy of token frequencies as a proxy for information variety/richness. 
+
+ 
+Quick prototype: We removed digits, stop words and punctuation. Frequency is used to calculate the entropy and kth row indicates the entropy of first k reviews. 
+
+Observation: Entropy did not increase much or even decrease as "duplicate information is given".  It gives some information on the richness of the review, though we won't be able to locate similar reviews 
+
+ 
+
+ 
+
+ 
+
+Challenges/Limitations 
+
+ 
+
+Token-based richness can’t capture meaning, context, or novelty. 
+
+Can works best as a signal, not final truth. Can’t distinguish between meaningful vs filler content. 
+
+ 
+
+ 
+
+Semantic & embedding based approach 
+ 
+
+This is where we move from “how much data” to “how meaningful is the data” 
+
+ 
+
+How? 
+
+ 
+
+       Option - 1 
+
+Generate embeddings at sentence or n-gram level using pre-trained models like SBERT or others. 
+
+Compute semantic dispersion (average pairwise cosine distance) - reflects the degree of semantic variability or spread within a document/dataset. 
+
+Furthermore, we can use clustering techniques to group similar embeddings together. And then extract the representative sentences from each cluster to get a list of facets/topics that are in the document/dataset. 
+
+Note: If document or dataset like reviews are really large/long, we can use techniques like summarization or extract top-k informative sentences before clustering. 
+
+   
+
+       Option – 2 
+
+Use SLMs/LLMs directly to extract the list of facets/topics that are in the document/dataset. 
+
+Example: Information extracted by a language model using just Top 4 reviews on Yelp for Canlis Seattle: https://www.yelp.ca/biz/canlis-seattle#reviews 
+
+ 
+
+Facet 
+
+Mentions / Evidence from Reviews 
+
+Reservation  
+
+“we were early… got to sit early” 
+
+Hospitality / Staff 
+
+“greeted and taken care of”, “warm embrace of the staff”, “friendly staff”, “knowledgeable staff” 
+
+Ambiance / Atmosphere 
+
+“seated next to the owner’s table… amazing history”, “timeless ambiance”, “live piano”, “sun set… skies painted gradients”, “corner seat… Japanese pine tree” 
+
+Food Quality & Taste 
+
+“halibut melted in your mouth”, “wagyu was delicious”, “each item was cooked good”, “culinary artistry”, “no complaints” 
+
+Dietary Options 
+
+“vegan and gluten-free accommodated”, “bread isn’t gluten-free but I had to try” 
+
+Menu Curation / Creativity 
+
+“curated menus… showcase the chef’s vision”, “ever-evolving culinary artistry” 
+
+Bread & Sides 
+
+“tofu butter”, “bread was salty”, “Canlis salad made table side” 
+
+Drinks / Cocktails / Wine 
+
+“cocktails instead of wine… loved the drinks”, “Zefira’s delight (cocktail)… refreshing”, “extensive wine choices” 
+
+Service Thoughtfulness 
+
+“special map of Seattle”, “very thoughtful”, “thank you for making my birthday so memorable” 
+
+Pricing & Value 
+
+“$$$$$, $200+ per person”, “for that price, I expected perfection”, “go to a Michelin spot for the same number” 
+
+Special Occasions / Events 
+
+“birthday”, “anniversary”, “celebrated my sister’s birthday with family” 
+
+Location/View 
+
+“stunning view”, “corner seat… pine tree”, “sunset… deep blue skies” 
+
+Return Experience / Loyalty 
+
+“returning after five years”, “cannot wait to come back” 
+
+Signature Dishes 
+
+“Canlis salad”, “citrus parfait”, “fern app” 
+
+Innovation vs Tradition 
+
+“unique blend of tradition and innovation”, “a true ‘way of life’” 
+
+Expectations vs Reality 
+
+“some reviews are great and some bad”, “some dishes were hits, others meh”, “just okay… nothing really wowed me” 
+
+ 
+Sample review dataset from which the above is extracted. 
+
+ 
+
+We could then use the extracted facets to calculate the average facet count for each entity or average it over the entire corpus. This can also be split on various cohorts like TopN, region, segment, language, etc. 
+
+ 
+
+Option – 3: Extract facets using fine-tuned NER model  
+
+We propose a method that would use a fine-tuned NER (Name Entity Recognition) model for Facet recognition to detect facets in the different documents (Reviews and URLs) linked to an entity and generate a score.  
+
+These facets can come from different sources, but as an example, we could extract them from user queries using an LLM and use facet frequency in queries to calculate weights for the score.  
+
+ 
+
+This process is depicted in the following diagram: 
+
+ 
+
+ 
+
+We could also generate embeddings and use clustering to measure diversity. 
+
+ 
+
+Advantages: If getting facets from user queries, we would make sure that the detected facets are relevant to the user. 
+
+ 
+
+Layer – 3 – Gaps identification 
+
+ 
+
+Layer-2 helped with understanding how rich or diverse information is present in the data corpus we have. But what it doesn’t tell is “what is missing?”. Given a business entity it could be possible the data corpus is really rich enough with multiple facets present but what if we could be missing one important facet? How do we get to know that? 
+
+Example: What if our data corpus is really lacking ‘pricing/value’ facet for a restaurant? 
+
+ 
+
+There can be multiple different approaches here: 
+
+Using cross-referencing against competitors. 
+
+Using user query logs (metrics like GDQ or qGDR can be used to determine recall gaps). 
+
+Using domain knowledge, cluster-based discovery, or LLM-guided discovery for facets. 
+
+User research: Local Search Journeys Final Reading Deck.pptx (slide 18) 
+
+ 
+ 
+
+ 
+
+Plan for C3 
+
+ 
+
+Feature 
+
+ETA 
+
+Remarks 
+
+Create baselines on TopN and overall random sets for Layer-2 (richness metric) – prototype for option 1 
+
+6/19 
+
+ 
+
+Create baselines on TopN and overall random sets for Layer-2 (richness metric) – prototype for option 2 is option 1 isnt giving expected results 
+
+7/3 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+Slicing and Dicing 
+
+We will meet the common slicing and dicing patterns as defined for RDQ, IWFQ, and Governance. This will include, but is not limited to: 
+ 
+
+Language, Region, TopZ Sets, Segment, Governance (Paywall Status, Provider Name, License Status), and Data Release 
+
+Customer?  
+
+ 
+
+Appendix 
+
+Terminology 
+
+ 
+
+Enrichment content type: Content types like Photos, Reviews, Urls, 3D Video, etc. 
+
+Example: for an insurance agent we need different types and number of enrichment content types vs that for an Attraction. Attraction might need a 3D video as enrichment content type for example. 
+
+In C2, we already focused on counts for Enrichment Content types.  
+
+Open question: Did we also define what all enrichment content types are needed per segment/ category and then identify the gaps/opportunities? 
+
+ 
+
+Facets: Characteristics of a business, like ambiance, cuisine type, etc. 
+
+We need to measure richness using Facets across different Enrichment content types like reviews, images, etc. 
+
+ 
+
+Sources for Facets 
+
+We could use multiple sources like: 
+
+Using LLM for a category/segment 
+
+User query logs 
+
+Business website/ trustworthy web pages 
+
+Competitor scraping 
+
+Enrichment content types like reviews, photos, amenities, etc. 
+
+User research: Local Search Journeys Final Reading Deck.pptx (slide 18) 
+
+ 
+
+For scoping we should decide on which ones to pick for V1. 
+ 
+
+Technical details on mining facets 
+
+ 
+
+Technical details on extracting facets from enrichment content types 
+
+ 
+TBD. We could use language models for this or a hybrid approach with language models + NLP. 
+ 
+
+For Reviews/URLs, we can use the Multilingual Page Richness Scorer ( Section 3 here: C3.25-Design Document Primary Webpage Selector for Local Entities.docx ) or a similar fine tuned model, or we could directly prompt an LLM ( GPT-4o, for example using the the prompts that were used to generate train/teWst data for the Multilingual Page Richness Scorer). 
+
+Measurement 
+
+Let’s assume for a restaurant these are the Facets we need for richness: 
+
+ {“menu items”, “cuisine type”, “drinks”, “allergy information”, “reservation policy”, “pricing”, “dietary options”, “accessibility”, “ambiance”, “parking”} 
+ 
+
+Example for measurement 
+
+This just shows how richness measurement on enrichment content type like reviews may look like. The Richness on average in this case was as ~42.5%. 
+
+ 
+
+Entity 
+
+Local’s richness 
+
+Facets matched in Local dataset 
+
+1 
+
+10% (1/10) 
+
+menu items 
+
+2 
+
+40% (4/10) 
+
+menu items, pricing, parking, ambiance 
+
+3 
+
+80% (8/10) 
+
+“menu items”, “cuisine type”, “drinks”, “allergy information”, “reservation policy”, “pricing”, “dietary options”, “accessibility” 
+
+… 
+
+… 
+
+… 
+
+N 
+
+40% (4/10) 
+
+“menu items”, “cuisine type”, “drinks”, “allergy information” 
+
+AVG 
+
+42.5% 
+
+ 
+
+ 
+
+Competitor richness on same: 
+
+Entity 
+
+Competitor richness 
+
+Facets matched in Competitor dataset 
+
+1 
+
+30% 
+
+menu items, pricing, parking 
+
+2 
+
+50% 
+
+menu items, pricing, parking, ambiance, drinks 
+
+3 
+
+90% 
+
+“menu items”, “cuisine type”, “drinks”, “allergy information”, “pricing”, “dietary options”, “accessibility”, “ambiance”, “parking”,  
+
+… 
+
+… 
+
+… 
+
+N 
+
+60% 
+
+“menu items”, “cuisine type”, “drinks”, “allergy information”, “pricing”, “dietary options”, 
+
+AVG 
+
+57.5% 
+
+ 
+
+ 
+
+ 
+
+We can cross-reference to external third parties (Google, etc.) to understand how far we are compared to what is available to users on the web/competirors. 
+ 
+Cross-referencing we find that we are -15% behind competitors. We could also calculate this for other third parties if required. 
+
+ 
+
+Entity 
+
+Local Richness 
+
+Competitor Richness 
+
+Delta 
+
+Facets Missing in Local (but in Competitor) 
+
+Facets present in Local (but missing in Competitor) 
+
+1 
+
+10% 
+
+30% 
+
+-20% 
+
+pricing, parking 
+
+ 
+
+2 
+
+40% 
+
+50% 
+
+-10% 
+
+drinks 
+
+ 
+
+3 
+
+80% 
+
+90% 
+
+-10% 
+
+parking 
+
+reservation policy 
+
+… 
+
+… 
+
+… 
+
+… 
+
+… 
+
+… 
+
+N 
+
+40% 
+
+60% 
+
+-20% 
+
+“pricing”, “dietary options”, 
+
+ 
+
+Overall 
+
+42.50% 
+
+57.50% 
+
+-15% 
+
+ 
+
+ 
+
+ 
+
+ 
+
+Open questions 
+
+For defining enrichment content types can we leverage competitor scraping? 
+
+Multi-valued facets – how to compare? May be this is for V2? 
+
+A = { 
+
+  "menu items": ["lasagna", "tiramisu", "espresso"], 
+
+  "cuisine type": "Italian", 
+
+  "drinks": ["red wine"], 
+
+  "ambiance": "romantic" 
+
+} 
+
+ 
+
+B = { 
+
+  "menu items": ["pasta", "tiramisu", "espresso", "risotto"], 
+
+  "cuisine type": ["Italian", “Chinese”], 
+
+  "drinks": ["red wine", "white wine", "aperol spritz"], 
+
+  "ambiance": ["romantic", "family-friendly"], 
+
+  "dietary options": ["gluten-free"], 
+
+  "accessibility": ["wheelchair accessible"], 
+
+  "parking": ["street", "garage"] 
+
+} 
+
+ 
+Actionable Insights 
+
+Missing facets: Highlight what’s expected but missing from the business’s enrichment content type. 
+
+Category-level gap analysis: Identify common weak facets across a group of businesses (e.g., 70% of restaurants missing “parking” info). 
+
+Feed level richness: Example, reviews from multiple providers (Yelp, TripAdvisor), compare richness per source. 
+
+ 
+Challenges 
+
+ 
+
+Unique Facets for a business may be missed when we generate Facets at category or segment level 
+ 
+
+If we use LLM for Facet generation, the output will need to be post processed. 
+
+ 
+ 
+
+ 
+
+Competitor data scraping  – Post processing will be required as well 
+
+ 
+ 
+
+ 
+
+Sample Review Data 
+
+“First I want to say I've been trying for years to get a reservation that fit my schedule. The experience didn't disappoint. From the entrance to building, we were immediately greeted and taken care of. We were early for our reservation and we got to sit early. We were seated right next to the owners table so we got to overhear all the amazing history of this restaurant. We were even able to meet the second generation owner and it made our night. Now food. They were able to accommodate me being vegan and gluten free, which was so exciting for me. I was able to get every course and it was so delightful. I will say be cautious with the bread. Not only is it delicious, so was the tofu butter but it was a bit salty. Bread isn't gluten free but I had to try. 
+
+There were absolutely no complaints. I would also suggest getting the Canlis salad made table side. You also get the recipe to take home. I can't wait to get back to this place and have another beautiful night. Thank you for making my birthday so memorable. 
+
+ 
+
+Upscale restaurant, with stunning view. Very $$$$, so when paying $200+ per person for a meal, you better expect perfection. However, some dishes were hits, and others were meh. Though I'm glad I got to try the famous Canlis and did enjoy the meal, given the price point, I'm not inclined to come again. 
+
+But of the hits, the halibut melted in your mouth - yum! Wagyu was also delicious, validly so for quality meat. The opening amuse bouche & Zefira's delight (cocktail) were refreshing. And of the desserts, the citrus parfait was one-of-a-kind. 
+
+Service was superb. They gave us a special map of Seattle since we were visiting from out of town. Very thoughtful. :) 
+
+I didn't know what to expect... some reviews are great and some were bad. I'm into curated menus and things where the restaurant gets to showcase what it wants via the chef and vision. 
+
+With that said, my lady and I split most all non vegetarian/vegan dishes and it was just ok, good to say the most but nothing really wowed me besides the extensive wine choices, knowledgeable staff and great service. 
+
+I come strictly for food, bad service or not doesn't reflect what i score here. 
+
+Overall something people should try but go to a Michelin spot for the same number and get something different. 
+
+Honorable mention though, the fern app was great, each item was cooked good, just wasn't a wow moment for a curated menu. 
+
+Returning to Canlis after five years, this time for our anniversary, felt like stepping into a cherished memory, yet with a beautifully different perspective. While my previous visit celebrated my sister's birthday with family, this occasion resonated on a deeply personal level. The consistent elegance, the warm embrace of the staff, and the timeless ambiance transported me back, while the ever-evolving culinary artistry reminded me why Canlis remains a Seattle treasure. It's their unique blend of tradition and innovation, a true 'way of life,' that makes every visit unforgettable. 
+
+This time i got to try their cocktails instead of wine and i absolutely loved the drinks we ordered. We also tried the Canlis salad and thought it really complimented the flavors of the bread. 
+
+We also got seated at the corner seat looking right outside the beautiful Japanese pine tree, as the sun set on a first spring like day of 2025, we got to enjoy our meal as the skies painted gradients of blue purple and deep blue. With live piano, friendly staff and the amazing innovative food, we had a blast and cannot wait to come back to celebrate another special occasion.” 
+ 

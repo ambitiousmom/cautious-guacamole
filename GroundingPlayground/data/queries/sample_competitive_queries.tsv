@@ -1,0 +1,21 @@
+query_id	query_text	query_type	segment	entity_ypid	entity_name	location
+Q001	Is Joe's Diner dog-friendly?	amenity	restaurant		Joe's Diner	Chicago, IL
+Q002	What are the hours for Walmart Allentown?	factual	retail	1C597BB6B0AD12BD	Walmart Supercenter	Allentown, PA
+Q003	What's the vibe at STK Steakhouse Midtown?	vibe	restaurant	F1217DD05A21364A	STK Steakhouse Midtown NYC	New York, NY
+Q004	Does Harbor Freight have parking?	amenity	retail	9AB46CA55E2296D	Harbor Freight	Chicago, IL
+Q005	Is Twisted Biscuit good for kids?	amenity	restaurant	E031EFCFE184CB95	Twisted Biscuit Brunch Co.	Edwardsville, IL
+Q006	What do reviews say about Circuit of the Americas?	reviews	entertainment	97310C0A3A98F6B4	Circuit of the Americas	Del Valle, TX
+Q007	Best burger spots near Times Square	comparison	restaurant			New York, NY
+Q008	Romantic dinner with a view in San Francisco	vibe	restaurant			San Francisco, CA
+Q009	Cheap eats open late near me	comparison	restaurant			
+Q010	Does Hibachi Buffet have a kids menu?	amenity	restaurant	2126DAAC54CF6144	Hibachi Buffet	Citrus Heights, CA
+Q011	Is Sublime Doughnuts cash only?	factual	restaurant	C1A87FF9164CCDBC	Sublime Doughnuts	Atlanta, GA
+Q012	What's the parking situation at Fox River Mall?	amenity	retail	E20C4479A9689C70	Fox River Mall	Appleton, WI
+Q013	Is The Bethesdan Hotel pet-friendly?	amenity	hotel	CCF477E1E8080236	The Bethesdan Hotel	Bethesda, MD
+Q014	Does Biscuit Head have outdoor seating?	amenity	restaurant	2F0CEBD2AEBB3D64	Biscuit Head	Asheville, NC
+Q015	What's the average price at Ruth's Chris Charlotte?	factual	restaurant	D89520183A9936FB	Ruth's Chris Steak House	Charlotte, NC
+Q016	Is Sequoia Park Zoo good for toddlers?	amenity	entertainment	D3A82B891763A740	Sequoia Park Zoo	Eureka, CA
+Q017	Does Adorama have in-store pickup?	amenity	retail	3704FC04DA427095	Adorama	New York, NY
+Q018	What's the atmosphere like at Basalt Waikiki?	vibe	restaurant	641743A19194C8D4	Basalt	Honolulu, HI
+Q019	Is River House Seafood wheelchair accessible?	amenity	restaurant	6CD37BEA9C7161DF	River House Seafood	Savannah, GA
+Q020	Does Cinemark Grapevine have recliner seats?	amenity	entertainment	A753E797A6CD4E0F	Cinemark Tinseltown Grapevine	Grapevine, TX

@@ -1,0 +1,19 @@
+query_id	responder	response_text	answered	confidence	source_cited	richness_score
+Q001	bing_copilot	I don't have specific information about Joe's Diner's pet policy.	no	low	none	1
+Q001	gemini	Based on Yelp reviews, Joe's Diner appears to be dog-friendly with outdoor seating that welcomes pets.	yes	high	yelp	4
+Q001	perplexity	Yes, Joe's Diner is dog-friendly. Multiple visitors mention bringing their dogs to the outdoor patio area.	yes	high	multiple_web	4
+Q002	bing_copilot	Walmart Supercenter in Allentown is open from 6am to 11pm daily.	yes	high	licensed	3
+Q002	gemini	The Walmart Supercenter at 1091 Mill Creek Rd in Allentown, PA is open 6:00 AM - 11:00 PM.	yes	high	google	3
+Q002	perplexity	Walmart Allentown hours are 6am-11pm Monday through Sunday.	yes	high	walmart_website	3
+Q003	bing_copilot	STK Steakhouse is an upscale steakhouse in Midtown Manhattan.	partial	medium	none	2
+Q003	gemini	STK Midtown has a trendy, nightclub-like atmosphere with DJ music, dim lighting, and a see-and-be-seen crowd. It's known for its lively energy, especially on weekend nights.	yes	high	yelp	5
+Q003	perplexity	STK Steakhouse Midtown offers a unique dining experience blending a high-end steakhouse with a chic lounge atmosphere. Expect loud music, stylish decor, and a party vibe especially after 9pm.	yes	high	multiple_web	5
+Q004	bing_copilot	Harbor Freight has a parking lot available for customers.	yes	medium	none	2
+Q004	gemini	Yes, the Harbor Freight on W Fullerton Ave in Chicago has a dedicated parking lot with ample spaces.	yes	high	google_maps	3
+Q004	perplexity	Harbor Freight Chicago location has free parking available in their lot.	yes	medium	website	2
+Q005	bing_copilot	I don't have specific information about whether Twisted Biscuit is kid-friendly.	no	low	none	1
+Q005	gemini	Twisted Biscuit Brunch Co. is family-friendly with a casual atmosphere. Reviews mention it's good for kids with options like pancakes and a welcoming environment.	yes	high	yelp	4
+Q005	perplexity	Yes, Twisted Biscuit is great for families. They have high chairs, a kid-friendly menu, and a relaxed brunch atmosphere.	yes	high	multiple_web	4
+Q006	bing_copilot	Circuit of the Americas has 17,040 reviews with an overall positive rating.	partial	medium	licensed	2
+Q006	gemini	Reviews of Circuit of the Americas praise the world-class facilities, great views of the track, and excellent organization of events. Some mention parking can be challenging during major events like F1.	yes	high	google_reviews	5
+Q006	perplexity	Circuit of the Americas is highly rated for its modern facilities and event experience. Visitors love the views and atmosphere but note that food is expensive and parking can be a trek.	yes	high	tripadvisor	5

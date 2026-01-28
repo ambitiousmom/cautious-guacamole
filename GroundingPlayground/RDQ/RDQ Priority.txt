@@ -1,0 +1,65 @@
+RDQ in WBR 
+
+ 
+
+Goal: Measure progress of rich data corpus over time- with an emphasis on tracking and closing gaps.  
+
+ 
+
+Priority Metrics and Attributes: 
+The priority of metrics stands in the order of Coverage -> Freshness -> Richness.  
+
+With a primary emphasis on our first suite of attributes Reviews, Images, and Linked URLs.  
+
+Why: 
+The highest priority is Coverage because high coverage is required for top attributes to support even the most basic experiences and grounding scenarios. 
+Freshness is important to build and maintain user trust – we must have a high percentage of up-to-date rich content to keep user retention high.  
+Richness is important- but will be most valuable for the additional detailed context layer- where there are more advanced UX experiences or to increase grounding value.  
+
+These are the most important attributes and are prioritized for measurement- we can expand over time if desired- like with Richness adding additional attribute types to have all up-richness score to track.  
+
+What to show: 
+
+The primary metric to report will be the gap with competitor (SERP API) where available: 
+
+Coverage of reviews / images 
+
+Freshness of reviews 
+
+Richness- My vote is to not start with richess - this is because we want to have a clear, confident, trackable metric working over time that is understood at data LT level before we bring to the WBR.  
+
+These metrics should display the actual gap in %, meaning we will need to calculate this and not just have two separate values. We should always display the count in addition to the gap %.  
+
+ 
+In addition to competitor gap- show governance impact to grounding as a default slice in WBR reporting.  
+ 
+This should be enough until we make meaningful progress but can consider showing additional coverage or add in richness if there are particular areas of interest. 
+ 
+
+Cadence: 
+Measure per release? Daily? Other? 
+
+Measurement Set: 
+
+The default measurement set will be top X entities and will be aligned to IWFQ top set entities.  
+ 
+Country Set: 
+
+By default, we will show an aggregate score across all rebase production regions with ability to drill down to any country set for individual reporting should we desire. 
+
+Pull-ins: 
+
+As needed, we can pull in additional metrics that are of interest in that cycle. For example, we could pull in beta branches for upcoming rebase releases, we could pull in China specific RDQ, or we could focus on individual segments such as Hotels we want to prioritize.  
+
+ 
+
+Display: 
+ 
+Charts similar to below but tracking the competitor gap for coverage, freshness. For richness, we can display the richness score as it changes over time.  
+ 
+Onechart displaying two values: Coverage gap for reviews and coverage gap for images 
+(Alternative: Display actual values for Bing / G & have separate box showing gap value)  
+
+One chart displaying governance impact to grounding as a single % value.  
+One chart displaying freshness gap of reviews.  
+One chart displaying richness.  

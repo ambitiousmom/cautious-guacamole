@@ -1,0 +1,7 @@
+query_id	query_text	query_type	segment	winner	winning_score	bing_score	bing_gap	gap_reason
+Q001	Is Joe's Diner dog-friendly?	amenity	restaurant	tie: gemini, perplexity	0.8888888888888891	0.055555555555555566	0.8333333333333335	missing_data
+Q002	What are the hours for Walmart Allentown?	factual	retail	tie: bing_copilot, gemini, perplexity	0.8333333333333334	0.8333333333333334	0.0	none
+Q003	What's the vibe at STK Steakhouse Midtown?	vibe	restaurant	tie: gemini, perplexity	0.9444444444444445	0.3611111111111111	0.5833333333333335	less_rich
+Q004	Does Harbor Freight have parking?	amenity	retail	gemini	0.8333333333333334	0.5277777777777778	0.3055555555555556	less_rich
+Q005	Is Twisted Biscuit good for kids?	amenity	restaurant	tie: gemini, perplexity	0.8888888888888891	0.055555555555555566	0.8333333333333335	missing_data
+Q006	What do reviews say about Circuit of the Americas?	reviews	entertainment	tie: gemini, perplexity	0.9444444444444445	0.5277777777777778	0.41666666666666674	less_rich

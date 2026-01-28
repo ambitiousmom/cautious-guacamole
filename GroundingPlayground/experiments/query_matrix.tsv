@@ -1,0 +1,21 @@
+query_id	method	query_text	entity	segment	complexity	tests_for	expected_attribute
+Q01	method1	Does Din Tai Fung Bellevue have outdoor seating?	Din Tai Fung Bellevue	Restaurant	Simple	Structured boolean	Outdoor seating
+Q02	method1	What time does Din Tai Fung Bellevue close on Friday?	Din Tai Fung Bellevue	Restaurant	Simple	Structured data	Hours
+Q03	method1	Is Din Tai Fung Bellevue good for a date?	Din Tai Fung Bellevue	Restaurant	Complex	Semi-structured insight	Occasion
+Q04	method1	What do people complain about at Din Tai Fung Bellevue?	Din Tai Fung Bellevue	Restaurant	Complex	Unstructured inference	Review synthesis (negative)
+Q05	method1	What should I order at Din Tai Fung Bellevue?	Din Tai Fung Bellevue	Restaurant	Complex	Semi-structured insight	Most Ordered
+Q06	method2	Does Overlake Medical Center have parking?	Overlake Medical Center	Healthcare	Simple	Structured boolean	Parking
+Q07	method2	What are the hours for Swedish Medical Center emergency room?	Swedish Medical Center	Healthcare	Medium	Structured data	Hours (24/7?)
+Q08	method2	Is Bellevue Square wheelchair accessible?	Bellevue Square	Retail/Mall	Simple	Structured boolean	Wheelchair accessible
+Q09	method2	Does Marriott Bellevue have a pool?	Marriott Bellevue	Hotel	Simple	Structured boolean	Pool amenity
+Q10	method2	Is Starbucks Reserve Roastery Seattle good for working?	Starbucks Reserve Roastery	Cafe	Complex	Semi-structured insight	Wi-Fi, seating, vibe
+Q11	method2	Does Home Depot Bellevue do curbside pickup?	Home Depot Bellevue	Retail	Simple	Structured boolean	Curbside pickup
+Q12	method3	Does Din Tai Fung Bellevue accept reservations?	Din Tai Fung Bellevue	Restaurant	Simple	Structured boolean	Reservations
+Q13	method3	Is Din Tai Fung Bellevue LGBTQ+ friendly?	Din Tai Fung Bellevue	Restaurant	Simple	Structured boolean	LGBTQ+ friendly
+Q14	method3	Does Din Tai Fung Bellevue have vegetarian options?	Din Tai Fung Bellevue	Restaurant	Medium	Structured or review inference	Vegetarian options
+Q15	method3	Does Din Tai Fung Bellevue deliver?	Din Tai Fung Bellevue	Restaurant	Simple	Structured boolean	Delivery
+Q16	method3	Is Din Tai Fung Bellevue good for large groups?	Din Tai Fung Bellevue	Restaurant	Medium	Structured or review inference	Good for groups
+Q17	method1	How expensive is Canlis Seattle?	Canlis Seattle	Restaurant (fine dining)	Medium	Structured data	Price range
+Q18	method2	What do people say about Seattle Children's Hospital?	Seattle Children's Hospital	Healthcare	Complex	Unstructured inference	Review synthesis
+Q19	method2	Is Costco Kirkland busy on weekends?	Costco Kirkland	Retail	Complex	Unstructured inference	Popular times / review inference
+Q20	method3	Does Pike Place Market have restrooms?	Pike Place Market	Attraction	Simple	Structured boolean	Restroom

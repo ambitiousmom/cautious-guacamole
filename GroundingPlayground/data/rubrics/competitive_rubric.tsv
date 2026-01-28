@@ -1,0 +1,6 @@
+metric_name	weight	scoring	description
+answered	0.3	yes=1, partial=0.5, no=0	Did the responder answer the question?
+confidence	0.15	high=1, medium=0.5, low=0	How confident was the answer?
+source_cited	0.2	reputable=1, any=0.5, none=0	Did they cite a source?
+richness_score	0.25	score/5	How detailed and useful was the response? (1-5)
+factually_correct	0.1	yes=1, unknown=0.5, no=0	Was the answer factually accurate? (requires verification)

@@ -1,0 +1,58 @@
+RDQ Metric Principles 
+
+ 
+
+Why 
+As we develop our RDQ metric(s) we need a set of high level principles that guide us in our decision making and that we return to and ensure any metric we create meets our principles. 
+
+ 
+
+What 
+
+The metrics should be simple. They should be simple to measure and simple to understand. We should avoid complex measurement definitions and ensure that any stakeholder, including LT, can easily understand the metric. 
+
+The metrics should be trustworthy. It should be easy to identify if they are directionally correct and they should inspire confidence in their results.   
+
+The metrics should be actionable. The metric results should demonstrate a clear call to action. They should provide gap analysis, ship determination, and strategic insights. In order to be actionable, the metrics should be sensitive enough that they capture iterative changes made in our data.  
+
+The metrics should be scalable. While demonstrating proof of concepts on small scale is valuable, for us to meet our other principles, we will want to ensure the metrics can be measured on a large scale, and at the frequency needed to produce desired insights.  
+
+The metrics should impact focused. They must be able to measure the correct outputs we are looking for and be able to track progress towards the business outcomes.  
+
+The metrics should have consistency with other data metrics (IWFQ, Governance). Meaning, we should have common slicing, including the same impression basis, one metrics portal that is utilized, and fully take advantages of the learnings and techniques used.  
+
+Goal 
+We must answer the question of “How rich is our data?” as a default – but more importantly, we must be able to understand why we are rich, why and where we aren’t, and build a strategy to reach the state where Copilot is convinced our data is rich enough to be used as their primary source. To do this, after establishing the metrics, we must consistently measure against top competitors (Google) and current Copilot data provider (SERP API).  
+
+We must be able to answer key product questions, for example: 
+
+Do we have any segments in the Top 1K set that are bad quality? If so, what are they? 
+
+Do we have any segments or regions that have prohibitively low quality for UX/Relevance?  
+
+What is the impact of governance on our data richness? 
+
+What providers give us the largest impact to richness? 
+
+What is the diversity of our rich content?  
+
+In addition to this goal, we must think of our customers and stakeholders, and ensure we enable answers to common questions. 
+Example of some questions from stakeholders that we will want to support: 
+
+What is the coverage of our Hotels that lack enough amenities to show in magazine layout? 
+
+How fresh is the pricing information we have for restaurants?  
+
+“” 
+
+“” 
+
+“” 
+
+These are not exhaustive- but point to the concept of needing enough coverage in the metrics- as well as enough slices to unlock key product insights.  
+
+ 
+
+ 
+
+Let’s utilize Bing where appropriate, such as utilizing work from Web Data Platform team for what are ‘bad’ algo links.  

@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Grounding Playground Report</title>
+    <style>
+        * { box-sizing: border-box; }
+        body { 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0; padding: 20px;
+            background: #f5f5f5;
+        }
+        .container { max-width: 1200px; margin: 0 auto; }
+        h1 { color: #0078d4; }
+        .card {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .card h2 { margin-top: 0; color: #333; }
+        .metric {
+            display: inline-block;
+            padding: 15px 25px;
+            margin: 10px;
+            background: #f0f0f0;
+            border-radius: 8px;
+            text-align: center;
+        }
+        .metric .value { font-size: 2em; font-weight: bold; color: #0078d4; }
+        .metric .label { color: #666; font-size: 0.9em; }
+        .bar {
+            height: 24px;
+            background: #e0e0e0;
+            border-radius: 4px;
+            margin: 8px 0;
+            overflow: hidden;
+        }
+        .bar-fill {
+            height: 100%;
+            background: #0078d4;
+            text-align: right;
+            padding-right: 8px;
+            color: white;
+            font-size: 0.8em;
+            line-height: 24px;
+        }
+        .bar-fill.gemini { background: #4285f4; }
+        .bar-fill.perplexity { background: #20b2aa; }
+        .bar-fill.bing { background: #0078d4; }
+        .bar-fill.tie { background: #888; }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 10px 0;
+        }
+        th, td {
+            padding: 10px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        th { background: #f5f5f5; }
+        .win { color: #107c10; font-weight: bold; }
+        .lose { color: #d83b01; }
+        .partial { color: #797673; }
+        .timestamp { color: #888; font-size: 0.8em; }
+        
+        /* Deep Dive Styles */
+        .deep-dive .subtitle { color: #666; margin-bottom: 20px; }
+        .comparison-card {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            margin: 20px 0;
+            overflow: hidden;
+        }
+        .comparison-header {
+            background: #f8f8f8;
+            padding: 15px;
+            border-bottom: 1px solid #ddd;
+        }
+        .query-type-badge {
+            display: inline-block;
+            padding: 3px 10px;
+            border-radius: 12px;
+            font-size: 0.75em;
+            margin-right: 10px;
+            background: #e0e0e0;
+        }
+        .query-type-badge.amenity { background: #e3f2fd; color: #1565c0; }
+        .query-type-badge.vibe { background: #fce4ec; color: #c2185b; }
+        .query-type-badge.factual { background: #e8f5e9; color: #2e7d32; }
+        .query-type-badge.reviews { background: #fff3e0; color: #e65100; }
+        .query-type-badge.comparison { background: #f3e5f5; color: #7b1fa2; }
+        .comparison-body {
+            display: flex;
+            gap: 0;
+        }
+        .response-column {
+            flex: 1;
+            padding: 15px;
+        }
+        .bing-column {
+            background: #fafafa;
+            border-right: 1px solid #ddd;
+        }
+        .winner-column {
+            background: #f0fff0;
+        }
+        .column-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eee;
+        }
+        .responder-name {
+            font-weight: bold;
+        }
+        .score {
+            color: #666;
+            font-size: 0.9em;
+        }
+        .response-text {
+            font-size: 0.9em;
+            line-height: 1.5;
+            color: #333;
+            font-style: italic;
+        }
+        .source-badge {
+            margin-top: 10px;
+            padding: 5px 10px;
+            background: #e8f5e9;
+            border-radius: 4px;
+            font-size: 0.8em;
+            display: inline-block;
+        }
+        .advantages {
+            background: #fff8e1;
+            padding: 15px;
+            border-top: 1px solid #ddd;
+        }
+        .advantages ul {
+            margin: 5px 0 0 0;
+            padding-left: 20px;
+        }
+        .advantages li {
+            margin: 5px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎯 Grounding Playground Report</h1>
+        <p class="timestamp">Generated: 2026-01-26 14:14</p>
+        
+        <div class="card">
+            <h2>📊 Overview</h2>
+            <div class="metric">
+                <div class="value">6</div>
+                <div class="label">Total Queries</div>
+            </div>
+            <div class="metric">
+                <div class="value">0</div>
+                <div class="label">Bing Wins</div>
+            </div>
+            <div class="metric">
+                <div class="value">0%</div>
+                <div class="label">Bing Win Rate</div>
+            </div>
+        </div>
+        
+        <div class="card">
+            <h2>🏆 Winner Distribution</h2>
+            
+            <div>
+                <strong>tie: gemini, perplexity</strong>: 4 (67%)
+                <div class="bar">
+                    <div class="bar-fill tie: gemini, perplexity" 
+                         style="width: 66.66666666666666%">
+                        4
+                    </div>
+                </div>
+            </div>
+            
+            <div>
+                <strong>tie: bing_copilot, gemini, perplexity</strong>: 1 (17%)
+                <div class="bar">
+                    <div class="bar-fill tie: bing" 
+                         style="width: 16.666666666666664%">
+                        1
+                    </div>
+                </div>
+            </div>
+            
+            <div>
+                <strong>gemini</strong>: 1 (17%)
+                <div class="bar">
+                    <div class="bar-fill gemini" 
+                         style="width: 16.666666666666664%">
+                        1
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+        
+        <div class="card">
+            <h2>📉 Why Bing Lost</h2>
+            <table>
+                <tr><th>Gap Reason</th><th>Count</th><th>Description</th></tr>
+                <tr>
+                    <td>less_rich</td>
+                    <td>3</td>
+                    <td>Both answered but competitor was richer</td>
+                </tr><tr>
+                    <td>missing_data</td>
+                    <td>2</td>
+                    <td>Bing could not answer, competitor did</td>
+                </tr><tr>
+                    <td>none</td>
+                    <td>1</td>
+                    <td>none</td>
+                </tr>
+            </table>
+        </div>
+        
+        <div class="card">
+            <h2>📋 Bing Win Rate by Query Type</h2>
+            <table>
+                <tr><th>Query Type</th><th>Bing Win %</th><th>Visual</th></tr>
+                <tr>
+                    <td>amenity</td>
+                    <td class="lose">0%</td>
+                    <td><div class="bar"><div class="bar-fill bing" style="width: 0.0%">0%</div></div></td>
+                </tr><tr>
+                    <td>factual</td>
+                    <td class="lose">0%</td>
+                    <td><div class="bar"><div class="bar-fill bing" style="width: 0.0%">0%</div></div></td>
+                </tr><tr>
+                    <td>reviews</td>
+                    <td class="lose">0%</td>
+                    <td><div class="bar"><div class="bar-fill bing" style="width: 0.0%">0%</div></div></td>
+                </tr><tr>
+                    <td>vibe</td>
+                    <td class="lose">0%</td>
+                    <td><div class="bar"><div class="bar-fill bing" style="width: 0.0%">0%</div></div></td>
+                </tr>
+            </table>
+        </div>
+        
+        <div class="card">
+            <h2>🏪 Bing Win Rate by Segment</h2>
+            <table>
+                <tr><th>Segment</th><th>Bing Win %</th><th>Visual</th></tr>
+                <tr>
+                    <td>entertainment</td>
+                    <td class="lose">0%</td>
+                    <td><div class="bar"><div class="bar-fill bing" style="width: 0.0%">0%</div></div></td>
+                </tr><tr>
+                    <td>restaurant</td>
+                    <td class="lose">0%</td>
+                    <td><div class="bar"><div class="bar-fill bing" style="width: 0.0%">0%</div></div></td>
+                </tr><tr>
+                    <td>retail</td>
+                    <td class="lose">0%</td>
+                    <td><div class="bar"><div class="bar-fill bing" style="width: 0.0%">0%</div></div></td>
+                </tr>
+            </table>
+        </div>
+        
+        <div class="card">
+            <h2>📝 Detailed Results</h2>
+            <table>
+                <tr>
+                    <th>Query</th>
+                    <th>Type</th>
+                    <th>Winner</th>
+                    <th>Bing Score</th>
+                    <th>Gap Reason</th>
+                </tr>
+                <tr>
+                    <td>Is Joe's Diner dog-friendly?</td>
+                    <td>amenity</td>
+                    <td class="lose">tie: gemini, perplexity</td>
+                    <td>0.06</td>
+                    <td>missing_data</td>
+                </tr><tr>
+                    <td>What are the hours for Walmart Allentown?</td>
+                    <td>factual</td>
+                    <td class="lose">tie: bing_copilot, gemini, perplexity</td>
+                    <td>0.83</td>
+                    <td>none</td>
+                </tr><tr>
+                    <td>What's the vibe at STK Steakhouse Midtown?</td>
+                    <td>vibe</td>
+                    <td class="lose">tie: gemini, perplexity</td>
+                    <td>0.36</td>
+                    <td>less_rich</td>
+                </tr><tr>
+                    <td>Does Harbor Freight have parking?</td>
+                    <td>amenity</td>
+                    <td class="lose">gemini</td>
+                    <td>0.53</td>
+                    <td>less_rich</td>
+                </tr><tr>
+                    <td>Is Twisted Biscuit good for kids?</td>
+                    <td>amenity</td>
+                    <td class="lose">tie: gemini, perplexity</td>
+                    <td>0.06</td>
+                    <td>missing_data</td>
+                </tr><tr>
+                    <td>What do reviews say about Circuit of the Americas?</td>
+                    <td>reviews</td>
+                    <td class="lose">tie: gemini, perplexity</td>
+                    <td>0.53</td>
+                    <td>less_rich</td>
+                </tr>
+            </table>
+        </div>
+        
+        <div class="card deep-dive">
+            <h2>🔬 Deep Dive: Why Competitors Win</h2>
+            <p class="subtitle">Side-by-side comparison of Bing vs. winning competitor responses</p>
+            
+            
+            <div class="comparison-card">
+                <div class="comparison-header">
+                    <span class="query-type-badge amenity">amenity</span>
+                    <strong>Is Joe's Diner dog-friendly?</strong>
+                </div>
+                <div class="comparison-body">
+                    <div class="response-column bing-column">
+                        <div class="column-header">
+                            <span class="responder-name">🔷 Bing Copilot</span>
+                            <span class="score">Score: 0.06</span>
+                        </div>
+                        <div class="response-text">I don't have specific information about Joe's Diner's pet policy.</div>
+                    </div>
+                    <div class="response-column winner-column">
+                        <div class="column-header">
+                            <span class="responder-name">🏆 tie: gemini, perplexity</span>
+                            <span class="score">Score: 0.89</span>
+                        </div>
+                        <div class="response-text">Based on Yelp reviews, Joe's Diner appears to be dog-friendly with outdoor seating that welcomes pet...</div>
+                        <div class="source-badge">Source: yelp</div>
+                    </div>
+                </div>
+                <div class="advantages">
+                    <strong>Why competitor won:</strong>
+                    <ul>
+                        <li>✅ Could answer the question</li><li>📚 Cited source: yelp</li><li>📝 Richer response (4 vs 1)</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="comparison-card">
+                <div class="comparison-header">
+                    <span class="query-type-badge factual">factual</span>
+                    <strong>What are the hours for Walmart Allentown?</strong>
+                </div>
+                <div class="comparison-body">
+                    <div class="response-column bing-column">
+                        <div class="column-header">
+                            <span class="responder-name">🔷 Bing Copilot</span>
+                            <span class="score">Score: 0.83</span>
+                        </div>
+                        <div class="response-text">Walmart Supercenter in Allentown is open from 6am to 11pm daily.</div>
+                    </div>
+                    <div class="response-column winner-column">
+                        <div class="column-header">
+                            <span class="responder-name">🏆 tie: bing_copilot, gemini, perplexity</span>
+                            <span class="score">Score: 0.83</span>
+                        </div>
+                        <div class="response-text">The Walmart Supercenter at 1091 Mill Creek Rd in Allentown, PA is open 6:00 AM - 11:00 PM.</div>
+                        <div class="source-badge">Source: google</div>
+                    </div>
+                </div>
+                <div class="advantages">
+                    <strong>Why competitor won:</strong>
+                    <ul>
+                        <li>Higher overall quality score</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="comparison-card">
+                <div class="comparison-header">
+                    <span class="query-type-badge vibe">vibe</span>
+                    <strong>What's the vibe at STK Steakhouse Midtown?</strong>
+                </div>
+                <div class="comparison-body">
+                    <div class="response-column bing-column">
+                        <div class="column-header">
+                            <span class="responder-name">🔷 Bing Copilot</span>
+                            <span class="score">Score: 0.36</span>
+                        </div>
+                        <div class="response-text">STK Steakhouse is an upscale steakhouse in Midtown Manhattan.</div>
+                    </div>
+                    <div class="response-column winner-column">
+                        <div class="column-header">
+                            <span class="responder-name">🏆 tie: gemini, perplexity</span>
+                            <span class="score">Score: 0.94</span>
+                        </div>
+                        <div class="response-text">STK Midtown has a trendy, nightclub-like atmosphere with DJ music, dim lighting, and a see-and-be-se...</div>
+                        <div class="source-badge">Source: yelp</div>
+                    </div>
+                </div>
+                <div class="advantages">
+                    <strong>Why competitor won:</strong>
+                    <ul>
+                        <li>📚 Cited source: yelp</li><li>📝 Richer response (5 vs 2)</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="comparison-card">
+                <div class="comparison-header">
+                    <span class="query-type-badge amenity">amenity</span>
+                    <strong>Does Harbor Freight have parking?</strong>
+                </div>
+                <div class="comparison-body">
+                    <div class="response-column bing-column">
+                        <div class="column-header">
+                            <span class="responder-name">🔷 Bing Copilot</span>
+                            <span class="score">Score: 0.53</span>
+                        </div>
+                        <div class="response-text">Harbor Freight has a parking lot available for customers.</div>
+                    </div>
+                    <div class="response-column winner-column">
+                        <div class="column-header">
+                            <span class="responder-name">🏆 gemini</span>
+                            <span class="score">Score: 0.83</span>
+                        </div>
+                        <div class="response-text">Yes, the Harbor Freight on W Fullerton Ave in Chicago has a dedicated parking lot with ample spaces.</div>
+                        <div class="source-badge">Source: google_maps</div>
+                    </div>
+                </div>
+                <div class="advantages">
+                    <strong>Why competitor won:</strong>
+                    <ul>
+                        <li>📚 Cited source: google_maps</li><li>📝 Richer response (3 vs 2)</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="comparison-card">
+                <div class="comparison-header">
+                    <span class="query-type-badge amenity">amenity</span>
+                    <strong>Is Twisted Biscuit good for kids?</strong>
+                </div>
+                <div class="comparison-body">
+                    <div class="response-column bing-column">
+                        <div class="column-header">
+                            <span class="responder-name">🔷 Bing Copilot</span>
+                            <span class="score">Score: 0.06</span>
+                        </div>
+                        <div class="response-text">I don't have specific information about whether Twisted Biscuit is kid-friendly.</div>
+                    </div>
+                    <div class="response-column winner-column">
+                        <div class="column-header">
+                            <span class="responder-name">🏆 tie: gemini, perplexity</span>
+                            <span class="score">Score: 0.89</span>
+                        </div>
+                        <div class="response-text">Twisted Biscuit Brunch Co. is family-friendly with a casual atmosphere. Reviews mention it's good fo...</div>
+                        <div class="source-badge">Source: yelp</div>
+                    </div>
+                </div>
+                <div class="advantages">
+                    <strong>Why competitor won:</strong>
+                    <ul>
+                        <li>✅ Could answer the question</li><li>📚 Cited source: yelp</li><li>📝 Richer response (4 vs 1)</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="comparison-card">
+                <div class="comparison-header">
+                    <span class="query-type-badge reviews">reviews</span>
+                    <strong>What do reviews say about Circuit of the Americas?</strong>
+                </div>
+                <div class="comparison-body">
+                    <div class="response-column bing-column">
+                        <div class="column-header">
+                            <span class="responder-name">🔷 Bing Copilot</span>
+                            <span class="score">Score: 0.53</span>
+                        </div>
+                        <div class="response-text">Circuit of the Americas has 17,040 reviews with an overall positive rating.</div>
+                    </div>
+                    <div class="response-column winner-column">
+                        <div class="column-header">
+                            <span class="responder-name">🏆 tie: gemini, perplexity</span>
+                            <span class="score">Score: 0.94</span>
+                        </div>
+                        <div class="response-text">Reviews of Circuit of the Americas praise the world-class facilities, great views of the track, and ...</div>
+                        <div class="source-badge">Source: google_reviews</div>
+                    </div>
+                </div>
+                <div class="advantages">
+                    <strong>Why competitor won:</strong>
+                    <ul>
+                        <li>📝 Richer response (5 vs 2)</li>
+                    </ul>
+                </div>
+            </div>
+            
+        </div>
+        
+    </div>
+</body>
+</html>

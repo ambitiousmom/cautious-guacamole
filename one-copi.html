@@ -572,8 +572,8 @@
             </div>
           </div>
 
-          <!-- ═══ BEAT 1b: User asks about Sarah's comments ═══ -->
-          <div class="user-msg hidden" id="beat1b">
+          <!-- ═══ BEAT 1b: User prompt before beat 2 ═══ -->
+          <div class="user-msg" id="beat1b" style="display:none;">
             <div class="bubble">What did Sarah say?</div>
           </div>
 
@@ -1044,6 +1044,9 @@ function resetDemo() {
     const el = document.getElementById(id);
     if (el) { el.classList.add('hidden'); el.classList.remove('anim-fadeinup','anim-slidein'); }
   });
+  // Reset beat1b separately (uses style.display)
+  var b1b = document.getElementById('beat1b');
+  if (b1b) { b1b.style.display = 'none'; b1b.classList.remove('anim-fadeinup'); }
   // Reset cross-ref badges
   document.querySelectorAll('.xref').forEach(el => el.classList.remove('visible'));
   document.querySelectorAll('.chat-status').forEach(el => el.classList.remove('visible'));
@@ -1134,7 +1137,7 @@ function showStep(n) {
   else if (n === 2) {
     // Show user message first
     var ub = document.getElementById('beat1b');
-    if (ub) { ub.classList.remove('hidden'); ub.classList.add('anim-fadeinup'); }
+    if (ub) { ub.style.display = ''; ub.classList.add('anim-fadeinup'); }
     scrollConvo();
     // Then reveal Copilot response after delay
     setTimeout(function(){

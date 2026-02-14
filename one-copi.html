@@ -468,14 +468,14 @@
       <div class="sidebar-section">
         <div class="section-header">Chats <span class="search-icon">🔍</span></div>
         <div class="chat-list-item active" id="chatBudget" onclick="switchChat('budget')">
-          <div class="chat-title-row"><span class="chat-title-text">Q3 Budget Review</span><span class="chat-status" id="statusBudget">🔔</span></div>
+          <div class="chat-title-row"><span class="chat-title-text">Q3 Budget Review</span><span class="chat-status" id="statusBudget" style="width:8px;height:8px;border-radius:50%;background:#0F6CBD;display:inline-block;"></span></div>
         </div>
         <div class="chat-list-item" id="chatStrategy" onclick="switchChat('strategy')">
-          <div class="chat-title-row"><span class="chat-title-text">Product Strategy H2</span><span class="chat-status" id="statusStrategy">�</span></div>
+          <div class="chat-title-row"><span class="chat-title-text">Product Strategy H2</span><span class="chat-status" id="statusStrategy" style="width:8px;height:8px;border-radius:50%;background:#0F6CBD;display:inline-block;"></span></div>
           <span class="xref" id="xrefStrategy">↳ referenced today</span>
         </div>
         <div class="chat-list-item" id="chatHiring" onclick="switchChat('hiring')">
-          <div class="chat-title-row"><span class="chat-title-text">Hiring Plan — Eng</span><span class="chat-status" id="statusHiring">�</span></div>
+          <div class="chat-title-row"><span class="chat-title-text">Hiring Plan — Eng</span><span class="chat-status" id="statusHiring" style="width:8px;height:8px;border-radius:50%;background:#0F6CBD;display:inline-block;"></span></div>
           <span class="xref" id="xrefHiring">↳ data pulled today</span>
         </div>
         <div class="chat-list-item"><span class="chat-title-text">Comparing Decks for...</span></div>
@@ -1086,10 +1086,9 @@ function resetDemo() {
   // Reset cross-ref badges
   document.querySelectorAll('.xref').forEach(el => el.classList.remove('visible'));
   document.querySelectorAll('.chat-status').forEach(el => el.classList.remove('visible'));
-  // Reset sidebar icons to bells
-  document.getElementById('statusBudget').textContent = '\uD83D\uDD14';
-  document.getElementById('statusStrategy').textContent = '\uD83D\uDD14';
-  document.getElementById('statusHiring').textContent = '\uD83D\uDD14';
+  // Reset sidebar icons to blue dots
+  var dots = ['statusBudget','statusStrategy','statusHiring'];
+  dots.forEach(function(id){ var el=document.getElementById(id); el.textContent=''; el.style.width='8px'; el.style.height='8px'; el.style.borderRadius='50%'; el.style.background='#0F6CBD'; el.style.display='inline-block'; });
   // Reset sidebar active state
   document.querySelectorAll('.chat-list-item').forEach(el => el.classList.remove('active'));
   document.getElementById('chatBudget').classList.add('active');
@@ -1177,6 +1176,8 @@ function showStep(n) {
   }
 
   if (n === 1) {
+    // Hide blue dot for Q3 Budget (user clicked into it)
+    document.getElementById('statusBudget').style.display = 'none';
     revealBeat('beat1'); showAnn('ann1'); scrollConvo();
     showAutoHint('No user prompt needed', function(){
       // Hide annotation to unblock input bar
@@ -1248,7 +1249,8 @@ function showStep(n) {
     document.getElementById('xrefHiring').classList.add('visible');
     document.getElementById('xrefStrategy').classList.add('visible');
     // Change budget icon to green check (completed)
-    document.getElementById('statusBudget').textContent = '\u2705';
+    var sb = document.getElementById('statusBudget');
+    sb.textContent = '\u2705'; sb.style.width=''; sb.style.height=''; sb.style.borderRadius=''; sb.style.background=''; sb.style.display=''; sb.classList.add('visible');
     setTimeout(function(){ showClickHint(document.getElementById('chatStrategy'),'Click here','right'); }, 1000);
   }
   else if (n === 11) {

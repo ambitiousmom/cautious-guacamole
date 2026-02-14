@@ -333,23 +333,23 @@
   .step-prev:disabled, .step-next:disabled { opacity: 0.3; cursor: default; }
 
   /* ═══ Annotations ═══ */
-  .annotation-panel {
-    position: fixed; z-index: 90;
-    max-width: 300px;
-    pointer-events: none;
-    transition: all 0.4s ease;
-  }
+  .ann-overlay { position: fixed; inset: 0; z-index: 90; pointer-events: none; }
   .ann {
+    position: fixed; z-index: 91;
     background: rgba(30,30,30,0.94); color: white; padding: 14px 18px;
     border-radius: 10px; font-size: 12px; line-height: 1.65;
     backdrop-filter: blur(12px); box-shadow: 0 6px 24px rgba(0,0,0,0.25);
-    border-left: 3px solid #B4A0FF; opacity: 0; transform: translateY(6px);
+    border-left: 3px solid #B4A0FF; max-width: 280px;
+    opacity: 0; transform: translateY(6px);
     transition: all 0.4s ease; pointer-events: auto; display: none;
   }
   .ann.visible { opacity: 1; transform: translateY(0); display: block; }
+  .ann .ann-num { display: inline-block; background: #7B57FF; color: white; width: 20px; height: 20px; border-radius: 50%; text-align: center; line-height: 20px; font-size: 10px; font-weight: 700; margin-right: 6px; vertical-align: middle; }
   .ann .ann-tag { font-size: 10px; text-transform: uppercase; letter-spacing: 1.2px; color: #B4A0FF; margin-bottom: 4px; font-weight: 700; }
   .ann .ann-title { font-size: 13px; font-weight: 600; color: white; margin-bottom: 6px; }
   .ann .ann-body { color: rgba(255,255,255,0.85); }
+  .ann-arrow { position: fixed; z-index: 90; pointer-events: none; opacity: 0; transition: opacity 0.4s ease; }
+  .ann-arrow.visible { opacity: 1; }
 
   /* ═══ Animations ═══ */
   @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
@@ -1010,67 +1010,85 @@
 </div>
 
 <!-- ═══ ANNOTATIONS ═══ -->
-<div class="annotation-panel" id="annotations">
-  <div class="ann" id="ann1">
-    <div class="ann-tag">Proactive Intelligence</div>
-    <div class="ann-title">Copilot Opens With Awareness</div>
-    <div class="ann-body">No blank box. Copilot monitored artifacts linked to this chat overnight and surfaces what changed &#8212; <strong>zero user prompts needed</strong>. The user&#8217;s morning starts with context, not questions.</div>
-  </div>
-  <div class="ann" id="ann2">
-    <div class="ann-tag">Cross-Artifact Reasoning</div>
-    <div class="ann-title">Suggested Reply With Citations</div>
-    <div class="ann-body">Copilot cross-referenced the CFO&#8217;s comment with live Excel data and drafted a reply &#8212; <strong>with citations to specific cells</strong>. The user reviews and approves, not researches and writes.</div>
-  </div>
-  <div class="ann" id="ann3">
-    <div class="ann-tag">User Agency</div>
-    <div class="ann-title">Act On Behalf, Not As</div>
-    <div class="ann-body">Reply posted <strong>as the user</strong>, not as Copilot. The EA model: Copilot drafts, the user&#8217;s name goes on it. One click to approve. <em>Trust through transparency.</em></div>
-  </div>
-  <div class="ann" id="ann4">
-    <div class="ann-tag">Apps Inside Copilot</div>
-    <div class="ann-title">Excel Analysis Without Switching</div>
-    <div class="ann-body">The hiring pipeline, the data table, the suggested reply &#8212; all happen <strong>inline in BizChat</strong>. No app switch needed. This is the &#8220;apps inside Copilot&#8221; pattern: bring the capability to the conversation.</div>
-  </div>
-  <div class="ann" id="ann5">
-    <div class="ann-tag">Seamless Transition</div>
-    <div class="ann-title">&#8220;This One Needs Your Eyes&#8221;</div>
-    <div class="ann-body">The move to Word isn&#8217;t a context switch &#8212; it&#8217;s Copilot deciding <strong>the right surface for the task</strong>. Document review needs the full editor. The conversation carries over into the Word Copilot pane.</div>
-  </div>
-  <div class="ann" id="ann6">
-    <div class="ann-tag">Copilot Inside Apps</div>
-    <div class="ann-title">Continuous Conversation in Word</div>
-    <div class="ann-body">The Word Copilot pane shows the <strong>full conversation history</strong> from BizChat. The user picks up exactly where they left off &#8212; zero re-orientation. Same thread, different surface.</div>
-  </div>
-  <div class="ann" id="ann7">
-    <div class="ann-tag">Linked Context</div>
-    <div class="ann-title">Same Conversation, Seamless Return</div>
-    <div class="ann-body">The user says &#8220;take me back&#8221; in Word and the return to BizChat is <strong>initiated from the same conversation</strong>. No tab-switching. The EA walks back with you.</div>
-  </div>
-  <div class="ann" id="ann8">
-    <div class="ann-tag">Round-Trip Awareness</div>
-    <div class="ann-title">BizChat Knows What Happened in Word</div>
-    <div class="ann-body">Which changes were accepted, what the user edited manually &#8212; <strong>BizChat picks it all up</strong>. The conversation is a continuous record across surfaces, not two separate histories.</div>
-  </div>
-  <div class="ann" id="ann9">
-    <div class="ann-tag">Graceful Friction</div>
-    <div class="ann-title">High-Stakes Actions Get Guardrails</div>
-    <div class="ann-body">Emailing an executive? The draft is shown for review. Recipient count and seniority are flagged. <strong>Send is available but not automatic</strong> &#8212; the consequence determines the confirmation UX.</div>
-  </div>
-  <div class="ann" id="ann10">
-    <div class="ann-tag">Workstream Pivot</div>
-    <div class="ann-title">Budget Done &#8212; Switch to Strategy</div>
-    <div class="ann-body">The user clicks the Strategy chat in the sidebar. <strong>Copilot already knows what happened in the budget chat</strong> and offers to continue. Chats are episodes. The intelligence is continuous.</div>
-  </div>
-  <div class="ann" id="ann11">
-    <div class="ann-tag">Bidirectional Context</div>
-    <div class="ann-title">Hiring Chat Knows Its Data Was Used</div>
-    <div class="ann-body"><strong>No information is orphaned.</strong> The hiring chat shows that its pipeline data was pulled into the budget review. Every chat touching a workstream knows about the others.</div>
-  </div>
-  <div class="ann" id="ann12">
-    <div class="ann-tag">Persistent Workstream Graph</div>
-    <div class="ann-title">Chats Are Episodes, Workstreams Endure</div>
-    <div class="ann-body">The strategy chat knows it was referenced from the budget review and offers to <strong>pick up where that conversation left off</strong>. Individual chats come and go &#8212; the workstream intelligence persists.</div>
-  </div>
+<div class="ann" id="ann1" data-target="beat1" data-pos="right">
+  <div class="ann-tag"><span class="ann-num">1</span> Proactive Intelligence</div>
+  <div class="ann-title">Copilot Opens With Awareness</div>
+  <div class="ann-body">No blank box. Copilot monitored linked artifacts overnight and surfaces what changed &#8212; <strong>zero prompts needed</strong>.</div>
+</div>
+<div class="ann" id="ann2" data-target="beat2" data-pos="right">
+  <div class="ann-tag"><span class="ann-num">2</span> Cross-Artifact Reasoning</div>
+  <div class="ann-title">Suggested Reply With Citations</div>
+  <div class="ann-body">Cross-referenced the CFO&#8217;s comment with live Excel data and drafted a reply &#8212; <strong>with citations to specific cells</strong>.</div>
+</div>
+<div class="ann" id="ann3" data-target="beat3" data-pos="right">
+  <div class="ann-tag"><span class="ann-num">3</span> User Agency</div>
+  <div class="ann-title">Act On Behalf, Not As</div>
+  <div class="ann-body">Reply posted <strong>as the user</strong>, not as Copilot. One click to approve. <em>Trust through transparency.</em></div>
+</div>
+<div class="ann" id="ann4a" data-target="beat4" data-pos="right">
+  <div class="ann-tag"><span class="ann-num">4a</span> Apps Inside Copilot</div>
+  <div class="ann-title">Excel Analysis &#8212; No App Switch</div>
+  <div class="ann-body">Hiring pipeline pulled <strong>inline in BizChat</strong>. The data table, analysis, and suggested reply &#8212; all in one conversation.</div>
+</div>
+<div class="ann" id="ann4b" data-target="beat4" data-pos="below">
+  <div class="ann-tag"><span class="ann-num">4b</span> Compound Action</div>
+  <div class="ann-title">Draft Reply + Insert Into Doc</div>
+  <div class="ann-body">Copilot offers to post the reply <strong>and</strong> insert the data table into the Word doc &#8212; two actions, one click.</div>
+</div>
+<div class="ann" id="ann5" data-target="beat5" data-pos="right">
+  <div class="ann-tag"><span class="ann-num">5</span> Seamless Transition</div>
+  <div class="ann-title">&#8220;This One Needs Your Eyes&#8221;</div>
+  <div class="ann-body">Copilot decides <strong>the right surface for the task</strong>. Document review needs the full editor. The conversation carries over.</div>
+</div>
+<div class="ann" id="ann6a" data-target="wordView" data-pos="overlay-top">
+  <div class="ann-tag"><span class="ann-num">6a</span> Copilot Inside Apps</div>
+  <div class="ann-title">Word Opens With Full Context</div>
+  <div class="ann-body">The document shows tracked changes from Copilot. The side pane has the <strong>full conversation history</strong> &#8212; zero re-orientation.</div>
+</div>
+<div class="ann" id="ann6b" data-target="wordView" data-pos="overlay-right">
+  <div class="ann-tag"><span class="ann-num">6b</span> Linked Conversation</div>
+  <div class="ann-title">Same Thread, Different Surface</div>
+  <div class="ann-body">The Copilot pane mirrors the BizChat conversation exactly. <strong>&#8220;Linked to: Q3 Budget Review&#8221;</strong> makes continuity explicit.</div>
+</div>
+<div class="ann" id="ann7">
+  <div class="ann-tag"><span class="ann-num">7</span> Linked Context</div>
+  <div class="ann-title">Same Conversation, Seamless Return</div>
+  <div class="ann-body">The user says &#8220;take me back&#8221; and the return to BizChat is <strong>initiated from the same conversation</strong>. The EA walks back with you.</div>
+</div>
+<div class="ann" id="ann8a" data-target="beat8user" data-pos="right">
+  <div class="ann-tag"><span class="ann-num">8a</span> Round-Trip Awareness</div>
+  <div class="ann-title">BizChat Knows What Happened</div>
+  <div class="ann-body">Changes accepted, manual edits &#8212; <strong>BizChat picks it all up</strong>. A continuous record across surfaces.</div>
+</div>
+<div class="ann" id="ann8b" data-target="beat8" data-pos="right">
+  <div class="ann-tag"><span class="ann-num">8b</span> Proactive Summary</div>
+  <div class="ann-title">Back From Word &#8212; Here&#8217;s What Changed</div>
+  <div class="ann-body">Copilot summarizes exactly what happened in Word: what was accepted, edited, and resolved. <strong>No context lost.</strong></div>
+</div>
+<div class="ann" id="ann9" data-target="beat9" data-pos="right">
+  <div class="ann-tag"><span class="ann-num">9</span> Graceful Friction</div>
+  <div class="ann-title">High-Stakes Actions Get Guardrails</div>
+  <div class="ann-body">Emailing an executive? Draft shown for review. Recipient seniority flagged. <strong>Send is available but not automatic.</strong></div>
+</div>
+<div class="ann" id="ann10a" data-target="chatStrategy" data-pos="right">
+  <div class="ann-tag"><span class="ann-num">10a</span> Workstream Pivot</div>
+  <div class="ann-title">Budget Done &#8212; Switch to Strategy</div>
+  <div class="ann-body">The sidebar shows other workstreams with <strong>blue dots</strong> &#8212; items that need attention. Click to pivot.</div>
+</div>
+<div class="ann" id="ann10b" data-target="beat9b" data-pos="right">
+  <div class="ann-tag"><span class="ann-num">10b</span> Workstream Complete</div>
+  <div class="ann-title">Budget Wrapped &#8212; Email Sent</div>
+  <div class="ann-body">The budget workstream is done. Copilot asks: <strong>what&#8217;s next?</strong> The sidebar makes context-switching effortless.</div>
+</div>
+<div class="ann" id="ann11" data-target="altChatView" data-pos="right">
+  <div class="ann-tag"><span class="ann-num">11</span> Cross-Chat Intelligence</div>
+  <div class="ann-title">Strategy Chat Picks Up The Thread</div>
+  <div class="ann-body"><strong>Copilot already knows</strong> what happened in the budget chat and offers to continue. Chats are episodes &#8212; the intelligence is continuous.</div>
+</div>
+<div class="ann" id="ann12" data-target="altChatView" data-pos="right">
+  <div class="ann-tag"><span class="ann-num">12</span> Bidirectional Context</div>
+  <div class="ann-title">Hiring Chat Knows Its Data Was Used</div>
+  <div class="ann-body"><strong>No information orphaned.</strong> The hiring chat shows its pipeline data was pulled into the budget review. Every workstream is connected.</div>
 </div>
 
 <!-- ═══ CONVO: Hiring Plan Chat ═══ -->
@@ -1328,7 +1346,7 @@ function showStep(n) {
     setTimeout(function(){ var b=document.querySelector('#beat3 .action-btn.primary'); if(b) showClickHint(b,'Click here'); }, 500);
   }
   else if (n === 4) {
-    revealBeat('beat4'); showAnn('ann4'); scrollConvo();
+    revealBeat('beat4'); showAnn('ann4a,ann4b'); scrollConvo();
     setTimeout(function(){ var b=document.querySelector('#beat4 .action-btn.primary'); if(b) showClickHint(b,'Click here'); }, 500);
   }
   else if (n === 5) {
@@ -1338,7 +1356,7 @@ function showStep(n) {
   else if (n === 6) {
     document.getElementById('bizchatView').classList.add('collapsed');
     document.getElementById('wordView').classList.add('expanded');
-    setTimeout(function(){ showAnn('ann6'); }, 600);
+    setTimeout(function(){ showAnn('ann6a,ann6b'); }, 600);
     // Show click hint on Word Copilot input bar after Word opens
     var wcpInput = document.querySelector('.wcp-input-bar input');
     window._waitingForWordSend = true;
@@ -1383,7 +1401,7 @@ function showStep(n) {
     setTimeout(function(){
       revealBeat('beat8user'); scrollConvo();
       setTimeout(function(){
-        revealBeat('beat8'); scrollConvo(); showAnn('ann8');
+        revealBeat('beat8'); scrollConvo(); showAnn('ann8a,ann8b');
         setTimeout(function(){ var b=document.querySelector('#beat8 .action-btn.primary'); if(b) showClickHint(b,'Click here'); }, 800);
       }, 600);
     }, 600);
@@ -1393,7 +1411,7 @@ function showStep(n) {
     setTimeout(function(){ var b=document.getElementById('sendCFOBtn'); if(b) showClickHint(b,'Click here'); }, 500);
   }
   else if (n === 10) {
-    revealBeat('beat9b'); scrollConvo(); showAnn('ann10');
+    revealBeat('beat9b'); scrollConvo(); showAnn('ann10a,ann10b');
     document.getElementById('xrefHiring').classList.add('visible');
     document.getElementById('xrefStrategy').classList.add('visible');
     // Change budget icon to green check (completed)
@@ -1485,10 +1503,8 @@ function updateDots() {
 }
 
 function hideAllAnns() {
-  for (var i = 1; i <= 13; i++) {
-    var el = document.getElementById('ann' + i);
-    if (el) el.classList.remove('visible');
-  }
+  document.querySelectorAll('.ann').forEach(function(el){ el.classList.remove('visible'); });
+  document.querySelectorAll('.ann-arrow').forEach(function(el){ el.remove(); });
   clearClickHints();
 }
 
@@ -1561,55 +1577,122 @@ function showAutoHint(label, callback) {
   document.body.appendChild(hint);
 }
 
-// Map beats to their target elements for positioning
-var beatTargets = {
-  1: 'beat1', 2: 'beat2', 3: 'beat3', 4: 'beat4', 5: 'beat5',
-  6: null, 7: null, 8: 'beat8', 9: 'beat9', 10: null, 11: null, 12: null, 13: null
-};
-
 function showAnn(id) {
-  const beatNum = parseInt(id.replace('ann', ''));
-  const annEl = document.getElementById(id);
-  if (!annEl) return;
+  // Support showing multiple annotations: showAnn('ann6a,ann6b') or showAnn('ann1')
+  var ids = id.split(',');
+  ids.forEach(function(annId, idx) {
+    annId = annId.trim();
+    var annEl = document.getElementById(annId);
+    if (!annEl) return;
+    var targetId = annEl.dataset.target;
+    var pos = annEl.dataset.pos || 'right';
+    var targetEl = targetId ? document.getElementById(targetId) : null;
 
-  // Update the ann-tag to include the beat label
-  const tag = annEl.querySelector('.ann-tag');
-  if (tag) tag.textContent = stepLabels[beatNum] || 'Design Decision';
-
-  // Position the annotation panel near the target
-  const panel = document.getElementById('annotations');
-  const targetId = beatTargets[beatNum];
-
-  if (targetId) {
-    const targetEl = document.getElementById(targetId);
-    if (targetEl && targetEl.offsetParent !== null) {
-      const rect = targetEl.getBoundingClientRect();
-      // Place to the right of the element
-      let left = rect.right + 16;
-      let top = rect.top + 20;
-      // If overflows right, place bottom-right
-      if (left + 310 > window.innerWidth) {
-        left = window.innerWidth - 330;
-        top = rect.bottom + 12;
-      }
-      // Keep in viewport
-      if (top + 150 > window.innerHeight) top = window.innerHeight - 170;
-      if (top < 60) top = 60;
-      panel.style.left = left + 'px';
-      panel.style.top = top + 'px';
-      panel.style.right = 'auto';
-      panel.style.bottom = 'auto';
+    // Delay stagger for multiple cards
+    setTimeout(function() {
       annEl.classList.add('visible');
-      return;
-    }
+      if (targetEl && targetEl.offsetParent !== null) {
+        var rect = targetEl.getBoundingClientRect();
+        var annW = 290, annH = 140;
+        var left, top;
+
+        if (pos === 'right') {
+          left = Math.min(rect.right + 20, window.innerWidth - annW - 20);
+          top = rect.top + 20 + (idx * 160);
+        } else if (pos === 'below') {
+          left = Math.min(rect.left + 40, window.innerWidth - annW - 20);
+          top = rect.bottom + 16 + (idx * 160);
+        } else if (pos === 'overlay-top') {
+          left = rect.left + 40;
+          top = rect.top + 60;
+        } else if (pos === 'overlay-right') {
+          left = rect.right - annW - 40;
+          top = rect.top + 200;
+        } else {
+          left = rect.right + 20;
+          top = rect.top + 20;
+        }
+
+        // Keep in viewport
+        if (top + annH > window.innerHeight - 40) top = window.innerHeight - annH - 60;
+        if (top < 50) top = 50;
+        if (left < 10) left = 10;
+
+        annEl.style.left = left + 'px';
+        annEl.style.top = top + 'px';
+
+        // Draw arrow from card to target
+        drawArrow(annEl, targetEl, pos);
+      } else {
+        // Default position for Word view etc
+        annEl.style.right = '20px';
+        annEl.style.bottom = (80 + idx * 170) + 'px';
+        annEl.style.left = 'auto';
+        annEl.style.top = 'auto';
+      }
+    }, idx * 300);
+  });
+}
+
+function drawArrow(annEl, targetEl, pos) {
+  var aRect = annEl.getBoundingClientRect();
+  var tRect = targetEl.getBoundingClientRect();
+
+  // Calculate start (from card edge) and end (to target edge)
+  var sx, sy, ex, ey;
+  if (pos === 'right' || pos === 'overlay-right') {
+    sx = aRect.left; sy = aRect.top + aRect.height / 2;
+    ex = tRect.right + 4; ey = Math.min(Math.max(tRect.top + tRect.height * 0.3, sy - 60), sy + 60);
+  } else if (pos === 'below') {
+    sx = aRect.left + aRect.width / 2; sy = aRect.top;
+    ex = tRect.left + tRect.width / 2; ey = tRect.bottom + 4;
+  } else if (pos === 'overlay-top') {
+    sx = aRect.left + aRect.width / 2; sy = aRect.bottom;
+    ex = tRect.left + tRect.width * 0.3; ey = tRect.top + 100;
+  } else {
+    sx = aRect.left; sy = aRect.top + aRect.height / 2;
+    ex = tRect.right; ey = tRect.top + tRect.height / 2;
   }
 
-  // Default: bottom-left above the input bar
-  panel.style.left = 'auto';
-  panel.style.right = '360px';
-  panel.style.top = 'auto';
-  panel.style.bottom = '20px';
-  annEl.classList.add('visible');
+  // Curved path
+  var mx = (sx + ex) / 2;
+  var my = (sy + ey) / 2;
+  var cx1 = sx + (ex - sx) * 0.1;
+  var cy1 = sy;
+  var cx2 = ex - (ex - sx) * 0.1;
+  var cy2 = ey;
+
+  var svgNS = 'http://www.w3.org/2000/svg';
+  var svg = document.createElementNS(svgNS, 'svg');
+  svg.setAttribute('class', 'ann-arrow');
+  svg.style.position = 'fixed';
+  svg.style.left = '0';
+  svg.style.top = '0';
+  svg.style.width = '100vw';
+  svg.style.height = '100vh';
+  svg.style.overflow = 'visible';
+
+  var path = document.createElementNS(svgNS, 'path');
+  path.setAttribute('d', 'M' + sx + ',' + sy + ' C' + cx1 + ',' + cy1 + ' ' + cx2 + ',' + cy2 + ' ' + ex + ',' + ey);
+  path.setAttribute('fill', 'none');
+  path.setAttribute('stroke', '#B4A0FF');
+  path.setAttribute('stroke-width', '2');
+  path.setAttribute('stroke-dasharray', '6,4');
+  path.setAttribute('opacity', '0.7');
+
+  // Arrowhead
+  var arrow = document.createElementNS(svgNS, 'circle');
+  arrow.setAttribute('cx', ex);
+  arrow.setAttribute('cy', ey);
+  arrow.setAttribute('r', '4');
+  arrow.setAttribute('fill', '#B4A0FF');
+
+  svg.appendChild(path);
+  svg.appendChild(arrow);
+  document.body.appendChild(svg);
+
+  // Animate in
+  setTimeout(function() { svg.classList.add('visible'); }, 50);
 }
 
 // Keyboard nav

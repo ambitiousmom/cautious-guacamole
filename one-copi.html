@@ -389,17 +389,17 @@
   .end-overlay .fin { font-size: 48px; font-weight: 300; color: white; font-style: italic; font-family: Georgia, serif; }
   .end-overlay .sub { font-size: 14px; color: rgba(255,255,255,0.5); margin-top: 8px; }
   .auto-hint {
-    position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%); z-index: 200;
+    position: fixed; bottom: 100px; left: calc(var(--sidebar-w) + 40px); z-index: 200;
     background: #7B57FF; color: white;
-    font-size: 12px; font-family: var(--font); line-height: 1.5;
-    padding: 8px 18px; border-radius: 20px; cursor: pointer;
+    font-size: 11px; font-family: var(--font); line-height: 1.4;
+    padding: 8px 14px; border-radius: 10px; cursor: pointer;
     box-shadow: 0 2px 12px rgba(123,87,255,0.4);
     animation: pulse 1.5s ease infinite;
-    transition: background 0.2s;
+    max-width: 160px; text-align: center;
   }
   .auto-hint:hover { background: #6A49E0; }
-  .auto-hint .hint-label { display: inline; font-weight: 600; }
-  .auto-hint .hint-action { display: inline; margin-left: 8px; opacity: 0.85; }
+  .auto-hint .hint-label { display: block; font-weight: 600; font-size: 11px; margin-bottom: 4px; }
+  .auto-hint .hint-action { display: block; font-size: 10px; opacity: 0.85; }
 
   /* ═══ Reset Button ═══ */
   .reset-btn { position: fixed; top: 12px; left: calc(var(--sidebar-w) + 12px); z-index: 100; padding: 5px 12px; border-radius: 14px; border: 1px solid var(--border); background: var(--surface); font-size: 11px; cursor: pointer; font-family: var(--font); color: var(--text-secondary); box-shadow: 0 1px 4px rgba(0,0,0,0.06); transition: all 0.2s; }
@@ -1310,7 +1310,7 @@ function showAutoHint(label, callback) {
   clearClickHints();
   var hint = document.createElement('div');
   hint.className = 'auto-hint';
-  hint.innerHTML = '<div class=\"hint-label\">' + label + '</div><div class=\"hint-action\">Click to continue \u2192</div>';
+  hint.innerHTML = '<div class=\"hint-label\">No user prompt needed</div><div class=\"hint-action\">press any key</div>';
   hint.addEventListener('click', function() { hint.remove(); if (callback) callback(); });
   document.body.appendChild(hint);
 }

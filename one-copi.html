@@ -142,7 +142,7 @@
   .agent-icon.word { background: #185ABD; }
   .agent-icon.excel { background: #107C10; }
   .agent-icon.ppt { background: #D24726; }
-  .agent-icon.sm { width: 16px; height: 16px; font-size: 8px; border-radius: 3px; vertical-align: -2px; }
+  .agent-icon.sm { width: 16px; height: 16px; font-size: 8px; border-radius: 3px; vertical-align: middle; }
   .copilot-msg .agent-label .think-icon { font-size: 14px; }
   .copilot-msg .body { font-size: 14px; line-height: 1.7; color: var(--text); }
   .copilot-msg .body p { margin-bottom: 10px; }
@@ -650,7 +650,7 @@
               </div>
               <div class="proactive-card-body">
                 <div class="update-item">
-                  <span class="update-icon">💬</span>
+                  <span class="update-icon"><span class="agent-icon word sm">W</span></span>
                   <div><strong>Sarah Chen (CFO) left 2 comments</strong> on <span class="doc-ref">Q3_Budget_Proposal.docx</span><br/><span class="quote">"Can we revisit the marketing allocation rationale?"</span> and <span class="quote">"Timeline seems aggressive for the engineering ramp"</span></div>
                 </div>
                 <div class="update-item">
@@ -775,7 +775,7 @@
                   <div>You edited the infrastructure paragraph — changed <em>"reserved instances"</em> to <em>"1-year committed use discounts"</em></div>
                 </div>
                 <div class="update-item">
-                  <span class="update-icon">💬</span>
+                  <span class="update-icon"><span class="agent-icon word sm">W</span></span>
                   <div>Both Sarah Chen (CFO) comments are now <strong>resolved</strong></div>
                 </div>
               </div>
@@ -925,7 +925,7 @@
           <div class="tracked-insert">
             Marketing allocation revised to <strong>$1.18M (28%)</strong>, grounded in Q3 actual ROI data showing campaign efficiency held at reduced spend. The reallocation funds engineering headcount growth while maintaining coverage for priority campaigns.
           </div>
-          <p style="margin-top: 4px; font-size: 11px; color: var(--text-muted);"><em>💬 Sarah Chen (CFO) comment resolved — reply posted</em></p>
+          <p style="margin-top: 4px; font-size: 11px; color: var(--text-muted);"><em><span class="agent-icon word sm">W</span> Sarah Chen (CFO) comment resolved — reply posted</em></p>
 
           <h2>3. Engineering Headcount</h2>
           <p>Current team: 42 engineers. Q2 attrition: 3 departures.</p>
@@ -939,7 +939,7 @@
             </table>
             Ramp completable by end of Q3 if offers go out by March 15. Net +2 over attrition.
           </div>
-          <p style="margin-top: 4px; font-size: 11px; color: var(--text-muted);"><em>💬 Sarah Chen (CFO) comment resolved — pipeline data attached</em></p>
+          <p style="margin-top: 4px; font-size: 11px; color: var(--text-muted);"><em><span class="agent-icon word sm">W</span> Sarah Chen (CFO) comment resolved — pipeline data attached</em></p>
 
           <h2>4. Infrastructure</h2>
           <p>Cloud infrastructure costs are projected at $680K, a 15% increase driven by AI workload scaling. Recommend reserved instance commitments to reduce to $590K.</p>
@@ -1097,7 +1097,7 @@
   <div class="user-msg" style="opacity:0.5;"><div class="bubble">What's the current hiring pipeline for the engineering team?</div></div>
   <div class="copilot-msg" style="opacity:0.5;"><div class="agent-label"><span class="agent-icon excel" style="font-size:10px;">X</span> Excel</div><div class="body"><p>Based on Hiring_Plan_H2.xlsx, you have 13 candidates across 5 open roles. 4 are in final interview stage. Average time-to-fill is 5.3 weeks.</p></div></div>
   <div class="day-divider" style="color:var(--copilot-purple); font-weight:600;">↳ Cross-referenced today</div>
-  <div class="copilot-msg"><div class="proactive-card"><div class="proactive-card-header" style="background:linear-gradient(90deg, rgba(123,87,255,0.08), transparent);"><span class="bell">🔗</span> Referenced in: Q3 Budget Review</div><div class="proactive-card-body"><div class="update-item"><span class="update-icon"><span class="agent-icon excel sm">X</span></span><div>Hiring pipeline data (Pipeline A2:D6) was <strong>pulled into the Q3 Budget Review</strong> conversation to respond to Sarah Chen (CFO)'s comment about engineering ramp timeline.</div></div><div class="update-item"><span class="update-icon"><span class="agent-icon word sm">W</span></span><div>The pipeline table was <strong>inserted into Q3_Budget_Proposal.docx, Section 3</strong> as a tracked change.</div></div><div class="update-item"><span class="update-icon">💬</span><div>A reply was posted to Sarah Chen (CFO) citing this data.</div></div></div></div><div class="body" style="margin-top:10px;"><p>Want to continue working on the hiring plan here, or go back to the budget review?</p></div></div>
+  <div class="copilot-msg"><div class="proactive-card"><div class="proactive-card-header" style="background:linear-gradient(90deg, rgba(123,87,255,0.08), transparent);"><span class="bell">🔗</span> Referenced in: Q3 Budget Review</div><div class="proactive-card-body"><div class="update-item"><span class="update-icon"><span class="agent-icon excel sm">X</span></span><div>Hiring pipeline data (Pipeline A2:D6) was <strong>pulled into the Q3 Budget Review</strong> conversation to respond to Sarah Chen (CFO)'s comment about engineering ramp timeline.</div></div><div class="update-item"><span class="update-icon"><span class="agent-icon word sm">W</span></span><div>The pipeline table was <strong>inserted into Q3_Budget_Proposal.docx, Section 3</strong> as a tracked change.</div></div><div class="update-item"><span class="update-icon"><span class="agent-icon word sm">W</span></span><div>A reply was posted to Sarah Chen (CFO) citing this data.</div></div></div></div><div class="body" style="margin-top:10px;"><p>Want to continue working on the hiring plan here, or go back to the budget review?</p></div></div>
 </div>
 
 <!-- ═══ CONVO: Strategy Chat ═══ -->

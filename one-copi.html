@@ -389,17 +389,17 @@
   .end-overlay .fin { font-size: 48px; font-weight: 300; color: white; font-style: italic; font-family: Georgia, serif; }
   .end-overlay .sub { font-size: 14px; color: rgba(255,255,255,0.5); margin-top: 8px; }
   .auto-hint {
-    position: fixed; bottom: 24px; right: 24px; z-index: 200;
-    background: rgba(30,30,30,0.94); color: white;
+    position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%); z-index: 200;
+    background: #7B57FF; color: white;
     font-size: 12px; font-family: var(--font); line-height: 1.5;
-    padding: 12px 18px; border-radius: 10px; cursor: pointer;
-    backdrop-filter: blur(12px); box-shadow: 0 4px 20px rgba(0,0,0,0.25);
-    border-left: 3px solid #B4A0FF;
-    animation: fadeInUp 0.4s ease both; transition: background 0.2s;
+    padding: 8px 18px; border-radius: 20px; cursor: pointer;
+    box-shadow: 0 2px 12px rgba(123,87,255,0.4);
+    animation: pulse 1.5s ease infinite;
+    transition: background 0.2s;
   }
-  .auto-hint:hover { background: rgba(50,50,50,0.95); }
-  .auto-hint .hint-label { font-size: 10px; color: #B4A0FF; text-transform: uppercase; letter-spacing: 1px; font-weight: 600; margin-bottom: 4px; }
-  .auto-hint .hint-action { color: rgba(255,255,255,0.9); }
+  .auto-hint:hover { background: #6A49E0; }
+  .auto-hint .hint-label { display: inline; font-weight: 600; }
+  .auto-hint .hint-action { display: inline; margin-left: 8px; opacity: 0.85; }
 
   /* ═══ Reset Button ═══ */
   .reset-btn { position: fixed; top: 12px; left: calc(var(--sidebar-w) + 12px); z-index: 100; padding: 5px 12px; border-radius: 14px; border: 1px solid var(--border); background: var(--surface); font-size: 11px; cursor: pointer; font-family: var(--font); color: var(--text-secondary); box-shadow: 0 1px 4px rgba(0,0,0,0.06); transition: all 0.2s; }

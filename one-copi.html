@@ -1068,6 +1068,10 @@
   <div class="ann-tag"><span class="ann-num">9b</span> Handoff with Context</div>
   <div class="ann-body">Copilot summarizes what happened in Word: what was accepted, what was edited, what’s resolved. <strong>No context lost in the round-trip.</strong></div>
 </div>
+<div class="ann" id="ann8c" data-target="beat8">
+  <div class="ann-tag"><span class="ann-num">9c</span> Graceful Degradation</div>
+  <div class="ann-body">The user changed “reserved instances” to “1-year committed use discounts” — overriding Copilot’s suggestion. Copilot doesn’t resist. It <strong>acknowledges the edit and moves on</strong>. When the user corrects, the system adapts.</div>
+</div>
 <div class="ann" id="ann9a" data-target="beat9">
   <div class="ann-tag"><span class="ann-num">10a</span> Progressive Disclosure</div>
   <div class="ann-body">Copilot layers information: draft first, then recipients, then send. <strong>Complexity is revealed gradually</strong>, not dumped all at once.</div>
@@ -1401,7 +1405,7 @@ function showStep(n) {
     setTimeout(function(){
       revealBeat('beat8user'); scrollConvo();
       setTimeout(function(){
-        revealBeat('beat8'); scrollConvo(); showAnn('ann8a,ann8b');
+        revealBeat('beat8'); scrollConvo(); showAnn('ann8a,ann8b,ann8c');
         setTimeout(function(){ var b=document.querySelector('#beat8 .action-btn.primary'); if(b) showClickHint(b,'Click here'); }, 800);
       }, 600);
     }, 600);

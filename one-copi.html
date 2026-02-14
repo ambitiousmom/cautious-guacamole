@@ -1188,7 +1188,11 @@ function resetDemo() {
   document.getElementById('mainInput').value = '';
   document.getElementById('mainInput').onclick = null;
   document.getElementById('inputRightIcons').src = 'input-bar-bottomright.png';
+  // Reset Word Copilot input
+  var wcpIn = document.querySelector('.wcp-input-bar input'); if(wcpIn){wcpIn.value='';wcpIn.onclick=null;}
+  var wcpSend = document.querySelector('.wcp-input-bar img[alt="Actions"]'); if(wcpSend){wcpSend.onclick=null;}
   window._waitingForSend = false;
+  window._waitingForWordSend = false;
   window._autoHintActive = false;
   // Reset step button
   document.getElementById('stepNext').disabled = false;
@@ -1326,23 +1330,18 @@ function showStep(n) {
   else if (n === 6) {
     document.getElementById('bizchatView').classList.add('collapsed');
     document.getElementById('wordView').classList.add('expanded');
-    setTimeout(function(){ showAnn('ann6'); showAutoHint('Word opens with context', function(){ step=7; showStep(7); }); }, 600);
-  }
-  else if (n === 7) {
-    showAnn('ann7');
-    // Show click hint on Word Copilot input bar
+    setTimeout(function(){ showAnn('ann6'); }, 600);
+    // Show click hint on Word Copilot input bar after Word opens
     var wcpInput = document.querySelector('.wcp-input-bar input');
     window._waitingForWordSend = true;
     setTimeout(function(){
       showClickHint(wcpInput, 'Click here');
-    }, 600);
+    }, 1000);
     wcpInput.onclick = function() {
       if (window._waitingForWordSend) {
         this.onclick = null;
         clearClickHints();
-        // Type the message
         this.value = 'Looks good to me. Take me back.';
-        // Show click hint on send area
         var sendIcon = document.querySelector('.wcp-input-bar img[alt="Actions"]');
         setTimeout(function(){
           showClickHint(sendIcon, 'Click here');
@@ -1352,16 +1351,22 @@ function showStep(n) {
           window._waitingForWordSend = false;
           wcpInput.value = '';
           clearClickHints();
-          // Show user message and reply
-          var m=document.getElementById('beat7msg'); var r=document.getElementById('beat7reply');
-          m.classList.remove('hidden'); m.classList.add('anim-fadeinup');
-          setTimeout(function(){ r.classList.remove('hidden'); r.classList.add('anim-fadeinup'); }, 800);
-          var wp=document.querySelector('.wcp-messages'); setTimeout(function(){ wp.scrollTop=wp.scrollHeight; }, 200);
-          // Auto-advance to beat 8 after a pause
-          showAutoHint('Heading back to BizChat', function(){ step=8; showStep(8); });
+          step = 7;
+          showStep(7);
         };
       }
     };
+  }
+  else if (n === 7) {
+    // Word view stays open, show user message and reply in Copilot pane
+    document.getElementById('bizchatView').classList.add('collapsed');
+    document.getElementById('wordView').classList.add('expanded');
+    showAnn('ann7');
+    var m=document.getElementById('beat7msg'); var r=document.getElementById('beat7reply');
+    m.classList.remove('hidden'); m.classList.add('anim-fadeinup');
+    setTimeout(function(){ r.classList.remove('hidden'); r.classList.add('anim-fadeinup'); }, 800);
+    var wp=document.querySelector('.wcp-messages'); setTimeout(function(){ wp.scrollTop=wp.scrollHeight; }, 200);
+    showAutoHint('Heading back to BizChat', function(){ step=8; showStep(8); });
   }
   else if (n === 8) {
     document.getElementById('wordView').classList.remove('expanded');
@@ -1603,7 +1608,7 @@ document.addEventListener('keydown', (e) => {
     resetDemo();
     return;
   }
-  if (window._autoHintActive || window._waitingForSend) return;
+  if (window._autoHintActive || window._waitingForSend || window._waitingForWordSend) return;
   if (e.key === 'ArrowRight' || e.key === ' ') {
     e.preventDefault();
     if (step === 0) advanceFromCheckin();

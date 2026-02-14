@@ -1509,6 +1509,8 @@ function hideAllAnns() {
 }
 
 function clearClickHints() {
+  if (_hintRAF) { cancelAnimationFrame(_hintRAF); _hintRAF = null; }
+  _hintTarget = null;
   document.querySelectorAll('.click-hint').forEach(function(el){ el.remove(); });
   document.querySelectorAll('.click-target').forEach(function(el){ el.classList.remove('click-target'); });
   document.querySelectorAll('.auto-hint').forEach(function(el){ el.remove(); });
@@ -1516,6 +1518,7 @@ function clearClickHints() {
 
 var _hintTarget = null;
 var _hintSide = null;
+var _hintRAF = null;
 
 function showClickHint(target, text, side) {
   clearClickHints();
@@ -1528,18 +1531,22 @@ function showClickHint(target, text, side) {
   hint.id = 'activeHint';
   hint.textContent = text || 'Click here';
   if (side === 'right') hint.classList.add('arrow-left');
-  // Make tooltip clickable — triggers the target's click
   hint.style.pointerEvents = 'auto';
   hint.style.cursor = 'pointer';
   hint.addEventListener('click', function() { target.click(); });
   document.body.appendChild(hint);
   positionHint();
+  // Continuously reposition to stay locked to target
+  startHintTracking();
 }
 
 function positionHint() {
   var hint = document.getElementById('activeHint');
   if (!hint || !_hintTarget) return;
   var rect = _hintTarget.getBoundingClientRect();
+  // Hide if target is off-screen
+  if (rect.width === 0 && rect.height === 0) { hint.style.display = 'none'; return; }
+  hint.style.display = '';
   if (_hintSide === 'right') {
     hint.style.left = (rect.right + 8) + 'px';
     hint.style.top = (rect.top + rect.height / 2) + 'px';
@@ -1549,6 +1556,16 @@ function positionHint() {
     hint.style.top = (rect.top + rect.height / 2) + 'px';
     hint.style.transform = 'translate(-100%, -50%)';
   }
+}
+
+function startHintTracking() {
+  if (_hintRAF) cancelAnimationFrame(_hintRAF);
+  function tick() {
+    if (!document.getElementById('activeHint')) { _hintRAF = null; return; }
+    positionHint();
+    _hintRAF = requestAnimationFrame(tick);
+  }
+  _hintRAF = requestAnimationFrame(tick);
 }
 
 function showAutoHint(label, callback) {

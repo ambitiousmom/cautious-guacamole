@@ -1044,7 +1044,10 @@ function startDemo() {
   // Beat 0: Show BizChat with Copilot Home in conversation area
   document.getElementById('beat0home').style.display = '';
   document.getElementById('convoInner').style.display = 'none';
-  document.getElementById('topbarTitle').textContent = 'Home';
+  document.getElementById('altChatView').classList.add('hidden');
+  // Hide chat-specific topbar elements and input bar
+  document.querySelector('.topbar').style.display = 'none';
+  document.querySelector('.input-bar-container').style.display = 'none';
   document.getElementById('statusBudget').classList.add('visible');
   document.getElementById('statusStrategy').classList.add('visible');
   document.getElementById('statusHiring').classList.add('visible');
@@ -1059,9 +1062,11 @@ function startDemo() {
 }
 
 function advanceFromCheckin() {
-  // Hide home, show chat
+  // Hide home, show chat with topbar and input bar
   document.getElementById('beat0home').style.display = 'none';
   document.getElementById('convoInner').style.display = '';
+  document.querySelector('.topbar').style.display = '';
+  document.querySelector('.input-bar-container').style.display = '';
   document.getElementById('topbarTitle').textContent = 'Q3 Budget Review';
   clearClickHints();
   step = 1;
@@ -1075,6 +1080,8 @@ function resetDemo() {
   // Restore beat 0 home
   document.getElementById('beat0home').style.display = '';
   document.getElementById('convoInner').style.display = 'none';
+  document.querySelector('.topbar').style.display = 'none';
+  document.querySelector('.input-bar-container').style.display = 'none';
   document.getElementById('bizchatView').classList.remove('collapsed');
   document.getElementById('wordView').classList.remove('expanded');
   // Reset all beats

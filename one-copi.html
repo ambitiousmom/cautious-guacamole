@@ -142,7 +142,7 @@
   .agent-icon.word { background: #185ABD; }
   .agent-icon.excel { background: #107C10; }
   .agent-icon.ppt { background: #D24726; }
-  .agent-icon.sm { width: 16px; height: 16px; font-size: 8px; border-radius: 3px; vertical-align: middle; }
+  .agent-icon.sm { width: 16px; height: 16px; font-size: 8px; border-radius: 3px; vertical-align: middle; flex-shrink: 0; }
   .copilot-msg .agent-label .think-icon { font-size: 14px; }
   .copilot-msg .body { font-size: 14px; line-height: 1.7; color: var(--text); }
   .copilot-msg .body p { margin-bottom: 10px; }
@@ -153,7 +153,7 @@
   /* Citation pill */
   .cite-pill { display: inline-flex; align-items: center; gap: 4px; background: #F0F0F0; border: 1px solid var(--border); border-radius: 4px; padding: 2px 8px; font-size: 11px; color: var(--text-secondary); cursor: pointer; vertical-align: middle; margin: 0 2px; }
   .cite-pill:hover { background: var(--border-light); }
-  .cite-pill .cite-icon { font-size: 12px; }
+  .cite-pill .cite-icon { font-size: 12px; display: inline-flex; align-items: center; }
 
   /* Sources pill */
   .sources-pill { display: inline-flex; align-items: center; gap: 6px; background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 6px 14px; font-size: 12px; color: var(--text-secondary); cursor: pointer; margin-top: 8px; }
@@ -179,7 +179,7 @@
   .proactive-card-body { padding: 14px 16px; }
   .update-item { display: flex; align-items: flex-start; gap: 10px; padding: 8px 0; font-size: 13px; line-height: 1.6; }
   .update-item + .update-item { border-top: 1px solid var(--border-light); }
-  .update-icon { font-size: 16px; flex-shrink: 0; margin-top: 2px; }
+  .update-icon { font-size: 16px; flex-shrink: 0; margin-top: 3px; line-height: 1; }
   .update-item .doc-ref { color: var(--brand-blue); font-weight: 500; }
   .update-item .quote { font-style: italic; color: var(--text-secondary); }
 

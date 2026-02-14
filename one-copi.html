@@ -1128,15 +1128,19 @@ function showStep(n) {
   if (n === 1) {
     revealBeat('beat1'); showAnn('ann1'); scrollConvo();
     showAutoHint('Proactive \u2014 no user prompt needed', function(){
-      var ub = document.getElementById('beat1b');
-      ub.classList.remove('hidden'); ub.classList.add('anim-fadeinup');
-      scrollConvo();
-      setTimeout(function(){ step=2; showStep(2); }, 800);
+      step=2; showStep(2);
     });
   }
   else if (n === 2) {
-    revealBeat('beat2'); showAnn('ann2'); scrollConvo();
-    setTimeout(function(){ var b=document.querySelector('#beat2 .action-btn.primary'); if(b) showClickHint(b,'Click here'); }, 800);
+    // Show user message first
+    var ub = document.getElementById('beat1b');
+    if (ub) { ub.classList.remove('hidden'); ub.classList.add('anim-fadeinup'); }
+    scrollConvo();
+    // Then reveal Copilot response after delay
+    setTimeout(function(){
+      revealBeat('beat2'); showAnn('ann2'); scrollConvo();
+      setTimeout(function(){ var b=document.querySelector('#beat2 .action-btn.primary'); if(b) showClickHint(b,'Click here'); }, 800);
+    }, 600);
   }
   else if (n === 3) {
     revealBeat('beat3'); showAnn('ann3'); scrollConvo();

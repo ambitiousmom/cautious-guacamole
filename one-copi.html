@@ -348,8 +348,8 @@
   .ann .ann-tag { font-size: 10px; text-transform: uppercase; letter-spacing: 1.2px; color: #B4A0FF; margin-bottom: 4px; font-weight: 700; }
   .ann .ann-title { font-size: 13px; font-weight: 600; color: white; margin-bottom: 6px; }
   .ann .ann-body { color: rgba(255,255,255,0.85); }
-  .ann-arrow { position: fixed; z-index: 90; pointer-events: none; opacity: 0; transition: opacity 0.4s ease; }
-  .ann-arrow.visible { opacity: 1; }
+  .ann-arrow { position: fixed; z-index: 90; pointer-events: none; opacity: 0; transition: opacity 0.5s ease; }
+  .ann-arrow.visible { opacity: 0.8; }
 
   /* ═══ Animations ═══ */
   @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
@@ -1640,65 +1640,70 @@ function drawArrow(annEl, targetEl, pos) {
   var tRect = targetEl.getBoundingClientRect();
   if (aRect.width === 0 || tRect.width === 0) return;
 
-  // Start from card's left-center, end at target's right edge vertically centered
-  var sx = aRect.left;
-  var sy = aRect.top + aRect.height / 2;
-  var ex = tRect.right + 6;
-  var ey = tRect.top + tRect.height * 0.35;
+  // Arrow from card edge to target edge
+  var sx, sy, ex, ey;
+  var cardOnRight = aRect.left > tRect.left;
 
-  // Clamp ey to be visible
-  if (ey < 50) ey = 50;
-  if (ey > window.innerHeight - 50) ey = window.innerHeight - 50;
-
-  // For overlay positions
-  if (pos === 'overlay-top') {
-    sx = aRect.left + aRect.width / 2;
-    sy = aRect.bottom + 4;
-    ex = tRect.left + tRect.width * 0.3;
-    ey = sy + 60;
-  } else if (pos === 'below') {
-    sx = aRect.left + 40;
-    sy = aRect.top;
-    ex = tRect.left + tRect.width / 2;
-    ey = tRect.bottom + 8;
+  if (cardOnRight) {
+    // Card is to the right — arrow goes left from card to target
+    sx = aRect.left + 10;
+    sy = aRect.top + aRect.height / 2;
+    ex = tRect.right + 12;
+    ey = tRect.top + tRect.height * 0.4;
+  } else {
+    // Card is to the left — arrow goes right from card to target
+    sx = aRect.right - 10;
+    sy = aRect.top + aRect.height / 2;
+    ex = tRect.left - 12;
+    ey = tRect.top + tRect.height * 0.4;
   }
 
-  // Control points for a smooth curve
-  var cx1 = sx - (sx - ex) * 0.4;
-  var cy1 = sy;
-  var cx2 = ex + (sx - ex) * 0.2;
+  // Curve control points — create a nice swooping curve
+  var dx = ex - sx;
+  var dy = ey - sy;
+  var cx1 = sx + dx * 0.15;
+  var cy1 = sy + dy * 0.7;
+  var cx2 = sx + dx * 0.6;
   var cy2 = ey;
+
+  // Calculate arrowhead angle from the last segment of the curve
+  var t = 0.95;
+  var t1 = 1 - t;
+  var px = t1*t1*t1*sx + 3*t1*t1*t*cx1 + 3*t1*t*t*cx2 + t*t*t*ex;
+  var py = t1*t1*t1*sy + 3*t1*t1*t*cy1 + 3*t1*t*t*cy2 + t*t*t*ey;
+  var angle = Math.atan2(ey - py, ex - px);
+  var aLen = 10;
+  var aSpread = 0.45;
+  var ax1 = ex - aLen * Math.cos(angle - aSpread);
+  var ay1 = ey - aLen * Math.sin(angle - aSpread);
+  var ax2 = ex - aLen * Math.cos(angle + aSpread);
+  var ay2 = ey - aLen * Math.sin(angle + aSpread);
 
   var svgNS = 'http://www.w3.org/2000/svg';
   var svg = document.createElementNS(svgNS, 'svg');
   svg.setAttribute('class', 'ann-arrow');
-  svg.style.position = 'fixed';
-  svg.style.left = '0';
-  svg.style.top = '0';
-  svg.style.width = '100vw';
-  svg.style.height = '100vh';
-  svg.style.overflow = 'visible';
+  svg.style.cssText = 'position:fixed;left:0;top:0;width:100vw;height:100vh;overflow:visible;z-index:90;pointer-events:none;';
 
+  // Main curve
   var path = document.createElementNS(svgNS, 'path');
-  path.setAttribute('d', 'M' + sx + ',' + sy + ' C' + cx1 + ',' + cy1 + ' ' + cx2 + ',' + cy2 + ' ' + ex + ',' + ey);
+  path.setAttribute('d', 'M'+sx+','+sy+' C'+cx1+','+cy1+' '+cx2+','+cy2+' '+ex+','+ey);
   path.setAttribute('fill', 'none');
-  path.setAttribute('stroke', '#B4A0FF');
-  path.setAttribute('stroke-width', '2');
-  path.setAttribute('stroke-dasharray', '6,4');
-  path.setAttribute('opacity', '0.7');
+  path.setAttribute('stroke', '#7B57FF');
+  path.setAttribute('stroke-width', '2.5');
+  path.setAttribute('stroke-linecap', 'round');
 
   // Arrowhead
-  var arrow = document.createElementNS(svgNS, 'circle');
-  arrow.setAttribute('cx', ex);
-  arrow.setAttribute('cy', ey);
-  arrow.setAttribute('r', '4');
-  arrow.setAttribute('fill', '#B4A0FF');
+  var head = document.createElementNS(svgNS, 'path');
+  head.setAttribute('d', 'M'+ax1+','+ay1+' L'+ex+','+ey+' L'+ax2+','+ay2);
+  head.setAttribute('fill', 'none');
+  head.setAttribute('stroke', '#7B57FF');
+  head.setAttribute('stroke-width', '2.5');
+  head.setAttribute('stroke-linecap', 'round');
+  head.setAttribute('stroke-linejoin', 'round');
 
   svg.appendChild(path);
-  svg.appendChild(arrow);
+  svg.appendChild(head);
   document.body.appendChild(svg);
-
-  // Animate in
   setTimeout(function() { svg.classList.add('visible'); }, 50);
 }
 

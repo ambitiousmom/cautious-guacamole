@@ -1254,10 +1254,14 @@ function showStep(n) {
     setTimeout(function(){ showClickHint(document.getElementById('chatStrategy'),'Click here','right'); }, 1000);
   }
   else if (n === 11) {
+    // Hide blue dot for Strategy (user clicked into it)
+    document.getElementById('statusStrategy').style.display = 'none';
     switchToAltChat('strategy'); showAnn('ann11');
     setTimeout(function(){ showClickHint(document.getElementById('chatHiring'),'Click here','right'); }, 1000);
   }
   else if (n === 12) {
+    // Hide blue dot for Hiring (user clicked into it)
+    document.getElementById('statusHiring').style.display = 'none';
     switchToAltChat('hiring'); showAnn('ann12');
     setTimeout(function(){ showClickHint(document.getElementById('chatStrategy'),'Click here','right'); }, 1000);
   }

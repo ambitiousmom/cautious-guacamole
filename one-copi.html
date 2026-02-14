@@ -538,10 +538,10 @@
           <div class="day-divider">Today</div>
 
           <!-- ═══ BEAT 0: Morning check-in greeting ═══ -->
-          <div id="beat0greeting" style="text-align:center; padding:40px 20px;">
-            <div style="font-size:24px; margin-bottom:8px;">☀️</div>
-            <div style="font-size:18px; font-weight:600; color:var(--text); margin-bottom:6px;">Good morning</div>
-            <div style="font-size:13px; color:var(--text-secondary); line-height:1.6; margin-bottom:20px;">Your morning check-in is ready.</div>
+          <div id="beat0greeting" style="text-align:center; padding:16px 20px;">
+            <div style="font-size:20px; margin-bottom:4px;">☀️</div>
+            <div style="font-size:16px; font-weight:600; color:var(--text); margin-bottom:4px;">Good morning</div>
+            <div style="font-size:12px; color:var(--text-secondary); line-height:1.5; margin-bottom:14px;">Your morning check-in is ready.</div>
             <div style="text-align:left; max-width:360px; margin:0 auto;">
               <div id="checkinItem1" onclick="advanceFromCheckin()" style="display:flex; align-items:center; gap:10px; padding:10px 14px; background:var(--blue-light); border:1px solid var(--border); border-radius:8px; margin-bottom:8px; cursor:pointer; transition:background 0.15s;">
                 <span style="font-size:14px;">🔔</span>
@@ -1057,10 +1057,13 @@ function startDemo() {
   document.getElementById('statusHiring').classList.add('visible');
   document.getElementById('stepBar').classList.remove('hidden');
   step = 0;
+  // Scroll to greeting so it's fully visible
+  var greeting = document.getElementById('beat0greeting');
+  if (greeting) greeting.scrollIntoView({ behavior: 'smooth', block: 'center' });
   // Show click hint on Q3 Budget Review checkin item
   setTimeout(function(){
     showClickHint(document.getElementById('checkinItem1'), 'Click here');
-  }, 500);
+  }, 800);
 }
 
 function advanceFromCheckin() {

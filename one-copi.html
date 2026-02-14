@@ -1622,8 +1622,8 @@ function showAnn(id) {
         annEl.style.right = 'auto';
         annEl.style.bottom = 'auto';
 
-        // Draw arrow after a brief delay so card is rendered
-        setTimeout(function(){ drawArrow(annEl, targetEl, pos); }, 50);
+        // Draw arrow after card animation completes
+        setTimeout(function(){ drawArrow(annEl, targetEl, pos); }, 500);
       } else {
         // Default: right side
         annEl.style.right = '30px';
@@ -1638,32 +1638,35 @@ function showAnn(id) {
 function drawArrow(annEl, targetEl, pos) {
   var aRect = annEl.getBoundingClientRect();
   var tRect = targetEl.getBoundingClientRect();
+  if (aRect.width === 0 || tRect.width === 0) return;
 
-  // Arrow starts from the left edge of the card, ends at the right edge of the target
-  var sx = aRect.left - 4;
+  // Start from card's left-center, end at target's right edge vertically centered
+  var sx = aRect.left;
   var sy = aRect.top + aRect.height / 2;
-  var ex = Math.min(tRect.right + 8, aRect.left - 20);
-  var ey = tRect.top + Math.min(tRect.height * 0.4, 60);
+  var ex = tRect.right + 6;
+  var ey = tRect.top + tRect.height * 0.35;
 
-  // For overlay positions, arrow goes down from card
+  // Clamp ey to be visible
+  if (ey < 50) ey = 50;
+  if (ey > window.innerHeight - 50) ey = window.innerHeight - 50;
+
+  // For overlay positions
   if (pos === 'overlay-top') {
     sx = aRect.left + aRect.width / 2;
     sy = aRect.bottom + 4;
     ex = tRect.left + tRect.width * 0.3;
-    ey = Math.min(tRect.top + 120, sy + 80);
+    ey = sy + 60;
   } else if (pos === 'below') {
     sx = aRect.left + 40;
-    sy = aRect.top - 4;
+    sy = aRect.top;
     ex = tRect.left + tRect.width / 2;
     ey = tRect.bottom + 8;
   }
 
-  // Curved path
-  var mx = (sx + ex) / 2;
-  var my = (sy + ey) / 2;
-  var cx1 = sx + (ex - sx) * 0.1;
+  // Control points for a smooth curve
+  var cx1 = sx - (sx - ex) * 0.4;
   var cy1 = sy;
-  var cx2 = ex - (ex - sx) * 0.1;
+  var cx2 = ex + (sx - ex) * 0.2;
   var cy2 = ey;
 
   var svgNS = 'http://www.w3.org/2000/svg';

@@ -1060,6 +1060,7 @@ function resetDemo() {
   document.getElementById('mainInput').value = '';
   document.getElementById('inputRightIcons').src = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAF4AAAAvCAYAAABqrH0KAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAAFiUAABYlAUlSJPAAAANmSURBVHhe7ZjdK2xRFMD9bUYzZjIoRUbyMN6MNzHNixApCSXNFC9EvHgYHzVlknkRXqSEpHwUQpSvxue6rdU907nr3OnOOXOy93TXr1ZZsz/O9ps9e5+9y0BQQhn/QPgZRLwiRLwiRLwiRLwiRLwiRLwiRLwiRLwiRLwiRLwiRLwiRLwiRLwiRLwiXBO/vb0Nw8PD0NXVBUNDQ7C+vs6rCCZcEZ9IJKC8vNwS/f39vGrJ8v7+DslkEp6fn3mRI4oWv7W1ZRFujqWlJd6kJNnZ2aH/Z2VlhRc5omjxHR0dFtnmCIfDvElJsrm56epEKlp8XV2dRbY5Kioq4PPzkzfTnq+vL7i8vMzlxi97eXk599nV1RV8fHzkcjsULb6ystIim8fj4yNvpj3z8/M09ru7O8q5eFzzvV4vTExMsJaFIeLzMDk5SWM/PT2lnC81uMliPjg4yFoWhojPg4j/IY6Pj2FgYICWEGRqaorGfnZ2Rjlfal5eXv4Q//39TeeXvb09U6/5EfG/mZmZobEeHh5Sblc87gWYj42NmXrNj23x19fX0N3dDQ8PD5QHAgGLaB5PT080I/Bn6tYBxG0M8QcHB5TbXWpub28pHxkZMfWaH9vi8SoAH7CxsUF5dXW1RTSPbDYL+/v79Pfi4iLvUgu0F7+7u0sPmJ2dpTwSiVhEmyMUClG9tbU1yjOZDOtRD7QXj7PX4/FAX18f5QsLCxbZ5ojH41QP1z7MzYcSndBePNLa2gp+v582FDzhtbe3W4RjtLS00BeF9aqqqih0BX+JtbW1cH9/T7ndzfXt7Q3q6+sLvlJwJN5Y53t6eijHYzPOkObmZvD5fNDU1ASjo6Pw+vpK5Z2dnVR/enqa9aQvdme8XRyJR/CdFR+MV7/41vI3cKZHo1Gq19bWRm82pYK24vHia3x8nB6OF2U4w1OpFG2+eG+NAwoGg1Qei8Xyfjm6YuxdNzc3lPOlBg9auNyiAyc4Fm+QTqehoaGBBsWjpqYG5ubmeJOSAPeu8/PzXM7FI/iigGu7E4oWb3ByckKzHgfX29sLR0dHJbW0/Au+1BSLa+IRtwenE8aMX11d5UWOEPEFgq+ZeFVycXHBixzhqngcXGNjY8E3dP8zrooXCkfEK0LEK0LEK0LEK0LEK0LEK0LEK+IX1vpxDmvtWvAAAAAASUVORK5CYII=';
   window._waitingForSend = false;
+  window._autoHintActive = false;
   // Reset step button
   document.getElementById('stepNext').disabled = false;
   // text removed
@@ -1333,6 +1334,7 @@ function positionHint() {
 
 function showAutoHint(label, callback) {
   clearClickHints();
+  window._autoHintActive = true;
   var hint = document.createElement('div');
   hint.className = 'auto-hint';
   hint.innerHTML = '<div class=\"hint-label\">No user prompt needed</div><div class=\"hint-action\">click or press any key</div>';
@@ -1340,6 +1342,7 @@ function showAutoHint(label, callback) {
   function trigger() {
     if (fired) return;
     fired = true;
+    window._autoHintActive = false;
     hint.remove();
     document.removeEventListener('keydown', onKey);
     if (callback) callback();
@@ -1347,10 +1350,11 @@ function showAutoHint(label, callback) {
   function onKey(e) {
     if (e.key === 'Escape') return;
     e.preventDefault();
+    e.stopImmediatePropagation();
     trigger();
   }
   hint.addEventListener('click', trigger);
-  document.addEventListener('keydown', onKey);
+  document.addEventListener('keydown', onKey, true);
   document.body.appendChild(hint);
 }
 
@@ -1413,6 +1417,7 @@ document.addEventListener('keydown', (e) => {
     resetDemo();
     return;
   }
+  if (window._autoHintActive || window._waitingForSend) return;
   if (e.key === 'ArrowRight' || e.key === ' ') {
     e.preventDefault();
     if (step === 0) startDemo();

@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
@@ -351,12 +351,55 @@
   @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
   @keyframes fadeInUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
   @keyframes slideInRight { from { opacity: 0; transform: translateX(20px); } to { opacity: 1; transform: translateX(0); } }
+  @keyframes pulse { 0%, 100% { box-shadow: 0 0 0 0 rgba(123,87,255,0.4); } 50% { box-shadow: 0 0 0 8px rgba(123,87,255,0); } }
   .anim-fadein { animation: fadeIn 0.4s ease both; }
   .anim-fadeinup { animation: fadeInUp 0.4s ease both; }
   .anim-slidein { animation: slideInRight 0.4s ease both; }
 
   .hidden { display: none !important; }
   .invisible { opacity: 0; }
+
+  /* ═══ Click Hints ═══ */
+  .click-hint {
+    position: fixed; z-index: 200;
+    background: rgba(30,30,30,0.94); color: #B4A0FF;
+    font-size: 11px; font-weight: 600; font-family: var(--font);
+    padding: 4px 10px; border-radius: 12px;
+    white-space: nowrap; pointer-events: none;
+    animation: pulse 1.5s ease infinite;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+  }
+  .click-hint::after {
+    content: ''; position: absolute;
+    top: 50%; right: -10px; transform: translateY(-50%);
+    border: 5px solid transparent; border-left-color: rgba(30,30,30,0.94);
+  }
+  .click-hint.arrow-left::after {
+    right: auto; left: -10px;
+    border-left-color: transparent; border-right-color: rgba(30,30,30,0.94);
+  }
+  .click-target { animation: pulse 2s ease infinite; border-radius: 6px; }
+  .end-overlay {
+    position: fixed; inset: 0; z-index: 300;
+    background: rgba(0,0,0,0.7); display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    opacity: 0; pointer-events: none; transition: opacity 0.6s ease;
+  }
+  .end-overlay.visible { opacity: 1; pointer-events: auto; }
+  .end-overlay .fin { font-size: 48px; font-weight: 300; color: white; font-style: italic; font-family: Georgia, serif; }
+  .end-overlay .sub { font-size: 14px; color: rgba(255,255,255,0.5); margin-top: 8px; }
+  .auto-hint {
+    position: fixed; bottom: 24px; right: 24px; z-index: 200;
+    background: rgba(30,30,30,0.94); color: white;
+    font-size: 12px; font-family: var(--font); line-height: 1.5;
+    padding: 12px 18px; border-radius: 10px; cursor: pointer;
+    backdrop-filter: blur(12px); box-shadow: 0 4px 20px rgba(0,0,0,0.25);
+    border-left: 3px solid #B4A0FF;
+    animation: fadeInUp 0.4s ease both; transition: background 0.2s;
+  }
+  .auto-hint:hover { background: rgba(50,50,50,0.95); }
+  .auto-hint .hint-label { font-size: 10px; color: #B4A0FF; text-transform: uppercase; letter-spacing: 1px; font-weight: 600; margin-bottom: 4px; }
+  .auto-hint .hint-action { color: rgba(255,255,255,0.9); }
 
   /* ═══ Reset Button ═══ */
   .reset-btn { position: fixed; top: 12px; left: calc(var(--sidebar-w) + 12px); z-index: 100; padding: 5px 12px; border-radius: 14px; border: 1px solid var(--border); background: var(--surface); font-size: 11px; cursor: pointer; font-family: var(--font); color: var(--text-secondary); box-shadow: 0 1px 4px rgba(0,0,0,0.06); transition: all 0.2s; }
@@ -529,6 +572,11 @@
             </div>
           </div>
 
+          <!-- ═══ BEAT 1b: User asks about Sarah's comments ═══ -->
+          <div class="user-msg hidden" id="beat1b">
+            <div class="bubble">What did Sarah say?</div>
+          </div>
+
           <!-- ═══ BEAT 2: Suggested response ═══ -->
           <div class="copilot-msg hidden" id="beat2">
             <div class="body">
@@ -635,13 +683,13 @@
             </div>
             <div class="suggestion-card" style="margin-top: 8px;">
               <div class="suggestion-card-actions" style="border-top: none;">
-                <button class="action-btn primary" onclick="nextStep()">Notify CFO</button>
+                <button class="action-btn primary" onclick="nextStep()">Draft email to CFO</button>
                 <button class="action-btn ghost">Move on →</button>
               </div>
             </div>
           </div>
 
-          <!-- ═══ BEAT 9: Notify CFO with friction ═══ -->
+          <!-- ═══ BEAT 9: Draft email to CFO ═══ -->
           <div class="copilot-msg hidden" id="beat9">
             <div class="agent-label"><img src="data:image/png;base64,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" style="height:26px;" alt="Copilot"></div>
             <div class="body">
@@ -664,11 +712,15 @@
                 <span style="font-size:11px; color:var(--red); display:flex; align-items:center; gap:4px;">⚠️ Sending to: 1 executive recipient</span>
                 <div style="margin-left:auto; display:flex; gap:8px;">
                   <button class="action-btn secondary">Edit draft</button>
-                  <button class="action-btn primary">Send</button>
+                  <button class="action-btn primary" id="sendCFOBtn" onclick="nextStep()">Send</button>
                 </div>
               </div>
             </div>
-            <div class="confirm-chip" style="margin-top:8px;">✓ Email sent to Sarah Chen (CFO)</div>
+          </div>
+
+          <!-- ═══ BEAT 9b: Email sent confirmation ═══ -->
+          <div class="copilot-msg hidden" id="beat9b">
+            <div class="confirm-chip">✓ Email sent to Sarah Chen (CFO)</div>
             <div class="body" style="margin-top: 10px;">
               <p>Budget workstream wrapped. What else do you want to work on?</p>
             </div>
@@ -941,6 +993,12 @@
   <div class="user-msg"><div class="bubble">Yes, go ahead</div></div>
   <div class="copilot-msg"><div class="agent-label"><img src="data:image/png;base64,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" style="height:22px;" alt="Copilot"></div><div class="body"><p>Pulling competitive data from <strong>Competitive_Analysis_Q3.xlsx</strong> and drafting Slide 7…</p><div class="confirm-chip" style="margin-top:6px;">✓ Slide 7 — Competitive Landscape drafted</div><p style="margin-top:10px;">The slide includes a 4-quadrant competitor map and 3 key differentiators. I've also outlined Slide 8 (GTM timeline) based on your product roadmap dates.</p><p>Want to review in PowerPoint, or should I finalize and move to the GTM slide?</p></div></div>
 </div>
+<!-- ═══ END OVERLAY ═══ -->
+<div class="end-overlay" id="endOverlay">
+  <div class="fin">Fin.</div>
+  <div class="sub">(end of demo)</div>
+</div>
+
 <!-- ═══ STEP BAR ═══ -->
 <div class="step-bar hidden" id="stepBar">
   <button class="step-prev" id="stepPrev" onclick="prevStep()">←</button>
@@ -950,7 +1008,7 @@
 
 <script>
 let step = 0;
-const totalSteps = 12;
+const totalSteps = 13;
 const stepLabels = [
   '',
   'Beat 1 — Copilot surfaces changes proactively',
@@ -961,10 +1019,11 @@ const stepLabels = [
   'Beat 6 — Word opens, side pane pre-briefed',
   'Beat 7 — User finishes in Word, heads back',
   'Beat 8 — BizChat knows what happened in Word',
-  'Beat 9 — Notify CFO with proportional friction',
-  'Beat 10 — Click Product Strategy — continue from here',
-  'Beat 11 — Hiring chat shows cross-reference',
-  'Beat 12 — Strategy chat with full cross-reference'
+  'Beat 9 — Draft email to CFO',
+  'Beat 10 — Email sent, budget wrapped',
+  'Beat 11 — Click Product Strategy — continue from here',
+  'Beat 12 — Hiring chat shows cross-reference',
+  'Beat 13 — Strategy chat with full cross-reference'
 ];
 
 function startDemo() {
@@ -977,10 +1036,11 @@ function startDemo() {
 function resetDemo() {
   document.getElementById('landing').classList.remove('hidden');
   document.getElementById('stepBar').classList.add('hidden');
+  document.getElementById('endOverlay').classList.remove('visible');
   document.getElementById('bizchatView').classList.remove('collapsed');
   document.getElementById('wordView').classList.remove('expanded');
   // Reset all beats
-  ['beat1','beat2','beat3','beat4','beat5','beat7msg','beat7reply','beat8','beat9','beat10'].forEach(id => {
+  ['beat1','beat1b','beat2','beat3','beat4','beat5','beat7msg','beat7reply','beat8','beat9','beat9b','beat10'].forEach(id => {
     const el = document.getElementById(id);
     if (el) { el.classList.add('hidden'); el.classList.remove('anim-fadeinup','anim-slidein'); }
   });
@@ -1019,76 +1079,31 @@ function prevStep() {
 }
 
 function undoStep(n) {
-  // Reverse the state changes made by step n
-  if (n === 12) {
-    // Undo strategy chat switch
-    document.getElementById('convoInner').style.display = '';
-    document.getElementById('altChatView').classList.add('hidden');
-    document.querySelectorAll('.chat-list-item').forEach(el => el.classList.remove('active'));
-    document.getElementById('chatHiring').classList.add('active');
-    document.getElementById('topbarTitle').textContent = 'Hiring Plan — Eng';
-    switchToAltChat('hiring');
-    document.getElementById('stepNext').disabled = false;
-    // text removed
-  }
-  else if (n === 11) {
-    // Undo cross-chat switch
-    document.getElementById('convoInner').style.display = '';
-    document.getElementById('altChatView').classList.add('hidden');
-    document.querySelectorAll('.chat-list-item').forEach(el => el.classList.remove('active'));
-    document.getElementById('chatBudget').classList.add('active');
-    document.getElementById('topbarTitle').textContent = 'Q3 Budget Review';
-    document.getElementById('stepNext').disabled = false;
-    // text removed
-  }
-  else if (n === 10) {
-    // Undo alt chat, go back to main convo
-    document.getElementById('convoInner').style.display = '';
-    document.getElementById('altChatView').classList.add('hidden');
-    document.querySelectorAll('.chat-list-item').forEach(el => el.classList.remove('active'));
-    document.getElementById('chatBudget').classList.add('active');
-    document.getElementById('topbarTitle').textContent = 'Q3 Budget Review';
-  }
-  else if (n === 9) {
-    hideEl('beat9');
-    document.getElementById('xrefHiring').classList.remove('visible');
-    document.getElementById('xrefStrategy').classList.remove('visible');
-    document.getElementById('statusBudget').classList.remove('visible');
-    document.getElementById('statusStrategy').classList.remove('visible');
-    document.getElementById('statusHiring').classList.remove('visible');
-    document.getElementById('stepNext').disabled = false;
-    // text removed
-  }
-  else if (n === 8) {
-    hideEl('beat8');
-    // Go back to Word view
-    document.getElementById('bizchatView').classList.add('collapsed');
-    document.getElementById('wordView').classList.add('expanded');
-  }
-  else if (n === 7) {
-    hideEl('beat7msg');
-    hideEl('beat7reply');
-  }
-  else if (n === 6) {
-    // Undo Word transition - go back to BizChat
-    document.getElementById('wordView').classList.remove('expanded');
-    document.getElementById('bizchatView').classList.remove('collapsed');
-  }
-  else if (n === 5) {
-    hideEl('beat5');
-  }
-  else if (n === 4) {
-    hideEl('beat4');
-  }
-  else if (n === 3) {
-    hideEl('beat3');
-  }
-  else if (n === 2) {
-    hideEl('beat2');
-  }
-  else if (n === 1) {
-    hideEl('beat1');
-  }
+  if (n === 13) {
+    document.getElementById('convoInner').style.display='';document.getElementById('altChatView').classList.add('hidden');
+    document.querySelectorAll('.chat-list-item').forEach(el=>el.classList.remove('active'));
+    document.getElementById('chatHiring').classList.add('active');document.getElementById('stepNext').disabled=false;
+  } else if (n === 12) {
+    document.getElementById('convoInner').style.display='';document.getElementById('altChatView').classList.add('hidden');
+    document.querySelectorAll('.chat-list-item').forEach(el=>el.classList.remove('active'));
+    document.getElementById('chatStrategy').classList.add('active');document.getElementById('topbarTitle').textContent='Product Strategy H2';
+  } else if (n === 11) {
+    document.getElementById('convoInner').style.display='';document.getElementById('altChatView').classList.add('hidden');
+    document.querySelectorAll('.chat-list-item').forEach(el=>el.classList.remove('active'));
+    document.getElementById('chatBudget').classList.add('active');document.getElementById('topbarTitle').textContent='Q3 Budget Review';
+  } else if (n === 10) {
+    hideEl('beat9b');
+    document.getElementById('xrefHiring').classList.remove('visible');document.getElementById('xrefStrategy').classList.remove('visible');
+    document.getElementById('statusBudget').classList.remove('visible');document.getElementById('statusStrategy').classList.remove('visible');document.getElementById('statusHiring').classList.remove('visible');
+  } else if (n === 9) { hideEl('beat9'); }
+  else if (n === 8) { hideEl('beat8');document.getElementById('bizchatView').classList.add('collapsed');document.getElementById('wordView').classList.add('expanded'); }
+  else if (n === 7) { hideEl('beat7msg');hideEl('beat7reply'); }
+  else if (n === 6) { document.getElementById('wordView').classList.remove('expanded');document.getElementById('bizchatView').classList.remove('collapsed'); }
+  else if (n === 5) { hideEl('beat5'); }
+  else if (n === 4) { hideEl('beat4'); }
+  else if (n === 3) { hideEl('beat3'); }
+  else if (n === 2) { hideEl('beat2'); }
+  else if (n === 1) { hideEl('beat1'); }
 }
 
 function hideEl(id) {
@@ -1111,89 +1126,76 @@ function showStep(n) {
   }
 
   if (n === 1) {
-    revealBeat('beat1');
-    showAnn('ann1');
-    scrollConvo();
+    revealBeat('beat1'); showAnn('ann1'); scrollConvo();
+    showAutoHint('Proactive \u2014 no user prompt needed', function(){
+      var ub = document.getElementById('beat1b');
+      ub.classList.remove('hidden'); ub.classList.add('anim-fadeinup');
+      scrollConvo();
+      setTimeout(function(){ step=2; showStep(2); }, 800);
+    });
   }
   else if (n === 2) {
-    revealBeat('beat2');
-    showAnn('ann2');
-    scrollConvo();
+    revealBeat('beat2'); showAnn('ann2'); scrollConvo();
+    setTimeout(function(){ var b=document.querySelector('#beat2 .action-btn.primary'); if(b) showClickHint(b,'Click here'); }, 800);
   }
   else if (n === 3) {
-    revealBeat('beat3');
-    showAnn('ann3');
-    scrollConvo();
+    revealBeat('beat3'); showAnn('ann3'); scrollConvo();
+    setTimeout(function(){ var b=document.querySelector('#beat3 .action-btn.primary'); if(b) showClickHint(b,'Click here'); }, 500);
   }
   else if (n === 4) {
-    revealBeat('beat4');
-    showAnn('ann4');
-    scrollConvo();
+    revealBeat('beat4'); showAnn('ann4'); scrollConvo();
+    setTimeout(function(){ var b=document.querySelector('#beat4 .action-btn.primary'); if(b) showClickHint(b,'Click here'); }, 500);
   }
   else if (n === 5) {
-    revealBeat('beat5');
-    showAnn('ann5');
-    scrollConvo();
-    // Prepare for transition
+    revealBeat('beat5'); showAnn('ann5'); scrollConvo();
+    showAutoHint('Copilot is opening the document', function(){ step=6; showStep(6); });
   }
   else if (n === 6) {
-    // Transition to Word
     document.getElementById('bizchatView').classList.add('collapsed');
     document.getElementById('wordView').classList.add('expanded');
-    setTimeout(() => showAnn('ann6'), 600);
+    setTimeout(function(){ showAnn('ann6'); showAutoHint('Word opens with context', function(){ step=7; showStep(7); }); }, 600);
   }
   else if (n === 7) {
-    // User says done in Word pane
-    const msg = document.getElementById('beat7msg');
-    const reply = document.getElementById('beat7reply');
-    msg.classList.remove('hidden');
-    msg.classList.add('anim-fadeinup');
-    setTimeout(() => {
-      reply.classList.remove('hidden');
-      reply.classList.add('anim-fadeinup');
-    }, 800);
+    var m=document.getElementById('beat7msg'); var r=document.getElementById('beat7reply');
+    m.classList.remove('hidden'); m.classList.add('anim-fadeinup');
+    setTimeout(function(){ r.classList.remove('hidden'); r.classList.add('anim-fadeinup'); }, 800);
     showAnn('ann7');
-    // Scroll word pane messages
-    const wpMsgs = document.querySelector('.wcp-messages');
-    setTimeout(() => { wpMsgs.scrollTop = wpMsgs.scrollHeight; }, 200);
+    var wp=document.querySelector('.wcp-messages'); setTimeout(function(){ wp.scrollTop=wp.scrollHeight; }, 200);
+    showAutoHint('User finishes in Word', function(){ step=8; showStep(8); });
   }
   else if (n === 8) {
-    // Transition back to BizChat
     document.getElementById('wordView').classList.remove('expanded');
     document.getElementById('bizchatView').classList.remove('collapsed');
-    setTimeout(() => {
-      revealBeat('beat8');
-      scrollConvo();
-      showAnn('ann8');
+    setTimeout(function(){
+      revealBeat('beat8'); scrollConvo(); showAnn('ann8');
+      setTimeout(function(){ var b=document.querySelector('#beat8 .action-btn.primary'); if(b) showClickHint(b,'Click here'); }, 800);
     }, 600);
   }
   else if (n === 9) {
-    // Notify CFO
-    revealBeat('beat9');
-    showAnn('ann9');
-    scrollConvo();
-    // Show cross-ref badges in sidebar + status icons
+    revealBeat('beat9'); showAnn('ann9'); scrollConvo();
+    setTimeout(function(){ var b=document.getElementById('sendCFOBtn'); if(b) showClickHint(b,'Click here'); }, 500);
+  }
+  else if (n === 10) {
+    revealBeat('beat9b'); scrollConvo(); showAnn('ann10');
     document.getElementById('xrefHiring').classList.add('visible');
     document.getElementById('xrefStrategy').classList.add('visible');
     document.getElementById('statusBudget').classList.add('visible');
     document.getElementById('statusStrategy').classList.add('visible');
     document.getElementById('statusHiring').classList.add('visible');
-  }
-  else if (n === 10) {
-    // User clicks Product Strategy in sidebar, says "go ahead"
-    switchToAltChat('strategy');
-    showAnn('ann10');
+    setTimeout(function(){ showClickHint(document.getElementById('chatStrategy'),'Click here','right'); }, 1000);
   }
   else if (n === 11) {
-    // Switch to Hiring chat
-    switchToAltChat('hiring');
-    showAnn('ann11');
+    switchToAltChat('strategy'); showAnn('ann11');
+    setTimeout(function(){ showClickHint(document.getElementById('chatHiring'),'Click here','right'); }, 1000);
   }
   else if (n === 12) {
-    // Back to Strategy chat
+    switchToAltChat('hiring'); showAnn('ann12');
+    setTimeout(function(){ showClickHint(document.getElementById('chatStrategy'),'Click here','right'); }, 1000);
+  }
+  else if (n === 13) {
     switchToAltChat('strategy');
-    showAnn('ann12');
     document.getElementById('stepNext').disabled = true;
+    setTimeout(function(){ document.getElementById('endOverlay').classList.add('visible'); }, 2000);
   }
 }
 
@@ -1219,14 +1221,16 @@ function switchToAltChat(chatId) {
 }
 
 function switchChat(chatId) {
-  // Only allow switching after beat 9
-  if (step < 11) return;
-  if (chatId === 'hiring') { step = 11; showStep(11); }
-  else if (chatId === 'strategy') { step = 12; showStep(12); }
+  if (step < 10) return;
+  if (chatId === 'hiring') { step = 12; showStep(12); }
+  else if (chatId === 'strategy') {
+    if (step <= 10) { step = 11; showStep(11); }
+    else { step = 13; showStep(13); }
+  }
   else if (chatId === 'budget') {
     document.getElementById('convoInner').style.display = '';
     document.getElementById('altChatView').classList.add('hidden');
-    document.querySelectorAll('.chat-list-item').forEach(el => el.classList.remove('active'));
+    document.querySelectorAll('.chat-list-item').forEach(function(el){ el.classList.remove('active'); });
     document.getElementById('chatBudget').classList.add('active');
     document.getElementById('topbarTitle').textContent = 'Q3 Budget Review';
   }
@@ -1252,16 +1256,65 @@ function updateDots() {
 }
 
 function hideAllAnns() {
-  for (let i = 1; i <= 12; i++) {
-    const el = document.getElementById('ann' + i);
+  for (var i = 1; i <= 13; i++) {
+    var el = document.getElementById('ann' + i);
     if (el) el.classList.remove('visible');
+  }
+  clearClickHints();
+}
+
+function clearClickHints() {
+  document.querySelectorAll('.click-hint').forEach(function(el){ el.remove(); });
+  document.querySelectorAll('.click-target').forEach(function(el){ el.classList.remove('click-target'); });
+  document.querySelectorAll('.auto-hint').forEach(function(el){ el.remove(); });
+}
+
+var _hintTarget = null;
+var _hintSide = null;
+
+function showClickHint(target, text, side) {
+  clearClickHints();
+  if (!target) return;
+  target.classList.add('click-target');
+  _hintTarget = target;
+  _hintSide = side || 'left';
+  var hint = document.createElement('div');
+  hint.className = 'click-hint';
+  hint.id = 'activeHint';
+  hint.textContent = text || 'Click here';
+  if (side === 'right') hint.classList.add('arrow-left');
+  document.body.appendChild(hint);
+  positionHint();
+}
+
+function positionHint() {
+  var hint = document.getElementById('activeHint');
+  if (!hint || !_hintTarget) return;
+  var rect = _hintTarget.getBoundingClientRect();
+  if (_hintSide === 'right') {
+    hint.style.left = (rect.right + 8) + 'px';
+    hint.style.top = (rect.top + rect.height / 2) + 'px';
+    hint.style.transform = 'translateY(-50%)';
+  } else {
+    hint.style.left = (rect.left - 8) + 'px';
+    hint.style.top = (rect.top + rect.height / 2) + 'px';
+    hint.style.transform = 'translate(-100%, -50%)';
   }
 }
 
+function showAutoHint(label, callback) {
+  clearClickHints();
+  var hint = document.createElement('div');
+  hint.className = 'auto-hint';
+  hint.innerHTML = '<div class=\"hint-label\">' + label + '</div><div class=\"hint-action\">Click to continue \u2192</div>';
+  hint.addEventListener('click', function() { hint.remove(); if (callback) callback(); });
+  document.body.appendChild(hint);
+}
+
 // Map beats to their target elements for positioning
-const beatTargets = {
+var beatTargets = {
   1: 'beat1', 2: 'beat2', 3: 'beat3', 4: 'beat4', 5: 'beat5',
-  6: null, 7: null, 8: 'beat8', 9: 'beat9', 10: null, 11: null, 12: null
+  6: null, 7: null, 8: 'beat8', 9: 'beat9', 10: null, 11: null, 12: null, 13: null
 };
 
 function showAnn(id) {
@@ -1311,6 +1364,12 @@ function showAnn(id) {
 
 // Keyboard nav
 document.addEventListener('keydown', (e) => {
+  // If end overlay is showing, any key resets to landing
+  if (document.getElementById('endOverlay').classList.contains('visible')) {
+    document.getElementById('endOverlay').classList.remove('visible');
+    resetDemo();
+    return;
+  }
   if (e.key === 'ArrowRight' || e.key === ' ') {
     e.preventDefault();
     if (step === 0) startDemo();
@@ -1322,6 +1381,9 @@ document.addEventListener('keydown', (e) => {
   }
   if (e.key === 'Escape') resetDemo();
 });
+
+// Reposition hint on scroll
+document.getElementById('convoArea').addEventListener('scroll', positionHint);
 </script>
 
 </body>

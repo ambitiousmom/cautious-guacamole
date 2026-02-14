@@ -1574,8 +1574,9 @@ function showAnn(id) {
   var ids = id.split(',');
   var isWordView = document.getElementById('wordView') && document.getElementById('wordView').classList.contains('expanded');
   var annW = 280;
-  var cardH = 120; // estimated card height
-  var totalH = ids.length * cardH + (ids.length - 1) * 16; // cards + gaps
+  var cardH = 140; // estimated card height
+  var gap = 24;
+  var totalH = ids.length * cardH + (ids.length - 1) * gap;
   var startTop = Math.max(60, (window.innerHeight - totalH) / 2);
 
   ids.forEach(function(annId, idx) {
@@ -1587,7 +1588,7 @@ function showAnn(id) {
 
     setTimeout(function() {
       annEl.classList.add('visible');
-      var top = startTop + idx * (cardH + 16);
+      var top = startTop + idx * (cardH + gap);
 
       if (isWordView) {
         var wordPane = document.querySelector('.word-copilot-pane');

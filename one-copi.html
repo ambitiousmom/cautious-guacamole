@@ -1012,13 +1012,25 @@
   <div class="ann-tag"><span class="ann-num">2</span> Ambient Awareness</div>
   <div class="ann-body">Inside the chat, Copilot shows <strong>exactly what changed while you were away</strong>: Sarah’s comments, updated spreadsheets, refreshed data. Context first, not a blank prompt.</div>
 </div>
+<div class="ann" id="ann1b" data-target="beat1">
+  <div class="ann-tag"><span class="ann-num">2b</span> Persistent Memory</div>
+  <div class="ann-body">Yesterday’s conversation is still here. Today’s changes layer on top. Copilot’s memory <strong>spans sessions</strong> — it doesn’t start fresh every morning.</div>
+</div>
 <div class="ann" id="ann2" data-target="beat2">
   <div class="ann-tag"><span class="ann-num">3</span> Cross-Artifact Reasoning &amp; Grounding</div>
   <div class="ann-body">Copilot cross-referenced the CFO’s comment with live Excel data and drafted a suggested reply — <strong>with citations to specific cells</strong>. The user reviews, not writes.</div>
 </div>
+<div class="ann" id="ann2b" data-target="beat2">
+  <div class="ann-tag"><span class="ann-num">3b</span> Explainable Reasoning</div>
+  <div class="ann-body">Copilot shows <strong>why</strong> it chose those sources — the citations aren’t decoration, they’re the reasoning chain made visible. Every claim is traceable.</div>
+</div>
 <div class="ann" id="ann3" data-target="beat3">
   <div class="ann-tag"><span class="ann-num">4</span> Agency Through Transparency</div>
   <div class="ann-body">Reply posted <strong>as the user</strong>, not as Copilot. The EA model: Copilot drafts, the user’s name goes on it. One click to approve. <em>Trust through transparency.</em></div>
+</div>
+<div class="ann" id="ann3b" data-target="beat3">
+  <div class="ann-tag"><span class="ann-num">4b</span> Correctable by Default</div>
+  <div class="ann-body">Every action has an <strong>edit, dismiss, or override</strong> option. Copilot assumes it might be wrong — the UI always offers a way to correct course.</div>
 </div>
 <div class="ann" id="ann4a" data-target="beat4">
   <div class="ann-tag"><span class="ann-num">5a</span> Flow Preservation</div>
@@ -1027,6 +1039,10 @@
 <div class="ann" id="ann4b" data-target="beat4">
   <div class="ann-tag"><span class="ann-num">5b</span> Orchestrate for the Job-to-be-Done</div>
   <div class="ann-body">Copilot offers to post the reply <strong>and</strong> insert the data table into the Word doc — two actions, one click.</div>
+</div>
+<div class="ann" id="ann4c" data-target="beat4">
+  <div class="ann-tag"><span class="ann-num">5c</span> Calibrated Confidence</div>
+  <div class="ann-body">“Tight but feasible” — Copilot <strong>qualifies its assessment</strong>, not just states it. Confidence is proportional to the data, not absolute.</div>
 </div>
 <div class="ann" id="ann5" data-target="beat5">
   <div class="ann-tag"><span class="ann-num">6</span> Intelligent Surface Handoff</div>
@@ -1286,7 +1302,7 @@ function showStep(n) {
   if (n === 1) {
     // Hide blue dot for Q3 Budget (user clicked into it)
     document.getElementById('statusBudget').style.display = 'none';
-    revealBeat('beat1'); showAnn('ann1'); scrollConvo();
+    revealBeat('beat1'); showAnn('ann1,ann1b'); scrollConvo();
     // Show click hint on the input bar — clicking types "What did Sarah say?"
     window._waitingForSend = true;
     setTimeout(function(){
@@ -1317,16 +1333,16 @@ function showStep(n) {
     scrollConvo();
     // Then reveal Copilot response after delay
     setTimeout(function(){
-      revealBeat('beat2'); showAnn('ann2'); scrollConvo();
+      revealBeat('beat2'); showAnn('ann2,ann2b'); scrollConvo();
       setTimeout(function(){ var b=document.querySelector('#beat2 .action-btn.primary'); if(b) showClickHint(b,'Click here'); }, 800);
     }, 600);
   }
   else if (n === 3) {
-    revealBeat('beat3'); showAnn('ann3'); scrollConvo();
+    revealBeat('beat3'); showAnn('ann3,ann3b'); scrollConvo();
     setTimeout(function(){ var b=document.querySelector('#beat3 .action-btn.primary'); if(b) showClickHint(b,'Click here'); }, 500);
   }
   else if (n === 4) {
-    revealBeat('beat4'); showAnn('ann4a,ann4b'); scrollConvo();
+    revealBeat('beat4'); showAnn('ann4a,ann4b,ann4c'); scrollConvo();
     setTimeout(function(){ var b=document.querySelector('#beat4 .action-btn.primary'); if(b) showClickHint(b,'Click here'); }, 500);
   }
   else if (n === 5) {

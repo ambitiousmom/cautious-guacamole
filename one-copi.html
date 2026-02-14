@@ -468,14 +468,14 @@
       <div class="sidebar-section">
         <div class="section-header">Chats <span class="search-icon">🔍</span></div>
         <div class="chat-list-item active" id="chatBudget" onclick="switchChat('budget')">
-          <div class="chat-title-row"><span class="chat-title-text">Q3 Budget Review</span><span class="chat-status" id="statusBudget">✅</span></div>
+          <div class="chat-title-row"><span class="chat-title-text">Q3 Budget Review</span><span class="chat-status" id="statusBudget">🔔</span></div>
         </div>
         <div class="chat-list-item" id="chatStrategy" onclick="switchChat('strategy')">
-          <div class="chat-title-row"><span class="chat-title-text">Product Strategy H2</span><span class="chat-status" id="statusStrategy">🟠</span></div>
+          <div class="chat-title-row"><span class="chat-title-text">Product Strategy H2</span><span class="chat-status" id="statusStrategy">�</span></div>
           <span class="xref" id="xrefStrategy">↳ referenced today</span>
         </div>
         <div class="chat-list-item" id="chatHiring" onclick="switchChat('hiring')">
-          <div class="chat-title-row"><span class="chat-title-text">Hiring Plan — Eng</span><span class="chat-status" id="statusHiring">🟡</span></div>
+          <div class="chat-title-row"><span class="chat-title-text">Hiring Plan — Eng</span><span class="chat-status" id="statusHiring">�</span></div>
           <span class="xref" id="xrefHiring">↳ data pulled today</span>
         </div>
         <div class="chat-list-item"><span class="chat-title-text">Comparing Decks for...</span></div>
@@ -540,7 +540,33 @@
           <div id="beat0greeting" style="text-align:center; padding:40px 20px;">
             <div style="font-size:24px; margin-bottom:8px;">☀️</div>
             <div style="font-size:18px; font-weight:600; color:var(--text); margin-bottom:6px;">Good morning</div>
-            <div style="font-size:13px; color:var(--text-secondary); line-height:1.6;">Your morning check-in is ready.<br/>3 workstreams need attention.</div>
+            <div style="font-size:13px; color:var(--text-secondary); line-height:1.6; margin-bottom:20px;">Your morning check-in is ready.</div>
+            <div style="text-align:left; max-width:360px; margin:0 auto;">
+              <div id="checkinItem1" onclick="advanceFromCheckin()" style="display:flex; align-items:center; gap:10px; padding:10px 14px; background:var(--blue-light); border:1px solid var(--border); border-radius:8px; margin-bottom:8px; cursor:pointer; transition:background 0.15s;">
+                <span style="font-size:14px;">🔔</span>
+                <div style="flex:1;">
+                  <div style="font-size:13px; font-weight:600; color:var(--text);">Q3 Budget Review</div>
+                  <div style="font-size:11px; color:var(--text-secondary);">Sarah Chen (CFO) left 2 comments</div>
+                </div>
+                <span style="font-size:11px; color:var(--red); font-weight:600;">Urgent</span>
+              </div>
+              <div style="display:flex; align-items:center; gap:10px; padding:10px 14px; background:var(--surface); border:1px solid var(--border); border-radius:8px; margin-bottom:8px; opacity:0.7;">
+                <span style="font-size:14px;">🔔</span>
+                <div style="flex:1;">
+                  <div style="font-size:13px; font-weight:600; color:var(--text);">Product Strategy H2</div>
+                  <div style="font-size:11px; color:var(--text-secondary);">Deck due tomorrow — 2 slides missing</div>
+                </div>
+                <span style="font-size:11px; color:var(--yellow); font-weight:600;">Due soon</span>
+              </div>
+              <div style="display:flex; align-items:center; gap:10px; padding:10px 14px; background:var(--surface); border:1px solid var(--border); border-radius:8px; opacity:0.5;">
+                <span style="font-size:14px;">🔔</span>
+                <div style="flex:1;">
+                  <div style="font-size:13px; font-weight:600; color:var(--text);">Hiring Plan — Eng</div>
+                  <div style="font-size:11px; color:var(--text-secondary);">Pipeline data refreshed overnight</div>
+                </div>
+                <span style="font-size:11px; color:var(--text-muted);">Updated</span>
+              </div>
+            </div>
           </div>
 
           <!-- ═══ BEAT 1: Proactive card ═══ -->
@@ -1024,19 +1050,23 @@ const stepLabels = [
 
 function startDemo() {
   document.getElementById('landing').classList.add('hidden');
-  // Beat 0: Show BizChat with sidebar status icons and morning greeting
+  // Beat 0: Show BizChat with sidebar bell icons and morning greeting
   document.getElementById('statusBudget').classList.add('visible');
   document.getElementById('statusStrategy').classList.add('visible');
   document.getElementById('statusHiring').classList.add('visible');
   document.getElementById('stepBar').classList.remove('hidden');
   step = 0;
-  // Show auto-hint to advance
-  showAutoHint('Morning check-in', function(){
-    // Hide greeting, show beat 1
-    document.getElementById('beat0greeting').style.display = 'none';
-    step = 1;
-    showStep(1);
-  });
+  // Show click hint on Q3 Budget Review checkin item
+  setTimeout(function(){
+    showClickHint(document.getElementById('checkinItem1'), 'Click here');
+  }, 500);
+}
+
+function advanceFromCheckin() {
+  document.getElementById('beat0greeting').style.display = 'none';
+  clearClickHints();
+  step = 1;
+  showStep(1);
 }
 
 function resetDemo() {
@@ -1056,6 +1086,10 @@ function resetDemo() {
   // Reset cross-ref badges
   document.querySelectorAll('.xref').forEach(el => el.classList.remove('visible'));
   document.querySelectorAll('.chat-status').forEach(el => el.classList.remove('visible'));
+  // Reset sidebar icons to bells
+  document.getElementById('statusBudget').textContent = '\uD83D\uDD14';
+  document.getElementById('statusStrategy').textContent = '\uD83D\uDD14';
+  document.getElementById('statusHiring').textContent = '\uD83D\uDD14';
   // Reset sidebar active state
   document.querySelectorAll('.chat-list-item').forEach(el => el.classList.remove('active'));
   document.getElementById('chatBudget').classList.add('active');
@@ -1213,9 +1247,8 @@ function showStep(n) {
     revealBeat('beat9b'); scrollConvo(); showAnn('ann10');
     document.getElementById('xrefHiring').classList.add('visible');
     document.getElementById('xrefStrategy').classList.add('visible');
-    document.getElementById('statusBudget').classList.add('visible');
-    document.getElementById('statusStrategy').classList.add('visible');
-    document.getElementById('statusHiring').classList.add('visible');
+    // Change budget icon to green check (completed)
+    document.getElementById('statusBudget').textContent = '\u2705';
     setTimeout(function(){ showClickHint(document.getElementById('chatStrategy'),'Click here','right'); }, 1000);
   }
   else if (n === 11) {

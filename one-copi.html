@@ -1008,6 +1008,10 @@
   <div class="ann-tag"><span class="ann-num">1</span> Proactive Intelligence</div>
   <div class="ann-body">Copilot opens with <strong>workstreams triaged by urgency</strong> — not a blank box. It monitored artifacts overnight and surfaces what needs attention. Zero prompts needed.</div>
 </div>
+<div class="ann" id="ann0b" data-target="checkinItem0" style="z-index:200;">
+  <div class="ann-tag"><span class="ann-num">1b</span> Predictive Gen UI</div>
+  <div class="ann-body">This surface is <strong>generated, not static</strong>. It’s “Good morning” now, but it reshapes based on time of day, user context, and artifact state — and dissolves after you act on it.</div>
+</div>
 <div class="ann" id="ann1" data-target="beat1">
   <div class="ann-tag"><span class="ann-num">2</span> Ambient Awareness</div>
   <div class="ann-body">Inside the chat, Copilot shows <strong>exactly what changed while you were away</strong>: Sarah’s comments, updated spreadsheets, refreshed data. Context first, not a blank prompt.</div>
@@ -1162,7 +1166,7 @@ function startDemo() {
   setTimeout(function(){
     var item = document.getElementById('checkinItem0');
     if (item) item.scrollIntoView({ behavior: 'smooth', block: 'center' });
-    setTimeout(function(){ showAnn('ann0'); showClickHint(item, 'Click here'); }, 500);
+    setTimeout(function(){ showAnn('ann0,ann0b'); showClickHint(item, 'Click here'); }, 500);
   }, 300);
 }
 

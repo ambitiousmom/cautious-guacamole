@@ -1033,12 +1033,8 @@
   <div class="ann-body">Copilot decides <strong>the right surface for the task</strong>. Document review needs the full editor. The conversation carries over into the Word Copilot pane.</div>
 </div>
 <div class="ann" id="ann6a" data-target="wordView">
-  <div class="ann-tag"><span class="ann-num">6a</span> Copilot Inside Apps</div>
-  <div class="ann-body">Word opens with tracked changes from Copilot. The side pane has the <strong>full conversation history</strong> — the user picks up exactly where they left off.</div>
-</div>
-<div class="ann" id="ann6b" data-target="wordView">
-  <div class="ann-tag"><span class="ann-num">6b</span> Linked Conversation</div>
-  <div class="ann-body">The Copilot pane mirrors the BizChat conversation. <strong>Same thread, different surface.</strong> Continuity is explicit, not implied.</div>
+  <div class="ann-tag"><span class="ann-num">6</span> Copilot Inside Apps</div>
+  <div class="ann-body">Word opens with tracked changes and the Copilot side pane shows the <strong>full conversation history</strong> from BizChat. Same thread, different surface &#8212; the user picks up exactly where they left off.</div>
 </div>
 <div class="ann" id="ann7">
   <div class="ann-tag"><span class="ann-num">7</span> Linked Context</div>
@@ -1336,7 +1332,7 @@ function showStep(n) {
   else if (n === 6) {
     document.getElementById('bizchatView').classList.add('collapsed');
     document.getElementById('wordView').classList.add('expanded');
-    setTimeout(function(){ showAnn('ann6a,ann6b'); }, 600);
+    setTimeout(function(){ showAnn('ann6a'); }, 600);
     // Show click hint on Word Copilot input bar after Word opens
     var wcpInput = document.querySelector('.wcp-input-bar input');
     window._waitingForWordSend = true;

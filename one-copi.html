@@ -348,8 +348,8 @@
   .ann .ann-tag { font-size: 10px; text-transform: uppercase; letter-spacing: 1.2px; color: #B4A0FF; margin-bottom: 4px; font-weight: 700; }
   .ann .ann-title { font-size: 13px; font-weight: 600; color: white; margin-bottom: 6px; }
   .ann .ann-body { color: rgba(255,255,255,0.85); }
-  .ann-arrow { position: fixed; z-index: 90; pointer-events: none; opacity: 0; transition: opacity 0.5s ease; }
-  .ann-arrow.visible { opacity: 0.8; }
+  .ann-pulse { animation: annPulse 2s ease infinite; border-radius: 8px; }
+  @keyframes annPulse { 0%, 100% { box-shadow: 0 0 0 0 rgba(123,87,255,0.5); } 50% { box-shadow: 0 0 0 6px rgba(123,87,255,0); } }
 
   /* ═══ Animations ═══ */
   @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
@@ -1504,7 +1504,7 @@ function updateDots() {
 
 function hideAllAnns() {
   document.querySelectorAll('.ann').forEach(function(el){ el.classList.remove('visible'); });
-  document.querySelectorAll('.ann-arrow').forEach(function(el){ el.remove(); });
+  document.querySelectorAll('.ann-pulse').forEach(function(el){ el.classList.remove('ann-pulse'); });
   clearClickHints();
 }
 
@@ -1596,132 +1596,43 @@ function showAutoHint(label, callback) {
 
 function showAnn(id) {
   var ids = id.split(',');
+  var isWordView = document.getElementById('wordView') && document.getElementById('wordView').classList.contains('expanded');
+  var annW = 280;
+
   ids.forEach(function(annId, idx) {
     annId = annId.trim();
     var annEl = document.getElementById(annId);
     if (!annEl) return;
     var targetId = annEl.dataset.target;
-    var pos = annEl.dataset.pos || 'right';
     var targetEl = targetId ? document.getElementById(targetId) : null;
 
     setTimeout(function() {
       annEl.classList.add('visible');
-      var annW = 280;
+      var top = 120 + (idx * 180);
 
-      if (targetEl && targetEl.getBoundingClientRect) {
-        var rect = targetEl.getBoundingClientRect();
-        var left, top;
+      // Keep in viewport
+      if (top > window.innerHeight - 200) top = window.innerHeight - 200;
+      if (top < 60) top = 60;
 
-        if (pos === 'right') {
-          // Place at right edge of viewport, vertically near target
-          left = window.innerWidth - annW - 30;
-          top = Math.max(60, Math.min(rect.top + (idx * 170), window.innerHeight - 200));
-        } else if (pos === 'below') {
-          left = window.innerWidth - annW - 30;
-          top = Math.max(60, Math.min(rect.bottom + 20 + (idx * 170), window.innerHeight - 200));
-        } else if (pos === 'overlay-top') {
-          left = rect.left + 60;
-          top = rect.top + 70;
-        } else if (pos === 'overlay-right') {
-          left = window.innerWidth - annW - 30;
-          top = rect.top + 220 + (idx * 170);
-        } else {
-          left = window.innerWidth - annW - 30;
-          top = 100 + (idx * 170);
-        }
-
-        // Keep in viewport
-        if (top > window.innerHeight - 180) top = window.innerHeight - 180 - (idx * 170);
-        if (top < 50) top = 50 + (idx * 170);
-
-        annEl.style.left = left + 'px';
-        annEl.style.top = top + 'px';
-        annEl.style.right = 'auto';
-        annEl.style.bottom = 'auto';
-
-        // Draw arrow after card animation completes
-        setTimeout(function(){ drawArrow(annEl, targetEl, pos); }, 500);
+      if (isWordView) {
+        // Word view: place cards to the left of the Copilot pane
+        var wordPane = document.querySelector('.word-copilot-pane');
+        var paneRect = wordPane ? wordPane.getBoundingClientRect() : { left: window.innerWidth - 340 };
+        annEl.style.left = (paneRect.left - annW - 20) + 'px';
       } else {
-        // Default: right side
-        annEl.style.right = '30px';
-        annEl.style.top = (100 + idx * 170) + 'px';
-        annEl.style.left = 'auto';
-        annEl.style.bottom = 'auto';
+        // BizChat view: place cards at right-center
+        annEl.style.left = (window.innerWidth - annW - 30) + 'px';
+      }
+      annEl.style.top = top + 'px';
+      annEl.style.right = 'auto';
+      annEl.style.bottom = 'auto';
+
+      // Pulse the target element to draw attention
+      if (targetEl) {
+        targetEl.classList.add('ann-pulse');
       }
     }, idx * 300);
   });
-}
-
-function drawArrow(annEl, targetEl, pos) {
-  var aRect = annEl.getBoundingClientRect();
-  var tRect = targetEl.getBoundingClientRect();
-  if (aRect.width === 0 || tRect.width === 0) return;
-
-  // Arrow from card edge to target edge
-  var sx, sy, ex, ey;
-  var cardOnRight = aRect.left > tRect.left;
-
-  if (cardOnRight) {
-    // Card is to the right — arrow goes left from card to target
-    sx = aRect.left + 10;
-    sy = aRect.top + aRect.height / 2;
-    ex = tRect.right + 12;
-    ey = tRect.top + tRect.height * 0.4;
-  } else {
-    // Card is to the left — arrow goes right from card to target
-    sx = aRect.right - 10;
-    sy = aRect.top + aRect.height / 2;
-    ex = tRect.left - 12;
-    ey = tRect.top + tRect.height * 0.4;
-  }
-
-  // Curve control points — create a nice swooping curve
-  var dx = ex - sx;
-  var dy = ey - sy;
-  var cx1 = sx + dx * 0.15;
-  var cy1 = sy + dy * 0.7;
-  var cx2 = sx + dx * 0.6;
-  var cy2 = ey;
-
-  // Calculate arrowhead angle from the last segment of the curve
-  var t = 0.95;
-  var t1 = 1 - t;
-  var px = t1*t1*t1*sx + 3*t1*t1*t*cx1 + 3*t1*t*t*cx2 + t*t*t*ex;
-  var py = t1*t1*t1*sy + 3*t1*t1*t*cy1 + 3*t1*t*t*cy2 + t*t*t*ey;
-  var angle = Math.atan2(ey - py, ex - px);
-  var aLen = 10;
-  var aSpread = 0.45;
-  var ax1 = ex - aLen * Math.cos(angle - aSpread);
-  var ay1 = ey - aLen * Math.sin(angle - aSpread);
-  var ax2 = ex - aLen * Math.cos(angle + aSpread);
-  var ay2 = ey - aLen * Math.sin(angle + aSpread);
-
-  var svgNS = 'http://www.w3.org/2000/svg';
-  var svg = document.createElementNS(svgNS, 'svg');
-  svg.setAttribute('class', 'ann-arrow');
-  svg.style.cssText = 'position:fixed;left:0;top:0;width:100vw;height:100vh;overflow:visible;z-index:90;pointer-events:none;';
-
-  // Main curve
-  var path = document.createElementNS(svgNS, 'path');
-  path.setAttribute('d', 'M'+sx+','+sy+' C'+cx1+','+cy1+' '+cx2+','+cy2+' '+ex+','+ey);
-  path.setAttribute('fill', 'none');
-  path.setAttribute('stroke', '#7B57FF');
-  path.setAttribute('stroke-width', '2.5');
-  path.setAttribute('stroke-linecap', 'round');
-
-  // Arrowhead
-  var head = document.createElementNS(svgNS, 'path');
-  head.setAttribute('d', 'M'+ax1+','+ay1+' L'+ex+','+ey+' L'+ax2+','+ay2);
-  head.setAttribute('fill', 'none');
-  head.setAttribute('stroke', '#7B57FF');
-  head.setAttribute('stroke-width', '2.5');
-  head.setAttribute('stroke-linecap', 'round');
-  head.setAttribute('stroke-linejoin', 'round');
-
-  svg.appendChild(path);
-  svg.appendChild(head);
-  document.body.appendChild(svg);
-  setTimeout(function() { svg.classList.add('visible'); }, 50);
 }
 
 // Keyboard nav

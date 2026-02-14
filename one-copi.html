@@ -345,8 +345,7 @@
   }
   .ann.visible { opacity: 1; transform: translateY(0); display: block; }
   .ann .ann-num { display: inline-block; background: #7B57FF; color: white; width: 20px; height: 20px; border-radius: 50%; text-align: center; line-height: 20px; font-size: 10px; font-weight: 700; margin-right: 6px; vertical-align: middle; }
-  .ann .ann-tag { font-size: 10px; text-transform: uppercase; letter-spacing: 1.2px; color: #B4A0FF; margin-bottom: 4px; font-weight: 700; }
-  .ann .ann-title { font-size: 13px; font-weight: 600; color: white; margin-bottom: 6px; }
+  .ann .ann-tag { font-size: 13px; text-transform: uppercase; letter-spacing: 1px; color: #B4A0FF; margin-bottom: 8px; font-weight: 700; }
   .ann .ann-body { color: rgba(255,255,255,0.85); }
   .ann-pulse { animation: annPulse 2s ease infinite; border-radius: 8px; }
   @keyframes annPulse { 0%, 100% { box-shadow: 0 0 0 0 rgba(123,87,255,0.5); } 50% { box-shadow: 0 0 0 6px rgba(123,87,255,0); } }
@@ -1004,93 +1003,75 @@
 
 </div>
 
-<!-- ═══ ANNOTATIONS ═══ -->
-<div class="ann" id="ann0" data-target="checkinItem0" data-pos="right" style="z-index:200;">
+<!-- ANNOTATIONS -->
+<div class="ann" id="ann0" data-target="checkinItem0" style="z-index:200;">
   <div class="ann-tag"><span class="ann-num">0</span> Proactive Intelligence</div>
-  <div class="ann-title">The Morning Brief</div>
   <div class="ann-body">Copilot opens with <strong>workstreams triaged by urgency</strong> — not a blank box. It monitored artifacts overnight and surfaces what needs attention. Zero prompts needed.</div>
 </div>
-<div class="ann" id="ann1" data-target="beat1" data-pos="right">
+<div class="ann" id="ann1" data-target="beat1">
   <div class="ann-tag"><span class="ann-num">1</span> Ambient Awareness</div>
-  <div class="ann-title">What Changed While You Were Away</div>
-  <div class="ann-body">Inside the chat, Copilot shows <strong>exactly what changed</strong>: Sarah’s comments, updated spreadsheets, refreshed data. The user sees context, not a blank prompt.</div>
+  <div class="ann-body">Inside the chat, Copilot shows <strong>exactly what changed while you were away</strong>: Sarah’s comments, updated spreadsheets, refreshed data. Context first, not a blank prompt.</div>
 </div>
-<div class="ann" id="ann2" data-target="beat2" data-pos="right">
+<div class="ann" id="ann2" data-target="beat2">
   <div class="ann-tag"><span class="ann-num">2</span> Cross-Artifact Reasoning</div>
-  <div class="ann-title">Suggested Reply With Citations</div>
-  <div class="ann-body">Cross-referenced the CFO&#8217;s comment with live Excel data and drafted a reply &#8212; <strong>with citations to specific cells</strong>.</div>
+  <div class="ann-body">Copilot cross-referenced the CFO’s comment with live Excel data and drafted a suggested reply — <strong>with citations to specific cells</strong>. The user reviews, not writes.</div>
 </div>
-<div class="ann" id="ann3" data-target="beat3" data-pos="right">
+<div class="ann" id="ann3" data-target="beat3">
   <div class="ann-tag"><span class="ann-num">3</span> User Agency</div>
-  <div class="ann-title">Act On Behalf, Not As</div>
-  <div class="ann-body">Reply posted <strong>as the user</strong>, not as Copilot. One click to approve. <em>Trust through transparency.</em></div>
+  <div class="ann-body">Reply posted <strong>as the user</strong>, not as Copilot. The EA model: Copilot drafts, the user’s name goes on it. One click to approve. <em>Trust through transparency.</em></div>
 </div>
-<div class="ann" id="ann4a" data-target="beat4" data-pos="right">
+<div class="ann" id="ann4a" data-target="beat4">
   <div class="ann-tag"><span class="ann-num">4a</span> Apps Inside Copilot</div>
-  <div class="ann-title">Excel Analysis &#8212; No App Switch</div>
-  <div class="ann-body">Hiring pipeline pulled <strong>inline in BizChat</strong>. The data table, analysis, and suggested reply &#8212; all in one conversation.</div>
+  <div class="ann-body">Hiring pipeline analysis happens <strong>inline in BizChat</strong> — no app switch. The data table, analysis, and suggested reply all in one conversation.</div>
 </div>
-<div class="ann" id="ann4b" data-target="beat4" data-pos="below">
+<div class="ann" id="ann4b" data-target="beat4">
   <div class="ann-tag"><span class="ann-num">4b</span> Compound Action</div>
-  <div class="ann-title">Draft Reply + Insert Into Doc</div>
-  <div class="ann-body">Copilot offers to post the reply <strong>and</strong> insert the data table into the Word doc &#8212; two actions, one click.</div>
+  <div class="ann-body">Copilot offers to post the reply <strong>and</strong> insert the data table into the Word doc — two actions, one click.</div>
 </div>
-<div class="ann" id="ann5" data-target="beat5" data-pos="right">
+<div class="ann" id="ann5" data-target="beat5">
   <div class="ann-tag"><span class="ann-num">5</span> Seamless Transition</div>
-  <div class="ann-title">&#8220;This One Needs Your Eyes&#8221;</div>
-  <div class="ann-body">Copilot decides <strong>the right surface for the task</strong>. Document review needs the full editor. The conversation carries over.</div>
+  <div class="ann-body">Copilot decides <strong>the right surface for the task</strong>. Document review needs the full editor. The conversation carries over into the Word Copilot pane.</div>
 </div>
-<div class="ann" id="ann6a" data-target="wordView" data-pos="overlay-top">
+<div class="ann" id="ann6a" data-target="wordView">
   <div class="ann-tag"><span class="ann-num">6a</span> Copilot Inside Apps</div>
-  <div class="ann-title">Word Opens With Full Context</div>
-  <div class="ann-body">The document shows tracked changes from Copilot. The side pane has the <strong>full conversation history</strong> &#8212; zero re-orientation.</div>
+  <div class="ann-body">Word opens with tracked changes from Copilot. The side pane has the <strong>full conversation history</strong> — the user picks up exactly where they left off.</div>
 </div>
-<div class="ann" id="ann6b" data-target="wordView" data-pos="overlay-right">
+<div class="ann" id="ann6b" data-target="wordView">
   <div class="ann-tag"><span class="ann-num">6b</span> Linked Conversation</div>
-  <div class="ann-title">Same Thread, Different Surface</div>
-  <div class="ann-body">The Copilot pane mirrors the BizChat conversation exactly. <strong>&#8220;Linked to: Q3 Budget Review&#8221;</strong> makes continuity explicit.</div>
+  <div class="ann-body">The Copilot pane mirrors the BizChat conversation. <strong>Same thread, different surface.</strong> Continuity is explicit, not implied.</div>
 </div>
 <div class="ann" id="ann7">
   <div class="ann-tag"><span class="ann-num">7</span> Linked Context</div>
-  <div class="ann-title">Same Conversation, Seamless Return</div>
-  <div class="ann-body">The user says &#8220;take me back&#8221; and the return to BizChat is <strong>initiated from the same conversation</strong>. The EA walks back with you.</div>
+  <div class="ann-body">The user says “take me back” and the return to BizChat is <strong>initiated from the same conversation</strong>. No tab-switching. The EA walks back with you.</div>
 </div>
-<div class="ann" id="ann8a" data-target="beat8user" data-pos="right">
+<div class="ann" id="ann8a" data-target="beat8user">
   <div class="ann-tag"><span class="ann-num">8a</span> Round-Trip Awareness</div>
-  <div class="ann-title">BizChat Knows What Happened</div>
-  <div class="ann-body">Changes accepted, manual edits &#8212; <strong>BizChat picks it all up</strong>. A continuous record across surfaces.</div>
+  <div class="ann-body">Changes accepted, manual edits — <strong>BizChat picks it all up</strong>. The conversation is a continuous record across surfaces, not two separate histories.</div>
 </div>
-<div class="ann" id="ann8b" data-target="beat8" data-pos="right">
+<div class="ann" id="ann8b" data-target="beat8">
   <div class="ann-tag"><span class="ann-num">8b</span> Proactive Summary</div>
-  <div class="ann-title">Back From Word &#8212; Here&#8217;s What Changed</div>
-  <div class="ann-body">Copilot summarizes exactly what happened in Word: what was accepted, edited, and resolved. <strong>No context lost.</strong></div>
+  <div class="ann-body">Copilot summarizes what happened in Word: what was accepted, what was edited, what’s resolved. <strong>No context lost in the round-trip.</strong></div>
 </div>
-<div class="ann" id="ann9" data-target="beat9" data-pos="right">
+<div class="ann" id="ann9" data-target="beat9">
   <div class="ann-tag"><span class="ann-num">9</span> Graceful Friction</div>
-  <div class="ann-title">High-Stakes Actions Get Guardrails</div>
-  <div class="ann-body">Emailing an executive? Draft shown for review. Recipient seniority flagged. <strong>Send is available but not automatic.</strong></div>
+  <div class="ann-body">Emailing an executive? Draft shown for review. Recipient seniority flagged. <strong>Send is available but not automatic</strong> — the consequence determines the confirmation UX.</div>
 </div>
-<div class="ann" id="ann10a" data-target="chatStrategy" data-pos="right">
+<div class="ann" id="ann10a" data-target="chatStrategy">
   <div class="ann-tag"><span class="ann-num">10a</span> Workstream Pivot</div>
-  <div class="ann-title">Budget Done &#8212; Switch to Strategy</div>
-  <div class="ann-body">The sidebar shows other workstreams with <strong>blue dots</strong> &#8212; items that need attention. Click to pivot.</div>
+  <div class="ann-body">Budget workstream done. The sidebar shows other workstreams with <strong>blue dots</strong> signaling items that need attention. One click to pivot.</div>
 </div>
-<div class="ann" id="ann10b" data-target="beat9b" data-pos="right">
+<div class="ann" id="ann10b" data-target="beat9b">
   <div class="ann-tag"><span class="ann-num">10b</span> Workstream Complete</div>
-  <div class="ann-title">Budget Wrapped &#8212; Email Sent</div>
-  <div class="ann-body">The budget workstream is done. Copilot asks: <strong>what&#8217;s next?</strong> The sidebar makes context-switching effortless.</div>
+  <div class="ann-body">Email sent, budget wrapped. Copilot asks <strong>what’s next?</strong> The sidebar makes context-switching effortless.</div>
 </div>
-<div class="ann" id="ann11" data-target="altChatView" data-pos="right">
+<div class="ann" id="ann11" data-target="altChatView">
   <div class="ann-tag"><span class="ann-num">11</span> Cross-Chat Intelligence</div>
-  <div class="ann-title">Strategy Chat Picks Up The Thread</div>
-  <div class="ann-body"><strong>Copilot already knows</strong> what happened in the budget chat and offers to continue. Chats are episodes &#8212; the intelligence is continuous.</div>
+  <div class="ann-body"><strong>Copilot already knows</strong> what happened in the budget chat and offers to continue. Chats are episodes — the intelligence is continuous.</div>
 </div>
-<div class="ann" id="ann12" data-target="altChatView" data-pos="right">
+<div class="ann" id="ann12" data-target="altChatView">
   <div class="ann-tag"><span class="ann-num">12</span> Bidirectional Context</div>
-  <div class="ann-title">Hiring Chat Knows Its Data Was Used</div>
   <div class="ann-body"><strong>No information orphaned.</strong> The hiring chat shows its pipeline data was pulled into the budget review. Every workstream is connected.</div>
 </div>
-
 <!-- ═══ CONVO: Hiring Plan Chat ═══ -->
 <div class="hidden" id="hiringChatContent">
   <div class="day-divider">Feb 3</div>
@@ -1598,6 +1579,9 @@ function showAnn(id) {
   var ids = id.split(',');
   var isWordView = document.getElementById('wordView') && document.getElementById('wordView').classList.contains('expanded');
   var annW = 280;
+  var cardH = 120; // estimated card height
+  var totalH = ids.length * cardH + (ids.length - 1) * 16; // cards + gaps
+  var startTop = Math.max(60, (window.innerHeight - totalH) / 2);
 
   ids.forEach(function(annId, idx) {
     annId = annId.trim();
@@ -1608,26 +1592,20 @@ function showAnn(id) {
 
     setTimeout(function() {
       annEl.classList.add('visible');
-      var top = 120 + (idx * 180);
-
-      // Keep in viewport
-      if (top > window.innerHeight - 200) top = window.innerHeight - 200;
-      if (top < 60) top = 60;
+      var top = startTop + idx * (cardH + 16);
 
       if (isWordView) {
-        // Word view: place cards to the left of the Copilot pane
         var wordPane = document.querySelector('.word-copilot-pane');
         var paneRect = wordPane ? wordPane.getBoundingClientRect() : { left: window.innerWidth - 340 };
         annEl.style.left = (paneRect.left - annW - 20) + 'px';
       } else {
-        // BizChat view: place cards at right-center
         annEl.style.left = (window.innerWidth - annW - 30) + 'px';
       }
       annEl.style.top = top + 'px';
       annEl.style.right = 'auto';
       annEl.style.bottom = 'auto';
 
-      // Pulse the target element to draw attention
+      // Pulse the target element
       if (targetEl) {
         targetEl.classList.add('ann-pulse');
       }

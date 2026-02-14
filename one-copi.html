@@ -345,7 +345,8 @@
     transition: all 0.4s ease; pointer-events: auto; display: none;
   }
   .ann.visible { opacity: 1; transform: translateY(0); display: block; }
-  .ann .ann-tag { font-size: 10px; text-transform: uppercase; letter-spacing: 1.2px; color: #B4A0FF; margin-bottom: 6px; font-weight: 700; }
+  .ann .ann-tag { font-size: 10px; text-transform: uppercase; letter-spacing: 1.2px; color: #B4A0FF; margin-bottom: 4px; font-weight: 700; }
+  .ann .ann-title { font-size: 13px; font-weight: 600; color: white; margin-bottom: 6px; }
   .ann .ann-body { color: rgba(255,255,255,0.85); }
 
   /* ═══ Animations ═══ */
@@ -1024,52 +1025,64 @@
 <!-- ═══ ANNOTATIONS ═══ -->
 <div class="annotation-panel" id="annotations">
   <div class="ann" id="ann1">
-    <div class="ann-tag">Design Decision</div>
-    <div class="ann-body">Copilot opens with awareness, not a blank box. It monitored artifacts linked to this chat and surfaced what changed. <strong>Zero user prompts.</strong></div>
+    <div class="ann-tag">Proactive Intelligence</div>
+    <div class="ann-title">Copilot Opens With Awareness</div>
+    <div class="ann-body">No blank box. Copilot monitored artifacts linked to this chat overnight and surfaces what changed &#8212; <strong>zero user prompts needed</strong>. The user&#8217;s morning starts with context, not questions.</div>
   </div>
   <div class="ann" id="ann2">
-    <div class="ann-tag">Design Decision</div>
-    <div class="ann-body">Copilot cross-referenced Sarah Chen (CFO)'s comment with the updated Excel actuals and drafted a response — <strong>with citations to specific cells</strong>. The user reviews, not writes.</div>
+    <div class="ann-tag">Cross-Artifact Reasoning</div>
+    <div class="ann-title">Suggested Reply With Citations</div>
+    <div class="ann-body">Copilot cross-referenced the CFO&#8217;s comment with live Excel data and drafted a reply &#8212; <strong>with citations to specific cells</strong>. The user reviews and approves, not researches and writes.</div>
   </div>
   <div class="ann" id="ann3">
-    <div class="ann-tag">Design Decision</div>
-    <div class="ann-body">Comment posted <strong>as the user</strong>, not as Copilot. The EA drafts the reply; the managing director's name goes on it. One click to approve.</div>
+    <div class="ann-tag">User Agency</div>
+    <div class="ann-title">Act On Behalf, Not As</div>
+    <div class="ann-body">Reply posted <strong>as the user</strong>, not as Copilot. The EA model: Copilot drafts, the user&#8217;s name goes on it. One click to approve. <em>Trust through transparency.</em></div>
   </div>
   <div class="ann" id="ann4">
-    <div class="ann-tag">Design Decision</div>
-    <div class="ann-body">Excel analysis happens <strong>inline in BizChat</strong> — no app switch. The data table, the hiring pipeline, the suggested reply — all in one conversation. This is "apps inside Copilot."</div>
+    <div class="ann-tag">Apps Inside Copilot</div>
+    <div class="ann-title">Excel Analysis Without Switching</div>
+    <div class="ann-body">The hiring pipeline, the data table, the suggested reply &#8212; all happen <strong>inline in BizChat</strong>. No app switch needed. This is the &#8220;apps inside Copilot&#8221; pattern: bring the capability to the conversation.</div>
   </div>
   <div class="ann" id="ann5">
-    <div class="ann-tag">Design Decision</div>
-    <div class="ann-body">The transition to Word isn't a "switch" — it's Copilot saying <em>"this one needs your eyes."</em> The conversation follows into the Word side pane. <strong>"Linked to: Q3 Budget Review"</strong> makes continuity explicit.</div>
+    <div class="ann-tag">Seamless Transition</div>
+    <div class="ann-title">&#8220;This One Needs Your Eyes&#8221;</div>
+    <div class="ann-body">The move to Word isn&#8217;t a context switch &#8212; it&#8217;s Copilot deciding <strong>the right surface for the task</strong>. Document review needs the full editor. The conversation carries over into the Word Copilot pane.</div>
   </div>
   <div class="ann" id="ann6">
-    <div class="ann-tag">Design Decision</div>
-    <div class="ann-body">Word Copilot pane shows the BizChat thread history + a summary of what's been done. The user picks up <strong>exactly where they left off</strong> — zero re-orientation.</div>
+    <div class="ann-tag">Copilot Inside Apps</div>
+    <div class="ann-title">Continuous Conversation in Word</div>
+    <div class="ann-body">The Word Copilot pane shows the <strong>full conversation history</strong> from BizChat. The user picks up exactly where they left off &#8212; zero re-orientation. Same thread, different surface.</div>
   </div>
   <div class="ann" id="ann7">
-    <div class="ann-tag">Design Decision</div>
-    <div class="ann-body">The user says "done" in Word and the return to BizChat is <strong>initiated from the same conversation</strong>. No tab-switching. The EA walks back with you.</div>
+    <div class="ann-tag">Linked Context</div>
+    <div class="ann-title">Same Conversation, Seamless Return</div>
+    <div class="ann-body">The user says &#8220;take me back&#8221; in Word and the return to BizChat is <strong>initiated from the same conversation</strong>. No tab-switching. The EA walks back with you.</div>
   </div>
   <div class="ann" id="ann8">
-    <div class="ann-tag">Design Decision</div>
-    <div class="ann-body"><strong>Round-trip awareness.</strong> BizChat knows what happened in Word — which changes were accepted, what the user edited manually. The conversation is a <em>continuous record</em>, not two separate histories.</div>
+    <div class="ann-tag">Round-Trip Awareness</div>
+    <div class="ann-title">BizChat Knows What Happened in Word</div>
+    <div class="ann-body">Which changes were accepted, what the user edited manually &#8212; <strong>BizChat picks it all up</strong>. The conversation is a continuous record across surfaces, not two separate histories.</div>
   </div>
   <div class="ann" id="ann9">
-    <div class="ann-tag">Design Decision</div>
-    <div class="ann-body"><strong>Graceful friction.</strong> The email draft is shown for review. Recipient count and executive status are flagged. Send is available but not the default action — preview and edit come first. The consequence determines the confirmation UX.</div>
+    <div class="ann-tag">Graceful Friction</div>
+    <div class="ann-title">High-Stakes Actions Get Guardrails</div>
+    <div class="ann-body">Emailing an executive? The draft is shown for review. Recipient count and seniority are flagged. <strong>Send is available but not automatic</strong> &#8212; the consequence determines the confirmation UX.</div>
   </div>
   <div class="ann" id="ann10">
-    <div class="ann-tag">Design Decision</div>
-    <div class="ann-body">The user clicks into the Strategy chat from the sidebar. The cross-reference shows what happened in the budget chat. They say <strong>"go ahead"</strong> and Copilot picks up exactly where the other conversation left off. <em>Chats are episodes. The intelligence is continuous.</em></div>
+    <div class="ann-tag">Workstream Pivot</div>
+    <div class="ann-title">Budget Done &#8212; Switch to Strategy</div>
+    <div class="ann-body">The user clicks the Strategy chat in the sidebar. <strong>Copilot already knows what happened in the budget chat</strong> and offers to continue. Chats are episodes. The intelligence is continuous.</div>
   </div>
   <div class="ann" id="ann11">
-    <div class="ann-tag">Design Decision</div>
-    <div class="ann-body"><strong>Bidirectional workstream graph.</strong> The hiring chat shows what happened to its data in the budget chat. No information is orphaned. Every chat that touches a workstream knows about the others.</div>
+    <div class="ann-tag">Bidirectional Context</div>
+    <div class="ann-title">Hiring Chat Knows Its Data Was Used</div>
+    <div class="ann-body"><strong>No information is orphaned.</strong> The hiring chat shows that its pipeline data was pulled into the budget review. Every chat touching a workstream knows about the others.</div>
   </div>
   <div class="ann" id="ann12">
-    <div class="ann-tag">Design Decision</div>
-    <div class="ann-body">The strategy chat knows it was referenced from the budget review — and offers to <strong>pick up where that conversation left off</strong>. Chats are episodes. Workstreams are the durable entities.</div>
+    <div class="ann-tag">Persistent Workstream Graph</div>
+    <div class="ann-title">Chats Are Episodes, Workstreams Endure</div>
+    <div class="ann-body">The strategy chat knows it was referenced from the budget review and offers to <strong>pick up where that conversation left off</strong>. Individual chats come and go &#8212; the workstream intelligence persists.</div>
   </div>
 </div>
 

@@ -1356,7 +1356,7 @@ function showStep(n) {
   else if (n === 6) {
     document.getElementById('bizchatView').classList.add('collapsed');
     document.getElementById('wordView').classList.add('expanded');
-    setTimeout(function(){ showAnn('ann6a'); }, 600);
+    setTimeout(function(){ showAnn('ann6a,ann7'); }, 600);
     // Show click hint on Word Copilot input bar after Word opens
     var wcpInput = document.querySelector('.wcp-input-bar input');
     window._waitingForWordSend = true;

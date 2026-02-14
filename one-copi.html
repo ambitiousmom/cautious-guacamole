@@ -1335,8 +1335,22 @@ function showAutoHint(label, callback) {
   clearClickHints();
   var hint = document.createElement('div');
   hint.className = 'auto-hint';
-  hint.innerHTML = '<div class=\"hint-label\">No user prompt needed</div><div class=\"hint-action\">press any key</div>';
-  hint.addEventListener('click', function() { hint.remove(); if (callback) callback(); });
+  hint.innerHTML = '<div class=\"hint-label\">No user prompt needed</div><div class=\"hint-action\">click or press any key</div>';
+  var fired = false;
+  function trigger() {
+    if (fired) return;
+    fired = true;
+    hint.remove();
+    document.removeEventListener('keydown', onKey);
+    if (callback) callback();
+  }
+  function onKey(e) {
+    if (e.key === 'Escape') return;
+    e.preventDefault();
+    trigger();
+  }
+  hint.addEventListener('click', trigger);
+  document.addEventListener('keydown', onKey);
   document.body.appendChild(hint);
 }
 

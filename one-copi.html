@@ -1125,6 +1125,8 @@ function showStep(n) {
   updateDots();
   document.getElementById('stepLabel').textContent = step + ' / ' + totalSteps;
   hideAllAnns();
+  // Clear blocking flags unless we're about to set them
+  if (n !== 1) { window._waitingForSend = false; window._autoHintActive = false; }
   // Update prev button state
   document.getElementById('stepPrev').disabled = (n <= 1);
   // Re-enable next button unless we're at the final step showing complete

@@ -211,8 +211,8 @@
   .suggestion-card-body .cite-row { margin-top: 8px; display: flex; gap: 6px; flex-wrap: wrap; }
   .suggestion-card-actions { display: flex; gap: 8px; padding: 12px 16px; border-top: 1px solid var(--border-light); background: #FAFAFA; }
   .action-btn { padding: 7px 18px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; font-family: var(--font); border: none; transition: all 0.15s; }
-  .action-btn.primary { background: var(--copilot-purple); color: white; }
-  .action-btn.primary:hover { background: #6A49E0; }
+  .action-btn.primary { background: #E0E0E0; color: #5A3EC8; font-weight: 700; }
+  .action-btn.primary:hover { background: #D0D0D0; }
   .action-btn.secondary { background: transparent; color: var(--text-secondary); border: 1px solid var(--border); }
   .action-btn.secondary:hover { background: var(--surface-hover); }
   .action-btn.ghost { background: transparent; color: var(--text-muted); border: none; }
@@ -362,21 +362,21 @@
   /* ═══ Click Hints ═══ */
   .click-hint {
     position: fixed; z-index: 200;
-    background: rgba(30,30,30,0.94); color: #B4A0FF;
+    background: #7B57FF; color: white;
     font-size: 11px; font-weight: 600; font-family: var(--font);
     padding: 4px 10px; border-radius: 12px;
     white-space: nowrap; pointer-events: none;
     animation: pulse 1.5s ease infinite;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+    box-shadow: 0 2px 8px rgba(123,87,255,0.4);
   }
   .click-hint::after {
     content: ''; position: absolute;
     top: 50%; right: -10px; transform: translateY(-50%);
-    border: 5px solid transparent; border-left-color: rgba(30,30,30,0.94);
+    border: 5px solid transparent; border-left-color: #7B57FF;
   }
   .click-hint.arrow-left::after {
     right: auto; left: -10px;
-    border-left-color: transparent; border-right-color: rgba(30,30,30,0.94);
+    border-left-color: transparent; border-right-color: #7B57FF;
   }
   .click-target { animation: pulse 2s ease infinite; border-radius: 6px; }
   .end-overlay {
@@ -437,14 +437,14 @@
   <div class="journey-box">
     <div class="jb-label">The Journey — 12 Beats</div>
     <div class="beat"><span class="beat-num">1</span> Copilot surfaces what changed overnight — proactively</div>
-    <div class="beat"><span class="beat-num">2</span> Drafts a response to the CFO's comment, with citations</div>
+    <div class="beat"><span class="beat-num">2</span> Drafts a response to Sarah Chen (CFO)'s comment, with citations</div>
     <div class="beat"><span class="beat-num">3</span> User approves — comment posted on their behalf</div>
     <div class="beat"><span class="beat-num">4</span> Excel analysis happens inline — no app switch</div>
     <div class="beat"><span class="beat-num">5</span> User decides to insert analysis into the Word doc</div>
     <div class="beat"><span class="beat-num">6</span> Word opens, side pane pre-briefed — conversation continues</div>
     <div class="beat"><span class="beat-num">7</span> User finishes in Word — "Done, looks good"</div>
     <div class="beat"><span class="beat-num">8</span> Back in BizChat — Copilot knows what happened in Word</div>
-    <div class="beat"><span class="beat-num">9</span> Notify CFO — email drafted with proportional friction</div>
+    <div class="beat"><span class="beat-num">9</span> Draft email to Sarah Chen (CFO) with proportional friction</div>
     <div class="beat"><span class="beat-num">10</span> "What about the strategy deck?" — fluid workstream switch</div>
     <div class="beat"><span class="beat-num">11</span> Click "Hiring Plan" chat — cross-reference shows what happened</div>
     <div class="beat"><span class="beat-num">12</span> Click "Product Strategy" chat — same pattern, bidirectional</div>
@@ -572,15 +572,15 @@
             </div>
           </div>
 
-          <!-- ═══ BEAT 1b: User prompt before beat 2 ═══ -->
-          <div class="user-msg" id="beat1b" style="display:none;">
+          <!-- ═══ BEAT 1b: User prompt ═══ -->
+          <div class="user-msg hidden" id="beat1b">
             <div class="bubble">What did Sarah say?</div>
           </div>
 
           <!-- ═══ BEAT 2: Suggested response ═══ -->
           <div class="copilot-msg hidden" id="beat2">
             <div class="body">
-              <p>Regarding the CFO's first comment — I cross-referenced the updated Q3 actuals with the marketing allocation. Here's a suggested reply:</p>
+              <p>Regarding Sarah Chen (CFO)'s first comment — I cross-referenced the updated Q3 actuals with the marketing allocation. Here's a suggested reply:</p>
             </div>
             <div class="suggestion-card">
               <div class="suggestion-card-header"><img src="data:image/png;base64,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" style="height:22px;vertical-align:-4px;" alt="Copilot"> Suggested reply to CFO's comment</div>
@@ -605,7 +605,7 @@
           <div class="copilot-msg hidden" id="beat3">
             <div class="confirm-chip">✓ Reply posted on your behalf to Q3_Budget_Proposal.docx, Section 2</div>
             <div class="body" style="margin-top: 10px;">
-              <p>The CFO's second comment asks about the engineering ramp timeline: <em>"Timeline seems aggressive."</em></p>
+              <p>Sarah Chen (CFO)'s second comment asks about the engineering ramp timeline: <em>"Timeline seems aggressive."</em></p>
               <p>I can pull the hiring pipeline data to build a response — want me to check?</p>
             </div>
             <div class="suggestion-card" style="margin-top: 8px;">
@@ -632,7 +632,7 @@
                 <span class="cite-pill"><span class="cite-icon">📊</span> Hiring_Plan_H2.xlsx · Pipeline A2:D6</span>
               </div>
               <div style="margin-top: 12px;">
-                <p><strong>Suggested reply to CFO:</strong></p>
+                <p><strong>Suggested reply to Sarah Chen (CFO):</strong></p>
                 <div class="draft-text" style="background: #FAFAFA; border-left: 3px solid var(--copilot-purple); padding: 12px 16px; border-radius: 0 8px 8px 0; font-style: italic; color: var(--text-secondary); line-height: 1.7; margin-top: 6px;">
                   "The hiring timeline is backed by active pipeline data — we have 13 candidates across 5 roles, with projected starts between March 28 and May 1. Completion by end of Q3 requires offers out by mid-March. I've attached the pipeline breakdown below."
                 </div>
@@ -650,7 +650,7 @@
           <!-- ═══ BEAT 5: Transition message ═══ -->
           <div class="copilot-msg hidden" id="beat5">
             <div class="body">
-              <p>I'll add the hiring timeline table to <strong>Section 3</strong> of Q3_Budget_Proposal.docx and post the reply to the CFO's second comment referencing it.</p>
+              <p>I'll add the hiring timeline table to <strong>Section 3</strong> of Q3_Budget_Proposal.docx and post the reply to Sarah Chen (CFO)'s second comment referencing it.</p>
               <div class="confirm-chip" style="margin-top: 6px;">✓ Table inserted into Section 3 · Reply posted</div>
               <p style="margin-top: 10px;">Opening the document for your review →</p>
             </div>
@@ -674,16 +674,16 @@
                 </div>
                 <div class="update-item">
                   <span class="update-icon">💬</span>
-                  <div>Both CFO comments are now <strong>resolved</strong></div>
+                  <div>Both Sarah Chen (CFO) comments are now <strong>resolved</strong></div>
                 </div>
               </div>
             </div>
             <div class="body" style="margin-top: 10px;">
-              <p>The Q3 Budget Proposal is finalized. Version 2.4 saved. Want me to notify the CFO that the doc is updated, or move on to something else?</p>
+              <p>The Q3 Budget Proposal is finalized. Version 2.4 saved. Want me to notify Sarah Chen (CFO) that the doc is updated, or move on to something else?</p>
             </div>
             <div class="suggestion-card" style="margin-top: 8px;">
               <div class="suggestion-card-actions" style="border-top: none;">
-                <button class="action-btn primary" onclick="nextStep()">Draft email to CFO</button>
+                <button class="action-btn primary" onclick="nextStep()">Draft email</button>
                 <button class="action-btn ghost">Move on →</button>
               </div>
             </div>
@@ -693,7 +693,7 @@
           <div class="copilot-msg hidden" id="beat9">
             <div class="agent-label"><img src="data:image/png;base64,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" style="height:26px;" alt="Copilot"></div>
             <div class="body">
-              <p>I've drafted a notification to the CFO:</p>
+              <p>I've drafted a notification to Sarah Chen (CFO):</p>
             </div>
             <div class="suggestion-card">
               <div class="suggestion-card-header"><img src="data:image/png;base64,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" style="height:22px;vertical-align:-4px;" alt="Copilot"> Draft email to CFO</div>
@@ -827,7 +827,7 @@
           <div class="tracked-insert">
             Marketing allocation revised to <strong>$1.18M (28%)</strong>, grounded in Q3 actual ROI data showing campaign efficiency held at reduced spend. The reallocation funds engineering headcount growth while maintaining coverage for priority campaigns.
           </div>
-          <p style="margin-top: 4px; font-size: 11px; color: var(--text-muted);"><em>💬 CFO comment resolved — reply posted</em></p>
+          <p style="margin-top: 4px; font-size: 11px; color: var(--text-muted);"><em>💬 Sarah Chen (CFO) comment resolved — reply posted</em></p>
 
           <h2>3. Engineering Headcount</h2>
           <p>Current team: 42 engineers. Q2 attrition: 3 departures.</p>
@@ -841,7 +841,7 @@
             </table>
             Ramp completable by end of Q3 if offers go out by March 15. Net +2 over attrition.
           </div>
-          <p style="margin-top: 4px; font-size: 11px; color: var(--text-muted);"><em>💬 CFO comment resolved — pipeline data attached</em></p>
+          <p style="margin-top: 4px; font-size: 11px; color: var(--text-muted);"><em>💬 Sarah Chen (CFO) comment resolved — pipeline data attached</em></p>
 
           <h2>4. Infrastructure</h2>
           <p>Cloud infrastructure costs are projected at $680K, a 15% increase driven by AI workload scaling. Recommend reserved instance commitments to reduce to $590K.</p>
@@ -883,7 +883,7 @@
 
         <div class="wcp-msg copilot-side" style="animation: fadeInUp 0.4s ease 1.3s both;">
           <div class="wcp-label"><img src="data:image/png;base64,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" style="height:22px;" alt="Copilot"> <span style="font-size:9px; color:var(--copilot-purple); font-weight:400; margin-left:4px;">context-aware</span></div>
-          <div class="wcp-text">I resolved both CFO comments — the <strong>marketing rationale</strong> reply is posted, and the <strong>hiring pipeline table</strong> is inserted in Section 3. All tracked changes are ready for your review.</div>
+          <div class="wcp-text">I resolved both Sarah Chen (CFO) comments — the <strong>marketing rationale</strong> reply is posted, and the <strong>hiring pipeline table</strong> is inserted in Section 3. All tracked changes are ready for your review.</div>
         </div>
 
         <div class="wcp-msg copilot-side" style="animation: fadeInUp 0.4s ease 1.7s both; background: rgba(123,87,255,0.04); padding: 10px 12px; border-radius: 8px; margin-top: 4px;">
@@ -892,7 +892,7 @@
             <strong>What's ready:</strong><br/>
             ✓ Section 2 — marketing revised to 28%<br/>
             ✓ Section 3 — hiring pipeline table added<br/>
-            ✓ Both CFO comments resolved<br/><br/>
+            ✓ Both Sarah Chen (CFO) comments resolved<br/><br/>
             You can review the tracked changes above, accept/reject, or tell me to adjust anything.
           </div>
         </div>
@@ -930,7 +930,7 @@
   </div>
   <div class="ann" id="ann2">
     <div class="ann-tag">Design Decision</div>
-    <div class="ann-body">Copilot cross-referenced the CFO's comment with the updated Excel actuals and drafted a response — <strong>with citations to specific cells</strong>. The user reviews, not writes.</div>
+    <div class="ann-body">Copilot cross-referenced Sarah Chen (CFO)'s comment with the updated Excel actuals and drafted a response — <strong>with citations to specific cells</strong>. The user reviews, not writes.</div>
   </div>
   <div class="ann" id="ann3">
     <div class="ann-tag">Design Decision</div>
@@ -980,7 +980,7 @@
   <div class="user-msg" style="opacity:0.5;"><div class="bubble">What's the current hiring pipeline for the engineering team?</div></div>
   <div class="copilot-msg" style="opacity:0.5;"><div class="agent-label"><span class="agent-icon excel" style="font-size:10px;">X</span> Excel</div><div class="body"><p>Based on Hiring_Plan_H2.xlsx, you have 13 candidates across 5 open roles. 4 are in final interview stage. Average time-to-fill is 5.3 weeks.</p></div></div>
   <div class="day-divider" style="color:var(--copilot-purple); font-weight:600;">↳ Cross-referenced today</div>
-  <div class="copilot-msg"><div class="proactive-card"><div class="proactive-card-header" style="background:linear-gradient(90deg, rgba(123,87,255,0.08), transparent);"><span class="bell">🔗</span> Referenced in: Q3 Budget Review</div><div class="proactive-card-body"><div class="update-item"><span class="update-icon">📊</span><div>Hiring pipeline data (Pipeline A2:D6) was <strong>pulled into the Q3 Budget Review</strong> conversation to respond to the CFO's comment about engineering ramp timeline.</div></div><div class="update-item"><span class="update-icon">📄</span><div>The pipeline table was <strong>inserted into Q3_Budget_Proposal.docx, Section 3</strong> as a tracked change.</div></div><div class="update-item"><span class="update-icon">💬</span><div>A reply was posted to the CFO citing this data.</div></div></div></div><div class="body" style="margin-top:10px;"><p>Want to continue working on the hiring plan here, or go back to the budget review?</p></div></div>
+  <div class="copilot-msg"><div class="proactive-card"><div class="proactive-card-header" style="background:linear-gradient(90deg, rgba(123,87,255,0.08), transparent);"><span class="bell">🔗</span> Referenced in: Q3 Budget Review</div><div class="proactive-card-body"><div class="update-item"><span class="update-icon">📊</span><div>Hiring pipeline data (Pipeline A2:D6) was <strong>pulled into the Q3 Budget Review</strong> conversation to respond to Sarah Chen (CFO)'s comment about engineering ramp timeline.</div></div><div class="update-item"><span class="update-icon">📄</span><div>The pipeline table was <strong>inserted into Q3_Budget_Proposal.docx, Section 3</strong> as a tracked change.</div></div><div class="update-item"><span class="update-icon">💬</span><div>A reply was posted to Sarah Chen (CFO) citing this data.</div></div></div></div><div class="body" style="margin-top:10px;"><p>Want to continue working on the hiring plan here, or go back to the budget review?</p></div></div>
 </div>
 
 <!-- ═══ CONVO: Strategy Chat ═══ -->
@@ -997,6 +997,7 @@
 <div class="end-overlay" id="endOverlay">
   <div class="fin">Fin.</div>
   <div class="sub">(end of demo)</div>
+  <div class="sub" style="margin-top:16px; font-size:12px;">press any key</div>
 </div>
 
 <!-- ═══ STEP BAR ═══ -->
@@ -1019,7 +1020,7 @@ const stepLabels = [
   'Beat 6 — Word opens, side pane pre-briefed',
   'Beat 7 — User finishes in Word, heads back',
   'Beat 8 — BizChat knows what happened in Word',
-  'Beat 9 — Draft email to CFO',
+  'Beat 9 — Draft email to Sarah Chen (CFO)',
   'Beat 10 — Email sent, budget wrapped',
   'Beat 11 — Click Product Strategy — continue from here',
   'Beat 12 — Hiring chat shows cross-reference',
@@ -1044,9 +1045,6 @@ function resetDemo() {
     const el = document.getElementById(id);
     if (el) { el.classList.add('hidden'); el.classList.remove('anim-fadeinup','anim-slidein'); }
   });
-  // Reset beat1b separately (uses style.display)
-  var b1b = document.getElementById('beat1b');
-  if (b1b) { b1b.style.display = 'none'; b1b.classList.remove('anim-fadeinup'); }
   // Reset cross-ref badges
   document.querySelectorAll('.xref').forEach(el => el.classList.remove('visible'));
   document.querySelectorAll('.chat-status').forEach(el => el.classList.remove('visible'));
@@ -1136,8 +1134,7 @@ function showStep(n) {
   }
   else if (n === 2) {
     // Show user message first
-    var ub = document.getElementById('beat1b');
-    if (ub) { ub.style.display = ''; ub.classList.add('anim-fadeinup'); }
+    revealBeat('beat1b');
     scrollConvo();
     // Then reveal Copilot response after delay
     setTimeout(function(){

@@ -1,0 +1,1328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>One Copilot — Prototype</title>
+<style>
+  :root {
+    --bg: #F5F5F5;
+    --surface: #FFFFFF;
+    --surface-hover: #F5F5F5;
+    --border: #E0E0E0;
+    --border-light: #EBEBEB;
+    --text: #242424;
+    --text-secondary: #616161;
+    --text-muted: #999;
+    --brand-blue: #0F6CBD;
+    --copilot-purple: #7B57FF;
+    --copilot-send: #6B3FA0;
+    --green: #107C10;
+    --green-light: #DFF6DD;
+    --red: #D13438;
+    --yellow: #FFB900;
+    --blue-light: #EBF3FC;
+    --purple-light: #F3EEFF;
+    --font: 'Segoe UI Variable', 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
+    --sidebar-w: 220px;
+    --pane-w: 320px;
+    --transition: 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: var(--font); background: var(--bg); color: var(--text); height: 100vh; overflow: hidden; }
+
+  /* ═══ Landing ═══ */
+  .landing {
+    position: fixed; inset: 0; z-index: 200;
+    background: linear-gradient(145deg, #0F0F2D 0%, #1B1050 40%, #2D1A5E 100%);
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    color: white; transition: opacity 0.5s ease, visibility 0.5s;
+  }
+  .landing.hidden { opacity: 0; visibility: hidden; }
+  .landing-badge { font-size: 11px; letter-spacing: 2.5px; text-transform: uppercase; color: rgba(255,255,255,0.4); margin-bottom: 24px; }
+  .landing h1 { font-size: 48px; font-weight: 600; margin-bottom: 12px; background: linear-gradient(90deg, #fff, #C8B8FF); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+  .landing .sub { font-size: 17px; color: rgba(255,255,255,0.65); max-width: 520px; text-align: center; line-height: 1.65; margin-bottom: 32px; }
+  .landing .journey-box { background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 20px 28px; max-width: 480px; margin-bottom: 36px; }
+  .journey-box .jb-label { font-size: 10px; text-transform: uppercase; letter-spacing: 1.5px; color: #B4A0FF; margin-bottom: 10px; font-weight: 600; }
+  .journey-box .beat { display: flex; gap: 10px; align-items: flex-start; font-size: 13px; color: rgba(255,255,255,0.75); padding: 5px 0; line-height: 1.5; }
+  .journey-box .beat-num { background: rgba(255,255,255,0.12); border-radius: 4px; padding: 1px 7px; font-size: 11px; font-weight: 600; color: #B4A0FF; flex-shrink: 0; margin-top: 1px; }
+  .start-btn { padding: 14px 40px; border-radius: 28px; border: none; background: linear-gradient(135deg, #7B57FF, #0F6CBD); color: white; font-size: 15px; font-weight: 600; cursor: pointer; box-shadow: 0 4px 20px rgba(123,87,255,0.4); transition: transform 0.2s, box-shadow 0.2s; }
+  .start-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 28px rgba(123,87,255,0.5); }
+  .landing .meta { margin-top: 28px; font-size: 11px; color: rgba(255,255,255,0.25); }
+
+  /* ═══ Main Shell ═══ */
+  .shell { display: flex; height: 100vh; width: 100vw; }
+
+  /* ═══ BizChat View ═══ */
+  .bizchat-view { display: flex; flex: 1; height: 100%; transition: all var(--transition); overflow: hidden; }
+  .bizchat-view.collapsed { flex: 0 0 0px; overflow: hidden; width: 0; }
+
+  /* ── Sidebar ── */
+  .sidebar {
+    width: var(--sidebar-w); min-width: var(--sidebar-w); height: 100%;
+    background: var(--surface); border-right: 1px solid var(--border-light);
+    display: flex; flex-direction: column; overflow: hidden;
+  }
+  .sidebar-top { padding: 12px 14px; display: flex; align-items: center; justify-content: space-between; }
+  .copilot-logo { width: 28px; height: 28px; border-radius: 6px; display: flex; align-items: center; justify-content: center; background: #242424; }
+  .copilot-logo svg { width: 18px; height: 18px; }
+  .cp-svg { display: inline-block; width: 1em; height: 1em; vertical-align: -0.1em; }
+  .cp-svg-sm { display: inline-block; width: 14px; height: 14px; vertical-align: -2px; }
+  .cp-svg-md { display: inline-block; width: 18px; height: 18px; vertical-align: -3px; }
+  .sidebar-toggle { width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; background: none; border: none; cursor: pointer; color: var(--text-secondary); font-size: 16px; border-radius: 4px; }
+  .sidebar-toggle:hover { background: var(--surface-hover); }
+
+  .sidebar-nav { padding: 4px 8px; }
+  .nav-item { display: flex; align-items: center; gap: 10px; padding: 7px 10px; border-radius: 6px; font-size: 13px; color: var(--text-secondary); cursor: pointer; transition: background 0.15s; text-decoration: none; }
+  .nav-item:hover { background: var(--surface-hover); }
+  .nav-item .nav-icon { width: 18px; text-align: center; font-size: 14px; }
+
+  .sidebar-divider { height: 1px; background: var(--border-light); margin: 8px 14px; }
+
+  .sidebar-section { padding: 4px 8px; }
+  .section-header { font-size: 11px; font-weight: 600; color: var(--text-secondary); padding: 6px 10px; display: flex; align-items: center; justify-content: space-between; }
+  .section-header .search-icon { cursor: pointer; font-size: 13px; }
+
+  .chat-list-item { display: flex; align-items: flex-start; padding: 6px 10px; border-radius: 6px; font-size: 13px; color: var(--text); cursor: pointer; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; transition: background 0.15s; border-left: 3px solid transparent; flex-direction: column; gap: 2px; }
+  .chat-list-item:hover { background: var(--surface-hover); }
+  .chat-list-item.active { border-left-color: var(--brand-blue); font-weight: 600; background: var(--blue-light); }
+  .chat-list-item .xref { display: none; font-size: 10px; color: var(--copilot-purple); font-weight: 400; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .chat-list-item .xref.visible { display: block; }
+  .chat-list-item .chat-title-row { display: flex; align-items: center; gap: 6px; width: 100%; }
+  .chat-list-item .chat-title-text { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; flex: 1; }
+  .chat-status { font-size: 12px; flex-shrink: 0; opacity: 0; transition: opacity 0.3s; }
+  .chat-status.visible { opacity: 1; }
+
+  .sidebar-bottom { margin-top: auto; padding: 10px 14px; border-top: 1px solid var(--border-light); }
+  .sidebar-bottom .apps-link { font-size: 12px; color: var(--text-secondary); display: flex; align-items: center; gap: 8px; padding: 4px 0; }
+  .sidebar-bottom .user-row { display: flex; align-items: center; gap: 8px; padding: 6px 0; }
+  .user-avatar { width: 24px; height: 24px; border-radius: 50%; background: linear-gradient(135deg, #E89B35, #D4782F); display: flex; align-items: center; justify-content: center; font-size: 10px; color: white; font-weight: 600; }
+  .user-name { font-size: 12px; color: var(--text); }
+  .premium-badge { font-size: 10px; color: var(--text-muted); }
+
+  /* ── Main Content ── */
+  .bizchat-main { flex: 1; display: flex; flex-direction: column; min-width: 0; height: 100%; }
+
+  /* Top bar */
+  .topbar {
+    height: 48px; display: flex; align-items: center; padding: 0 16px;
+    border-bottom: 1px solid var(--border-light); background: var(--surface); flex-shrink: 0;
+    position: relative;
+  }
+  .topbar-title { font-size: 14px; font-weight: 600; color: var(--text); flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .topbar-toggle { display: flex; border: 1px solid var(--border); border-radius: 6px; overflow: hidden; margin: 0 12px; }
+  .topbar-toggle button { padding: 4px 16px; border: none; background: transparent; font-size: 12px; font-family: var(--font); cursor: pointer; color: var(--text-secondary); }
+  .topbar-toggle button.active { color: var(--brand-blue); font-weight: 600; background: var(--blue-light); }
+  .topbar-actions { display: flex; align-items: center; gap: 6px; }
+  .topbar-btn { width: 28px; height: 28px; border-radius: 4px; border: none; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 14px; background: transparent; color: var(--text-secondary); }
+  .auto-dropdown { padding: 4px 12px; border: 1px solid var(--border); border-radius: 4px; font-size: 12px; background: var(--surface); cursor: pointer; color: var(--text-secondary); }
+  .edit-btn-combo { display: flex; align-items: center; border-radius: 6px; overflow: hidden; }
+  .edit-btn-combo .edit-main { padding: 4px 10px; background: var(--copilot-purple); color: white; border: none; font-size: 14px; cursor: pointer; }
+  .edit-btn-combo .edit-chevron { padding: 4px 6px; background: var(--green); color: white; border: none; font-size: 10px; cursor: pointer; }
+
+  /* Conversation Area */
+  .convo-area {
+    flex: 1; overflow-y: auto; padding: 24px 0;
+    display: flex; flex-direction: column; align-items: center;
+  }
+  .convo-inner { width: 100%; max-width: 680px; padding: 0 20px; display: flex; flex-direction: column; gap: 4px; }
+
+  .day-divider { display: flex; align-items: center; gap: 12px; padding: 12px 0; font-size: 12px; color: var(--text-muted); }
+  .day-divider::before, .day-divider::after { content: ''; flex: 1; height: 1px; background: var(--border-light); }
+
+  /* User Message */
+  .user-msg { align-self: flex-end; max-width: 80%; margin: 8px 0; }
+  .user-msg .bubble { background: #F0F0F0; padding: 10px 16px; border-radius: 12px 12px 2px 12px; font-size: 14px; line-height: 1.6; }
+
+  /* Copilot Message */
+  .copilot-msg { margin: 8px 0; }
+  .copilot-msg .agent-label { display: flex; align-items: center; gap: 6px; margin-bottom: 6px; font-size: 13px; font-weight: 600; }
+  .agent-icon { width: 22px; height: 22px; border-radius: 4px; display: flex; align-items: center; justify-content: center; font-size: 10px; color: white; font-weight: 700; }
+  .agent-icon.word { background: #185ABD; }
+  .agent-icon.excel { background: #107C10; }
+  .copilot-msg .agent-label .think-icon { font-size: 14px; }
+  .copilot-msg .body { font-size: 14px; line-height: 1.7; color: var(--text); }
+  .copilot-msg .body p { margin-bottom: 10px; }
+  .copilot-msg .body ul { margin: 8px 0 12px 20px; }
+  .copilot-msg .body li { margin-bottom: 4px; }
+  .copilot-msg .body strong { color: var(--text); }
+
+  /* Citation pill */
+  .cite-pill { display: inline-flex; align-items: center; gap: 4px; background: #F0F0F0; border: 1px solid var(--border); border-radius: 4px; padding: 2px 8px; font-size: 11px; color: var(--text-secondary); cursor: pointer; vertical-align: middle; margin: 0 2px; }
+  .cite-pill:hover { background: var(--border-light); }
+  .cite-pill .cite-icon { font-size: 12px; }
+
+  /* Sources pill */
+  .sources-pill { display: inline-flex; align-items: center; gap: 6px; background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 6px 14px; font-size: 12px; color: var(--text-secondary); cursor: pointer; margin-top: 8px; }
+  .sources-pill:hover { background: var(--surface-hover); }
+
+  /* Feedback bar */
+  .feedback-bar { display: flex; gap: 6px; margin-top: 8px; padding: 4px 0; }
+  .feedback-bar button { background: none; border: none; cursor: pointer; font-size: 16px; color: var(--text-muted); padding: 4px; border-radius: 4px; }
+  .feedback-bar button:hover { background: var(--surface-hover); color: var(--text-secondary); }
+
+  /* ── Proactive Card ── */
+  .proactive-card {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 12px; padding: 0; margin: 12px 0;
+    overflow: hidden; box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+  }
+  .proactive-card-header {
+    display: flex; align-items: center; gap: 8px;
+    padding: 12px 16px; background: linear-gradient(90deg, rgba(123,87,255,0.06), rgba(15,108,189,0.04));
+    border-bottom: 1px solid var(--border-light); font-size: 12px; font-weight: 600; color: var(--copilot-purple);
+  }
+  .proactive-card-header .bell { font-size: 14px; }
+  .proactive-card-body { padding: 14px 16px; }
+  .update-item { display: flex; align-items: flex-start; gap: 10px; padding: 8px 0; font-size: 13px; line-height: 1.6; }
+  .update-item + .update-item { border-top: 1px solid var(--border-light); }
+  .update-icon { font-size: 16px; flex-shrink: 0; margin-top: 2px; }
+  .update-item .doc-ref { color: var(--brand-blue); font-weight: 500; }
+  .update-item .quote { font-style: italic; color: var(--text-secondary); }
+
+  /* ── Document Card ── */
+  .doc-card {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 10px; overflow: hidden; margin: 12px 0;
+    cursor: pointer; transition: box-shadow 0.2s;
+  }
+  .doc-card:hover { box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+  .doc-card-inner { display: flex; align-items: center; gap: 12px; padding: 14px 16px; }
+  .doc-card-icon { font-size: 28px; flex-shrink: 0; }
+  .doc-card-info { flex: 1; min-width: 0; }
+  .doc-card-title { font-size: 13px; font-weight: 600; color: var(--text); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .doc-card-sub { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
+  .doc-card-open { font-size: 16px; color: var(--text-muted); flex-shrink: 0; }
+
+  /* ── Suggested Response Card ── */
+  .suggestion-card {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 12px; margin: 12px 0; overflow: hidden;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+  }
+  .suggestion-card-header {
+    padding: 12px 16px; background: linear-gradient(90deg, rgba(123,87,255,0.05), transparent);
+    border-bottom: 1px solid var(--border-light);
+    font-size: 12px; color: var(--copilot-purple); font-weight: 600;
+    display: flex; align-items: center; gap: 6px;
+  }
+  .suggestion-card-body { padding: 14px 16px; font-size: 13px; line-height: 1.7; color: var(--text); }
+  .suggestion-card-body .draft-text { background: #FAFAFA; border-left: 3px solid var(--copilot-purple); padding: 12px 16px; border-radius: 0 8px 8px 0; margin: 10px 0; font-style: italic; color: var(--text-secondary); line-height: 1.7; }
+  .suggestion-card-body .cite-row { margin-top: 8px; display: flex; gap: 6px; flex-wrap: wrap; }
+  .suggestion-card-actions { display: flex; gap: 8px; padding: 12px 16px; border-top: 1px solid var(--border-light); background: #FAFAFA; }
+  .action-btn { padding: 7px 18px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; font-family: var(--font); border: none; transition: all 0.15s; }
+  .action-btn.primary { background: var(--copilot-purple); color: white; }
+  .action-btn.primary:hover { background: #6A49E0; }
+  .action-btn.secondary { background: transparent; color: var(--text-secondary); border: 1px solid var(--border); }
+  .action-btn.secondary:hover { background: var(--surface-hover); }
+  .action-btn.ghost { background: transparent; color: var(--text-muted); border: none; }
+
+  /* ── Confirmation Message ── */
+  .confirm-chip { display: inline-flex; align-items: center; gap: 6px; background: var(--green-light); border-radius: 8px; padding: 8px 14px; font-size: 13px; color: var(--green); font-weight: 500; margin: 4px 0; }
+
+  /* ── Data Table ── */
+  .data-table { width: 100%; border-collapse: collapse; font-size: 12px; margin: 10px 0; border-radius: 8px; overflow: hidden; border: 1px solid var(--border); }
+  .data-table th { background: #F5F5F5; text-align: left; padding: 8px 12px; font-weight: 600; border-bottom: 1px solid var(--border); }
+  .data-table td { padding: 8px 12px; border-bottom: 1px solid var(--border-light); }
+  .data-table tr:last-child td { border-bottom: none; }
+
+  /* ── Input Bar ── */
+  .input-bar-container { padding: 12px 20%; border-top: 1px solid var(--border-light); background: var(--surface); flex-shrink: 0; }
+  .input-bar { display: flex; flex-direction: column; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; }
+  .input-bar input { flex: 1; border: none; outline: none; font-size: 14px; font-family: var(--font); background: transparent; color: var(--text); }
+  .input-bar input::placeholder { color: var(--text-muted); }
+  .input-bar .ib-btn { background: none; border: none; cursor: pointer; color: var(--text-muted); font-size: 16px; padding: 2px; display: flex; align-items: center; }
+  .input-bar .tools-label { font-size: 12px; color: var(--text-secondary); display: flex; align-items: center; gap: 4px; cursor: pointer; }
+  .input-bar .send-btn { width: 32px; height: 32px; border-radius: 50%; background: var(--copilot-purple); color: white; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 16px; transition: background 0.15s; }
+  .input-bar .send-btn:hover { background: #6A49E0; }
+  .input-disclaimer { text-align: center; font-size: 11px; color: var(--text-muted); margin-top: 6px; }
+
+  /* ═══ Word View ═══ */
+  .word-view {
+    flex: 0 0 0px; height: 100%; display: flex; overflow: hidden;
+    transition: all var(--transition); border-left: 1px solid var(--border);
+  }
+  .word-view.expanded { flex: 1 1 auto; }
+
+  /* Word Main */
+  .word-main { flex: 1; display: flex; flex-direction: column; min-width: 0; }
+  .word-topbar { height: 40px; display: flex; align-items: center; padding: 0 12px; background: var(--surface); border-bottom: 1px solid var(--border-light); gap: 10px; flex-shrink: 0; }
+  .word-topbar .w-logo { width: 20px; height: 20px; background: #185ABD; border-radius: 3px; display: flex; align-items: center; justify-content: center; color: white; font-size: 10px; font-weight: 700; }
+  .word-topbar .w-title { font-size: 12px; font-weight: 500; color: var(--text); flex: 1; }
+  .word-topbar .w-share { padding: 4px 12px; background: var(--brand-blue); color: white; border: none; border-radius: 4px; font-size: 11px; font-weight: 600; cursor: pointer; }
+
+  .word-ribbon { height: 32px; display: flex; align-items: center; padding: 0 12px; border-bottom: 1px solid var(--border-light); background: var(--surface); gap: 2px; flex-shrink: 0; }
+  .word-ribbon button { padding: 4px 10px; font-size: 11px; color: var(--text-secondary); border: none; background: transparent; border-radius: 3px; cursor: pointer; font-family: var(--font); }
+  .word-ribbon button:hover { background: var(--surface-hover); }
+  .word-ribbon button.r-active { color: var(--brand-blue); font-weight: 600; }
+  .word-ribbon .r-copilot { color: var(--copilot-purple); font-weight: 600; }
+  .word-ribbon-right { margin-left: auto; display: flex; gap: 4px; }
+
+  .word-activity {
+    padding: 8px 16px; background: #F9F9F9; border-bottom: 1px solid var(--border-light);
+    display: flex; align-items: center; gap: 10px; font-size: 12px; color: var(--text-secondary); flex-shrink: 0;
+  }
+  .word-activity .act-icon { font-size: 16px; }
+  .word-activity .view-more { padding: 3px 10px; background: var(--brand-blue); color: white; border: none; border-radius: 4px; font-size: 11px; cursor: pointer; margin-left: 8px; }
+
+  .word-canvas { flex: 1; overflow-y: auto; background: #F0F0F0; padding: 30px; }
+  .word-page { max-width: 620px; margin: 0 auto; background: white; padding: 50px 60px; box-shadow: 0 1px 6px rgba(0,0,0,0.1); min-height: 700px; }
+  .word-page h1 { font-size: 22px; font-weight: 700; margin-bottom: 4px; }
+  .word-page .wp-subtitle { font-size: 14px; font-style: italic; color: var(--text-secondary); margin-bottom: 24px; }
+  .word-page .wp-meta { font-size: 11px; color: var(--text-muted); margin-bottom: 20px; }
+  .word-page h2 { font-size: 16px; color: var(--brand-blue); margin: 24px 0 10px; }
+  .word-page p { font-size: 13px; line-height: 1.75; margin-bottom: 10px; }
+  .tracked-insert { background: #E8F5E9; border-left: 3px solid var(--green); padding: 8px 12px; border-radius: 0 6px 6px 0; margin: 8px 0; font-size: 13px; line-height: 1.7; position: relative; }
+  .tracked-insert::after { content: 'Copilot'; position: absolute; right: 8px; top: -8px; background: var(--green); color: white; font-size: 9px; padding: 1px 6px; border-radius: 8px; }
+
+  /* Word Copilot Pane */
+  .word-copilot-pane {
+    width: var(--pane-w); min-width: var(--pane-w); height: 100%;
+    border-left: 1px solid var(--border); background: var(--surface);
+    display: flex; flex-direction: column; overflow: hidden;
+  }
+  .wcp-header { height: 40px; display: flex; align-items: center; padding: 0 12px; border-bottom: 1px solid var(--border-light); gap: 6px; flex-shrink: 0; }
+  .wcp-header .wcp-icons { display: flex; gap: 4px; margin-left: auto; }
+  .wcp-header .wcp-icons button { width: 24px; height: 24px; border: none; background: none; cursor: pointer; color: var(--text-muted); font-size: 13px; border-radius: 3px; display: flex; align-items: center; justify-content: center; }
+  .wcp-header .wcp-icons button:hover { background: var(--surface-hover); }
+
+  .linked-badge {
+    margin: 10px 12px 0; padding: 8px 12px;
+    background: linear-gradient(90deg, rgba(123,87,255,0.06), rgba(15,108,189,0.04));
+    border: 1px solid rgba(123,87,255,0.15);
+    border-radius: 8px; font-size: 11px; color: var(--copilot-purple);
+    display: flex; align-items: center; gap: 6px;
+    animation: fadeIn 0.5s ease 0.3s both;
+  }
+  .linked-badge .lb-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--copilot-purple); }
+
+  .wcp-messages { flex: 1; overflow-y: auto; padding: 12px; display: flex; flex-direction: column; gap: 10px; }
+
+  .wcp-msg { font-size: 12px; line-height: 1.6; }
+  .wcp-msg.user-side { background: #F0F0F0; padding: 8px 12px; border-radius: 10px 10px 2px 10px; align-self: flex-end; max-width: 85%; }
+  .wcp-msg.copilot-side { }
+  .wcp-msg .wcp-label { font-size: 11px; font-weight: 600; color: var(--text); margin-bottom: 3px; display: flex; align-items: center; gap: 4px; }
+  .wcp-msg .wcp-label .cp-icon { font-size: 13px; }
+  .wcp-msg .wcp-text { color: var(--text-secondary); }
+  .wcp-msg .wcp-text strong { color: var(--text); }
+
+  .wcp-divider { display: flex; align-items: center; gap: 8px; font-size: 10px; color: var(--text-muted); padding: 4px 0; }
+  .wcp-divider::before, .wcp-divider::after { content: ''; flex: 1; height: 1px; background: var(--border-light); }
+
+  .wcp-input-bar { padding: 10px 12px; border-top: 1px solid var(--border-light); flex-shrink: 0; }
+  .wcp-input { display: flex; align-items: center; gap: 6px; background: #FAFAFA; border: 1px solid var(--border); border-radius: 8px; padding: 8px 10px; }
+  .wcp-input input { flex: 1; border: none; background: transparent; font-size: 12px; font-family: var(--font); outline: none; }
+  .wcp-input input::placeholder { color: var(--text-muted); }
+  .wcp-disclaimer { font-size: 9px; color: var(--text-muted); text-align: center; margin-top: 4px; }
+
+  /* ═══ Step Indicator ═══ */
+  .step-bar {
+    position: fixed; bottom: -100px; right: 20px; z-index: 100;
+    display: flex; align-items: center; gap: 6px;
+    opacity: 0; pointer-events: none;
+    transition: opacity 0.3s; 
+  }
+  .step-bar.hidden { opacity: 0; pointer-events: none; }
+  .step-dot { display: none; }
+  .step-label { color: rgba(255,255,255,0.5); font-size: 11px; min-width: 36px; text-align: center; }
+  .step-prev, .step-next { padding: 6px 14px; border-radius: 14px; border: 1px solid rgba(255,255,255,0.2); background: transparent; color: white; font-size: 12px; cursor: pointer; font-family: var(--font); transition: all 0.2s; white-space: nowrap; }
+  .step-prev:hover, .step-next:hover { background: rgba(255,255,255,0.1); }
+  .step-prev:disabled, .step-next:disabled { opacity: 0.3; cursor: default; }
+
+  /* ═══ Annotations ═══ */
+  .annotation-panel {
+    position: fixed; z-index: 90;
+    max-width: 300px;
+    pointer-events: none;
+    transition: all 0.4s ease;
+  }
+  .ann {
+    background: rgba(30,30,30,0.94); color: white; padding: 14px 18px;
+    border-radius: 10px; font-size: 12px; line-height: 1.65;
+    backdrop-filter: blur(12px); box-shadow: 0 6px 24px rgba(0,0,0,0.25);
+    border-left: 3px solid #B4A0FF; opacity: 0; transform: translateY(6px);
+    transition: all 0.4s ease; pointer-events: auto; display: none;
+  }
+  .ann.visible { opacity: 1; transform: translateY(0); display: block; }
+  .ann .ann-tag { font-size: 10px; text-transform: uppercase; letter-spacing: 1.2px; color: #B4A0FF; margin-bottom: 6px; font-weight: 700; }
+  .ann .ann-body { color: rgba(255,255,255,0.85); }
+
+  /* ═══ Animations ═══ */
+  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+  @keyframes fadeInUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+  @keyframes slideInRight { from { opacity: 0; transform: translateX(20px); } to { opacity: 1; transform: translateX(0); } }
+  .anim-fadein { animation: fadeIn 0.4s ease both; }
+  .anim-fadeinup { animation: fadeInUp 0.4s ease both; }
+  .anim-slidein { animation: slideInRight 0.4s ease both; }
+
+  .hidden { display: none !important; }
+  .invisible { opacity: 0; }
+
+  /* ═══ Reset Button ═══ */
+  .reset-btn { position: fixed; top: 12px; left: calc(var(--sidebar-w) + 12px); z-index: 100; padding: 5px 12px; border-radius: 14px; border: 1px solid var(--border); background: var(--surface); font-size: 11px; cursor: pointer; font-family: var(--font); color: var(--text-secondary); box-shadow: 0 1px 4px rgba(0,0,0,0.06); transition: all 0.2s; }
+  .reset-btn:hover { background: var(--blue-light); color: var(--brand-blue); }
+  .reset-btn.hidden { opacity: 0; pointer-events: none; }
+
+  /* Scrollbar */
+  ::-webkit-scrollbar { width: 5px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: #CCC; border-radius: 3px; }
+  ::-webkit-scrollbar-thumb:hover { background: #AAA; }
+
+  /* ═══ Floating Canvas (for inline doc editing) ═══ */
+  .floating-canvas {
+    background: white; border: 1px solid var(--border); border-radius: 10px;
+    margin: 12px 0; overflow: hidden; box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+  }
+  .fc-toolbar { display: flex; align-items: center; gap: 6px; padding: 8px 12px; background: #FAFAFA; border-bottom: 1px solid var(--border-light); }
+  .fc-toolbar .fc-logo { width: 18px; height: 18px; background: #185ABD; border-radius: 3px; display: flex; align-items: center; justify-content: center; color: white; font-size: 8px; font-weight: 700; }
+  .fc-toolbar .fc-title { font-size: 11px; font-weight: 500; color: var(--text); flex: 1; }
+  .fc-toolbar .fc-pill { font-size: 10px; color: var(--text-muted); background: #F0F0F0; padding: 2px 8px; border-radius: 10px; cursor: pointer; }
+  .fc-toolbar .fc-pill:hover { background: var(--border); }
+  .fc-body { padding: 20px 24px; max-height: 300px; overflow-y: auto; }
+  .fc-body h3 { font-size: 14px; margin-bottom: 8px; }
+  .fc-body p { font-size: 12px; line-height: 1.7; color: var(--text-secondary); margin-bottom: 8px; }
+</style>
+</head>
+<body>
+
+<!-- ═══ LANDING ═══ -->
+<div class="landing" id="landing">
+  <div class="landing-badge">Interactive Prototype · One Copilot</div>
+  <h1>The Morning Check-In</h1>
+  <p class="sub">A PM opens Copilot. Three workstreams are in flight. One chat. Zero context switches. This is what "One Copilot" feels like.</p>
+  <div class="journey-box">
+    <div class="jb-label">The Journey — 12 Beats</div>
+    <div class="beat"><span class="beat-num">1</span> Copilot surfaces what changed overnight — proactively</div>
+    <div class="beat"><span class="beat-num">2</span> Drafts a response to the CFO's comment, with citations</div>
+    <div class="beat"><span class="beat-num">3</span> User approves — comment posted on their behalf</div>
+    <div class="beat"><span class="beat-num">4</span> Excel analysis happens inline — no app switch</div>
+    <div class="beat"><span class="beat-num">5</span> User decides to insert analysis into the Word doc</div>
+    <div class="beat"><span class="beat-num">6</span> Word opens, side pane pre-briefed — conversation continues</div>
+    <div class="beat"><span class="beat-num">7</span> User finishes in Word — "Done, looks good"</div>
+    <div class="beat"><span class="beat-num">8</span> Back in BizChat — Copilot knows what happened in Word</div>
+    <div class="beat"><span class="beat-num">9</span> Notify CFO — email drafted with proportional friction</div>
+    <div class="beat"><span class="beat-num">10</span> "What about the strategy deck?" — fluid workstream switch</div>
+    <div class="beat"><span class="beat-num">11</span> Click "Hiring Plan" chat — cross-reference shows what happened</div>
+    <div class="beat"><span class="beat-num">12</span> Click "Product Strategy" chat — same pattern, bidirectional</div>
+  </div>
+  <button class="start-btn" onclick="startDemo()">Experience the prototype →</button>
+  <div class="meta">Use → arrow key or click "Next" to advance</div>
+</div>
+
+<!-- ═══ SHELL ═══ -->
+<div class="shell">
+
+  <!-- ═══ BIZCHAT VIEW ═══ -->
+  <div class="bizchat-view" id="bizchatView">
+    <!-- Sidebar -->
+    <div class="sidebar">
+      <div class="sidebar-top">
+        <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACYAAAApCAYAAABZa1t7AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAAFiUAABYlAUlSJPAAAASTSURBVFhH7dRbUFQFHMdx35ppJi/j5A0trWacplJrcqyRi5FKWQqtLKAEGBF5S8UgMVEQNbVQQ0REVAQEFSS1WINlWbmsGIsVCARIboiIixC7C7vscrFvo82QeVY7S9OMD/vweTnzP7/5vpwzpNPUw6NoyP0PHhX2MFvZw2xlD7OVPcxW9jBb2RxW22YhUGXCSWHBUWFhprwbR7mZmbndzMgxMjW2BZdlVUQmNAretYVNYdd1ZqZlGhifpsch1YBDio5xKXrGHtUxJlnH6P23eOw1FcNcLjJqrpqjOTcFG2LZFOab087wfa0M23eT4fu0DIu7edfQu1p43L+akW+WMWH+JZ7xquDdjVcEG2KJDitvNvJE7LV7NDI0VsPwvQ2MiKtndHwdI+b+wIQFl3h6cSUOQbWMW9mAptUs2BJDdNimkiYcDpQzIbGMpw6WMjFJxaSkIp49dJ7nDiuYEV/C2HnlTPSpxCG4jtFrf2PkhmZ8j/+Orssi2Ps3osPmnMrjxZRspqRmMTX1BC+nZfDKsTReTU9henoybjuVnC1uQ/GzjoJKAyUxzRRGackKb+dkuJ78LUbKkk10dAi3rREVVq3V4pwZh0tmLG9k7cb1VAyzs79kTvZ23L7ZxlunoymqaR64rztQT4FPOTLvGrK9NBz3bOaYp5ZjC1sp2tMu2LdGVNiJ2kLcv/0Mj+8+RZITgjRnFT6yT/CVLcdftpSIwuiBW73BTKXfOUolCpQeFzjn/hNnFlSTPb+eU/OvkL9SI9i3RlRYQvluQnL9CM1dzLq8RXye58VGuZQouYQt+R4o6zIGbjsuXeOKNIPLnmdQS3Ipea8QpUcp+R5q5B5qSkOrBPvWiApLVgUQXzCbAwWuJBXM4nCBM0eVTqQqZ5KufJ0bbX//FnRHlDR7JXJVmkqNZyYVC89SLjlHmSSPixI5tV9XCvatERWWVzoXWdE0vi+cgrzoJQqKXqCw+HmKiyejvuj4z/vQ/egX7aLVJ57r3ofQeKVSLz1OrTSTGs8stPKrgn1rRIX9WvUx1SXj+aVkHPWqMTSoRqFRPUmjaiStDZEDd9rc8xiXRdEVuJXO93eg89nFLZ+9tHgn0Ox9kCavJPQ39IJ9a0SF6Tvb6NREYapyo6d0Mn0XJtH/43R6Lodhqi7DVKGmPe0Ijb5+dIeux7RqI6alm+n6cCtdAdvp9N1J56Kv0IccEmw/iKiw+5krsuCgO+x4G8JmQ6AzLe840bZ6CZbIEMzrw/4KXB2BacUmjEujMAZH05mlEGw9yKDC7rid9AFEusEaV277OdE0z4XePR/RG7Ocni9WYdm8FnNEKObwdXSHhdMdugHDda1g50EGHdZzJg7WukKQMzqJI00BbvQf9qcvIZDe2GB6YpbRs2MFlm13ItdglJ0WbDzMoMO66qshaBZdUic0c5wwJbrzx0lvbqf50n/En/7EQPrig+jbG4wlYycGg1Gw8TCDDrujQ57LtdXLubE1AFP6EnrzQ+krjKBXsYnevCgssmi61dkY9OK+xHv9p7D/kz3MVvYwW9nDbGUPs5U9zFZ/AovebfKEAWUDAAAAAElFTkSuQmCC" style="height:28px;" alt="Copilot" />
+        <button class="sidebar-toggle">☰</button>
+      </div>
+      <div class="sidebar-nav">
+        <div class="nav-item"><span class="nav-icon">✚</span> New chat</div>
+        <div class="nav-item"><span class="nav-icon">🔍</span> Search</div>
+        <div class="nav-item"><span class="nav-icon">📚</span> Library</div>
+        <div class="nav-item"><span class="nav-icon">✨</span> Create</div>
+        <div class="nav-item"><span class="nav-icon">🚀</span> Frontier</div>
+      </div>
+      <div class="sidebar-divider"></div>
+      <div class="sidebar-section">
+        <div class="section-header">Agents</div>
+        <div class="nav-item" style="font-size:12px;"><span class="nav-icon" style="font-size:12px;">📄</span> Word</div>
+      </div>
+      <div class="sidebar-divider"></div>
+      <div class="sidebar-section">
+        <div class="section-header">Chats <span class="search-icon">🔍</span></div>
+        <div class="chat-list-item active" id="chatBudget" onclick="switchChat('budget')">
+          <div class="chat-title-row"><span class="chat-title-text">Q3 Budget Review</span><span class="chat-status" id="statusBudget">✅</span></div>
+        </div>
+        <div class="chat-list-item" id="chatStrategy" onclick="switchChat('strategy')">
+          <div class="chat-title-row"><span class="chat-title-text">Product Strategy H2</span><span class="chat-status" id="statusStrategy">🟠</span></div>
+          <span class="xref" id="xrefStrategy">↳ referenced today</span>
+        </div>
+        <div class="chat-list-item" id="chatHiring" onclick="switchChat('hiring')">
+          <div class="chat-title-row"><span class="chat-title-text">Hiring Plan — Eng</span><span class="chat-status" id="statusHiring">🟡</span></div>
+          <span class="xref" id="xrefHiring">↳ data pulled today</span>
+        </div>
+        <div class="chat-list-item"><span class="chat-title-text">Comparing Decks for...</span></div>
+        <div class="chat-list-item"><span class="chat-title-text">Meeting Prep — Lead...</span></div>
+        <div class="chat-list-item"><span class="chat-title-text">Summary Request for...</span></div>
+      </div>
+      <div class="sidebar-bottom">
+        <div class="apps-link">📦 Apps</div>
+        <div class="user-row">
+          <div class="user-avatar">HS</div>
+          <div>
+            <div class="user-name">Hema Sridharan</div>
+            <div class="premium-badge">M365 Copilot (Premium)</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main -->
+    <div class="bizchat-main">
+      <!-- Top Bar -->
+      <div class="topbar">
+        <div class="topbar-title" id="topbarTitle">Q3 Budget Review</div>
+        <div class="topbar-toggle" style="position:absolute; left:50%; transform:translateX(-50%);">
+          <button class="active">Work</button>
+          <button>Web</button>
+        </div>
+        <div class="topbar-actions">
+          <img src="data:image/png;base64,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" style="height:36px;" alt="Actions" />
+        </div>
+      </div>
+
+      <!-- Conversation -->
+      <div class="convo-area" id="convoArea">
+        <div class="convo-inner" id="convoInner">
+
+
+          <div class="day-divider">Yesterday</div>
+
+          <!-- Previous context (always visible, muted) -->
+          <div class="user-msg" style="opacity: 0.5;">
+            <div class="bubble">Review the Q3 Budget Proposal and flag anything where marketing allocation looks disproportionate to engineering headcount growth.</div>
+          </div>
+          <div class="copilot-msg" style="opacity: 0.5;">
+            <div class="agent-label"><span class="agent-icon word">W</span> Word</div>
+            <div class="body"><p>I reviewed Q3_Budget_Proposal.docx. Marketing is allocated at 33% ($1.4M) — significantly above the 22% benchmark for your org's growth stage. I've suggested tracked changes reducing it to 28% and reallocating $350K to engineering headcount. The doc is saved with pending changes.</p></div>
+            <div class="doc-card">
+              <div class="doc-card-inner">
+                <span class="doc-card-icon">📄</span>
+                <div class="doc-card-info">
+                  <div class="doc-card-title">Q3_Budget_Proposal.docx</div>
+                  <div class="doc-card-sub">Saved in OneDrive · 3 tracked changes pending</div>
+                </div>
+                <span class="doc-card-open">↗</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="day-divider">Today</div>
+
+          <!-- ═══ BEAT 1: Proactive card ═══ -->
+          <div class="copilot-msg hidden" id="beat1">
+            <div class="agent-label"><img src="data:image/png;base64,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" style="height:26px;" alt="Copilot"></div>
+            <div class="proactive-card">
+              <div class="proactive-card-header">
+                <span class="bell">🔔</span> Since you were last here
+              </div>
+              <div class="proactive-card-body">
+                <div class="update-item">
+                  <span class="update-icon">💬</span>
+                  <div><strong>CFO left 2 comments</strong> on <span class="doc-ref">Q3_Budget_Proposal.docx</span><br/><span class="quote">"Can we revisit the marketing allocation rationale?"</span> and <span class="quote">"Timeline seems aggressive for the engineering ramp"</span></div>
+                </div>
+                <div class="update-item">
+                  <span class="update-icon">📊</span>
+                  <div><strong>Q3_Actuals.xlsx</strong> was updated by Finance team <span style="color:var(--text-muted);">· 3 hours ago</span></div>
+                </div>
+                <div class="update-item">
+                  <span class="update-icon">📋</span>
+                  <div><strong>Hiring_Plan_H2.xlsx</strong> pipeline data refreshed <span style="color:var(--text-muted);">· overnight sync</span></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- ═══ BEAT 2: Suggested response ═══ -->
+          <div class="copilot-msg hidden" id="beat2">
+            <div class="body">
+              <p>Regarding the CFO's first comment — I cross-referenced the updated Q3 actuals with the marketing allocation. Here's a suggested reply:</p>
+            </div>
+            <div class="suggestion-card">
+              <div class="suggestion-card-header"><img src="data:image/png;base64,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" style="height:22px;vertical-align:-4px;" alt="Copilot"> Suggested reply to CFO's comment</div>
+              <div class="suggestion-card-body">
+                <div class="draft-text">
+                  "The revised marketing allocation is grounded in Q3 actual ROI data — campaign efficiency held at reduced spend levels (see Q3_Actuals.xlsx, row 14). The 28% target balances growth investment with the engineering ramp funding. Happy to walk through the numbers in our Thursday sync."
+                </div>
+                <div class="cite-row">
+                  <span class="cite-pill"><span class="cite-icon">📊</span> Q3_Actuals.xlsx · D14</span>
+                  <span class="cite-pill"><span class="cite-icon">📄</span> Q3_Budget_Proposal · §2</span>
+                </div>
+              </div>
+              <div class="suggestion-card-actions">
+                <button class="action-btn primary" onclick="nextStep()">✓ Post as reply</button>
+                <button class="action-btn secondary">Edit first</button>
+                <button class="action-btn ghost">Dismiss</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- ═══ BEAT 3: Confirmation ═══ -->
+          <div class="copilot-msg hidden" id="beat3">
+            <div class="confirm-chip">✓ Reply posted on your behalf to Q3_Budget_Proposal.docx, Section 2</div>
+            <div class="body" style="margin-top: 10px;">
+              <p>The CFO's second comment asks about the engineering ramp timeline: <em>"Timeline seems aggressive."</em></p>
+              <p>I can pull the hiring pipeline data to build a response — want me to check?</p>
+            </div>
+            <div class="suggestion-card" style="margin-top: 8px;">
+              <div class="suggestion-card-actions" style="border-top: none;">
+                <button class="action-btn primary" onclick="nextStep()">Yes, pull the data</button>
+                <button class="action-btn secondary">I'll handle it</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- ═══ BEAT 4: Excel analysis inline ═══ -->
+          <div class="copilot-msg hidden" id="beat4">
+            <div class="agent-label"><span class="agent-icon excel">X</span> Excel <span class="think-icon">🧠</span></div>
+            <div class="body">
+              <p>I pulled the hiring pipeline from <strong>Hiring_Plan_H2.xlsx</strong>:</p>
+              <table class="data-table">
+                <tr><th>Role</th><th>Pipeline</th><th>Avg. Time-to-Fill</th><th>Projected Start</th></tr>
+                <tr><td>ML Engineer (×2)</td><td>4 candidates</td><td>6 weeks</td><td>Apr 15</td></tr>
+                <tr><td>Full-stack (×2)</td><td>7 candidates</td><td>4 weeks</td><td>Mar 28</td></tr>
+                <tr><td>Platform (×1)</td><td>2 candidates</td><td>8 weeks</td><td>May 1</td></tr>
+              </table>
+              <p>The ramp is completable by end of Q3 <strong>if offers go out by March 15</strong>. Tight but feasible given current pipeline volume.</p>
+              <div class="cite-row">
+                <span class="cite-pill"><span class="cite-icon">📊</span> Hiring_Plan_H2.xlsx · Pipeline A2:D6</span>
+              </div>
+              <div style="margin-top: 12px;">
+                <p><strong>Suggested reply to CFO:</strong></p>
+                <div class="draft-text" style="background: #FAFAFA; border-left: 3px solid var(--copilot-purple); padding: 12px 16px; border-radius: 0 8px 8px 0; font-style: italic; color: var(--text-secondary); line-height: 1.7; margin-top: 6px;">
+                  "The hiring timeline is backed by active pipeline data — we have 13 candidates across 5 roles, with projected starts between March 28 and May 1. Completion by end of Q3 requires offers out by mid-March. I've attached the pipeline breakdown below."
+                </div>
+              </div>
+            </div>
+            <div class="suggestion-card" style="margin-top: 10px;">
+              <div class="suggestion-card-actions" style="border-top: none;">
+                <button class="action-btn primary" onclick="nextStep()">Add analysis to budget doc</button>
+                <button class="action-btn secondary">Post as reply only</button>
+                <button class="action-btn ghost">Edit</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- ═══ BEAT 5: Transition message ═══ -->
+          <div class="copilot-msg hidden" id="beat5">
+            <div class="body">
+              <p>I'll add the hiring timeline table to <strong>Section 3</strong> of Q3_Budget_Proposal.docx and post the reply to the CFO's second comment referencing it.</p>
+              <div class="confirm-chip" style="margin-top: 6px;">✓ Table inserted into Section 3 · Reply posted</div>
+              <p style="margin-top: 10px;">Opening the document for your review →</p>
+            </div>
+          </div>
+
+          <!-- ═══ BEAT 8: Round-trip awareness ═══ -->
+          <div class="copilot-msg hidden" id="beat8">
+            <div class="agent-label"><img src="data:image/png;base64,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" style="height:26px;" alt="Copilot"></div>
+            <div class="proactive-card">
+              <div class="proactive-card-header">
+                <span class="bell">↩</span> Back from Word · Q3_Budget_Proposal.docx
+              </div>
+              <div class="proactive-card-body">
+                <div class="update-item">
+                  <span class="update-icon">✅</span>
+                  <div>You <strong>accepted all 3 tracked changes</strong> — marketing at 28%, hiring table in §3, infrastructure note</div>
+                </div>
+                <div class="update-item">
+                  <span class="update-icon">✏️</span>
+                  <div>You edited the infrastructure paragraph — changed <em>"reserved instances"</em> to <em>"1-year committed use discounts"</em></div>
+                </div>
+                <div class="update-item">
+                  <span class="update-icon">💬</span>
+                  <div>Both CFO comments are now <strong>resolved</strong></div>
+                </div>
+              </div>
+            </div>
+            <div class="body" style="margin-top: 10px;">
+              <p>The Q3 Budget Proposal is finalized. Version 2.4 saved. Want me to notify the CFO that the doc is updated, or move on to something else?</p>
+            </div>
+            <div class="suggestion-card" style="margin-top: 8px;">
+              <div class="suggestion-card-actions" style="border-top: none;">
+                <button class="action-btn primary" onclick="nextStep()">Notify CFO</button>
+                <button class="action-btn ghost">Move on →</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- ═══ BEAT 9: Notify CFO with friction ═══ -->
+          <div class="copilot-msg hidden" id="beat9">
+            <div class="agent-label"><img src="data:image/png;base64,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" style="height:26px;" alt="Copilot"></div>
+            <div class="body">
+              <p>I've drafted a notification to the CFO:</p>
+            </div>
+            <div class="suggestion-card">
+              <div class="suggestion-card-header"><img src="data:image/png;base64,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" style="height:22px;vertical-align:-4px;" alt="Copilot"> Draft email to CFO</div>
+              <div class="suggestion-card-body">
+                <div style="display:flex; align-items:center; gap:8px; margin-bottom:10px; font-size:12px; color:var(--text-secondary);">
+                  <strong>To:</strong> Sarah Chen (CFO) &nbsp;·&nbsp; <strong>Subject:</strong> Q3 Budget Proposal — Updated per your comments
+                </div>
+                <div class="draft-text">
+                  "Hi Sarah — I've updated the Q3 Budget Proposal based on your comments. Marketing allocation revised to 28% with supporting ROI data, and the engineering hiring timeline is now backed by pipeline data (all 5 roles feasible by end of Q3). Both comments are resolved in the doc. Let me know if you'd like to discuss in our Thursday sync."
+                </div>
+                <div class="cite-row" style="margin-top:8px;">
+                  <span class="cite-pill"><span class="cite-icon">📄</span> Q3_Budget_Proposal.docx attached</span>
+                </div>
+              </div>
+              <div class="suggestion-card-actions">
+                <span style="font-size:11px; color:var(--red); display:flex; align-items:center; gap:4px;">⚠️ Sending to: 1 executive recipient</span>
+                <div style="margin-left:auto; display:flex; gap:8px;">
+                  <button class="action-btn secondary">Edit draft</button>
+                  <button class="action-btn primary">Send</button>
+                </div>
+              </div>
+            </div>
+            <div class="confirm-chip" style="margin-top:8px;">✓ Email sent to Sarah Chen (CFO)</div>
+            <div class="body" style="margin-top: 10px;">
+              <p>Budget workstream wrapped. What else do you want to work on?</p>
+            </div>
+          </div>
+
+          <!-- ═══ BEAT 10: Removed from main chat - happens in Strategy sidebar click ═══ -->
+          <div class="copilot-msg hidden" id="beat10">
+            <div class="agent-label"><img src="data:image/png;base64,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" style="height:26px;" alt="Copilot"></div>
+            <div class="body">
+              <p>Your H2 strategy deck is <strong>80% done</strong> — here's where it stands:</p>
+            </div>
+            <div class="proactive-card">
+              <div class="proactive-card-header" style="background: linear-gradient(90deg, rgba(232,117,17,0.06), transparent);">
+                <span class="bell">📊</span> Product Strategy H2 · deck is 80% done
+              </div>
+              <div class="proactive-card-body">
+                <div class="update-item">
+                  <span class="update-icon">✅</span>
+                  <div><strong>Slides 1-6</strong> complete — exec summary, market sizing, product roadmap, customer segments</div>
+                </div>
+                <div class="update-item">
+                  <span class="update-icon">🔲</span>
+                  <div><strong>Slide 7</strong> missing — <em>Competitive landscape</em> (you mentioned needing Gartner data)</div>
+                </div>
+                <div class="update-item">
+                  <span class="update-icon">🔲</span>
+                  <div><strong>Slide 8</strong> missing — <em>Go-to-market timeline</em></div>
+                </div>
+                <div class="update-item">
+                  <span class="update-icon">🗓️</span>
+                  <div>Due <strong>tomorrow</strong> — Leadership Review, 2:00 PM</div>
+                </div>
+              </div>
+            </div>
+            <div class="body" style="margin-top: 10px;">
+              <p>Sarah shared <strong>Competitive_Analysis_Q3.xlsx</strong> last week — I can pull the data and generate the competitive landscape slide. Want me to draft it?</p>
+            </div>
+            <div class="suggestion-card" style="margin-top: 8px;">
+              <div class="suggestion-card-actions" style="border-top: none;">
+                <button class="action-btn primary">Yes, draft the slide</button>
+                <button class="action-btn secondary">Show me the data first</button>
+              </div>
+            </div>
+          </div>
+
+        </div>
+        <!-- Alt chat view for beats 10-11 -->
+        <div class="convo-inner hidden" id="altChatView"></div>
+      </div>
+
+      <!-- Input Bar -->
+      <div class="input-bar-container">
+        <div class="input-bar" style="border-radius:12px; border:1px solid var(--border); overflow:hidden; background:var(--surface);">
+          <input type="text" placeholder="Message Copilot" style="width:100%; border:none; outline:none; font-size:14px; font-family:var(--font); background:transparent; color:var(--text); padding:14px 16px 8px; display:block;" />
+          <div style="display:flex; align-items:center; justify-content:space-between; padding:4px 12px 10px;">
+            <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAI4AAAAsCAYAAACzKYDtAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAAFiUAABYlAUlSJPAAAARqSURBVHhe7ZrZK31RFMf9bcbIlKEoGTKlREryohSRQvEgShEelCFFRKIkDzwgSUqKlMzzlFi/vqv26dzt3OO07+/6/dyzPrXD2etM93zu2mvvI4oEwYAofYMgeEHEEYwQcQQjRBzBCBFHMELEEYwQcQQjRBzBiJDF+fz8pPn5eXp7e9O7hAgmZHFOT08pOjqadnZ29K6I4ObmhhYWFmhsbIx2d3f1bt8i4riATJqQkMD3p1ptbS09Pz/rob5DxAkCMk1cXByVlJTQ1tYWXV9fU19fH9/r4OCgHu47fCXO+Pg41dTUeGrFxcV8X9PT09b+7+/vlJycTKmpqQGxw8PDAef5H2lubub7WVlZ0buM8JU4eMD2YcdLcxJHj6mvrw84TzDUw3NriAkHIs4PcXR0xPdVVlZG29vbdHl5aQ1VnZ2dergnuru7KScnh1t2djbFxsZyw+9qO2LCgYjzg7S3t3/JCJmZmXzPoXJxcUG5ubnc8Hu4EXF+EKxRjY6OWrVMY2PjX3vIIk4EixNO3MTBdH9gYICysrL4s8VwhtndxsYGy2zn5OSEGhoaKCkpiWPxE4KfnZ0FxOnifHx80OLiIuXn51NMTAy30tJSPp4XXMXBopeeqkNpvb29+il8SzBxHh4eOLvh88KwiAdeVVVl1UNTU1NWLBYk09PT+aFDrNbWVsrLy+N9UTcdHh5asbo4k5OTvF9aWhr3oUGivb09ax83XMV5eXnhNQy3trS0xBeEG9L79HZ/f6+fwrcEE6e/v58/T8gDiRTLy8u8GFlQUMCFOvoqKir44Y+MjFiZCDO/trY2PgaKeLVdF0f9jeMqXl9fPS9uuorjBRmqzHASB19UCBMfH0/r6+sB8U9PT1RZWWn17e/vc7YoLCzkxUo7yERYNrD36eIoQXH+mZkZz8IoRJx/hJM4kAPDUkpKiuOQYX/46Ecc4rGfHadj6+JAlK6uLuuVCn729PRw1vGCiENEBwcHNDExQbOzs3R+fq53hwWnh6vEccs4iYmJPOwrcdwyTnl5uVUe6OIoIBBe4mINCf1eV8F9LQ7qgaamJr5+1VCAYlIQbpzEAd/VOEVFRXR1deWpxkFGcapxkFWOj48DZmiYYaEfcV7wtTgo6HHtHR0dPH3FtxjfeGzzOi01JZg4yHjqPZk+q8JU217MQgJsc5pVQTD7QqVdHGSv6upq3geSoQ/1Eo4zNzdn7eOGr8TRX3JmZGTwh3V3d2fFrK6u8v1gaqq/+AzWvKZ3O8HEAY+Pj1xvYKqNa0GmqaurC5heK7ANfapWwT7YF8ewYxcHWUlfJ4JokFJfJwqGr8QZGhria7U3XZy1tbUvMd81ry85IwlfiaOD/6vBtWO9A0MEhiqkcGzb3NzUwwUbIYuDtNfS0vIrF/fwz1mqJrA3LOEL7oQszm/n9vaWZ1aqXsHYj/c4gju+F0cwQ8QRjBBxBCNEHMEIEUcwQsQRjBBxBCNEHMEIEUcwQsQRjBBxBCNEHMEIEUcw4g/GyjwYm09AbwAAAABJRU5ErkJggg==" style="height:24px;" alt="Tools" />
+            <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAF4AAAAvCAYAAABqrH0KAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAAFiUAABYlAUlSJPAAAANmSURBVHhe7ZjdK2xRFMD9bUYzZjIoRUbyMN6MNzHNixApCSXNFC9EvHgYHzVlknkRXqSEpHwUQpSvxue6rdU907nr3OnOOXOy93TXr1ZZsz/O9ps9e5+9y0BQQhn/QPgZRLwiRLwiRLwiRLwiRLwiRLwiRLwiRLwiRLwiRLwiRLwiRLwiRLwiRLwiXBO/vb0Nw8PD0NXVBUNDQ7C+vs6rCCZcEZ9IJKC8vNwS/f39vGrJ8v7+DslkEp6fn3mRI4oWv7W1ZRFujqWlJd6kJNnZ2aH/Z2VlhRc5omjxHR0dFtnmCIfDvElJsrm56epEKlp8XV2dRbY5Kioq4PPzkzfTnq+vL7i8vMzlxi97eXk599nV1RV8fHzkcjsULb6ystIim8fj4yNvpj3z8/M09ru7O8q5eFzzvV4vTExMsJaFIeLzMDk5SWM/PT2lnC81uMliPjg4yFoWhojPg4j/IY6Pj2FgYICWEGRqaorGfnZ2Rjlfal5eXv4Q//39TeeXvb09U6/5EfG/mZmZobEeHh5Sblc87gWYj42NmXrNj23x19fX0N3dDQ8PD5QHAgGLaB5PT080I/Bn6tYBxG0M8QcHB5TbXWpub28pHxkZMfWaH9vi8SoAH7CxsUF5dXW1RTSPbDYL+/v79Pfi4iLvUgu0F7+7u0sPmJ2dpTwSiVhEmyMUClG9tbU1yjOZDOtRD7QXj7PX4/FAX18f5QsLCxbZ5ojH41QP1z7MzYcSndBePNLa2gp+v582FDzhtbe3W4RjtLS00BeF9aqqqih0BX+JtbW1cH9/T7ndzfXt7Q3q6+sLvlJwJN5Y53t6eijHYzPOkObmZvD5fNDU1ASjo6Pw+vpK5Z2dnVR/enqa9aQvdme8XRyJR/CdFR+MV7/41vI3cKZHo1Gq19bWRm82pYK24vHia3x8nB6OF2U4w1OpFG2+eG+NAwoGg1Qei8Xyfjm6YuxdNzc3lPOlBg9auNyiAyc4Fm+QTqehoaGBBsWjpqYG5ubmeJOSAPeu8/PzXM7FI/iigGu7E4oWb3ByckKzHgfX29sLR0dHJbW0/Au+1BSLa+IRtwenE8aMX11d5UWOEPEFgq+ZeFVycXHBixzhqngcXGNjY8E3dP8zrooXCkfEK0LEK0LEK0LEK0LEK0LEK0LEK+IX1vpxDmvtWvAAAAAASUVORK5CYII=" style="height:24px;" alt="Actions" />
+          </div>
+        </div>
+        <div class="input-disclaimer">AI-generated content may be incorrect</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ WORD VIEW ═══ -->
+  <div class="word-view" id="wordView">
+    <div class="word-main">
+      <div class="word-topbar">
+        <span class="w-logo">W</span>
+        <span class="w-title">Q3_Budget_Proposal.docx</span>
+        <span style="font-size:11px; color:var(--text-muted); margin-left:auto; margin-right:8px;">Editing</span>
+        <button class="w-share">Share</button>
+      </div>
+      <div class="word-ribbon">
+        <button class="r-active">Home</button>
+        <button>Insert</button>
+        <button>Layout</button>
+        <button>References</button>
+        <button>Review</button>
+        <button>View</button>
+        <button>Help</button>
+        <div class="word-ribbon-right">
+          <button>Editor</button>
+          <button class="r-copilot"><img src="data:image/png;base64,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" style="height:22px;vertical-align:-4px;" alt="Copilot"></button>
+        </div>
+      </div>
+      <div class="word-activity">
+        <span class="act-icon">ℹ</span>
+        <span><strong>Activity</strong> Catch up on updates, including comments from collaborators and edits to sections.</span>
+        <button class="view-more">View more</button>
+      </div>
+      <div class="word-canvas">
+        <div class="word-page">
+          <div class="wp-meta" style="color: var(--brand-blue); font-size: 10px;">Q3 Budget Proposal: Finance Review Draft</div>
+          <h1>Q3 Budget Proposal</h1>
+          <p class="wp-subtitle">Design Principles and Allocation Strategy for H2 FY26</p>
+          <div class="wp-meta">Finance Team · Last updated today by Copilot · Version 2.3</div>
+
+          <h2>1. Executive Summary</h2>
+          <p>This proposal outlines the Q3 FY26 budget allocation across engineering, marketing, operations, and infrastructure. Total proposed budget: <strong>$4.2M</strong>, representing a 12% increase over Q2.</p>
+
+          <h2>2. Marketing Allocation</h2>
+          <p style="text-decoration: line-through; color: #999;">Marketing is allocated $1.4M (33% of total budget), consistent with Q2 spending levels adjusted for seasonal campaign needs.</p>
+          <div class="tracked-insert">
+            Marketing allocation revised to <strong>$1.18M (28%)</strong>, grounded in Q3 actual ROI data showing campaign efficiency held at reduced spend. The reallocation funds engineering headcount growth while maintaining coverage for priority campaigns.
+          </div>
+          <p style="margin-top: 4px; font-size: 11px; color: var(--text-muted);"><em>💬 CFO comment resolved — reply posted</em></p>
+
+          <h2>3. Engineering Headcount</h2>
+          <p>Current team: 42 engineers. Q2 attrition: 3 departures.</p>
+          <div class="tracked-insert">
+            <strong>Hiring Pipeline Analysis (Copilot-generated from Hiring_Plan_H2.xlsx):</strong>
+            <table style="width:100%; border-collapse:collapse; font-size:12px; margin: 8px 0;">
+              <tr style="background:#F5F5F5;"><th style="text-align:left;padding:6px 8px;border:1px solid #E0E0E0;">Role</th><th style="padding:6px 8px;border:1px solid #E0E0E0;">Pipeline</th><th style="padding:6px 8px;border:1px solid #E0E0E0;">Time-to-Fill</th><th style="padding:6px 8px;border:1px solid #E0E0E0;">Start</th></tr>
+              <tr><td style="padding:6px 8px;border:1px solid #E0E0E0;">ML Engineer (×2)</td><td style="padding:6px 8px;border:1px solid #E0E0E0;text-align:center;">4</td><td style="padding:6px 8px;border:1px solid #E0E0E0;text-align:center;">6 wks</td><td style="padding:6px 8px;border:1px solid #E0E0E0;text-align:center;">Apr 15</td></tr>
+              <tr><td style="padding:6px 8px;border:1px solid #E0E0E0;">Full-stack (×2)</td><td style="padding:6px 8px;border:1px solid #E0E0E0;text-align:center;">7</td><td style="padding:6px 8px;border:1px solid #E0E0E0;text-align:center;">4 wks</td><td style="padding:6px 8px;border:1px solid #E0E0E0;text-align:center;">Mar 28</td></tr>
+              <tr><td style="padding:6px 8px;border:1px solid #E0E0E0;">Platform (×1)</td><td style="padding:6px 8px;border:1px solid #E0E0E0;text-align:center;">2</td><td style="padding:6px 8px;border:1px solid #E0E0E0;text-align:center;">8 wks</td><td style="padding:6px 8px;border:1px solid #E0E0E0;text-align:center;">May 1</td></tr>
+            </table>
+            Ramp completable by end of Q3 if offers go out by March 15. Net +2 over attrition.
+          </div>
+          <p style="margin-top: 4px; font-size: 11px; color: var(--text-muted);"><em>💬 CFO comment resolved — pipeline data attached</em></p>
+
+          <h2>4. Infrastructure</h2>
+          <p>Cloud infrastructure costs are projected at $680K, a 15% increase driven by AI workload scaling. Recommend reserved instance commitments to reduce to $590K.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Word Copilot Side Pane -->
+    <div class="word-copilot-pane">
+      <div class="wcp-header">
+        <img src="data:image/png;base64,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" style="height:22px;" alt="Copilot"> <span style="font-size:10px; color:var(--text-muted);">in Word</span>
+        <div class="wcp-icons">
+          <button>☰</button>
+          <button>✓</button>
+          <button>⊞</button>
+          <button>⋯</button>
+          <button>✕</button>
+        </div>
+      </div>
+
+      <div class="linked-badge">
+        <span class="lb-dot"></span>
+        Linked to: Q3 Budget Review · BizChat
+      </div>
+
+      <div class="wcp-messages">
+        <div class="wcp-divider">From BizChat · earlier today</div>
+
+        <div class="wcp-msg user-side" style="animation: fadeInUp 0.4s ease 0.5s both;">
+          Review Q3 Budget Proposal... flag marketing vs. engineering.
+        </div>
+
+        <div class="wcp-msg copilot-side" style="animation: fadeInUp 0.4s ease 0.8s both;">
+          <div class="wcp-label"><img src="data:image/png;base64,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" style="height:22px;" alt="Copilot"></div>
+          <div class="wcp-text">Reviewed. Marketing at 33% looks high — suggested reduction to 28% with $350K reallocated to engineering. 3 tracked changes applied.</div>
+        </div>
+
+        <div class="wcp-divider" style="animation: fadeIn 0.4s ease 1.1s both;">Today · continued</div>
+
+        <div class="wcp-msg copilot-side" style="animation: fadeInUp 0.4s ease 1.3s both;">
+          <div class="wcp-label"><img src="data:image/png;base64,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" style="height:22px;" alt="Copilot"> <span style="font-size:9px; color:var(--copilot-purple); font-weight:400; margin-left:4px;">context-aware</span></div>
+          <div class="wcp-text">I resolved both CFO comments — the <strong>marketing rationale</strong> reply is posted, and the <strong>hiring pipeline table</strong> is inserted in Section 3. All tracked changes are ready for your review.</div>
+        </div>
+
+        <div class="wcp-msg copilot-side" style="animation: fadeInUp 0.4s ease 1.7s both; background: rgba(123,87,255,0.04); padding: 10px 12px; border-radius: 8px; margin-top: 4px;">
+          <div class="wcp-label"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAJUAAAAwCAYAAAAYczgSAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAAFiUAABYlAUlSJPAAAAiGSURBVHhe7Zv5T1VHFMf9pbVJ/4H+0vSXtml/aVp/NLWLWC0KLgiGKIviFmsRRNG64las0aBY1wiKOy5VpIjaWKVqEdFKFKxFtOBWKYvghmjTnuZ7mrm5b+bNfffdh9LSOckn5s6cmXlv5vvOnJmL3Z4+fUoGgxd01k12NBjcojMjKoNndGZEZfCMzoyoDJ7RmRGVwTM6M6IyeEZnRlQGz+jMiMrgGZ0ZURk8ozMjKoNndGZEZfCMzoyoDJ7RmRGVwTM6M6IyeEZnRlQGz+jMiMrgGZ0ZURk8ozNXorpy5QqtXLmSJk+eTKmpqY7Mnj2brl27pvRh6HroLKCoduzYQb179w6KQYMG0Y0bN5S+DF0LnTmK6uTJkyySmJgYunz5slIPpk2bxj4FBQX04MEDKiws5OeMjAzF19C10JlWVI8fP6bhw4ezoOrr65V6gHIIaNasWT7lycnJ1LdvX2publbaGLoOOtOKCpFHRCC5TrBv3z72OXr0qE95UVERlx86dEhpY3j+tD28R/eb/QeGUNCZX1E9efKERowYwVGqra1NqRekpKSweLBNnjt3zuLYsWNcPmzYMDp8+DCX6aLdfwHMB7b/O3fuWGXHjx/n77hgwQLF/9/Ej/uyaXx0Lxo39H0q2bFYqQ8FnfkV1ZkzZ3jCNmzYoNQJmpqalATdibCwMFq9ejXnXXJfbrl69SotXLiQBg4caPUJ4ebm5jqKP1RKS0t5O0c6IIT1bxXV3fpaqvhuMxWsmkLTEnpT1si3qHFRd2rJfJG+TnqTkmM/oG+yU+inQ7nU/Ftop3Sd+RVVZmYmT1hdXZ1SJyguLmafIUOGUE5ODgsRC4yyefPmUUlJiRW5ULdixQqu27Rpk9JXINrb2/kU2q9fP0tMQ4cO5bHxjByutbVVaddRXLp0iaKiomjq1KnWOKGK6ubNm7RkyRKaOXNmh332qpJ8+iTsY0qLeY/yP3uNfl/0EtGybj40fdmd9kx8ldKHvUt9+3xMpftXKv24RWeKqJCgIxIkJSUpndjBfRQmVZwKq6qq+BkTJfsCRCj0O2rUKKUuEFu3bmUh9e/fn0V57949q+727du0ZcsWun//vtLuWRKqqET7jvxBYKtbmvi2IiQd68e8Todz5yj9uEVniqjOnz/PX9Zp63v48CGFh4fT2LFjrbKNGzdyu7Nnzyr+AlyeRkZGKuVOXL9+nSMgopR8IOhMjKiCEBXyE3xZbFtynUDcX61du9YqmzBhAkcSp9xm3LhxnPzL5U7s3buXx5o7d65j33YuXrzIiyW2S0TI5cuXU0tLi+VTWVnJAocf3gDgWqRPnz7cZs6cOT4HC7tvoO0v0Nhoj3rU2YmNjfU5CHgBW9nShLcU8dj5a0sP+qPmW/qjej/tXxBBRzbNVfpxi84UUc2YMYO/pFNCvWzZMvZBroTnxsZG3p6wGLKvHUQ3RCu53AksGsY6ePCgUucPRDMsKASCxUN75F/oY8yYMZZYhFDi4+OZ0aNH8+ePiIhgX7xyunv3ro9vIFG5GRvziu0a84By5Go4fKxatSrke73yovX0Vbw+Uv2V9w411FXShowRtDR1INVWfE+/XdHvLIHQmSIqTC62G7ncDqLNgAEDrMghknanha+pqWEfp23VH0JUWES5Tka3VUIcEAn6yc/P5zIhFPwYDhw4wNcGKEcCHRcXx+W4GrH7OokqmLHt7Tty+7tRdZJSo3soYhL8eWIm5WTE0d4Vk6jyeD5NTwxT+ggGnSmiSkxM5F+uXC6ora3lyZg/f75VhqQdi4CIJfsLdu3a5RPd3CJE5SafOnHiBH+O9PR0JdKiPfoRdUIo+L4NDQ0+vmvWrGHfvLw8fnYjqmDGtrfvSFE9aW+jmP69FDGxoL5PoVtVP9DnsR9R4Zp0vlIY9OmHVF1WqPTjFp0popoyZQpvU0jG5Tqwbt06ngxcGeAZpy/c4UyaNEnxtYMJhZ884YEQC4wtV0QTHfJC25GFIT/bfSGmYEUlPzuNbff3N34ofJUcQd9NfkURVXtDDX36yUc8pkxNebHSjxt0pohKvJ7JysryuSVHci7ur5B34EJw8+bNvBWibOfOncqgAmwBEBTueeS6QFRUVPBWO3jwYLpw4YJSb0cslFO0wL0Qtm2x0BMnTvRZVAgXOQ58t23bxmVOopBF5WZsu39Hi6q+7hLFRfakhkXdfUTVeuef9MMf5d+uU/pxg84UUeGiEeJBKJcHd8Lpb6jEO0LkLnJdILAIYpGR1ELc+IyiHrmMuKcKlNfgO+3Zs4fLhFBkXwgXAoaQIWi7r5Ooghnb3l4WdUdwrjiH4iN70q8ZL/sVVVbaECpa/4X1/MxFJcBJ5MiRI3wcFicibEG4jxLgl4y/nQqU2OM+C5FKnKaCBa+E0tLSrEnAwmFMfzfq27dv59OXvxMYtnb5RAehop/p06f7nP5wiSuiihtRBTO2vU+IDcLCW4hQrxTs/FJaQMMj36fVSW9Qa+YLPqLCNhgV/sHzF5UdcbpDRLCXV1dXW2KT2whOnTrFPosXh/YyEwuMl9MjR47kRUOfuBfDgiB6iXwL/5aXl/O9mfCDAHHysm9LdqGcPn2aEhIS2BdRCt9T5+skKrdjC9/du3dbIsapu6Nfuj9oaaC8RaMoKrwXNd2q7rycyh+PHj3iiCS/ukEUw4cqKytT2gAIAZOFXyOO6nJ9Z+JPKF2Vhus/U2vjLbp1uYxPfXaey+lPR3Z2NgtI5BnYHnFKxPaB94WyP0I9Qjra4O/b5frO5v8kqmeFzlyLCoko8iKIZPz48VbYjo6OVv7zA64XhC8WTXc90ZkYUYWOzlyLCuBkhEtPWUQ68NcFbt/XPW+MqEJHZ0GJymCwozMjKoNndGZEZfCMzoyoDJ7RmRGVwTM6M6IyeEZnRlQGz+jsb70v2A+wxvyFAAAAAElFTkSuQmCC" style="height:22px;" alt="Copilot"></div>
+          <div class="wcp-text">
+            <strong>What's ready:</strong><br/>
+            ✓ Section 2 — marketing revised to 28%<br/>
+            ✓ Section 3 — hiring pipeline table added<br/>
+            ✓ Both CFO comments resolved<br/><br/>
+            You can review the tracked changes above, accept/reject, or tell me to adjust anything.
+          </div>
+        </div>
+
+        <!-- Beat 7: User says done -->
+        <div class="wcp-msg user-side hidden" id="beat7msg" style="margin-top: 8px;">
+          Done, looks good. Accepted all changes. Head back to chat.
+        </div>
+        <div class="wcp-msg copilot-side hidden" id="beat7reply" style="margin-top: 6px;">
+          <div class="wcp-label"><img src="data:image/png;base64,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" style="height:22px;" alt="Copilot"></div>
+          <div class="wcp-text">Got it — all changes accepted, doc saved as v2.4. I'll carry the update back to your BizChat thread. Switching you over →</div>
+        </div>
+      </div>
+
+      <div class="wcp-input-bar">
+        <div style="border: 1px solid var(--border); border-radius: 10px; overflow: hidden; background: #FAFAFA;">
+          <input type="text" placeholder="Message Copilot" style="width:100%; border:none; outline:none; font-size:12px; font-family:var(--font); background:transparent; color:var(--text); padding:10px 12px 4px; display:block;" />
+          <div style="display:flex; align-items:center; justify-content:space-between; padding:2px 8px 8px;">
+            <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAI4AAAAsCAYAAACzKYDtAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAAFiUAABYlAUlSJPAAAARqSURBVHhe7ZrZK31RFMf9bcbIlKEoGTKlREryohSRQvEgShEelCFFRKIkDzwgSUqKlMzzlFi/vqv26dzt3OO07+/6/dyzPrXD2etM93zu2mvvI4oEwYAofYMgeEHEEYwQcQQjRBzBCBFHMELEEYwQcQQjRBzBiJDF+fz8pPn5eXp7e9O7hAgmZHFOT08pOjqadnZ29K6I4ObmhhYWFmhsbIx2d3f1bt8i4riATJqQkMD3p1ptbS09Pz/rob5DxAkCMk1cXByVlJTQ1tYWXV9fU19fH9/r4OCgHu47fCXO+Pg41dTUeGrFxcV8X9PT09b+7+/vlJycTKmpqQGxw8PDAef5H2lubub7WVlZ0buM8JU4eMD2YcdLcxJHj6mvrw84TzDUw3NriAkHIs4PcXR0xPdVVlZG29vbdHl5aQ1VnZ2dergnuru7KScnh1t2djbFxsZyw+9qO2LCgYjzg7S3t3/JCJmZmXzPoXJxcUG5ubnc8Hu4EXF+EKxRjY6OWrVMY2PjX3vIIk4EixNO3MTBdH9gYICysrL4s8VwhtndxsYGy2zn5OSEGhoaKCkpiWPxE4KfnZ0FxOnifHx80OLiIuXn51NMTAy30tJSPp4XXMXBopeeqkNpvb29+il8SzBxHh4eOLvh88KwiAdeVVVl1UNTU1NWLBYk09PT+aFDrNbWVsrLy+N9UTcdHh5asbo4k5OTvF9aWhr3oUGivb09ax83XMV5eXnhNQy3trS0xBeEG9L79HZ/f6+fwrcEE6e/v58/T8gDiRTLy8u8GFlQUMCFOvoqKir44Y+MjFiZCDO/trY2PgaKeLVdF0f9jeMqXl9fPS9uuorjBRmqzHASB19UCBMfH0/r6+sB8U9PT1RZWWn17e/vc7YoLCzkxUo7yERYNrD36eIoQXH+mZkZz8IoRJx/hJM4kAPDUkpKiuOQYX/46Ecc4rGfHadj6+JAlK6uLuuVCn729PRw1vGCiENEBwcHNDExQbOzs3R+fq53hwWnh6vEccs4iYmJPOwrcdwyTnl5uVUe6OIoIBBe4mINCf1eV8F9LQ7qgaamJr5+1VCAYlIQbpzEAd/VOEVFRXR1deWpxkFGcapxkFWOj48DZmiYYaEfcV7wtTgo6HHtHR0dPH3FtxjfeGzzOi01JZg4yHjqPZk+q8JU217MQgJsc5pVQTD7QqVdHGSv6upq3geSoQ/1Eo4zNzdn7eOGr8TRX3JmZGTwh3V3d2fFrK6u8v1gaqq/+AzWvKZ3O8HEAY+Pj1xvYKqNa0GmqaurC5heK7ANfapWwT7YF8ewYxcHWUlfJ4JokFJfJwqGr8QZGhria7U3XZy1tbUvMd81ry85IwlfiaOD/6vBtWO9A0MEhiqkcGzb3NzUwwUbIYuDtNfS0vIrF/fwz1mqJrA3LOEL7oQszm/n9vaWZ1aqXsHYj/c4gju+F0cwQ8QRjBBxBCNEHMEIEUcwQsQRjBBxBCNEHMEIEUcwQsQRjBBxBCNEHMEIEUcw4g/GyjwYm09AbwAAAABJRU5ErkJggg==" style="height:18px;" alt="Tools" />
+            <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAF4AAAAvCAYAAABqrH0KAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAAFiUAABYlAUlSJPAAAANmSURBVHhe7ZjdK2xRFMD9bUYzZjIoRUbyMN6MNzHNixApCSXNFC9EvHgYHzVlknkRXqSEpHwUQpSvxue6rdU907nr3OnOOXOy93TXr1ZZsz/O9ps9e5+9y0BQQhn/QPgZRLwiRLwiRLwiRLwiRLwiRLwiRLwiRLwiRLwiRLwiRLwiRLwiRLwiRLwiXBO/vb0Nw8PD0NXVBUNDQ7C+vs6rCCZcEZ9IJKC8vNwS/f39vGrJ8v7+DslkEp6fn3mRI4oWv7W1ZRFujqWlJd6kJNnZ2aH/Z2VlhRc5omjxHR0dFtnmCIfDvElJsrm56epEKlp8XV2dRbY5Kioq4PPzkzfTnq+vL7i8vMzlxi97eXk599nV1RV8fHzkcjsULb6ystIim8fj4yNvpj3z8/M09ru7O8q5eFzzvV4vTExMsJaFIeLzMDk5SWM/PT2lnC81uMliPjg4yFoWhojPg4j/IY6Pj2FgYICWEGRqaorGfnZ2Rjlfal5eXv4Q//39TeeXvb09U6/5EfG/mZmZobEeHh5Sblc87gWYj42NmXrNj23x19fX0N3dDQ8PD5QHAgGLaB5PT080I/Bn6tYBxG0M8QcHB5TbXWpub28pHxkZMfWaH9vi8SoAH7CxsUF5dXW1RTSPbDYL+/v79Pfi4iLvUgu0F7+7u0sPmJ2dpTwSiVhEmyMUClG9tbU1yjOZDOtRD7QXj7PX4/FAX18f5QsLCxbZ5ojH41QP1z7MzYcSndBePNLa2gp+v582FDzhtbe3W4RjtLS00BeF9aqqqih0BX+JtbW1cH9/T7ndzfXt7Q3q6+sLvlJwJN5Y53t6eijHYzPOkObmZvD5fNDU1ASjo6Pw+vpK5Z2dnVR/enqa9aQvdme8XRyJR/CdFR+MV7/41vI3cKZHo1Gq19bWRm82pYK24vHia3x8nB6OF2U4w1OpFG2+eG+NAwoGg1Qei8Xyfjm6YuxdNzc3lPOlBg9auNyiAyc4Fm+QTqehoaGBBsWjpqYG5ubmeJOSAPeu8/PzXM7FI/iigGu7E4oWb3ByckKzHgfX29sLR0dHJbW0/Au+1BSLa+IRtwenE8aMX11d5UWOEPEFgq+ZeFVycXHBixzhqngcXGNjY8E3dP8zrooXCkfEK0LEK0LEK0LEK0LEK0LEK0LEK+IX1vpxDmvtWvAAAAAASUVORK5CYII=" style="height:18px;" alt="Actions" />
+          </div>
+        </div>
+        <div class="wcp-disclaimer">AI-generated content may be incorrect</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ═══ ANNOTATIONS ═══ -->
+<div class="annotation-panel" id="annotations">
+  <div class="ann" id="ann1">
+    <div class="ann-tag">Design Decision</div>
+    <div class="ann-body">Copilot opens with awareness, not a blank box. It monitored artifacts linked to this chat and surfaced what changed. <strong>Zero user prompts.</strong></div>
+  </div>
+  <div class="ann" id="ann2">
+    <div class="ann-tag">Design Decision</div>
+    <div class="ann-body">Copilot cross-referenced the CFO's comment with the updated Excel actuals and drafted a response — <strong>with citations to specific cells</strong>. The user reviews, not writes.</div>
+  </div>
+  <div class="ann" id="ann3">
+    <div class="ann-tag">Design Decision</div>
+    <div class="ann-body">Comment posted <strong>as the user</strong>, not as Copilot. The EA drafts the reply; the managing director's name goes on it. One click to approve.</div>
+  </div>
+  <div class="ann" id="ann4">
+    <div class="ann-tag">Design Decision</div>
+    <div class="ann-body">Excel analysis happens <strong>inline in BizChat</strong> — no app switch. The data table, the hiring pipeline, the suggested reply — all in one conversation. This is "apps inside Copilot."</div>
+  </div>
+  <div class="ann" id="ann5">
+    <div class="ann-tag">Design Decision</div>
+    <div class="ann-body">The transition to Word isn't a "switch" — it's Copilot saying <em>"this one needs your eyes."</em> The conversation follows into the Word side pane. <strong>"Linked to: Q3 Budget Review"</strong> makes continuity explicit.</div>
+  </div>
+  <div class="ann" id="ann6">
+    <div class="ann-tag">Design Decision</div>
+    <div class="ann-body">Word Copilot pane shows the BizChat thread history + a summary of what's been done. The user picks up <strong>exactly where they left off</strong> — zero re-orientation.</div>
+  </div>
+  <div class="ann" id="ann7">
+    <div class="ann-tag">Design Decision</div>
+    <div class="ann-body">The user says "done" in Word and the return to BizChat is <strong>initiated from the same conversation</strong>. No tab-switching. The EA walks back with you.</div>
+  </div>
+  <div class="ann" id="ann8">
+    <div class="ann-tag">Design Decision</div>
+    <div class="ann-body"><strong>Round-trip awareness.</strong> BizChat knows what happened in Word — which changes were accepted, what the user edited manually. The conversation is a <em>continuous record</em>, not two separate histories.</div>
+  </div>
+  <div class="ann" id="ann9">
+    <div class="ann-tag">Design Decision</div>
+    <div class="ann-body"><strong>Graceful friction.</strong> The email draft is shown for review. Recipient count and executive status are flagged. Send is available but not the default action — preview and edit come first. The consequence determines the confirmation UX.</div>
+  </div>
+  <div class="ann" id="ann10">
+    <div class="ann-tag">Design Decision</div>
+    <div class="ann-body">The user clicks into the Strategy chat from the sidebar. The cross-reference shows what happened in the budget chat. They say <strong>"go ahead"</strong> and Copilot picks up exactly where the other conversation left off. <em>Chats are episodes. The intelligence is continuous.</em></div>
+  </div>
+  <div class="ann" id="ann11">
+    <div class="ann-tag">Design Decision</div>
+    <div class="ann-body"><strong>Bidirectional workstream graph.</strong> The hiring chat shows what happened to its data in the budget chat. No information is orphaned. Every chat that touches a workstream knows about the others.</div>
+  </div>
+  <div class="ann" id="ann12">
+    <div class="ann-tag">Design Decision</div>
+    <div class="ann-body">The strategy chat knows it was referenced from the budget review — and offers to <strong>pick up where that conversation left off</strong>. Chats are episodes. Workstreams are the durable entities.</div>
+  </div>
+</div>
+
+<!-- ═══ CONVO: Hiring Plan Chat ═══ -->
+<div class="hidden" id="hiringChatContent">
+  <div class="day-divider">Feb 3</div>
+  <div class="user-msg" style="opacity:0.5;"><div class="bubble">What's the current hiring pipeline for the engineering team?</div></div>
+  <div class="copilot-msg" style="opacity:0.5;"><div class="agent-label"><span class="agent-icon excel" style="font-size:10px;">X</span> Excel</div><div class="body"><p>Based on Hiring_Plan_H2.xlsx, you have 13 candidates across 5 open roles. 4 are in final interview stage. Average time-to-fill is 5.3 weeks.</p></div></div>
+  <div class="day-divider" style="color:var(--copilot-purple); font-weight:600;">↳ Cross-referenced today</div>
+  <div class="copilot-msg"><div class="proactive-card"><div class="proactive-card-header" style="background:linear-gradient(90deg, rgba(123,87,255,0.08), transparent);"><span class="bell">🔗</span> Referenced in: Q3 Budget Review</div><div class="proactive-card-body"><div class="update-item"><span class="update-icon">📊</span><div>Hiring pipeline data (Pipeline A2:D6) was <strong>pulled into the Q3 Budget Review</strong> conversation to respond to the CFO's comment about engineering ramp timeline.</div></div><div class="update-item"><span class="update-icon">📄</span><div>The pipeline table was <strong>inserted into Q3_Budget_Proposal.docx, Section 3</strong> as a tracked change.</div></div><div class="update-item"><span class="update-icon">💬</span><div>A reply was posted to the CFO citing this data.</div></div></div></div><div class="body" style="margin-top:10px;"><p>Want to continue working on the hiring plan here, or go back to the budget review?</p></div></div>
+</div>
+
+<!-- ═══ CONVO: Strategy Chat ═══ -->
+<div class="hidden" id="strategyChatContent">
+  <div class="day-divider">Feb 10</div>
+  <div class="user-msg" style="opacity:0.5;"><div class="bubble">Start pulling together the H2 product strategy deck. Here's the outline...</div></div>
+  <div class="copilot-msg" style="opacity:0.5;"><div class="agent-label"><span class="agent-icon word" style="font-size:10px;">P</span> PowerPoint</div><div class="body"><p>I've created a 6-slide skeleton based on your outline in Product_Strategy_H2.pptx. Slides 1-6 are drafted with placeholder content. I'll need the competitive landscape data and GTM timeline to complete slides 7-8.</p></div></div>
+  <div class="day-divider" style="color:var(--copilot-purple); font-weight:600;">↳ Cross-referenced today</div>
+  <div class="copilot-msg"><div class="proactive-card"><div class="proactive-card-header" style="background:linear-gradient(90deg, rgba(123,87,255,0.08), transparent);"><span class="bell">🔗</span> Referenced in: Q3 Budget Review</div><div class="proactive-card-body"><div class="update-item"><span class="update-icon">📋</span><div>You asked <em>"What about the strategy deck?"</em> — Copilot provided a <strong>status summary</strong>: 6/8 slides done, competitive landscape and GTM timeline remaining.</div></div><div class="update-item"><span class="update-icon">📊</span><div>Copilot identified <strong>Competitive_Analysis_Q3.xlsx</strong> (shared by Sarah) as a data source for slide 7 and offered to draft it.</div></div><div class="update-item"><span class="update-icon">🗓️</span><div>Flagged that the deck is <strong>due tomorrow</strong> for Leadership Review at 2:00 PM.</div></div></div></div><div class="body" style="margin-top:10px;"><p>The competitive slide hasn't been drafted yet — want me to pull from Sarah's Excel and draft it now?</p></div><div class="suggestion-card" style="margin-top:8px;"><div class="suggestion-card-actions" style="border-top:none;"><button class="action-btn primary">Yes, go ahead</button><button class="action-btn secondary">Show me the data first</button></div></div></div>
+  <div class="user-msg"><div class="bubble">Yes, go ahead</div></div>
+  <div class="copilot-msg"><div class="agent-label"><img src="data:image/png;base64,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" style="height:22px;" alt="Copilot"></div><div class="body"><p>Pulling competitive data from <strong>Competitive_Analysis_Q3.xlsx</strong> and drafting Slide 7…</p><div class="confirm-chip" style="margin-top:6px;">✓ Slide 7 — Competitive Landscape drafted</div><p style="margin-top:10px;">The slide includes a 4-quadrant competitor map and 3 key differentiators. I've also outlined Slide 8 (GTM timeline) based on your product roadmap dates.</p><p>Want to review in PowerPoint, or should I finalize and move to the GTM slide?</p></div></div>
+</div>
+<!-- ═══ STEP BAR ═══ -->
+<div class="step-bar hidden" id="stepBar">
+  <button class="step-prev" id="stepPrev" onclick="prevStep()">←</button>
+  <span class="step-label" id="stepLabel">1 / 12</span>
+  <button class="step-next" id="stepNext" onclick="nextStep()">→</button>
+</div>
+
+<script>
+let step = 0;
+const totalSteps = 12;
+const stepLabels = [
+  '',
+  'Beat 1 — Copilot surfaces changes proactively',
+  'Beat 2 — Suggests response with citations',
+  'Beat 3 — User approves, comment posted',
+  'Beat 4 — Excel analysis inline, no switch',
+  'Beat 5 — Insert into doc, prepare transition',
+  'Beat 6 — Word opens, side pane pre-briefed',
+  'Beat 7 — User finishes in Word, heads back',
+  'Beat 8 — BizChat knows what happened in Word',
+  'Beat 9 — Notify CFO with proportional friction',
+  'Beat 10 — Click Product Strategy — continue from here',
+  'Beat 11 — Hiring chat shows cross-reference',
+  'Beat 12 — Strategy chat with full cross-reference'
+];
+
+function startDemo() {
+  document.getElementById('landing').classList.add('hidden');
+  document.getElementById('stepBar').classList.remove('hidden');
+  step = 1;
+  showStep(1);
+}
+
+function resetDemo() {
+  document.getElementById('landing').classList.remove('hidden');
+  document.getElementById('stepBar').classList.add('hidden');
+  document.getElementById('bizchatView').classList.remove('collapsed');
+  document.getElementById('wordView').classList.remove('expanded');
+  // Reset all beats
+  ['beat1','beat2','beat3','beat4','beat5','beat7msg','beat7reply','beat8','beat9','beat10'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) { el.classList.add('hidden'); el.classList.remove('anim-fadeinup','anim-slidein'); }
+  });
+  // Reset cross-ref badges
+  document.querySelectorAll('.xref').forEach(el => el.classList.remove('visible'));
+  document.querySelectorAll('.chat-status').forEach(el => el.classList.remove('visible'));
+  // Reset sidebar active state
+  document.querySelectorAll('.chat-list-item').forEach(el => el.classList.remove('active'));
+  document.getElementById('chatBudget').classList.add('active');
+  // Reset topbar title
+  document.getElementById('topbarTitle').textContent = 'Q3 Budget Review';
+  // Reset convo visibility
+  document.getElementById('convoInner').style.display = '';
+  document.getElementById('altChatView').classList.add('hidden');
+  // Reset step button
+  document.getElementById('stepNext').disabled = false;
+  // text removed
+  hideAllAnns();
+  step = 0;
+  updateDots();
+}
+
+function nextStep() {
+  if (step < totalSteps) {
+    step++;
+    showStep(step);
+  }
+}
+
+function prevStep() {
+  if (step <= 1) return;
+  // Undo the current step's state before going back
+  undoStep(step);
+  step--;
+  showStep(step);
+}
+
+function undoStep(n) {
+  // Reverse the state changes made by step n
+  if (n === 12) {
+    // Undo strategy chat switch
+    document.getElementById('convoInner').style.display = '';
+    document.getElementById('altChatView').classList.add('hidden');
+    document.querySelectorAll('.chat-list-item').forEach(el => el.classList.remove('active'));
+    document.getElementById('chatHiring').classList.add('active');
+    document.getElementById('topbarTitle').textContent = 'Hiring Plan — Eng';
+    switchToAltChat('hiring');
+    document.getElementById('stepNext').disabled = false;
+    // text removed
+  }
+  else if (n === 11) {
+    // Undo cross-chat switch
+    document.getElementById('convoInner').style.display = '';
+    document.getElementById('altChatView').classList.add('hidden');
+    document.querySelectorAll('.chat-list-item').forEach(el => el.classList.remove('active'));
+    document.getElementById('chatBudget').classList.add('active');
+    document.getElementById('topbarTitle').textContent = 'Q3 Budget Review';
+    document.getElementById('stepNext').disabled = false;
+    // text removed
+  }
+  else if (n === 10) {
+    // Undo alt chat, go back to main convo
+    document.getElementById('convoInner').style.display = '';
+    document.getElementById('altChatView').classList.add('hidden');
+    document.querySelectorAll('.chat-list-item').forEach(el => el.classList.remove('active'));
+    document.getElementById('chatBudget').classList.add('active');
+    document.getElementById('topbarTitle').textContent = 'Q3 Budget Review';
+  }
+  else if (n === 9) {
+    hideEl('beat9');
+    document.getElementById('xrefHiring').classList.remove('visible');
+    document.getElementById('xrefStrategy').classList.remove('visible');
+    document.getElementById('statusBudget').classList.remove('visible');
+    document.getElementById('statusStrategy').classList.remove('visible');
+    document.getElementById('statusHiring').classList.remove('visible');
+    document.getElementById('stepNext').disabled = false;
+    // text removed
+  }
+  else if (n === 8) {
+    hideEl('beat8');
+    // Go back to Word view
+    document.getElementById('bizchatView').classList.add('collapsed');
+    document.getElementById('wordView').classList.add('expanded');
+  }
+  else if (n === 7) {
+    hideEl('beat7msg');
+    hideEl('beat7reply');
+  }
+  else if (n === 6) {
+    // Undo Word transition - go back to BizChat
+    document.getElementById('wordView').classList.remove('expanded');
+    document.getElementById('bizchatView').classList.remove('collapsed');
+  }
+  else if (n === 5) {
+    hideEl('beat5');
+  }
+  else if (n === 4) {
+    hideEl('beat4');
+  }
+  else if (n === 3) {
+    hideEl('beat3');
+  }
+  else if (n === 2) {
+    hideEl('beat2');
+  }
+  else if (n === 1) {
+    hideEl('beat1');
+  }
+}
+
+function hideEl(id) {
+  const el = document.getElementById(id);
+  if (el) {
+    el.classList.add('hidden');
+    el.classList.remove('anim-fadeinup', 'anim-slidein');
+  }
+}
+
+function showStep(n) {
+  updateDots();
+  document.getElementById('stepLabel').textContent = step + ' / ' + totalSteps;
+  hideAllAnns();
+  // Update prev button state
+  document.getElementById('stepPrev').disabled = (n <= 1);
+  // Re-enable next button unless we're at the final step showing complete
+  if (n < totalSteps) {
+    document.getElementById('stepNext').disabled = false;
+  }
+
+  if (n === 1) {
+    revealBeat('beat1');
+    showAnn('ann1');
+    scrollConvo();
+  }
+  else if (n === 2) {
+    revealBeat('beat2');
+    showAnn('ann2');
+    scrollConvo();
+  }
+  else if (n === 3) {
+    revealBeat('beat3');
+    showAnn('ann3');
+    scrollConvo();
+  }
+  else if (n === 4) {
+    revealBeat('beat4');
+    showAnn('ann4');
+    scrollConvo();
+  }
+  else if (n === 5) {
+    revealBeat('beat5');
+    showAnn('ann5');
+    scrollConvo();
+    // Prepare for transition
+  }
+  else if (n === 6) {
+    // Transition to Word
+    document.getElementById('bizchatView').classList.add('collapsed');
+    document.getElementById('wordView').classList.add('expanded');
+    setTimeout(() => showAnn('ann6'), 600);
+  }
+  else if (n === 7) {
+    // User says done in Word pane
+    const msg = document.getElementById('beat7msg');
+    const reply = document.getElementById('beat7reply');
+    msg.classList.remove('hidden');
+    msg.classList.add('anim-fadeinup');
+    setTimeout(() => {
+      reply.classList.remove('hidden');
+      reply.classList.add('anim-fadeinup');
+    }, 800);
+    showAnn('ann7');
+    // Scroll word pane messages
+    const wpMsgs = document.querySelector('.wcp-messages');
+    setTimeout(() => { wpMsgs.scrollTop = wpMsgs.scrollHeight; }, 200);
+  }
+  else if (n === 8) {
+    // Transition back to BizChat
+    document.getElementById('wordView').classList.remove('expanded');
+    document.getElementById('bizchatView').classList.remove('collapsed');
+    setTimeout(() => {
+      revealBeat('beat8');
+      scrollConvo();
+      showAnn('ann8');
+    }, 600);
+  }
+  else if (n === 9) {
+    // Notify CFO
+    revealBeat('beat9');
+    showAnn('ann9');
+    scrollConvo();
+    // Show cross-ref badges in sidebar + status icons
+    document.getElementById('xrefHiring').classList.add('visible');
+    document.getElementById('xrefStrategy').classList.add('visible');
+    document.getElementById('statusBudget').classList.add('visible');
+    document.getElementById('statusStrategy').classList.add('visible');
+    document.getElementById('statusHiring').classList.add('visible');
+  }
+  else if (n === 10) {
+    // User clicks Product Strategy in sidebar, says "go ahead"
+    switchToAltChat('strategy');
+    showAnn('ann10');
+  }
+  else if (n === 11) {
+    // Switch to Hiring chat
+    switchToAltChat('hiring');
+    showAnn('ann11');
+  }
+  else if (n === 12) {
+    // Back to Strategy chat
+    switchToAltChat('strategy');
+    showAnn('ann12');
+    document.getElementById('stepNext').disabled = true;
+  }
+}
+
+function switchToAltChat(chatId) {
+  // Hide main convo, show alt chat
+  document.getElementById('convoInner').style.display = 'none';
+  const altView = document.getElementById('altChatView');
+  altView.classList.remove('hidden');
+  altView.innerHTML = '';
+  // Copy content from template
+  const src = chatId === 'hiring' ? 'hiringChatContent' : 'strategyChatContent';
+  altView.innerHTML = document.getElementById(src).innerHTML;
+  altView.classList.add('anim-fadeinup');
+  // Update sidebar active state
+  document.querySelectorAll('.chat-list-item').forEach(el => el.classList.remove('active'));
+  const activeChat = chatId === 'hiring' ? 'chatHiring' : 'chatStrategy';
+  document.getElementById(activeChat).classList.add('active');
+  // Update topbar title
+  document.getElementById('topbarTitle').textContent = chatId === 'hiring' ? 'Hiring Plan — Eng' : 'Product Strategy H2';
+  // Scroll
+  const area = document.getElementById('convoArea');
+  setTimeout(() => { area.scrollTop = area.scrollHeight; }, 100);
+}
+
+function switchChat(chatId) {
+  // Only allow switching after beat 9
+  if (step < 11) return;
+  if (chatId === 'hiring') { step = 11; showStep(11); }
+  else if (chatId === 'strategy') { step = 12; showStep(12); }
+  else if (chatId === 'budget') {
+    document.getElementById('convoInner').style.display = '';
+    document.getElementById('altChatView').classList.add('hidden');
+    document.querySelectorAll('.chat-list-item').forEach(el => el.classList.remove('active'));
+    document.getElementById('chatBudget').classList.add('active');
+    document.getElementById('topbarTitle').textContent = 'Q3 Budget Review';
+  }
+}
+
+function revealBeat(id) {
+  const el = document.getElementById(id);
+  if (el) {
+    el.classList.remove('hidden');
+    el.classList.add('anim-fadeinup');
+  }
+}
+
+function scrollConvo() {
+  const area = document.getElementById('convoArea');
+  setTimeout(() => { area.scrollTop = area.scrollHeight; }, 100);
+}
+
+function updateDots() {
+  // Update step label with count
+  const label = document.getElementById('stepLabel');
+  if (label) label.textContent = step + ' / ' + totalSteps;
+}
+
+function hideAllAnns() {
+  for (let i = 1; i <= 12; i++) {
+    const el = document.getElementById('ann' + i);
+    if (el) el.classList.remove('visible');
+  }
+}
+
+// Map beats to their target elements for positioning
+const beatTargets = {
+  1: 'beat1', 2: 'beat2', 3: 'beat3', 4: 'beat4', 5: 'beat5',
+  6: null, 7: null, 8: 'beat8', 9: 'beat9', 10: null, 11: null, 12: null
+};
+
+function showAnn(id) {
+  const beatNum = parseInt(id.replace('ann', ''));
+  const annEl = document.getElementById(id);
+  if (!annEl) return;
+
+  // Update the ann-tag to include the beat label
+  const tag = annEl.querySelector('.ann-tag');
+  if (tag) tag.textContent = stepLabels[beatNum] || 'Design Decision';
+
+  // Position the annotation panel near the target
+  const panel = document.getElementById('annotations');
+  const targetId = beatTargets[beatNum];
+
+  if (targetId) {
+    const targetEl = document.getElementById(targetId);
+    if (targetEl && targetEl.offsetParent !== null) {
+      const rect = targetEl.getBoundingClientRect();
+      // Place to the right of the element
+      let left = rect.right + 16;
+      let top = rect.top + 20;
+      // If overflows right, place bottom-right
+      if (left + 310 > window.innerWidth) {
+        left = window.innerWidth - 330;
+        top = rect.bottom + 12;
+      }
+      // Keep in viewport
+      if (top + 150 > window.innerHeight) top = window.innerHeight - 170;
+      if (top < 60) top = 60;
+      panel.style.left = left + 'px';
+      panel.style.top = top + 'px';
+      panel.style.right = 'auto';
+      panel.style.bottom = 'auto';
+      annEl.classList.add('visible');
+      return;
+    }
+  }
+
+  // Default: bottom-left above the input bar
+  panel.style.left = 'auto';
+  panel.style.right = '360px';
+  panel.style.top = 'auto';
+  panel.style.bottom = '20px';
+  annEl.classList.add('visible');
+}
+
+// Keyboard nav
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'ArrowRight' || e.key === ' ') {
+    e.preventDefault();
+    if (step === 0) startDemo();
+    else if (step < totalSteps) nextStep();
+  }
+  if (e.key === 'ArrowLeft') {
+    e.preventDefault();
+    if (step > 1) prevStep();
+  }
+  if (e.key === 'Escape') resetDemo();
+});
+</script>
+
+</body>
+</html>

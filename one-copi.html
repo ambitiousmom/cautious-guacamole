@@ -442,6 +442,75 @@
   <button class="start-btn" onclick="startDemo()">Experience the prototype →</button>
 </div>
 
+<!-- ═══ BEAT 0: Copilot Home with Morning Check-In ═══ -->
+<div id="beat0overlay" style="position:fixed; inset:0; z-index:150; display:none;">
+  <div style="display:flex; height:100vh; width:100vw;">
+    <!-- Sidebar (same as main) -->
+    <div style="width:220px; min-width:220px; height:100%; background:white; border-right:1px solid #EBEBEB; display:flex; flex-direction:column; overflow:hidden;">
+      <div style="padding:12px 14px; display:flex; align-items:center; justify-content:space-between;">
+        <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACYAAAApCAYAAABZa1t7AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAAFiUAABYlAUlSJPAAAASTSURBVFhH7dRbUFQFHMdx35ppJi/j5A0trWacplJrcqyRi5FKWQqtLKAEGBF5S8UgMVEQNbVQQ0REVAQEFSS1WINlWbmsGIsVCARIboiIixC7C7vscrFvo82QeVY7S9OMD/vweTnzP7/5vpwzpNPUw6NoyP0PHhX2MFvZw2xlD7OVPcxW9jBb2RxW22YhUGXCSWHBUWFhprwbR7mZmbndzMgxMjW2BZdlVUQmNAretYVNYdd1ZqZlGhifpsch1YBDio5xKXrGHtUxJlnH6P23eOw1FcNcLjJqrpqjOTcFG2LZFOab087wfa0M23eT4fu0DIu7edfQu1p43L+akW+WMWH+JZ7xquDdjVcEG2KJDitvNvJE7LV7NDI0VsPwvQ2MiKtndHwdI+b+wIQFl3h6cSUOQbWMW9mAptUs2BJDdNimkiYcDpQzIbGMpw6WMjFJxaSkIp49dJ7nDiuYEV/C2HnlTPSpxCG4jtFrf2PkhmZ8j/+Orssi2Ps3osPmnMrjxZRspqRmMTX1BC+nZfDKsTReTU9henoybjuVnC1uQ/GzjoJKAyUxzRRGackKb+dkuJ78LUbKkk10dAi3rREVVq3V4pwZh0tmLG9k7cb1VAyzs79kTvZ23L7ZxlunoymqaR64rztQT4FPOTLvGrK9NBz3bOaYp5ZjC1sp2tMu2LdGVNiJ2kLcv/0Mj+8+RZITgjRnFT6yT/CVLcdftpSIwuiBW73BTKXfOUolCpQeFzjn/hNnFlSTPb+eU/OvkL9SI9i3RlRYQvluQnL9CM1dzLq8RXye58VGuZQouYQt+R4o6zIGbjsuXeOKNIPLnmdQS3Ipea8QpUcp+R5q5B5qSkOrBPvWiApLVgUQXzCbAwWuJBXM4nCBM0eVTqQqZ5KufJ0bbX//FnRHlDR7JXJVmkqNZyYVC89SLjlHmSSPixI5tV9XCvatERWWVzoXWdE0vi+cgrzoJQqKXqCw+HmKiyejvuj4z/vQ/egX7aLVJ57r3ofQeKVSLz1OrTSTGs8stPKrgn1rRIX9WvUx1SXj+aVkHPWqMTSoRqFRPUmjaiStDZEDd9rc8xiXRdEVuJXO93eg89nFLZ+9tHgn0Ox9kCavJPQ39IJ9a0SF6Tvb6NREYapyo6d0Mn0XJtH/43R6Lodhqi7DVKGmPe0Ijb5+dIeux7RqI6alm+n6cCtdAdvp9N1J56Kv0IccEmw/iKiw+5krsuCgO+x4G8JmQ6AzLe840bZ6CZbIEMzrw/4KXB2BacUmjEujMAZH05mlEGw9yKDC7rid9AFEusEaV277OdE0z4XePR/RG7Ocni9WYdm8FnNEKObwdXSHhdMdugHDda1g50EGHdZzJg7WukKQMzqJI00BbvQf9qcvIZDe2GB6YpbRs2MFlm13ItdglJ0WbDzMoMO66qshaBZdUic0c5wwJbrzx0lvbqf50n/En/7EQPrig+jbG4wlYycGg1Gw8TCDDrujQ57LtdXLubE1AFP6EnrzQ+krjKBXsYnevCgssmi61dkY9OK+xHv9p7D/kz3MVvYwW9nDbGUPs5U9zFZ/AovebfKEAWUDAAAAAElFTkSuQmCC" style="height:28px;" alt="Copilot" />
+        <span style="font-size:16px; color:#616161; cursor:pointer;">☰</span>
+      </div>
+      <div style="padding:4px 8px;">
+        <div style="display:flex;align-items:center;gap:10px;padding:7px 10px;font-size:13px;color:#616161;">✚ New chat</div>
+        <div style="display:flex;align-items:center;gap:10px;padding:7px 10px;font-size:13px;color:#616161;">🔍 Search</div>
+      </div>
+      <div style="height:1px;background:#EBEBEB;margin:8px 14px;"></div>
+      <div style="padding:4px 8px;">
+        <div style="font-size:11px;font-weight:600;color:#616161;padding:6px 10px;">Chats</div>
+        <div style="display:flex;flex-direction:column;gap:2px;padding:6px 10px;font-size:13px;color:#242424;">
+          <div style="display:flex;align-items:center;gap:6px;">Q3 Budget Review <span style="width:8px;height:8px;border-radius:50%;background:#0F6CBD;display:inline-block;"></span></div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:2px;padding:6px 10px;font-size:13px;color:#242424;">
+          <div style="display:flex;align-items:center;gap:6px;">Product Strategy H2 <span style="width:8px;height:8px;border-radius:50%;background:#0F6CBD;display:inline-block;"></span></div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:2px;padding:6px 10px;font-size:13px;color:#242424;">
+          <div style="display:flex;align-items:center;gap:6px;">Hiring Plan — Eng <span style="width:8px;height:8px;border-radius:50%;background:#0F6CBD;display:inline-block;"></span></div>
+        </div>
+      </div>
+    </div>
+    <!-- Main area - Copilot Home -->
+    <div style="flex:1; display:flex; flex-direction:column; background:#FAFAFA;">
+      <div style="height:48px; display:flex; align-items:center; padding:0 16px; border-bottom:1px solid #EBEBEB; background:white;">
+        <span style="font-size:14px; font-weight:600;">Home</span>
+      </div>
+      <div style="flex:1; display:flex; align-items:center; justify-content:center;">
+        <div style="text-align:center; max-width:420px; padding:20px;">
+          <div style="font-size:28px; margin-bottom:6px;">☀️</div>
+          <div style="font-size:20px; font-weight:600; color:#242424; margin-bottom:6px;">Good morning</div>
+          <div style="font-size:13px; color:#616161; margin-bottom:20px;">Your morning check-in is ready.</div>
+          <div style="text-align:left;">
+            <div id="checkinItem0" onclick="advanceFromCheckin()" style="display:flex; align-items:center; gap:10px; padding:12px 16px; background:#EBF3FC; border:1px solid #E0E0E0; border-radius:10px; margin-bottom:8px; cursor:pointer; transition:background 0.15s;">
+              <span style="font-size:14px;">🔔</span>
+              <div style="flex:1;">
+                <div style="font-size:13px; font-weight:600; color:#242424;">Q3 Budget Review</div>
+                <div style="font-size:11px; color:#616161;">Sarah Chen (CFO) left 2 comments</div>
+              </div>
+              <span style="font-size:11px; color:#D13438; font-weight:600;">Urgent</span>
+            </div>
+            <div style="display:flex; align-items:center; gap:10px; padding:12px 16px; background:white; border:1px solid #E0E0E0; border-radius:10px; margin-bottom:8px; opacity:0.7;">
+              <span style="font-size:14px;">🔔</span>
+              <div style="flex:1;">
+                <div style="font-size:13px; font-weight:600; color:#242424;">Product Strategy H2</div>
+                <div style="font-size:11px; color:#616161;">Deck due tomorrow — 2 slides missing</div>
+              </div>
+              <span style="font-size:11px; color:#FFB900; font-weight:600;">Due soon</span>
+            </div>
+            <div style="display:flex; align-items:center; gap:10px; padding:12px 16px; background:white; border:1px solid #E0E0E0; border-radius:10px; opacity:0.5;">
+              <span style="font-size:14px;">🔔</span>
+              <div style="flex:1;">
+                <div style="font-size:13px; font-weight:600; color:#242424;">Hiring Plan — Eng</div>
+                <div style="font-size:11px; color:#616161;">Pipeline data refreshed overnight</div>
+              </div>
+              <span style="font-size:11px; color:#999;">Updated</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
 <!-- ═══ SHELL ═══ -->
 <div class="shell">
 
@@ -536,39 +605,6 @@
           </div>
 
           <div class="day-divider">Today</div>
-
-          <!-- ═══ BEAT 0: Morning check-in greeting ═══ -->
-          <div id="beat0greeting" style="text-align:center; padding:16px 20px;">
-            <div style="font-size:20px; margin-bottom:4px;">☀️</div>
-            <div style="font-size:16px; font-weight:600; color:var(--text); margin-bottom:4px;">Good morning</div>
-            <div style="font-size:12px; color:var(--text-secondary); line-height:1.5; margin-bottom:14px;">Your morning check-in is ready.</div>
-            <div style="text-align:left; max-width:360px; margin:0 auto;">
-              <div id="checkinItem1" onclick="advanceFromCheckin()" style="display:flex; align-items:center; gap:10px; padding:10px 14px; background:var(--blue-light); border:1px solid var(--border); border-radius:8px; margin-bottom:8px; cursor:pointer; transition:background 0.15s;">
-                <span style="font-size:14px;">🔔</span>
-                <div style="flex:1;">
-                  <div style="font-size:13px; font-weight:600; color:var(--text);">Q3 Budget Review</div>
-                  <div style="font-size:11px; color:var(--text-secondary);">Sarah Chen (CFO) left 2 comments</div>
-                </div>
-                <span style="font-size:11px; color:var(--red); font-weight:600;">Urgent</span>
-              </div>
-              <div style="display:flex; align-items:center; gap:10px; padding:10px 14px; background:var(--surface); border:1px solid var(--border); border-radius:8px; margin-bottom:8px; opacity:0.7;">
-                <span style="font-size:14px;">🔔</span>
-                <div style="flex:1;">
-                  <div style="font-size:13px; font-weight:600; color:var(--text);">Product Strategy H2</div>
-                  <div style="font-size:11px; color:var(--text-secondary);">Deck due tomorrow — 2 slides missing</div>
-                </div>
-                <span style="font-size:11px; color:var(--yellow); font-weight:600;">Due soon</span>
-              </div>
-              <div style="display:flex; align-items:center; gap:10px; padding:10px 14px; background:var(--surface); border:1px solid var(--border); border-radius:8px; opacity:0.5;">
-                <span style="font-size:14px;">🔔</span>
-                <div style="flex:1;">
-                  <div style="font-size:13px; font-weight:600; color:var(--text);">Hiring Plan — Eng</div>
-                  <div style="font-size:11px; color:var(--text-secondary);">Pipeline data refreshed overnight</div>
-                </div>
-                <span style="font-size:11px; color:var(--text-muted);">Updated</span>
-              </div>
-            </div>
-          </div>
 
           <!-- ═══ BEAT 1: Proactive card ═══ -->
           <div class="copilot-msg hidden" id="beat1">
@@ -1051,23 +1087,22 @@ const stepLabels = [
 
 function startDemo() {
   document.getElementById('landing').classList.add('hidden');
-  // Beat 0: Show BizChat with sidebar bell icons and morning greeting
-  document.getElementById('statusBudget').classList.add('visible');
-  document.getElementById('statusStrategy').classList.add('visible');
-  document.getElementById('statusHiring').classList.add('visible');
-  document.getElementById('stepBar').classList.remove('hidden');
+  // Beat 0: Show Copilot Home with morning check-in
+  document.getElementById('beat0overlay').style.display = 'block';
   step = 0;
-  // Scroll to greeting so it's fully visible
-  var greeting = document.getElementById('beat0greeting');
-  if (greeting) greeting.scrollIntoView({ behavior: 'smooth', block: 'center' });
-  // Show click hint on Q3 Budget Review checkin item
+  // Show click hint on first checkin item
   setTimeout(function(){
-    showClickHint(document.getElementById('checkinItem1'), 'Click here');
+    showClickHint(document.getElementById('checkinItem0'), 'Click here');
   }, 800);
 }
 
 function advanceFromCheckin() {
-  document.getElementById('beat0greeting').style.display = 'none';
+  document.getElementById('beat0overlay').style.display = 'none';
+  // Show main BizChat with sidebar blue dots
+  document.getElementById('statusBudget').classList.add('visible');
+  document.getElementById('statusStrategy').classList.add('visible');
+  document.getElementById('statusHiring').classList.add('visible');
+  document.getElementById('stepBar').classList.remove('hidden');
   clearClickHints();
   step = 1;
   showStep(1);
@@ -1075,6 +1110,7 @@ function advanceFromCheckin() {
 
 function resetDemo() {
   document.getElementById('landing').classList.remove('hidden');
+  document.getElementById('beat0overlay').style.display = 'none';
   document.getElementById('stepBar').classList.add('hidden');
   document.getElementById('endOverlay').classList.remove('visible');
   // Restore beat 0 greeting

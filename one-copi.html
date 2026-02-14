@@ -1317,6 +1317,10 @@ function showClickHint(target, text, side) {
   hint.id = 'activeHint';
   hint.textContent = text || 'Click here';
   if (side === 'right') hint.classList.add('arrow-left');
+  // Make tooltip clickable — triggers the target's click
+  hint.style.pointerEvents = 'auto';
+  hint.style.cursor = 'pointer';
+  hint.addEventListener('click', function() { target.click(); });
   document.body.appendChild(hint);
   positionHint();
 }

@@ -88,6 +88,18 @@
   .fin-overlay.visible{opacity:1;pointer-events:auto;}
   .fin-overlay .fin{font-size:48px;font-weight:300;color:white;font-style:italic;font-family:Georgia,serif;}
   .fin-overlay .sub{font-size:14px;color:rgba(255,255,255,0.5);margin-top:8px;}
+  /* Desktop notification toast */
+  .desktop-notif{position:fixed;top:-100px;right:20px;z-index:250;width:340px;background:var(--surface);border-radius:12px;box-shadow:0 8px 32px rgba(0,0,0,0.18),0 0 0 1px rgba(0,0,0,0.05);padding:14px 16px;display:flex;gap:12px;align-items:flex-start;transition:top 0.5s cubic-bezier(0.4,0,0.2,1);font-family:var(--font);}
+  .desktop-notif.visible{top:20px;}
+  .desktop-notif .dn-icon{width:36px;height:36px;border-radius:8px;background:var(--purple);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+  .desktop-notif .dn-icon svg{width:20px;height:20px;}
+  .desktop-notif .dn-content{flex:1;min-width:0;}
+  .desktop-notif .dn-app{font-size:10px;color:var(--text-muted);font-weight:500;margin-bottom:2px;display:flex;align-items:center;gap:6px;}
+  .desktop-notif .dn-app .dn-time{margin-left:auto;}
+  .desktop-notif .dn-title{font-size:12px;font-weight:600;color:var(--text);margin-bottom:2px;}
+  .desktop-notif .dn-body{font-size:11px;color:var(--text-sec);line-height:1.5;}
+  .desktop-notif .dn-close{position:absolute;top:8px;right:10px;background:none;border:none;color:var(--text-muted);font-size:14px;cursor:pointer;padding:2px 6px;border-radius:4px;}
+  .desktop-notif .dn-close:hover{background:#F0F0F0;}
 </style>
 </head>
 <body>
@@ -154,6 +166,18 @@
 <div class="ann" id="ann2" style="bottom:200px;"><div class="ann-tag">Confidence Indicators</div><div class="ann-body">Each suggestion shows <strong>confidence level</strong>: high (data-backed), medium (inferred). The user sees how sure Copilot is before approving.</div></div>
 <div class="ann" id="ann3" style="bottom:200px;"><div class="ann-tag">Calibrated Confidence</div><div class="ann-body">Copilot flags what it <strong>can't verify</strong> and asks the user. It distinguishes doc facts from unverified claims. Uncertainty is surfaced, not hidden.</div></div>
 <div class="ann" id="ann4" style="bottom:200px;"><div class="ann-tag">Graceful Correction</div><div class="ann-body">User corrects a number and Copilot <strong>adapts downstream</strong> — recalculating payback automatically. Correction flows forward, not just to the edited field.</div></div>
+
+<!-- Desktop notification toast -->
+<div class="desktop-notif" id="desktopNotif">
+  <div class="dn-icon"><svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" fill="white" fill-opacity="0.2"/><path d="M8 12l3 3 5-5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+  <div class="dn-content">
+    <div class="dn-app">Copilot in Word · Agent Mode <span class="dn-time">now</span></div>
+    <div class="dn-title" id="dnTitle">Input needed</div>
+    <div class="dn-body" id="dnBody">I found a data point I can't verify — need your confirmation before proceeding.</div>
+  </div>
+  <button class="dn-close" onclick="hideNotif()">×</button>
+</div>
+
 <div class="fin-overlay" id="finOverlay"><div class="fin">Fin.</div><div class="sub">(end of demo)</div><div class="sub" style="margin-top:16px;font-size:12px;">press any key to restart</div></div>
 <script>
 let step=0;const totalSteps=4;
@@ -215,6 +239,7 @@ const o=document.createElement('div');o.className='suggestion-overlay';o.id='s1'
 t.parentNode.insertBefore(o,t.nextSibling);setTimeout(()=>o.classList.add('visible'),100);
 showAnn('ann2');showHint(document.querySelector('.action-btn.primary'),'Click here — accept');},2500);}
 else if(n===2){setV('listening');setTimeout(()=>{setV('processing');addMsg('user','🎤 Voice','"Check the ROI section — is the $180K per P0 cost still accurate?"');},600);
+setTimeout(()=>{showNotif('Input needed — Platform_Investment_Proposal','I found a data point I can\'t verify ($180K per P0). Need your confirmation before proceeding.');},1800);
 setTimeout(()=>{setV('idle');addMsg('copilot','Copilot · Suggest Mode','The $180K figure is in your doc but I <strong>can\'t verify it against current data</strong>. It may be from Q1.<div class="conf-indicator" style="background:#FFF4CE;color:#7A6200;margin-top:8px;">● Medium confidence — found in doc, unverified against source</div>Want me to flag it, or do you know the current number?<div class="action-row"><button class="action-btn" onclick="flagROI()">Flag for review</button><button class="action-btn primary" onclick="correctROI()">It\'s $220K now — update it</button></div>');
 document.getElementById('roi-content').scrollIntoView({behavior:'smooth',block:'center'});
 showAnn('ann3');showHint(document.querySelector('.action-btn.primary'),'Click here — user corrects');},2500);}
@@ -233,6 +258,8 @@ function addMsg(t,l,h){const a=document.getElementById('messages');const d=docum
 function setV(s){const d=document.getElementById('voiceDot');const st=document.getElementById('voiceStatus');d.className='voice-dot';if(s==='listening'){d.classList.add('listening');st.textContent='Listening...';}else if(s==='processing'){d.classList.add('processing');st.textContent='Processing...';}else{st.textContent='Ready';}}
 function showAnn(id){hideAnns();const e=document.getElementById(id);if(e){e.style.bottom='200px';e.classList.add('visible');}}
 function hideAnns(){document.querySelectorAll('.ann').forEach(a=>a.classList.remove('visible'));}
+function showNotif(title,body){document.getElementById('dnTitle').textContent=title;document.getElementById('dnBody').textContent=body;document.getElementById('desktopNotif').classList.add('visible');setTimeout(()=>hideNotif(),6000);}
+function hideNotif(){document.getElementById('desktopNotif').classList.remove('visible');}
 let _h=null;function showHint(t,txt){clearHints();if(!t)return;const h=document.createElement('div');h.className='click-hint';h.textContent=txt;h.addEventListener('click',()=>t.click());document.body.appendChild(h);_h={h,t};posH();requestAnimationFrame(function tk(){if(!_h)return;posH();requestAnimationFrame(tk);});}
 function posH(){if(!_h)return;const r=_h.t.getBoundingClientRect();_h.h.style.left=(r.left-8)+'px';_h.h.style.top=(r.top+r.height/2)+'px';_h.h.style.transform='translate(-100%,-50%)';}
 function clearHints(){document.querySelectorAll('.click-hint').forEach(h=>h.remove());_h=null;}

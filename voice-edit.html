@@ -286,7 +286,15 @@
   <div class="ann-body">"Yes," "do it," "go ahead" — the approval vocabulary is <strong>natural and forgiving</strong>. No button clicks required. The user stays in their flow.</div>
 </div>
 <div class="ann" id="ann6" style="top:120px;">
-  <div class="ann-tag"><span class="ann-num">6</span> Progressive Autonomy</div>
+  <div class="ann-tag"><span class="ann-num">6</span> Confirmation UX</div>
+  <div class="ann-body">When the user disagrees, <strong>"no" is enough</strong>. Copilot rolls back immediately and asks how to adjust. No friction, no guilt. Correction is a first-class interaction.</div>
+</div>
+<div class="ann" id="ann7" style="top:120px;">
+  <div class="ann-tag"><span class="ann-num">7</span> Calibrated Confidence</div>
+  <div class="ann-body">Copilot flags <strong>what it's unsure about</strong> and asks the user to verify. It distinguishes between facts it found in the doc and claims it inferred. Uncertainty is surfaced, not hidden.</div>
+</div>
+<div class="ann" id="ann8" style="top:120px;">
+  <div class="ann-tag"><span class="ann-num">8</span> Progressive Autonomy</div>
   <div class="ann-body">After several successful edits, the user says "just do it" — granting Copilot <strong>more autonomy</strong>. Trust is earned through demonstrated competence, then delegated.</div>
 </div>
 
@@ -300,13 +308,13 @@
 <!-- STEP BAR -->
 <div class="step-bar hidden" id="stepBar">
   <button id="stepPrev" onclick="prevStep()">←</button>
-  <span class="step-label" id="stepLabel">1 / 6</span>
+  <span class="step-label" id="stepLabel">1 / 8</span>
   <button id="stepNext" onclick="advanceStep()">→</button>
 </div>
 
 <script>
 let step = 0;
-const totalSteps = 6;
+const totalSteps = 8;
 
 // Voice command sequences
 const beats = [
@@ -333,6 +341,32 @@ const beats = [
     newHtml: null, // handled specially - two replacements
     annId: "ann2",
     scrollTo: "dev-velocity"
+  },
+  {
+    // Beat 3: Confirmation UX - user disagrees with a change
+    user: "Actually wait — I said 30 minutes, but the AI scaling section mentions 38% compute. Is that still accurate? Don't change anything yet.",
+    thinking: "Checking AI scaling data in the document...",
+    response: "Good catch. The 38% figure is from the original draft. I <strong>can't verify this against live data</strong> — it may be from Q1. I'd recommend confirming with the infra team before the CVP review. Want me to flag it with a comment?",
+    preview: null,
+    targetId: "ai-scaling",
+    oldText: null,
+    newHtml: null,
+    annId: "ann7",
+    scrollTo: "ai-scaling",
+    special: "flag-comment"
+  },
+  {
+    // Beat 4: User says yes, add comment
+    user: "Yes, flag it. And also — that exec summary edit you made? Undo it. I want to keep the three pillars listed out, not compressed.",
+    thinking: "Reverting executive summary... Adding review comment to AI scaling section...",
+    response: "Done — two actions:<br/>1. ✓ <strong>Reverted</strong> the executive summary to the original version<br/>2. ✓ <strong>Added review comment</strong> on the 38% compute figure: \"Verify with infra team — may be stale Q1 data\"<br/><br/>The exec summary is back to its original form.",
+    preview: null,
+    targetId: "exec-summary",
+    oldText: null,
+    newHtml: null,
+    annId: "ann6",
+    scrollTo: "exec-summary",
+    special: "undo-and-comment"
   },
   {
     // Beat 3: "Add a risk about vendor lock-in"
@@ -379,7 +413,7 @@ const beats = [
     targetId: null,
     oldText: null,
     newHtml: null,
-    annId: "ann6",
+    annId: "ann8",
     scrollTo: null
   }
 ];
@@ -467,10 +501,9 @@ function playBeat(n) {
       applyEdit(beat.targetId, beat.newHtml);
     }
 
-    // Special handling for beat 2 (two replacements)
+    // Special handling for beat 2 (two replacements for deploy time)
     if (n === 2) {
       applyEdit('dev-velocity', 'Unified CI/CD pipeline with built-in canary deployments, automated rollback, and environment parity enforcement. Target: reduce deploy-to-production from 4.2 hours to <strong>under 30 minutes</strong>.');
-      // Also update the outcomes list
       setTimeout(() => {
         const outcomes = document.querySelectorAll('.word-page li');
         outcomes.forEach(li => {
@@ -482,8 +515,33 @@ function playBeat(n) {
       }, 500);
     }
 
-    // Special handling for beat 3 (add new content)
+    // Beat 3: Calibrated confidence - flag comment on 38% figure
     if (n === 3) {
+      const aiEl = document.getElementById('ai-scaling');
+      if (aiEl) {
+        aiEl.classList.add('edit-flash');
+        const comment = document.createElement('div');
+        comment.style.cssText = 'background:#FFF8E1; border-left:3px solid #FFB900; padding:6px 10px; border-radius:0 6px 6px 0; margin:6px 0; font-size:11px; color:#7A6200; opacity:0; transform:translateY(4px); transition:all 0.5s;';
+        comment.innerHTML = '⚠️ <strong>Review needed:</strong> 38% compute figure may be stale (Q1 data). Verify with infra team.';
+        aiEl.parentNode.insertBefore(comment, aiEl.nextSibling);
+        setTimeout(() => { comment.style.opacity = '1'; comment.style.transform = 'translateY(0)'; }, 300);
+      }
+    }
+
+    // Beat 4: Undo exec summary + add comment
+    if (n === 4) {
+      // Revert exec summary to original
+      const execEl = document.getElementById('exec-summary');
+      if (execEl) {
+        execEl.classList.add('edit-flash');
+        setTimeout(() => {
+          execEl.innerHTML = 'This proposal recommends a <strong>$12M investment</strong> in platform infrastructure for H2 FY26, focused on three pillars: developer velocity, AI workload scaling, and reliability engineering. The investment addresses a growing gap between product ambition and platform capacity that has resulted in 23% longer deployment cycles and 3 P0 incidents in the last quarter.';
+        }, 300);
+      }
+    }
+
+    // Beat 5: Add vendor lock-in risk
+    if (n === 5) {
       const riskEl = document.getElementById('risks');
       const newRisk = document.createElement('div');
       newRisk.className = 'tracked-insert';
@@ -492,8 +550,8 @@ function playBeat(n) {
       setTimeout(() => newRisk.classList.add('visible'), 300);
     }
 
-    // Beat 6: Fin
-    if (n === 6) {
+    // Beat 8: Fin
+    if (n === 8) {
       setTimeout(() => {
         document.getElementById('finOverlay').classList.add('visible');
       }, 4000);

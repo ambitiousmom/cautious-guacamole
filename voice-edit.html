@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
@@ -122,18 +122,24 @@
     </div>
   </div>
   <div class="copilot-pane">
-    <div class="cp-header">
-      <svg width="22" height="22" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="#7B57FF"/><path d="M8 12l3 3 5-5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      <span class="cp-title">Copilot in Word</span><span class="agent-badge">AGENT MODE</span>
+    <div style="padding:0;border-bottom:none;">
+      <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAW0AAABFCAYAAACBibfNAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAAFiUAABYlAUlSJPAAAAheSURBVHhe7d3pb1TXGYDx/AlZpYgtLBWgNJQKJc2XfIhA7CBVuEql4tQYlaV2EOBEAqHgErt2yyKHBkJVIVlQqGs2Jw5GpQiMF+KdNQQ7crzVBoyDbYwxNlbat3pvNGbmHo89kBnPnPFj6SfBPXPvnU+P75x77viZ/v5+AQDY4Rn3BgBA5CLaAGARog0AFiHaAGARog0AFiHaAGARog0AFiHaAGARog0AFiHaAGARog0AFiHaAGARog0AFiHaAGARog0AFiHaAGARog0AFiHaAGARog0AFiHaAGARog0AFiHaAGARog0AFiHaQAT5V2WrJH76lby54UsZF5svL//m3BPT/XR/PY4ez30O2I1oAxHgSl2n/CrtkhHgYNDj6vHd54SdiDYQZqcrW+WVuPNGbINJj6/ncZ8b9iHaQBjpFXCog+2h5+GK235EGwijUE2J+KPnc78H2IVoA2GiNwndUR0J3Jy0G9EOsfbudkk9kyrLDiyTvOt5xjhGL13d4Q7qSNDzut8L7EG0Q6Srp0t25e+SCX+cINO3T5f47Hh5fuvzMuevc6SgtsB4PUYfXZbnDuqPNSHuvBw82yIzE4qNMQ89r/u9wB5WRruiokIyMzOfSHFxsXGcYLvWck0+KfpEYg7GyJiUMfLaztdkf+l+6entccYb7jZI4olEeekPL8nMXTNl/WfrJedqjty9f9c4FqLfcOuwxyzPl1//6bKkZNXKrhP1PnYer5efJ17wef3EFeel8Kt2Ka3ulEkrCozjeeh5Hw3yfkabpqYmpyXu7f48evRITp48aWwfaVZG++jRo7Jhw4YncuDAAeM4waRTIM9++KyMTx0vK/65wonxw76HxuuUxluvwuf9bZ48t/U5J+L139Ubr0N0c8fU2/h386W6+YHoT03zAym50enjyxsdMmdzuU+wi693SMU392RyvP9gexDtfqmqqpJFixZJWVmZMeamwU5PT5eVK1c6/3aPjyQrox2J9Apa9fb1GmNDudN1xwl9RWPgv/ERHdwh9Zbw6dfS0/e9/GJ9iTHm5gn2xdoumbJy+GArov0D/QS+ePFiKS0tNcY8+vr6JCUlReLj4+Xu3fB/KibaQZJwPEE++vdHxvZATEqbRLRHIXdIve3La5K88jZju5sGW6+urzXcDzjYimg/puHWK+7Bwq3B3rp1a8QEWxHtINGr7ECirR+t1hxbIx988cHAtsnpk4n2KOQOqbesgluy+7MGY7s3T7Bv/Kdbpv6u0BgfCtH2NVi4e3t7nWCvWrUqYoKtiHaQBHqlra+blTHLmRbxbONKe3Ryh9TbcNH2Dvb01UXG+HCItskT7qKiIifYW7ZscYLd2RlZT5FaGe3s7GzjRuOTSkpKksbGRuPYT+u9E+8Z0dYbktdvXh/4//u57zurRprbm31ep1falU2VxjER3dwh9faP8zf9RltvNJbVdMo3LQ/kp2sfB3tsbL4czr8p494delWKCna0jx075swNJycn+2zfuHGjLFmyRE6fPj2wrbq6WmJiYiQ2Nlba2tqMY4XThQsXZOHChbJu3TpZu3ZtxAVbWRnturo6587vj3Xv3j3j2E9rc95m2ZS3yWebrs2e+uep8m3bt864/rvuuzpj3xeTX5TatlpjO6KbO6Te/F1p67y1XmHXtz70CbbSKZL/icirAVx5Bzva27Ztk9mzZ8vSpUsHVld0d3fLvHnznO0ZGRkDr9WA6zZ1+fJl41jh1NPT48Ra31tOTo4xHgmsjHYk2lu8V5YfXu6zTVeSxGXFOQ/YTEmfItW3q439mjua5YXkF6T7YbcxhujmDqk3f1faR4puOcH+2SAPz/xkZYET7emrhp/fDna0GxoaJC0tzXge4ty5c85Suebmx58uNeZ79uyRQ4cOhX35nDcNtn4ySEhIkJKSEmeq5MyZM8brwo1oB0lVU5VMTJtoxFfD/XHBx3K15aqxjzpYcVAW7V9kbEf0c4fUm79oJ+77Wmb83gy2Cme0bae/SDTYq1evHvgEXl5eLgsWLIi4cBPtINIbjPpEpHv7UN7e97Zklmca2xH93CH15m96ZCjhnB6xmQZb57D1wZmOjg6fMZ3jnj9/vpw6dcrYL1ysjHZra6sxPz2UkbrZcbjqsIxLHSctHS3G2GAyCjJkxs4Zcr/nvjGG6OcOqTe9obj786eL9rQAlv8R7R94gh0XF+d3WV9hYaEzNx8p4bYy2nqH2nMjIxA7duwwjhEqOof91t63pK1r6F8UWRezZGzKWCmtNxf0Y3Rwh9RbRk6DfFF2x9g+lN/uuip9/f+VMcvNMTei3S9dXV0Dwb5z5/ES3MGcPXtW5s6dGxHhtjLakazvUZ/zRVCv735dalprjHGd495+brtM2z5NyhvLjXGMHu6Qelu6rcr53pG/5DbKq2uGnu7QpX6/TLnoLAMM5ClKRbT7JTc311l2ePv2bWNsMHl5ec5UiT4l6R4bSUQ7RI5cOuI8NJOUmyRN7U1OzLMvZTvz3u/8/R251XnL2Aejy3Df8rcps0b6v9cJj8B+9Euk3MsAB8O3/NmNaIeQzm3rVbdOg+jc9Ru735DjV44br8PoFMj3aeuTjws+rJRlqZf80qvsWeuGP5YH36dtN6I9AjofdPLEIwz85Ro8DaINhAl/IxJPg2gDYcRfY8eTItpAGF2p65RX4s4bcQ0FPY+ez/0eYBeiDYTZ6crWkIdbj6/ncZ8b9iHaQATQK+BQTZXocbnCjh5EG4ggepNQV3fosrzh1nH7o/vp/nocbjpGH6INABYh2gBgEaINABYh2gBgEaINABYh2gBgEaINABYh2gBgEaINABYh2gBgEaINABYh2gBgEaINABYh2gBgkf8DnOkjCMQVUN0AAAAASUVORK5CYII=" style="width:100%;display:block;" alt="Copilot in Word" />
     </div>
-    <div class="context-bar">
-      <div class="ctx-row"><span class="ctx-label">Audience:</span><span class="ctx-value">CVP Leadership</span><span class="ctx-pill high-stakes" style="margin-left:6px;">High-Stakes</span></div>
-      <div class="ctx-row"><span class="ctx-label">Due:</span><span class="ctx-value">Today, 2:00 PM</span><span class="ctx-pill time-pressure" style="margin-left:6px;">20 min left</span></div>
-    </div>
-    <div class="mode-bar"><div class="mode-dot"></div><div class="mode-text"><strong>Suggest mode</strong> — high-stakes audience. Changes previewed, not auto-applied.</div></div>
     <div class="voice-bar"><div class="voice-dot" id="voiceDot"></div><span class="voice-status" id="voiceStatus">Ready</span></div>
     <div class="cp-messages" id="messages">
-      <div class="msg copilot visible"><div class="msg-label">Copilot · Agent Mode</div>This doc is for your CVP and due in 20 minutes. I'm in <strong>suggest mode</strong> — I'll preview changes with confidence levels. You approve what looks right.</div>
+      <div class="msg copilot visible">
+        <div class="msg-label">Copilot · Agent Mode</div>
+        <div style="background:rgba(123,87,255,0.06);border:1px solid rgba(123,87,255,0.15);border-radius:8px;padding:8px 10px;margin-bottom:8px;font-size:11px;">
+          <div style="display:flex;align-items:center;gap:6px;margin-bottom:4px;"><span style="font-size:9px;background:#7B57FF;color:white;padding:2px 6px;border-radius:8px;font-weight:600;">AGENT MODE</span></div>
+          <div style="display:flex;gap:12px;margin-top:4px;">
+            <span><strong>Audience:</strong> CVP Leadership <span style="background:#FDECEA;color:#D13438;font-size:9px;padding:1px 6px;border-radius:8px;font-weight:600;">High-Stakes</span></span>
+          </div>
+          <div style="display:flex;gap:12px;margin-top:2px;">
+            <span><strong>Due:</strong> Today, 2:00 PM <span style="background:#FFF4CE;color:#7A6200;font-size:9px;padding:1px 6px;border-radius:8px;font-weight:600;">20 min left</span></span>
+          </div>
+        </div>
+        I detected this doc is for your <strong>CVP</strong> and due soon. Switching to <strong style="color:#E87400;">suggest mode</strong> &#8212; I'll preview changes with confidence levels instead of auto-applying. You approve what looks right.
+      </div>
     </div>
     <div class="cp-input"><button class="mic-btn" id="micBtn" onclick="advanceStep()"><span>🎤</span><span id="micLabel">Click to speak</span></button></div>
   </div>

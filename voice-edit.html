@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Voice Edit — Copilot Agent Mode</title>
+<style>
+  :root {
+    --bg: #F0F0F0;
+    --surface: #FFFFFF;
+    --border: #E0E0E0;
+    --text: #242424;
+    --text-sec: #616161;
+    --text-muted: #999;
+    --blue: #0F6CBD;
+    --purple: #7B57FF;
+    --green: #107C10;
+    --green-light: #E8F5E9;
+    --word-blue: #185ABD;
+    --pane-w: 340px;
+    --font: 'Segoe UI Variable', 'Segoe UI', -apple-system, sans-serif;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: var(--font); background: var(--bg); color: var(--text); height: 100vh; overflow: hidden; }
+
+  /* Landing */
+  .landing {
+    position: fixed; inset: 0; z-index: 200;
+    background: linear-gradient(145deg, #0F0F2D 0%, #1B1050 40%, #2D1A5E 100%);
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    color: white; transition: opacity 0.5s ease, visibility 0.5s;
+  }
+  .landing.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
+  .landing h1 { font-size: 42px; font-weight: 600; margin-bottom: 16px; background: linear-gradient(90deg, #fff, #C8B8FF); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+  .landing .sub { font-size: 16px; color: rgba(255,255,255,0.6); max-width: 600px; text-align: center; line-height: 1.7; margin-bottom: 12px; }
+  .landing .scenario { background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 20px 28px; max-width: 520px; margin-bottom: 28px; text-align: left; }
+  .scenario .sc-label { font-size: 10px; text-transform: uppercase; letter-spacing: 1.5px; color: #B4A0FF; margin-bottom: 8px; font-weight: 600; }
+  .scenario p { font-size: 13px; color: rgba(255,255,255,0.7); line-height: 1.65; margin-bottom: 6px; }
+  .start-btn { padding: 14px 36px; border-radius: 28px; border: none; background: linear-gradient(135deg, #7B57FF, #0F6CBD); color: white; font-size: 15px; font-weight: 600; cursor: pointer; box-shadow: 0 4px 20px rgba(123,87,255,0.4); }
+  .start-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 28px rgba(123,87,255,0.5); }
+
+  /* Shell */
+  .shell { display: flex; height: 100vh; width: 100vw; }
+
+  /* Word Main */
+  .word-main { flex: 1; display: flex; flex-direction: column; min-width: 0; }
+  .word-topbar { height: 40px; display: flex; align-items: center; padding: 0 12px; background: var(--surface); border-bottom: 1px solid var(--border); gap: 10px; flex-shrink: 0; }
+  .w-logo { width: 20px; height: 20px; background: var(--word-blue); border-radius: 3px; display: flex; align-items: center; justify-content: center; color: white; font-size: 10px; font-weight: 700; }
+  .w-title { font-size: 12px; font-weight: 500; color: var(--text); flex: 1; }
+  .word-ribbon { height: 32px; display: flex; align-items: center; padding: 0 12px; border-bottom: 1px solid var(--border); background: var(--surface); gap: 2px; flex-shrink: 0; }
+  .word-ribbon button { padding: 4px 10px; font-size: 11px; color: var(--text-sec); border: none; background: transparent; border-radius: 3px; cursor: pointer; font-family: var(--font); }
+  .word-ribbon .r-active { color: var(--blue); font-weight: 600; }
+  .word-canvas { flex: 1; overflow-y: auto; background: var(--bg); padding: 30px; }
+  .word-page { max-width: 680px; margin: 0 auto; background: white; padding: 50px 60px; box-shadow: 0 1px 6px rgba(0,0,0,0.1); min-height: 900px; font-size: 13px; line-height: 1.8; }
+  .word-page h1 { font-size: 22px; font-weight: 700; margin-bottom: 4px; color: var(--text); }
+  .word-page h2 { font-size: 16px; color: var(--blue); margin: 24px 0 10px; }
+  .word-page .meta { font-size: 11px; color: var(--text-muted); margin-bottom: 20px; }
+  .word-page p { margin-bottom: 12px; }
+  .word-page ul { margin: 8px 0 12px 24px; }
+  .word-page li { margin-bottom: 6px; }
+  .word-page .highlight { background: rgba(123,87,255,0.08); border-left: 3px solid var(--purple); padding: 8px 14px; border-radius: 0 8px 8px 0; margin: 10px 0; transition: all 0.5s ease; }
+  .word-page .highlight.active { background: rgba(123,87,255,0.15); box-shadow: 0 0 0 2px rgba(123,87,255,0.3); }
+  .word-page .edit-flash { animation: editFlash 1.5s ease; }
+  @keyframes editFlash { 0% { background: rgba(123,87,255,0.25); } 100% { background: transparent; } }
+  .tracked-insert { background: var(--green-light); border-left: 3px solid var(--green); padding: 8px 12px; border-radius: 0 6px 6px 0; margin: 8px 0; position: relative; opacity: 0; transform: translateY(4px); transition: all 0.5s ease; }
+  .tracked-insert.visible { opacity: 1; transform: translateY(0); }
+  .tracked-insert::after { content: 'Copilot'; position: absolute; right: 8px; top: -8px; background: var(--green); color: white; font-size: 9px; padding: 1px 6px; border-radius: 8px; }
+  .strikethrough { text-decoration: line-through; color: #999; transition: all 0.5s ease; }
+
+  /* Copilot Pane */
+  .copilot-pane {
+    width: var(--pane-w); min-width: var(--pane-w); height: 100%;
+    border-left: 1px solid var(--border); background: var(--surface);
+    display: flex; flex-direction: column; overflow: hidden;
+  }
+  .cp-header { height: 44px; display: flex; align-items: center; padding: 0 14px; border-bottom: 1px solid var(--border); gap: 8px; }
+  .cp-header .cp-icon { width: 22px; height: 22px; }
+  .cp-header .cp-title { font-size: 12px; font-weight: 600; color: var(--text); flex: 1; }
+  .cp-header .agent-badge { font-size: 9px; background: var(--purple); color: white; padding: 2px 8px; border-radius: 10px; font-weight: 600; letter-spacing: 0.5px; }
+
+  /* Voice indicator */
+  .voice-bar {
+    padding: 12px 14px; background: linear-gradient(90deg, rgba(123,87,255,0.04), rgba(123,87,255,0.02));
+    border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 10px;
+  }
+  .voice-dot { width: 10px; height: 10px; border-radius: 50%; background: #999; flex-shrink: 0; transition: all 0.3s; }
+  .voice-dot.listening { background: var(--green); animation: pulse-dot 1.5s ease infinite; }
+  .voice-dot.processing { background: var(--purple); animation: pulse-dot 0.8s ease infinite; }
+  @keyframes pulse-dot { 0%, 100% { box-shadow: 0 0 0 0 rgba(16,124,16,0.4); } 50% { box-shadow: 0 0 0 6px rgba(16,124,16,0); } }
+  .voice-status { font-size: 11px; color: var(--text-sec); flex: 1; }
+  .voice-wave { display: flex; align-items: center; gap: 2px; height: 20px; }
+  .voice-wave .bar { width: 3px; background: var(--purple); border-radius: 2px; transition: height 0.15s; }
+
+  /* Messages */
+  .cp-messages { flex: 1; overflow-y: auto; padding: 14px; display: flex; flex-direction: column; gap: 12px; }
+  .msg { padding: 10px 14px; border-radius: 10px; font-size: 12px; line-height: 1.6; max-width: 95%; opacity: 0; transform: translateY(6px); transition: all 0.4s ease; }
+  .msg.visible { opacity: 1; transform: translateY(0); }
+  .msg.user { background: #EBF3FC; align-self: flex-end; border-bottom-right-radius: 2px; }
+  .msg.user .msg-label { font-size: 10px; color: var(--blue); font-weight: 600; margin-bottom: 4px; display: flex; align-items: center; gap: 4px; }
+  .msg.copilot { background: #F8F6FF; align-self: flex-start; border-bottom-left-radius: 2px; }
+  .msg.copilot .msg-label { font-size: 10px; color: var(--purple); font-weight: 600; margin-bottom: 4px; }
+  .msg .action-chip { display: inline-flex; align-items: center; gap: 4px; background: var(--green-light); border: 1px solid rgba(16,124,16,0.2); color: var(--green); font-size: 10px; font-weight: 600; padding: 2px 8px; border-radius: 8px; margin-top: 6px; }
+
+  /* Input area */
+  .cp-input { padding: 12px 14px; border-top: 1px solid var(--border); }
+  .mic-btn { width: 100%; padding: 12px; border-radius: 24px; border: 2px solid var(--border); background: var(--surface); font-size: 13px; color: var(--text-sec); cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; transition: all 0.3s; font-family: var(--font); }
+  .mic-btn:hover { border-color: var(--purple); color: var(--purple); }
+  .mic-btn.active { border-color: var(--green); background: rgba(16,124,16,0.04); color: var(--green); }
+  .mic-icon { font-size: 18px; }
+  .cp-disclaimer { font-size: 10px; color: var(--text-muted); text-align: center; margin-top: 6px; }
+
+  /* Annotation cards */
+  .ann {
+    position: fixed; z-index: 91; right: 20px;
+    background: rgba(30,30,30,0.94); color: white; padding: 14px 18px;
+    border-radius: 10px; font-size: 12px; line-height: 1.65;
+    backdrop-filter: blur(12px); box-shadow: 0 6px 24px rgba(0,0,0,0.25);
+    border-left: 3px solid #B4A0FF; max-width: 280px;
+    opacity: 0; transform: translateY(6px);
+    transition: all 0.4s ease; display: none;
+  }
+  .ann.visible { opacity: 1; transform: translateY(0); display: block; }
+  .ann .ann-num { display: inline-block; background: var(--purple); color: white; width: 20px; height: 20px; border-radius: 50%; text-align: center; line-height: 20px; font-size: 10px; font-weight: 700; margin-right: 6px; }
+  .ann .ann-tag { font-size: 13px; text-transform: uppercase; letter-spacing: 1px; color: #B4A0FF; margin-bottom: 8px; font-weight: 700; }
+  .ann .ann-body { color: rgba(255,255,255,0.85); }
+
+  /* Step bar */
+  .step-bar { position: fixed; bottom: 16px; left: 50%; transform: translateX(-50%); z-index: 100; display: flex; align-items: center; gap: 12px; background: rgba(30,30,30,0.9); padding: 8px 20px; border-radius: 20px; backdrop-filter: blur(8px); }
+  .step-bar.hidden { display: none; }
+  .step-bar button { background: none; border: none; color: white; font-size: 16px; cursor: pointer; padding: 4px 8px; border-radius: 4px; font-family: var(--font); }
+  .step-bar button:hover { background: rgba(255,255,255,0.1); }
+  .step-bar button:disabled { opacity: 0.3; cursor: default; }
+  .step-label { color: rgba(255,255,255,0.6); font-size: 11px; min-width: 50px; text-align: center; }
+
+  /* Fin */
+  .fin-overlay {
+    position: fixed; inset: 0; z-index: 300;
+    background: rgba(0,0,0,0.7); display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    opacity: 0; pointer-events: none; transition: opacity 0.6s ease;
+  }
+  .fin-overlay.visible { opacity: 1; pointer-events: auto; }
+  .fin-overlay .fin { font-size: 48px; font-weight: 300; color: white; font-style: italic; font-family: Georgia, serif; }
+  .fin-overlay .sub { font-size: 14px; color: rgba(255,255,255,0.5); margin-top: 8px; }
+</style>
+</head>
+<body>
+
+<!-- LANDING -->
+<div class="landing" id="landing">
+  <h1>Voice-First Editing</h1>
+  <p class="sub">Copilot Agent Mode in Word — hands-free document editing</p>
+  <div class="scenario">
+    <div class="sc-label">Scenario</div>
+    <p>Yesterday, your CVP asked for a <strong>Platform Investment Proposal</strong> during a leadership meeting. You drafted it overnight with Copilot's help.</p>
+    <p>This morning, you want to <strong>refine it with voice commands</strong> while you prep for your next meeting. Copilot is in <strong>Agent Mode</strong> — listening, reasoning, and editing the doc on your behalf.</p>
+  </div>
+  <button class="start-btn" onclick="startDemo()">Start the demo →</button>
+</div>
+
+<!-- SHELL -->
+<div class="shell">
+  <!-- Word Document -->
+  <div class="word-main">
+    <div class="word-topbar">
+      <span class="w-logo">W</span>
+      <span class="w-title">Platform_Investment_Proposal_H2.docx</span>
+      <span style="font-size:11px; color:var(--text-muted); margin-left:auto;">Editing</span>
+    </div>
+    <div class="word-ribbon">
+      <button class="r-active">Home</button>
+      <button>Insert</button>
+      <button>Layout</button>
+      <button>References</button>
+      <button>Review</button>
+      <button>View</button>
+      <button>Help</button>
+    </div>
+    <div class="word-canvas" id="canvas">
+      <div class="word-page" id="docPage">
+        <div class="meta" style="color: var(--blue); font-size: 10px;">CONFIDENTIAL — Leadership Review Draft</div>
+        <h1>Platform Investment Proposal — H2 FY26</h1>
+        <p class="meta">Engineering Platform Team · Prepared for CVP Review · Draft v1.0</p>
+
+        <h2>1. Executive Summary</h2>
+        <p id="exec-summary">This proposal recommends a <strong>$12M investment</strong> in platform infrastructure for H2 FY26, focused on three pillars: developer velocity, AI workload scaling, and reliability engineering. The investment addresses a growing gap between product ambition and platform capacity that has resulted in 23% longer deployment cycles and 3 P0 incidents in the last quarter.</p>
+
+        <h2>2. Problem Statement</h2>
+        <p>The current platform stack was architected for 40 services. We now run 127 services across 3 regions. Key pain points:</p>
+        <ul>
+          <li id="deploy-time"><strong>Deployment time:</strong> Average deploy-to-production is 4.2 hours, up from 1.8 hours 18 months ago</li>
+          <li><strong>Incident rate:</strong> 3 P0 incidents in Q1, all traced to infrastructure drift between environments</li>
+          <li><strong>Developer satisfaction:</strong> Platform NPS dropped from 72 to 41 in the last survey</li>
+        </ul>
+
+        <h2>3. Proposed Investment</h2>
+        <p>We propose three investment areas:</p>
+
+        <h3 style="font-size:14px; color:var(--text); margin:16px 0 8px;">3.1 Developer Velocity ($4.5M)</h3>
+        <p id="dev-velocity">Unified CI/CD pipeline with built-in canary deployments, automated rollback, and environment parity enforcement. Target: reduce deploy-to-production from 4.2 hours to under 45 minutes.</p>
+
+        <h3 style="font-size:14px; color:var(--text); margin:16px 0 8px;">3.2 AI Workload Scaling ($5M)</h3>
+        <p id="ai-scaling">Dedicated GPU compute tier with auto-scaling, model versioning, and cost attribution per team. Current AI workloads consume 38% of compute but have no dedicated infrastructure — they compete with production services for resources.</p>
+
+        <h3 style="font-size:14px; color:var(--text); margin:16px 0 8px;">3.3 Reliability Engineering ($2.5M)</h3>
+        <p id="reliability">Investment in observability stack (distributed tracing, anomaly detection), chaos engineering program, and SRE team expansion from 4 to 8 engineers. Goal: reduce P0 incidents from 3/quarter to &lt;1/quarter.</p>
+
+        <h2>4. Expected Outcomes</h2>
+        <ul>
+          <li>Deploy-to-production: 4.2h → &lt;45min</li>
+          <li>P0 incidents: 3/quarter → &lt;1/quarter</li>
+          <li>Platform NPS: 41 → 65+</li>
+          <li>AI workload cost efficiency: 30% improvement through dedicated tier</li>
+        </ul>
+
+        <h2>5. Timeline & Milestones</h2>
+        <p id="timeline">Phase 1 (Jul-Sep): CI/CD modernization and GPU tier POC<br/>
+        Phase 2 (Oct-Nov): Full GPU scaling rollout, SRE hiring<br/>
+        Phase 3 (Dec): Chaos engineering program launch, final validation</p>
+
+        <h2>6. Risk Assessment</h2>
+        <p id="risks">Key risks include talent acquisition for SRE roles (market is competitive), GPU supply constraints for dedicated tier, and migration complexity for 127 services to new CI/CD. Mitigation strategies are detailed in Appendix B.</p>
+
+        <h2>7. Ask</h2>
+        <p id="ask-section">We are requesting <strong>$12M in H2 FY26 budget allocation</strong> with quarterly milestone reviews. First checkpoint: CI/CD POC results by end of August.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Copilot Agent Mode Pane -->
+  <div class="copilot-pane">
+    <div class="cp-header">
+      <svg class="cp-icon" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" fill="#7B57FF"/><path d="M8 12l3 3 5-5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <span class="cp-title">Copilot in Word</span>
+      <span class="agent-badge">AGENT MODE</span>
+    </div>
+
+    <div class="voice-bar" id="voiceBar">
+      <div class="voice-dot" id="voiceDot"></div>
+      <span class="voice-status" id="voiceStatus">Ready — click mic or press Space to speak</span>
+      <div class="voice-wave" id="voiceWave">
+        <div class="bar" style="height:4px;"></div>
+        <div class="bar" style="height:4px;"></div>
+        <div class="bar" style="height:4px;"></div>
+        <div class="bar" style="height:4px;"></div>
+        <div class="bar" style="height:4px;"></div>
+      </div>
+    </div>
+
+    <div class="cp-messages" id="messages">
+      <div class="msg copilot visible">
+        <div class="msg-label">Copilot · Agent Mode</div>
+        I'm ready to help edit your proposal. Speak naturally — I'll listen, confirm what I understood, and make the changes. You can say things like "tighten the executive summary" or "add a risk about vendor lock-in."
+      </div>
+    </div>
+
+    <div class="cp-input">
+      <button class="mic-btn" id="micBtn" onclick="advanceStep()">
+        <span class="mic-icon">🎤</span>
+        <span id="micLabel">Click to speak</span>
+      </button>
+      <div class="cp-disclaimer">Voice commands are processed locally · AI-generated edits may need review</div>
+    </div>
+  </div>
+</div>
+
+<!-- ANNOTATIONS -->
+<div class="ann" id="ann1" style="top:120px;">
+  <div class="ann-tag"><span class="ann-num">1</span> Voice-First Interaction</div>
+  <div class="ann-body">The user speaks naturally — no special syntax. Copilot <strong>interprets intent</strong>, not just keywords. "Make the exec summary punchier" is a valid command.</div>
+</div>
+<div class="ann" id="ann2" style="top:120px;">
+  <div class="ann-tag"><span class="ann-num">2</span> Confirm Before Acting</div>
+  <div class="ann-body">Copilot echoes back what it understood and <strong>previews the change</strong> before applying. The user approves with a simple "yes" — no need to look at the screen.</div>
+</div>
+<div class="ann" id="ann3" style="top:120px;">
+  <div class="ann-tag"><span class="ann-num">3</span> Ambient Editing</div>
+  <div class="ann-body">The document updates in real-time with <strong>tracked changes</strong>. The user can glance at the doc between tasks — edits are visible, reversible, and attributed to Copilot.</div>
+</div>
+<div class="ann" id="ann4" style="top:120px;">
+  <div class="ann-tag"><span class="ann-num">4</span> Multi-Step Reasoning</div>
+  <div class="ann-body">The user says "add something about vendor lock-in risk." Copilot doesn't just insert text — it <strong>reasons about where it belongs</strong>, what tone matches, and drafts contextually.</div>
+</div>
+<div class="ann" id="ann5" style="top:120px;">
+  <div class="ann-tag"><span class="ann-num">5</span> Hands-Free Approval</div>
+  <div class="ann-body">"Yes," "do it," "go ahead" — the approval vocabulary is <strong>natural and forgiving</strong>. No button clicks required. The user stays in their flow.</div>
+</div>
+<div class="ann" id="ann6" style="top:120px;">
+  <div class="ann-tag"><span class="ann-num">6</span> Progressive Autonomy</div>
+  <div class="ann-body">After several successful edits, the user says "just do it" — granting Copilot <strong>more autonomy</strong>. Trust is earned through demonstrated competence, then delegated.</div>
+</div>
+
+<!-- FIN -->
+<div class="fin-overlay" id="finOverlay">
+  <div class="fin">Fin.</div>
+  <div class="sub">(end of voice editing demo)</div>
+  <div class="sub" style="margin-top:16px; font-size:12px;">press any key to restart</div>
+</div>
+
+<!-- STEP BAR -->
+<div class="step-bar hidden" id="stepBar">
+  <button id="stepPrev" onclick="prevStep()">←</button>
+  <span class="step-label" id="stepLabel">1 / 6</span>
+  <button id="stepNext" onclick="advanceStep()">→</button>
+</div>
+
+<script>
+let step = 0;
+const totalSteps = 6;
+
+// Voice command sequences
+const beats = [
+  {
+    // Beat 1: "Make the executive summary shorter and punchier"
+    user: "Hey Copilot — make the executive summary shorter and more direct. It's for the CVP, he likes brevity.",
+    thinking: "Understanding... Tightening executive summary for executive audience.",
+    response: "Got it. I'll cut the executive summary to two sentences — leading with the ask and the why. Here's what I'd change:",
+    preview: "Requesting <strong>$12M for H2 platform investment</strong> to close a growing gap between product ambition and platform capacity — deployment cycles are up 130%, with 3 P0s last quarter.",
+    targetId: "exec-summary",
+    oldText: null, // will be set dynamically
+    newHtml: 'Requesting <strong>$12M for H2 platform investment</strong> to close a growing gap between product ambition and platform capacity — deployment cycles are up 130%, with 3 P0s last quarter. Three pillars: developer velocity, AI workload scaling, and reliability engineering.',
+    annId: "ann1",
+    scrollTo: "exec-summary"
+  },
+  {
+    // Beat 2: "Change deploy time target to 30 minutes"
+    user: "Actually, change the deploy-to-production target from 45 minutes to 30 minutes. We committed to that in the last sprint review.",
+    thinking: "Searching document for deployment targets...",
+    response: "Found 2 references to the 45-minute target — in section 3.1 and section 4. I'll update both. Confirm?",
+    preview: null,
+    targetId: "dev-velocity",
+    oldText: null,
+    newHtml: null, // handled specially - two replacements
+    annId: "ann2",
+    scrollTo: "dev-velocity"
+  },
+  {
+    // Beat 3: "Add a risk about vendor lock-in"
+    user: "Add a bullet about vendor lock-in risk in the GPU tier. That'll come up for sure.",
+    thinking: "Analyzing risk section... Drafting vendor lock-in risk for GPU investment.",
+    response: "I'll add a vendor lock-in risk to section 6, specific to the GPU tier. Here's the draft:",
+    preview: "<strong>GPU vendor lock-in:</strong> Dedicated GPU tier creates dependency on a single cloud provider's GPU SKUs. Mitigation: abstract compute layer with Kubernetes-based orchestration to preserve portability.",
+    targetId: "risks",
+    oldText: null,
+    newHtml: null,
+    annId: "ann4",
+    scrollTo: "risks"
+  },
+  {
+    // Beat 4: "Make the ask section stronger"
+    user: "The ask at the bottom feels weak. Make it more confident — this isn't a request, it's a recommendation backed by data.",
+    thinking: "Rewriting section 7 with stronger framing...",
+    response: "Reframing the ask from a request to a recommendation. Here's the revised version:",
+    preview: null,
+    targetId: "ask-section",
+    oldText: null,
+    newHtml: 'Based on the data presented, we <strong>recommend approving $12M in H2 FY26</strong> for platform investment. The cost of inaction — continued P0 incidents, developer attrition, and AI workload bottlenecks — exceeds the investment within two quarters. First milestone review: CI/CD POC results, end of August.',
+    annId: "ann5",
+    scrollTo: "ask-section"
+  },
+  {
+    // Beat 5: "Shorten the timeline section"
+    user: "Tighten up the timeline — bullet points, not paragraph. And add specific dates.",
+    thinking: "Reformatting timeline to bullets with dates...",
+    response: "Converting to bullets with specific dates. Applying directly:",
+    preview: null,
+    targetId: "timeline",
+    oldText: null,
+    newHtml: '<strong>Phase 1</strong> (Jul 1 – Sep 15): CI/CD modernization, GPU tier POC<br/><strong>Phase 2</strong> (Sep 16 – Nov 30): Full GPU scaling rollout, SRE hiring (4→8)<br/><strong>Phase 3</strong> (Dec 1 – Dec 31): Chaos engineering launch, final validation & CVP review',
+    annId: "ann3",
+    scrollTo: "timeline"
+  },
+  {
+    // Beat 6: "Read back the summary"
+    user: "Read me back the executive summary so I can hear how it sounds.",
+    thinking: "Reading executive summary...",
+    response: "Here's the current executive summary: \"Requesting $12M for H2 platform investment to close a growing gap between product ambition and platform capacity — deployment cycles are up 130%, with 3 P0s last quarter. Three pillars: developer velocity, AI workload scaling, and reliability engineering.\"",
+    preview: null,
+    targetId: null,
+    oldText: null,
+    newHtml: null,
+    annId: "ann6",
+    scrollTo: null
+  }
+];
+
+function startDemo() {
+  document.getElementById('landing').classList.add('hidden');
+  document.getElementById('stepBar').classList.remove('hidden');
+  step = 0;
+  updateStepLabel();
+}
+
+function updateStepLabel() {
+  document.getElementById('stepLabel').textContent = step + ' / ' + totalSteps;
+}
+
+function advanceStep() {
+  if (step >= totalSteps) return;
+  step++;
+  playBeat(step);
+  updateStepLabel();
+}
+
+function prevStep() {
+  if (step <= 0) return;
+  // Simple: just reload for now
+  location.reload();
+}
+
+function playBeat(n) {
+  const beat = beats[n - 1];
+  if (!beat) return;
+  const msgArea = document.getElementById('messages');
+
+  // Hide previous annotations
+  document.querySelectorAll('.ann').forEach(a => a.classList.remove('visible'));
+
+  // 1. Show voice listening state
+  setVoiceState('listening');
+
+  // 2. After 800ms, show user's voice command
+  setTimeout(() => {
+    setVoiceState('processing');
+    const userMsg = createMsg('user', '🎤 Voice', beat.user);
+    msgArea.appendChild(userMsg);
+    setTimeout(() => userMsg.classList.add('visible'), 50);
+    scrollMessages();
+  }, 800);
+
+  // 3. After 2s, show Copilot thinking
+  setTimeout(() => {
+    setVoiceState('idle');
+    const thinkMsg = createMsg('copilot', 'Copilot · thinking', '<em>' + beat.thinking + '</em>');
+    msgArea.appendChild(thinkMsg);
+    setTimeout(() => thinkMsg.classList.add('visible'), 50);
+    scrollMessages();
+  }, 2000);
+
+  // 4. After 3.5s, show Copilot response + preview
+  setTimeout(() => {
+    const responseHtml = beat.response +
+      (beat.preview ? '<div class="highlight" style="margin-top:10px; font-size:11px;">' + beat.preview + '</div>' : '') +
+      (beat.newHtml && n !== 6 ? '<div class="action-chip">✓ Applied as tracked change</div>' : '');
+    const respMsg = createMsg('copilot', 'Copilot · Agent Mode', responseHtml);
+    msgArea.appendChild(respMsg);
+    setTimeout(() => respMsg.classList.add('visible'), 50);
+    scrollMessages();
+
+    // Show annotation
+    if (beat.annId) {
+      const ann = document.getElementById(beat.annId);
+      if (ann) {
+        ann.style.top = '120px';
+        ann.classList.add('visible');
+      }
+    }
+
+    // Scroll document to target
+    if (beat.scrollTo) {
+      const el = document.getElementById(beat.scrollTo);
+      if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+
+    // Apply document edit
+    if (beat.targetId && beat.newHtml) {
+      applyEdit(beat.targetId, beat.newHtml);
+    }
+
+    // Special handling for beat 2 (two replacements)
+    if (n === 2) {
+      applyEdit('dev-velocity', 'Unified CI/CD pipeline with built-in canary deployments, automated rollback, and environment parity enforcement. Target: reduce deploy-to-production from 4.2 hours to <strong>under 30 minutes</strong>.');
+      // Also update the outcomes list
+      setTimeout(() => {
+        const outcomes = document.querySelectorAll('.word-page li');
+        outcomes.forEach(li => {
+          if (li.textContent.includes('45min')) {
+            li.innerHTML = li.innerHTML.replace('&lt;45min', '<strong>&lt;30min</strong>');
+            li.classList.add('edit-flash');
+          }
+        });
+      }, 500);
+    }
+
+    // Special handling for beat 3 (add new content)
+    if (n === 3) {
+      const riskEl = document.getElementById('risks');
+      const newRisk = document.createElement('div');
+      newRisk.className = 'tracked-insert';
+      newRisk.innerHTML = '<strong>GPU vendor lock-in:</strong> Dedicated GPU tier creates dependency on a single cloud provider\'s GPU SKUs. Mitigation: abstract compute layer with Kubernetes-based orchestration to preserve portability.';
+      riskEl.parentNode.insertBefore(newRisk, riskEl.nextSibling);
+      setTimeout(() => newRisk.classList.add('visible'), 300);
+    }
+
+    // Beat 6: Fin
+    if (n === 6) {
+      setTimeout(() => {
+        document.getElementById('finOverlay').classList.add('visible');
+      }, 4000);
+    }
+  }, 3500);
+}
+
+function applyEdit(targetId, newHtml) {
+  const el = document.getElementById(targetId);
+  if (!el) return;
+  el.classList.add('edit-flash');
+  setTimeout(() => {
+    el.innerHTML = newHtml;
+  }, 300);
+}
+
+function createMsg(type, label, content) {
+  const div = document.createElement('div');
+  div.className = 'msg ' + type;
+  div.innerHTML = '<div class="msg-label">' + label + '</div>' + content;
+  return div;
+}
+
+function scrollMessages() {
+  const area = document.getElementById('messages');
+  setTimeout(() => { area.scrollTop = area.scrollHeight; }, 100);
+}
+
+function setVoiceState(state) {
+  const dot = document.getElementById('voiceDot');
+  const status = document.getElementById('voiceStatus');
+  const bars = document.querySelectorAll('.voice-wave .bar');
+  const btn = document.getElementById('micBtn');
+  const label = document.getElementById('micLabel');
+
+  dot.className = 'voice-dot';
+  btn.className = 'mic-btn';
+
+  if (state === 'listening') {
+    dot.classList.add('listening');
+    status.textContent = 'Listening...';
+    btn.classList.add('active');
+    label.textContent = 'Listening...';
+    animateWave(true);
+  } else if (state === 'processing') {
+    dot.classList.add('processing');
+    status.textContent = 'Processing voice command...';
+    label.textContent = 'Processing...';
+    animateWave(false);
+  } else {
+    status.textContent = 'Ready — click or press →';
+    label.textContent = 'Click to speak';
+    animateWave(false);
+  }
+}
+
+function animateWave(active) {
+  const bars = document.querySelectorAll('.voice-wave .bar');
+  if (active) {
+    bars.forEach((bar, i) => {
+      bar.style.animation = `waveAnim 0.6s ease ${i * 0.1}s infinite alternate`;
+    });
+  } else {
+    bars.forEach(bar => {
+      bar.style.animation = 'none';
+      bar.style.height = '4px';
+    });
+  }
+}
+
+// Keyboard nav
+document.addEventListener('keydown', (e) => {
+  if (document.getElementById('finOverlay').classList.contains('visible')) {
+    document.getElementById('finOverlay').classList.remove('visible');
+    location.reload();
+    return;
+  }
+  if (document.getElementById('landing').classList.contains('hidden') === false) return;
+  if (e.key === 'ArrowRight' || e.key === ' ') {
+    e.preventDefault();
+    advanceStep();
+  }
+});
+
+// Add wave animation keyframes dynamically
+const styleSheet = document.createElement('style');
+styleSheet.textContent = `@keyframes waveAnim { from { height: 4px; } to { height: 18px; } }`;
+document.head.appendChild(styleSheet);
+</script>
+</body>
+</html>

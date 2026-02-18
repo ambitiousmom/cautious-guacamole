@@ -8,10 +8,10 @@
 <style>
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
 :root{
-  --bg:#fafafa;--fg:#1a1a1a;--muted:#6b6b6b;--dim:#999;--accent:#4f46e5;--accent-soft:#eef2ff;
+  --bg:#fafafa;--fg:#1a1a1a;--muted:#555;--dim:#999;--accent:#4f46e5;--accent-soft:#eef2ff;
   --border:#e5e5e5;--card:#fff;--font:'Segoe UI',system-ui,-apple-system,sans-serif;
   --mono:'Cascadia Code','Fira Code','SF Mono',monospace;
-  --max:680px;--radius:8px;
+  --max:700px;--radius:8px;
 }
 html{font-size:15px;scroll-behavior:smooth}
 body{font-family:var(--font);background:var(--bg);color:var(--fg);line-height:1.55;-webkit-font-smoothing:antialiased;padding:0 20px}
@@ -19,59 +19,60 @@ a{color:var(--accent);text-decoration:none}
 a:hover{text-decoration:underline}
 ::selection{background:var(--accent);color:#fff}
 
-.page{max-width:var(--max);margin:0 auto;padding:52px 0 40px}
-section{margin-bottom:36px}
-section:last-of-type{margin-bottom:0}
+.page{max-width:var(--max);margin:0 auto;padding:48px 0 36px}
+section{margin-bottom:32px}
 
 h1{font-size:2rem;font-weight:700;letter-spacing:-.04em;line-height:1.1;margin-bottom:4px}
 h1 span{background:linear-gradient(135deg,var(--accent),#7c3aed);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
-.role{font-size:.88rem;color:var(--muted);margin-bottom:0;line-height:1.45}
+.role{font-size:.86rem;color:var(--muted);line-height:1.45}
 .role strong{color:var(--fg);font-weight:600}
 
-/* Section labels */
-.sl{font-size:.62rem;text-transform:uppercase;letter-spacing:.12em;color:var(--accent);font-weight:700;margin-bottom:10px}
+.sl{font-size:.6rem;text-transform:uppercase;letter-spacing:.12em;color:var(--accent);font-weight:700;margin-bottom:10px}
 
 /* ── Signal grid ── */
 .signals{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--border);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden}
 @media(min-width:520px){.signals{grid-template-columns:repeat(3,1fr)}}
-.sig{background:var(--card);padding:14px 16px}
-.sig-label{font-size:.6rem;text-transform:uppercase;letter-spacing:.1em;color:var(--dim);font-weight:600;margin-bottom:3px}
-.sig-value{font-size:.84rem;font-weight:600;color:var(--fg);line-height:1.4}
+.sig{background:var(--card);padding:13px 15px}
+.sig-label{font-size:.58rem;text-transform:uppercase;letter-spacing:.1em;color:var(--dim);font-weight:600;margin-bottom:2px}
+.sig-value{font-size:.82rem;font-weight:600;color:var(--fg);line-height:1.4}
 .sig-value em{font-style:normal;color:var(--accent);font-weight:700}
 
-/* ── Timeline (compact) ── */
-.arc{position:relative;padding-left:24px}
-.arc::before{content:'';position:absolute;left:5px;top:6px;bottom:6px;width:1.5px;background:var(--border)}
-.arc-item{position:relative;margin-bottom:14px}
-.arc-item:last-child{margin-bottom:0}
-.arc-dot{position:absolute;left:-24px;top:5px;width:11px;height:11px;border-radius:50%;border:2px solid var(--accent);background:var(--bg)}
-.arc-item.now .arc-dot{background:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
-.arc-year{font-family:var(--mono);font-size:.68rem;color:var(--accent);font-weight:600}
-.arc-title{font-weight:700;font-size:.9rem;letter-spacing:-.01em}
-.arc-sub{color:var(--muted);font-size:.78rem;line-height:1.5;margin-top:1px}
+/* ── What I do ── */
+.do-grid{display:grid;grid-template-columns:1fr 1fr;gap:0 24px}
+@media(max-width:480px){.do-grid{grid-template-columns:1fr}}
+.do-item{padding:8px 0;border-bottom:1px solid var(--border)}
+.do-item:nth-last-child(-n+2){border-bottom:none}
+@media(max-width:480px){.do-item:last-child{border-bottom:none}}
+.do-item h4{font-size:.84rem;font-weight:700;margin-bottom:1px}
+.do-item p{font-size:.76rem;color:var(--muted);line-height:1.5}
 
 /* ── Built cards ── */
 .built-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 @media(max-width:480px){.built-grid{grid-template-columns:1fr}}
-.built{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:16px}
-.built-num{font-family:var(--mono);font-size:.62rem;color:var(--accent);font-weight:700;margin-bottom:4px}
-.built h4{font-size:.88rem;font-weight:700;margin-bottom:3px}
-.built p{font-size:.76rem;color:var(--muted);line-height:1.5}
-.built .tags{margin-top:8px;display:flex;flex-wrap:wrap;gap:4px}
-.built .tags span{font-size:.6rem;padding:2px 8px;border-radius:100px;background:#f3f4f6;color:#6b7280;font-weight:600}
+.built{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:15px}
+.built-num{font-family:var(--mono);font-size:.6rem;color:var(--accent);font-weight:700;margin-bottom:3px}
+.built h4{font-size:.86rem;font-weight:700;margin-bottom:2px}
+.built p{font-size:.74rem;color:var(--muted);line-height:1.5}
+.built .tags{margin-top:7px;display:flex;flex-wrap:wrap;gap:4px}
+.built .tags span{font-size:.58rem;padding:2px 7px;border-radius:100px;background:#f3f4f6;color:#6b7280;font-weight:600}
 
 /* ── Thesis ── */
-.thesis{font-size:.9rem;color:var(--muted);line-height:1.65;border-left:3px solid var(--accent);padding-left:16px}
+.thesis{font-size:.88rem;color:var(--muted);line-height:1.6;border-left:3px solid var(--accent);padding-left:16px}
 .thesis strong{color:var(--fg);font-weight:600}
 
-/* Footer */
-hr{border:none;border-top:1px solid var(--border);margin:36px 0 0}
-.foot{margin-top:20px;font-size:.72rem;color:var(--dim);text-align:center}
+/* ── Side gig ── */
+.side{display:flex;align-items:flex-start;gap:12px;padding:14px 16px;background:var(--card);border:1px solid var(--border);border-radius:var(--radius)}
+.side-icon{font-size:1.2rem;line-height:1;flex-shrink:0;margin-top:1px}
+.side p{font-size:.78rem;color:var(--muted);line-height:1.5}
+.side strong{color:var(--fg);font-weight:600}
+
+hr{border:none;border-top:1px solid var(--border);margin:32px 0 0}
+.foot{margin-top:16px;font-size:.7rem;color:var(--dim);text-align:center}
 .foot a{font-weight:600}
 
 @media(max-width:500px){
   h1{font-size:1.6rem}
-  .page{padding:40px 0 32px}
+  .page{padding:36px 0 28px}
 }
 </style>
 </head>
@@ -81,67 +82,59 @@ hr{border:none;border-top:1px solid var(--border);margin:36px 0 0}
 <!-- ═══ Header ═══ -->
 <section>
   <h1><span>Hema Sridharan</span></h1>
-  <div class="role">Senior PM, <strong>Microsoft Copilot</strong> · Grounding & Trust · M365 AI Platform</div>
+  <div class="role">Senior PM, <strong>Microsoft Copilot</strong> · 11 years product leadership & software engineering · Core Inventor, <strong>3 US Patents</strong></div>
 </section>
 
-<!-- ═══ At a glance ═══ -->
+<!-- ═══ Proof points ═══ -->
 <section>
   <div class="sl">At a glance</div>
   <div class="signals">
     <div class="sig">
-      <div class="sig-label">Now</div>
-      <div class="sig-value">DRI for <em>Copilot grounding</em> — RAG stack, EVALS, trust frameworks, competitive parity</div>
+      <div class="sig-label">Own</div>
+      <div class="sig-value"><em>Copilot grounding quality</em> — RAG stack, EVALS, trust frameworks, competitive parity across 1P & 3P</div>
     </div>
     <div class="sig">
       <div class="sig-label">Founded</div>
-      <div class="sig-value"><em>0→1 agentic charter</em> — solo JTBD proposal → SLT-funded → 10+ orgs aligned</div>
+      <div class="sig-value"><em>0→1 agentic charter</em> — customer JTBD research → SLT-funded roadmap → 10+ orgs aligned across divisions</div>
     </div>
     <div class="sig">
-      <div class="sig-label">Patents</div>
-      <div class="sig-value"><em>3 US Patents</em> — 2 GenAI agentic systems, 1 collaborative UX</div>
+      <div class="sig-label">Invented</div>
+      <div class="sig-value"><em>3 US Patents</em> — 2 for GenAI agent collaboration & orchestration, 1 for real-time collaboration</div>
     </div>
     <div class="sig">
-      <div class="sig-label">Impact</div>
-      <div class="sig-value"><em>12pt</em> defect reduction · <em>4pt</em> satisfaction lift — rapid experimentation at scale</div>
+      <div class="sig-label">Shipped</div>
+      <div class="sig-value"><em>12pt</em> defect reduction · <em>4pt</em> satisfaction lift — science-based experimentation, rapid iteration at scale</div>
     </div>
     <div class="sig">
-      <div class="sig-label">Stack</div>
-      <div class="sig-value">Orchestration · grounding · agent frameworks · SDKs/APIs · rendering engines · telemetry</div>
+      <div class="sig-label">Technical</div>
+      <div class="sig-value">Orchestration · grounding · agent frameworks · SDKs/APIs · rendering engines · telemetry platforms</div>
     </div>
     <div class="sig">
-      <div class="sig-label">Story</div>
-      <div class="sig-value">5-year career pause (teacher, writer). Came back. Shipped harder.</div>
+      <div class="sig-label">Responsible AI</div>
+      <div class="sig-value">Trust & quality evaluation frameworks · partnered with Applied Science & Policy to scale responsibly</div>
     </div>
   </div>
 </section>
 
-<!-- ═══ The arc ═══ -->
+<!-- ═══ What I do ═══ -->
 <section>
-  <div class="sl">Career arc</div>
-  <div class="arc">
-    <div class="arc-item now">
-      <div class="arc-dot"></div>
-      <div class="arc-year">2025 — Present</div>
-      <div class="arc-title">Lead PM & DRI — Grounding & Trust</div>
-      <div class="arc-sub">Microsoft Copilot · Own grounding quality across the RAG stack. Defined "Needs Met" competitive framework (vs. Perplexity, Google). Shipped automated EVALS pipelines. Translated AI regulations into trust and quality evaluation frameworks with Applied Science and Policy.</div>
+  <div class="sl">What I do</div>
+  <div class="do-grid">
+    <div class="do-item">
+      <h4>Strategy → Roadmap</h4>
+      <p>Turn high-ambiguity ideas into funded, multi-year roadmaps with cross-division alignment and measurable outcomes.</p>
     </div>
-    <div class="arc-item">
-      <div class="arc-dot"></div>
-      <div class="arc-year">2022 — 2025</div>
-      <div class="arc-title">0→1 Founder PM — Agent Orchestration</div>
-      <div class="arc-sub">M365 · Office Product Group · Authored "AI-Productivity Paradox" proposal. Secured SLT funding. Designed app-agnostic reasoning spine across Word, Excel, PPT, Teams. Drove go-to-market: scenario docs, metrics, rollout, stakeholder briefings.</div>
+    <div class="do-item">
+      <h4>AI Platform & Extensibility</h4>
+      <p>Define core AI capabilities — orchestration, grounding, memory, agent collaboration — that unlock 1P innovation and 3P extensibility.</p>
     </div>
-    <div class="arc-item">
-      <div class="arc-dot"></div>
-      <div class="arc-year">2016 — 2021</div>
-      <div class="arc-title">Career Pause — Teaching & Writing</div>
-      <div class="arc-sub">Motherhood. Tamil teacher for 1st-gen American kids. Screenplay writer for Tamil theater.</div>
+    <div class="do-item">
+      <h4>Cross-Org Execution</h4>
+      <p>Orchestrate engineering, applied science, design, and partner teams. Clear milestones, success criteria, effective communication.</p>
     </div>
-    <div class="arc-item">
-      <div class="arc-dot"></div>
-      <div class="arc-year">2009 — 2015</div>
-      <div class="arc-title">Software Engineer → Product Manager</div>
-      <div class="arc-sub">Microsoft OneNote · Led 12-engineer Canvas/Rendering redesign (Win, Mac, iOS). Built telemetry platform. Hands-on with SDK/API integration patterns and cross-platform tooling.</div>
+    <div class="do-item">
+      <h4>Go-to-Market</h4>
+      <p>Shape rollout plans, define product metrics, incorporate customer/developer feedback, and drive competitive disruption.</p>
     </div>
   </div>
 </section>
@@ -154,39 +147,47 @@ hr{border:none;border-top:1px solid var(--border);margin:36px 0 0}
       <div class="built-num">01</div>
       <h4>The Morning Check-In</h4>
       <p>Interactive M365 Copilot prototype — 18 UX principles across 12 beats. Proactive intelligence, cross-artifact reasoning, intelligent surface handoff.</p>
-      <div class="tags"><span>Multi-Turn</span><span>Cross-App</span><span>Interactive</span></div>
+      <div class="tags"><span>Multi-Turn</span><span>Cross-App</span><span>Conversational UX</span></div>
     </div>
     <div class="built">
       <div class="built-num">02</div>
       <h4>Voice-First Editing</h4>
-      <p>Voice-driven document editing in Word with Copilot. Natural language corrections, contextual rewrites, preserving creative flow.</p>
-      <div class="tags"><span>Voice UX</span><span>Copilot in Word</span></div>
+      <p>Voice-driven document editing in Word with Copilot. Natural language corrections, contextual rewrites, hands-free creative flow.</p>
+      <div class="tags"><span>Voice UX</span><span>Copilot in Word</span><span>Agent UX</span></div>
     </div>
     <div class="built">
       <div class="built-num">03</div>
       <h4>Agent Coherence Dashboard</h4>
-      <p>Trust & quality evaluation dashboard — coherence scoring, grounding accuracy, gravity metrics across orchestration layers.</p>
-      <div class="tags"><span>EVALS</span><span>Agent Quality</span><span>Trust</span></div>
+      <p>Trust & quality evaluation for Copilot agents — coherence scoring, grounding accuracy, gravity metrics across orchestration layers.</p>
+      <div class="tags"><span>EVALS</span><span>Agent Quality</span><span>Trust Metrics</span></div>
     </div>
     <div class="built">
       <div class="built-num">04</div>
       <h4>Grounding Playground</h4>
-      <p>Experimentation toolkit for RAG strategies — snippet approaches, token budgets, grounding precision comparisons.</p>
-      <div class="tags"><span>RAG</span><span>Experimentation</span></div>
+      <p>Experimentation toolkit for RAG strategies — snippet approaches, token budgets, grounding precision across query types.</p>
+      <div class="tags"><span>RAG</span><span>Experimentation</span><span>Token Optimization</span></div>
     </div>
+  </div>
+</section>
+
+<!-- ═══ Side gig ═══ -->
+<section>
+  <div class="side">
+    <div class="side-icon">✍️</div>
+    <p><strong>Side gig: Screenplay writer</strong> for Tamil-language theater — bringing story structure, audience instinct, and narrative economy to everything I build. Also a Tamil teacher for first-generation American kids.</p>
   </div>
 </section>
 
 <!-- ═══ Thesis ═══ -->
 <section>
   <div class="thesis">
-    I build AI products by <strong>prototyping, not slide-decking</strong>. From conversational UX and agent orchestration to grounding evaluation and responsible AI — I've built working artifacts for each. <strong>Happy to walk through them in conversation.</strong>
+    I build AI products by <strong>prototyping, not slide-decking</strong>. From conversational UX and agent orchestration to grounding evaluation and responsible AI — I've built working, interactive artifacts for each. <strong>Happy to walk through them in conversation.</strong>
   </div>
 </section>
 
 <hr>
 <div class="foot">
-  <a href="mailto:hesridharan@microsoft.com">hesridharan@microsoft.com</a> · Redmond, WA · B.S. Computer Science, Anna University
+  <a href="mailto:hesridharan@microsoft.com">hesridharan@microsoft.com</a> · Redmond, WA
 </div>
 
 </div>

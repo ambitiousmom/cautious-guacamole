@@ -250,7 +250,7 @@ ctxHtml+='<label style="display:flex;align-items:center;gap:6px;padding:4px 8px;
 ctxHtml+='</div>';
 ctxHtml+='<div class="action-row"><button class="action-btn primary" onclick="proceedBeat1()">Continue with suggestion</button><span class="click-hint">Click here</span></div>';
 addMsg('copilot','Copilot',ctxHtml);
-showAnn('ann1');},2000);}
+},2000);}
 
 else if(n===2){setV('listening');setTimeout(()=>{setV('processing');addMsg('user','🎤 Voice','"Check the ROI section — is the $180K per P0 cost still accurate?"');},600);
 setTimeout(()=>{showNotif('Input needed — Platform_Investment_Proposal','I found a data point I can\'t verify ($180K per P0). Need your confirmation before proceeding.');},1800);
@@ -263,7 +263,7 @@ document.getElementById('ask-section').scrollIntoView({behavior:'smooth',block:'
 showAnn('ann4');},2500);}
 }
 function selectMode(m){/* visual only for prototype */}
-function proceedBeat1(){clearHints();hideAnns();
+function proceedBeat1(){clearHints();hideAnns();showAnn('ann1');
 addMsg('copilot','Copilot','Here\'s a tighter version. Previewing, not applying:<div class="conf-indicator" style="background:#E8F5E9;color:#107C10;margin-top:8px;">\u25cf High confidence \u2014 restructured from existing content</div><div class="action-row"><button class="action-btn primary" onclick="applyBeat1()">Accept</button><span class="click-hint">Click here</span><button class="action-btn" onclick="advanceStep()">Skip</button></div>');
 const t=document.getElementById('exec-summary');t.scrollIntoView({behavior:'smooth',block:'center'});
 const o=document.createElement('div');o.className='suggestion-overlay';o.id='s1';o.innerHTML='<div class="so-badge">Copilot Suggestion</div><div class="so-confidence conf-high">HIGH CONFIDENCE</div>Requesting <strong>$12M for H2 platform investment</strong> to close a widening gap between product ambition and platform capacity \u2014 130% longer deploys, 3 P0s last quarter.';

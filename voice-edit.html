@@ -191,7 +191,7 @@
 
 <div class="fin-overlay" id="finOverlay"><div class="sub" style="font-size:18px;color:white;">End of demo</div><div class="sub" style="margin-top:12px;font-size:12px;">press any key</div></div>
 <script>
-let step=0;const totalSteps=2;
+let step=0;const totalSteps=3;
 let currentScenario='high';
 
 const scenarios = {
@@ -259,16 +259,18 @@ ctxHtml+='<div class="action-row"><button class="action-btn primary" onclick="pr
 addMsg('copilot','Copilot',ctxHtml);
 },2000);}
 
-else if(n===2){setV('listening');setTimeout(()=>{setV('processing');addMsg('user','voice','"Check the ROI section \u2014 is the $180K per P0 cost still accurate? And strengthen the ask."');},600);
+else if(n===2){setV('listening');setTimeout(()=>{setV('processing');addMsg('user','voice','"Check the ROI section \u2014 is the $180K per P0 cost still accurate?"');},600);
 setTimeout(()=>{showNotif('Input needed \u2014 Platform_Investment_Proposal','Can\'t verify $180K per P0. Need your confirmation before proceeding.');},1800);
 setTimeout(()=>{setV('idle');
 var html2='The $180K figure is in your doc but I <strong>can\'t verify it against current data</strong>. It may be from Q1.';
 html2+='<div class="conf-indicator" style="background:#FFF4CE;color:#7A6200;margin-top:8px;">\u25cf Medium confidence \u2014 found in doc, unverified</div>';
-html2+='Do you know the current number? I\'ll also reframe the ask as a recommendation.';
-html2+='<div class="action-row"><button class="action-btn primary" onclick="applyBeat2()">It\'s $220K \u2014 update and reframe ask</button><button class="action-btn" onclick="flagROI()">Flag for review</button></div>';
+html2+='<span style="color:var(--orange);">\u26a0 Flagged for review.</span> What\u2019s the current number?';
 addMsg('copilot','Copilot',html2);
 document.getElementById('roi-content').scrollIntoView({behavior:'smooth',block:'center'});
-showAnn('ann3');},2500);}
+showAnn('ann3');showMicHint();},2500);}
+
+else if(n===3){setV('listening');setTimeout(()=>{setV('processing');addMsg('user','voice','"It\'s $220K now. Update it and reframe the ask \u2014 say we recommend, don\'t request."');},600);
+setTimeout(()=>{setV('idle');applyBeat2();},2000);}
 }
 function selectMode(m){/* visual only */}
 function applyBeat2(){clearHints();hideAnns();

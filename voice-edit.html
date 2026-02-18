@@ -73,7 +73,7 @@
   .msg .conf-indicator{display:inline-flex;align-items:center;gap:4px;font-size:10px;font-weight:600;padding:3px 8px;border-radius:8px;margin-top:6px;}
   .msg .action-row{display:flex;gap:6px;margin-top:8px;flex-wrap:wrap;}
   .msg .action-btn{padding:4px 12px;border-radius:6px;border:1px solid var(--border);background:var(--surface);font-size:11px;cursor:pointer;font-family:var(--font);transition:all 0.2s;}
-  .msg .action-btn.primary{background:#F0F0F0;color:var(--text);border-color:var(--border);font-weight:600;}
+  .msg .action-btn.primary{background:#F0F0F0;color:var(--text);border-color:var(--blue);border-width:2px;font-weight:600;animation:pulseBtn 2s ease infinite;} @keyframes pulseBtn{0%,100%{box-shadow:0 0 0 0 rgba(15,108,189,0.3);}50%{box-shadow:0 0 0 4px rgba(15,108,189,0);}}
   .msg .action-btn:hover{transform:translateY(-1px);box-shadow:0 2px 8px rgba(0,0,0,0.1);}
   .cp-input{padding:12px 14px;border-top:1px solid var(--border);}
   .mic-btn{width:100%;padding:12px;border-radius:24px;border:2px solid var(--border);background:var(--surface);font-size:13px;color:var(--text-sec);cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:all 0.3s;font-family:var(--font);}
@@ -161,7 +161,7 @@
           <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAF4AAAAvCAYAAABqrH0KAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAAFiUAABYlAUlSJPAAAANmSURBVHhe7ZjdK2xRFMD9bUYzZjIoRUbyMN6MNzHNixApCSXNFC9EvHgYHzVlknkRXqSEpHwUQpSvxue6rdU907nr3OnOOXOy93TXr1ZZsz/O9ps9e5+9y0BQQhn/QPgZRLwiRLwiRLwiRLwiRLwiRLwiRLwiRLwiRLwiRLwiRLwiRLwiRLwiRLwiXBO/vb0Nw8PD0NXVBUNDQ7C+vs6rCCZcEZ9IJKC8vNwS/f39vGrJ8v7+DslkEp6fn3mRI4oWv7W1ZRFujqWlJd6kJNnZ2aH/Z2VlhRc5omjxHR0dFtnmCIfDvElJsrm56epEKlp8XV2dRbY5Kioq4PPzkzfTnq+vL7i8vMzlxi97eXk599nV1RV8fHzkcjsULb6ystIim8fj4yNvpj3z8/M09ru7O8q5eFzzvV4vTExMsJaFIeLzMDk5SWM/PT2lnC81uMliPjg4yFoWhojPg4j/IY6Pj2FgYICWEGRqaorGfnZ2Rjlfal5eXv4Q//39TeeXvb09U6/5EfG/mZmZobEeHh5Sblc87gWYj42NmXrNj23x19fX0N3dDQ8PD5QHAgGLaB5PT080I/Bn6tYBxG0M8QcHB5TbXWpub28pHxkZMfWaH9vi8SoAH7CxsUF5dXW1RTSPbDYL+/v79Pfi4iLvUgu0F7+7u0sPmJ2dpTwSiVhEmyMUClG9tbU1yjOZDOtRD7QXj7PX4/FAX18f5QsLCxbZ5ojH41QP1z7MzYcSndBePNLa2gp+v582FDzhtbe3W4RjtLS00BeF9aqqqih0BX+JtbW1cH9/T7ndzfXt7Q3q6+sLvlJwJN5Y53t6eijHYzPOkObmZvD5fNDU1ASjo6Pw+vpK5Z2dnVR/enqa9aQvdme8XRyJR/CdFR+MV7/41vI3cKZHo1Gq19bWRm82pYK24vHia3x8nB6OF2U4w1OpFG2+eG+NAwoGg1Qei8Xyfjm6YuxdNzc3lPOlBg9auNyiAyc4Fm+QTqehoaGBBsWjpqYG5ubmeJOSAPeu8/PzXM7FI/iigGu7E4oWb3ByckKzHgfX29sLR0dHJbW0/Au+1BSLa+IRtwenE8aMX11d5UWOEPEFgq+ZeFVycXHBixzhqngcXGNjY8E3dP8zrooXCkfEK0LEK0LEK0LEK0LEK0LEK0LEK+IX1vpxDmvtWvAAAAAASUVORK5CYII=" style="height:18px;" alt="Actions" />
         </div>
       </div>
-      <div style="font-size:10px;color:var(--text-muted);text-align:center;margin-top:4px;">AI-generated content may be incorrect</div>
+      <div style="font-size:10px;color:var(--text-muted);text-align:center;margin-top:4px;">AI-generated content may be incorrect</div><div id='micHintLabel' style='text-align:center;margin-top:4px;'><span style='display:inline-block;background:var(--blue);color:white;font-size:10px;padding:3px 12px;border-radius:12px;font-weight:600;animation:pulseBlue 1.5s ease infinite;'>Click here to speak</span></div>
     </div>
   </div>
 </div>
@@ -248,23 +248,23 @@ ctxHtml+='<label style="display:flex;align-items:center;gap:6px;padding:4px 8px;
 ctxHtml+='<label style="display:flex;align-items:center;gap:6px;padding:4px 8px;border-radius:6px;border:1px solid var(--border);cursor:pointer;font-size:11px;" onclick="selectMode(\'auto\')"><input type="radio" name="mode" style="accent-color:var(--blue);"> <strong>Auto-apply</strong> — make changes directly, I\'ll review later</label>';
 ctxHtml+='<label style="display:flex;align-items:center;gap:6px;padding:4px 8px;border-radius:6px;border:1px solid var(--border);cursor:pointer;font-size:11px;" onclick="selectMode(\'full\')"><input type="radio" name="mode" style="accent-color:var(--blue);"> <strong>Full autonomy</strong> — batch edits, skip confirmations</label>';
 ctxHtml+='</div>';
-ctxHtml+='<div class="action-row"><button class="action-btn primary" onclick="proceedBeat1()">Continue with suggestion</button><span class="click-hint">Click here</span></div>';
+ctxHtml+='<div class="action-row"><button class="action-btn primary" onclick="proceedBeat1()">Continue with suggestion</button></div>';
 addMsg('copilot','Copilot',ctxHtml);
 },2000);}
 
 else if(n===2){setV('listening');setTimeout(()=>{setV('processing');addMsg('user','🎤 Voice','"Check the ROI section — is the $180K per P0 cost still accurate?"');},600);
 setTimeout(()=>{showNotif('Input needed — Platform_Investment_Proposal','I found a data point I can\'t verify ($180K per P0). Need your confirmation before proceeding.');},1800);
-setTimeout(()=>{setV('idle');addMsg('copilot','Copilot · Suggest Mode','The $180K figure is in your doc but I <strong>can\'t verify it against current data</strong>. It may be from Q1.<div class="conf-indicator" style="background:#FFF4CE;color:#7A6200;margin-top:8px;">● Medium confidence — found in doc, unverified against source</div>Want me to flag it, or do you know the current number?<div class="action-row"><button class="action-btn" onclick="flagROI()">Flag for review</button><button class="action-btn primary" onclick="correctROI()">It\'s $220K now — update it</button><span class="click-hint">Click here</span></div>');
+setTimeout(()=>{setV('idle');addMsg('copilot','Copilot · Suggest Mode','The $180K figure is in your doc but I <strong>can\'t verify it against current data</strong>. It may be from Q1.<div class="conf-indicator" style="background:#FFF4CE;color:#7A6200;margin-top:8px;">● Medium confidence — found in doc, unverified against source</div>Want me to flag it, or do you know the current number?<div class="action-row"><button class="action-btn" onclick="flagROI()">Flag for review</button><button class="action-btn primary" onclick="correctROI()">It\'s $220K now — update it</button></div>');
 document.getElementById('roi-content').scrollIntoView({behavior:'smooth',block:'center'});
 showAnn('ann3');},2500);}
 else if(n===3){setV('listening');setTimeout(()=>{setV('processing');addMsg('user','🎤 Voice','"Strengthen the ask — say we recommend, don\'t just request."');},600);
-setTimeout(()=>{setV('idle');addMsg('copilot','Copilot','Reframing the ask as a recommendation.<div class="conf-indicator" style="background:#E8F5E9;color:#107C10;margin-top:8px;">● High confidence — tone shift only</div><div class="action-row"><button class="action-btn primary" onclick="applyAskFinal()">Accept</button><span class="click-hint">Click here</span><button class="action-btn" onclick="applyAskBFinal()">Alt version</button></div>');
+setTimeout(()=>{setV('idle');addMsg('copilot','Copilot','Reframing the ask as a recommendation.<div class="conf-indicator" style="background:#E8F5E9;color:#107C10;margin-top:8px;">● High confidence — tone shift only</div><div class="action-row"><button class="action-btn primary" onclick="applyAskFinal()">Accept</button><button class="action-btn" onclick="applyAskBFinal()">Alt version</button></div>');
 document.getElementById('ask-section').scrollIntoView({behavior:'smooth',block:'center'});
 showAnn('ann4');},2500);}
 }
 function selectMode(m){/* visual only for prototype */}
 function proceedBeat1(){clearHints();hideAnns();showAnn('ann1');
-addMsg('copilot','Copilot','Here\'s a tighter version. Previewing, not applying:<div class="conf-indicator" style="background:#E8F5E9;color:#107C10;margin-top:8px;">\u25cf High confidence \u2014 restructured from existing content</div><div class="action-row"><button class="action-btn primary" onclick="applyBeat1()">Accept</button><span class="click-hint">Click here</span><button class="action-btn" onclick="advanceStep()">Skip</button></div>');
+addMsg('copilot','Copilot','Here\'s a tighter version. Previewing, not applying:<div class="conf-indicator" style="background:#E8F5E9;color:#107C10;margin-top:8px;">\u25cf High confidence \u2014 restructured from existing content</div><div class="action-row"><button class="action-btn primary" onclick="applyBeat1()">Accept</button><button class="action-btn" onclick="advanceStep()">Skip</button></div>');
 const t=document.getElementById('exec-summary');t.scrollIntoView({behavior:'smooth',block:'center'});
 const o=document.createElement('div');o.className='suggestion-overlay';o.id='s1';o.innerHTML='<div class="so-badge">Copilot Suggestion</div><div class="so-confidence conf-high">HIGH CONFIDENCE</div>Requesting <strong>$12M for H2 platform investment</strong> to close a widening gap between product ambition and platform capacity \u2014 130% longer deploys, 3 P0s last quarter.';
 t.parentNode.insertBefore(o,t.nextSibling);setTimeout(()=>o.classList.add('visible'),100);

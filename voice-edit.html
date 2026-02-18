@@ -250,17 +250,17 @@ ctxHtml+='<label style="display:flex;align-items:center;gap:6px;padding:4px 8px;
 ctxHtml+='</div>';
 ctxHtml+='<div class="action-row"><button class="action-btn primary" onclick="proceedBeat1()">Continue with suggestion</button></div>';
 addMsg('copilot','Copilot',ctxHtml);
-showAnn('ann1');showHint(document.querySelector('.action-btn.primary'),'Click here');},2000);}
+showAnn('ann1');var _btns=document.querySelectorAll('.action-btn.primary');showHint(_btns[_btns.length-1],'Click here');},2000);}
 
 else if(n===2){setV('listening');setTimeout(()=>{setV('processing');addMsg('user','🎤 Voice','"Check the ROI section — is the $180K per P0 cost still accurate?"');},600);
 setTimeout(()=>{showNotif('Input needed — Platform_Investment_Proposal','I found a data point I can\'t verify ($180K per P0). Need your confirmation before proceeding.');},1800);
 setTimeout(()=>{setV('idle');addMsg('copilot','Copilot · Suggest Mode','The $180K figure is in your doc but I <strong>can\'t verify it against current data</strong>. It may be from Q1.<div class="conf-indicator" style="background:#FFF4CE;color:#7A6200;margin-top:8px;">● Medium confidence — found in doc, unverified against source</div>Want me to flag it, or do you know the current number?<div class="action-row"><button class="action-btn" onclick="flagROI()">Flag for review</button><button class="action-btn primary" onclick="correctROI()">It\'s $220K now — update it</button></div>');
 document.getElementById('roi-content').scrollIntoView({behavior:'smooth',block:'center'});
-showAnn('ann3');showHint(document.querySelector('.action-btn.primary'),'Click here — user corrects');},2500);}
+showAnn('ann3');var _btns=document.querySelectorAll('.action-btn.primary');showHint(_btns[_btns.length-1],'Click here — user corrects');},2500);}
 else if(n===3){setV('listening');setTimeout(()=>{setV('processing');addMsg('user','🎤 Voice','"Strengthen the ask — say we recommend, don\'t just request."');},600);
 setTimeout(()=>{setV('idle');addMsg('copilot','Copilot','Reframing the ask as a recommendation.<div class="conf-indicator" style="background:#E8F5E9;color:#107C10;margin-top:8px;">● High confidence — tone shift only</div><div class="action-row"><button class="action-btn primary" onclick="applyAskFinal()">Accept</button><button class="action-btn" onclick="applyAskBFinal()">Alt version</button></div>');
 document.getElementById('ask-section').scrollIntoView({behavior:'smooth',block:'center'});
-showAnn('ann4');showHint(document.querySelector('.action-btn.primary'),'Click here');},2500);}
+showAnn('ann4');var _btns=document.querySelectorAll('.action-btn.primary');showHint(_btns[_btns.length-1],'Click here');},2500);}
 }
 function selectMode(m){/* visual only for prototype */}
 function proceedBeat1(){clearHints();hideAnns();
@@ -268,7 +268,7 @@ addMsg('copilot','Copilot','Here\'s a tighter version. Previewing, not applying:
 const t=document.getElementById('exec-summary');t.scrollIntoView({behavior:'smooth',block:'center'});
 const o=document.createElement('div');o.className='suggestion-overlay';o.id='s1';o.innerHTML='<div class="so-badge">Copilot Suggestion</div><div class="so-confidence conf-high">HIGH CONFIDENCE</div>Requesting <strong>$12M for H2 platform investment</strong> to close a widening gap between product ambition and platform capacity \u2014 130% longer deploys, 3 P0s last quarter.';
 t.parentNode.insertBefore(o,t.nextSibling);setTimeout(()=>o.classList.add('visible'),100);
-showAnn('ann2');showHint(document.querySelector('.action-btn.primary'),'Click here \u2014 accept');}
+showAnn('ann2');var btns=document.querySelectorAll('.action-btn.primary');showHint(btns[btns.length-1],'Click here \u2014 accept');}
 function applyBeat1(){clearHints();const e=document.getElementById('exec-summary');e.innerHTML='Requesting <strong>$12M for H2 platform investment</strong> to close a widening gap between product ambition and platform capacity — 130% longer deploys, 3 P0s last quarter.';e.classList.add('edit-flash');const s=document.getElementById('s1');if(s)s.remove();addMsg('copilot','Copilot','<span style="color:var(--green);">✓ Executive summary updated.</span>');setTimeout(()=>showHint(document.getElementById('micBtn'),'Click here — next command'),500);}
 function correctROI(){clearHints();const e=document.getElementById('roi-content');e.innerHTML='Based on current incident costs (<strong>$220K per P0</strong>, updated FY26) and developer time savings, projected payback period is <strong>11 months</strong>.';e.classList.add('edit-flash');addMsg('copilot','Copilot','<span style="color:var(--green);">✓ Updated P0 cost to $220K, recalculated payback to 11 months.</span><div class="conf-indicator" style="background:#FFF4CE;color:#7A6200;margin-top:4px;">● Medium — payback recalculated, verify appendix formula</div>');setTimeout(()=>showHint(document.getElementById('micBtn'),'Click here — next command'),500);}
 function flagROI(){clearHints();addMsg('copilot','Copilot','<span style="color:var(--orange);">⚠ Flagged $180K with review comment.</span>');setTimeout(()=>advanceStep(),1000);}

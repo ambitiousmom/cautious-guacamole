@@ -1,308 +1,111 @@
 ﻿<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Voice Edit — Context-Aware Copilot</title>
+<html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/><title>Voice Edit &#8212; Copilot Agent Mode</title>
 <style>
-  :root {
-    --bg:#F0F0F0;--surface:#FFFFFF;--border:#E0E0E0;--text:#242424;--text-sec:#616161;--text-muted:#999;
-    --blue:#0F6CBD;--purple:#7B57FF;--green:#107C10;--green-light:#E8F5E9;--word-blue:#185ABD;--orange:#E87400;
-    --pane-w:380px;--font:'Segoe UI Variable','Segoe UI',-apple-system,sans-serif;
-  }
-  *{margin:0;padding:0;box-sizing:border-box;}
-  body{font-family:var(--font);background:var(--bg);color:var(--text);height:100vh;overflow:hidden;}
-  .landing{position:fixed;inset:0;z-index:200;background:linear-gradient(145deg,#0F0F2D,#1B1050 40%,#2D1A5E);display:flex;flex-direction:column;align-items:center;justify-content:center;color:white;transition:opacity 0.5s,visibility 0.5s;}
-  .landing.hidden{opacity:0;visibility:hidden;pointer-events:none;}
-  .landing h1{font-size:38px;font-weight:600;margin-bottom:14px;background:linear-gradient(90deg,#fff,#8ECDF7);-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
-  .landing .sub{font-size:15px;color:rgba(255,255,255,0.6);max-width:560px;text-align:center;line-height:1.7;margin-bottom:24px;}
-  .start-btn{padding:14px 36px;border-radius:28px;border:none;background:var(--blue);color:white;font-size:15px;font-weight:600;cursor:pointer;box-shadow:0 4px 20px rgba(15,108,189,0.4);}
-  .start-btn:hover{transform:translateY(-2px);}
-  .shell{display:flex;height:100vh;}
-  .word-main{flex:1;display:flex;flex-direction:column;min-width:0;}
-  .word-topbar{height:40px;display:flex;align-items:center;padding:0 12px;background:var(--surface);border-bottom:1px solid var(--border);gap:10px;}
-  .w-logo{width:20px;height:20px;background:var(--word-blue);border-radius:3px;display:flex;align-items:center;justify-content:center;color:white;font-size:10px;font-weight:700;}
-  .w-title{font-size:12px;font-weight:500;flex:1;}
-  .word-ribbon{height:32px;display:flex;align-items:center;padding:0 12px;border-bottom:1px solid var(--border);background:var(--surface);gap:2px;}
-  .word-ribbon button{padding:4px 10px;font-size:11px;color:var(--text-sec);border:none;background:transparent;border-radius:3px;cursor:pointer;font-family:var(--font);}
-  .word-ribbon .r-active{color:var(--blue);font-weight:600;}
-  .word-canvas{flex:1;overflow-y:auto;background:var(--bg);padding:30px;}
-  .word-page{max-width:680px;margin:0 auto;background:white;padding:50px 60px;box-shadow:0 1px 6px rgba(0,0,0,0.1);min-height:700px;font-size:13px;line-height:1.8;}
-  .word-page h1{font-size:22px;font-weight:700;margin-bottom:4px;}
-  .word-page h2{font-size:16px;color:var(--blue);margin:24px 0 10px;}
-  .word-page .meta{font-size:11px;color:var(--text-muted);margin-bottom:20px;}
-  .word-page p{margin-bottom:12px;}
-  .word-page ul{margin:8px 0 12px 24px;}
-  .word-page li{margin-bottom:6px;}
-  .edit-flash{animation:editFlash 1.5s ease;}
-  @keyframes editFlash{0%{background:rgba(123,87,255,0.2);}100%{background:transparent;}}
-  .suggestion-overlay{background:rgba(15,108,189,0.06);border:2px dashed var(--blue);border-radius:8px;padding:12px 14px;margin:10px 0;position:relative;opacity:0;transform:translateY(4px);transition:all 0.5s;font-size:13px;line-height:1.7;}
-  .suggestion-overlay.visible{opacity:1;transform:translateY(0);}
-  .suggestion-overlay .so-badge{position:absolute;top:-10px;left:12px;background:var(--blue);color:white;font-size:9px;padding:2px 8px;border-radius:8px;font-weight:600;}
-  .suggestion-overlay .so-confidence{position:absolute;top:-10px;right:12px;font-size:9px;padding:2px 8px;border-radius:8px;font-weight:600;}
-  .conf-high{background:var(--green);color:white;}
-  .conf-med{background:var(--orange);color:white;}
-  .copilot-pane{width:var(--pane-w);min-width:var(--pane-w);height:100%;border-left:1px solid var(--border);background:var(--surface);display:flex;flex-direction:column;}
-  .cp-header{height:44px;display:flex;align-items:center;padding:0 14px;border-bottom:1px solid var(--border);gap:8px;}
-  .cp-title{font-size:12px;font-weight:600;flex:1;}
-  .agent-badge{font-size:9px;background:var(--blue);color:white;padding:2px 8px;border-radius:10px;font-weight:600;}
-  .context-bar{padding:10px 14px;background:#FAFAFA;border-bottom:1px solid var(--border);font-size:11px;}
-  .ctx-row{display:flex;align-items:center;gap:8px;padding:3px 0;}
-  .ctx-label{color:var(--text-muted);min-width:70px;}
-  .ctx-value{color:var(--text);font-weight:500;}
-  .ctx-pill{display:inline-flex;align-items:center;gap:4px;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:600;}
-  .ctx-pill.high-stakes{background:#FDECEA;color:#D13438;}
-  .ctx-pill.time-pressure{background:#FFF4CE;color:#7A6200;}
-  .mode-bar{padding:8px 14px;background:linear-gradient(90deg,rgba(123,87,255,0.06),transparent);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:8px;}
-  .mode-dot{width:8px;height:8px;border-radius:50%;background:var(--orange);}
-  .mode-text{font-size:11px;color:var(--text-sec);}
-  .mode-text strong{color:var(--orange);}
-  .voice-bar{padding:10px 14px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px;}
-  .voice-dot{width:10px;height:10px;border-radius:50%;background:#999;transition:all 0.3s;}
-  .voice-dot.listening{background:var(--green);animation:pulseDot 1.5s ease infinite;}
-  .voice-dot.processing{background:var(--blue);animation:pulseDot 0.8s ease infinite;}
-  @keyframes pulseDot{0%,100%{box-shadow:0 0 0 0 rgba(16,124,16,0.4);}50%{box-shadow:0 0 0 6px rgba(16,124,16,0);}}
-  .cp-messages{flex:1;overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:10px;}
-  .msg{padding:10px 14px;border-radius:10px;font-size:12px;line-height:1.6;max-width:95%;opacity:0;transform:translateY(6px);transition:all 0.4s;}
-  .msg.visible{opacity:1;transform:translateY(0);}
-  .msg.user{background:#F0F0F0;align-self:flex-end;border-bottom-right-radius:2px;max-width:85%;}
-  .msg .msg-label{font-size:10px;font-weight:600;margin-bottom:4px;}
-  .msg.user .msg-label{color:var(--text);}
-  .msg.copilot{background:transparent;align-self:flex-start;border-bottom-left-radius:2px;padding:6px 0;}
-  .msg.copilot .msg-label{color:var(--text);}
-  .msg .conf-indicator{display:inline-flex;align-items:center;gap:4px;font-size:10px;font-weight:600;padding:3px 8px;border-radius:8px;margin-top:6px;}
-  .msg .action-row{display:flex;gap:6px;margin-top:8px;flex-wrap:wrap;}
-  .msg .action-btn{padding:4px 12px;border-radius:6px;border:1px solid var(--border);background:var(--surface);font-size:11px;cursor:pointer;font-family:var(--font);transition:all 0.2s;}
-  .msg .action-btn.primary{background:#F0F0F0;color:var(--text);border-color:var(--border);font-weight:600;}
-  .msg .action-btn:hover{transform:translateY(-1px);box-shadow:0 2px 8px rgba(0,0,0,0.1);}
-  .cp-input{padding:12px 14px;border-top:1px solid var(--border);}
-  .mic-btn{width:100%;padding:12px;border-radius:24px;border:2px solid var(--border);background:var(--surface);font-size:13px;color:var(--text-sec);cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:all 0.3s;font-family:var(--font);}
-  .mic-btn:hover{border-color:var(--blue);color:var(--blue);}
-  .click-hint{display:inline-flex;align-items:center;background:var(--blue);color:white;font-size:10px;padding:3px 10px;border-radius:12px;font-weight:600;animation:pulseBlue 1.5s ease infinite;font-family:var(--font);margin-left:6px;white-space:nowrap;}
-  @keyframes pulseBlue{0%,100%{box-shadow:0 0 0 0 rgba(15,108,189,0.4);}50%{box-shadow:0 0 0 6px rgba(15,108,189,0);}}
-  .ann{position:fixed;z-index:91;background:rgba(30,30,30,0.94);color:white;padding:14px 18px;border-radius:10px;font-size:12px;line-height:1.65;backdrop-filter:blur(12px);box-shadow:0 6px 24px rgba(0,0,0,0.25);border-left:3px solid var(--blue);max-width:260px;opacity:0;transform:translateY(6px);transition:all 0.4s;display:none;}
-  .ann.visible{opacity:1;transform:translateY(0);display:block;}
-  .ann .ann-tag{font-size:12px;text-transform:uppercase;letter-spacing:1px;color:var(--blue);margin-bottom:6px;font-weight:700;}
-  .ann .ann-body{color:rgba(255,255,255,0.85);}
-  .fin-overlay{position:fixed;inset:0;z-index:300;background:rgba(0,0,0,0.7);display:flex;flex-direction:column;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity 0.6s;}
-  .fin-overlay.visible{opacity:1;pointer-events:auto;}
-  .fin-overlay .fin{font-size:48px;font-weight:300;color:white;font-style:italic;font-family:Georgia,serif;}
-  .fin-overlay .sub{font-size:14px;color:rgba(255,255,255,0.5);margin-top:8px;}
-  /* Desktop notification toast */
-  .desktop-notif{position:fixed;bottom:-100px;right:20px;z-index:250;width:340px;background:var(--surface);border-radius:12px;box-shadow:0 8px 32px rgba(0,0,0,0.18),0 0 0 1px rgba(0,0,0,0.05);padding:14px 16px;display:flex;gap:12px;align-items:flex-start;transition:bottom 0.5s cubic-bezier(0.4,0,0.2,1);font-family:var(--font);}
-  .desktop-notif.visible{bottom:20px;}
-  .desktop-notif .dn-icon{width:36px;height:36px;border-radius:8px;background:var(--blue);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
-  .desktop-notif .dn-icon svg{width:20px;height:20px;}
-  .desktop-notif .dn-content{flex:1;min-width:0;}
-  .desktop-notif .dn-app{font-size:10px;color:var(--text-muted);font-weight:500;margin-bottom:2px;display:flex;align-items:center;gap:6px;}
-  .desktop-notif .dn-app .dn-time{margin-left:auto;}
-  .desktop-notif .dn-title{font-size:12px;font-weight:600;color:var(--text);margin-bottom:2px;}
-  .desktop-notif .dn-body{font-size:11px;color:var(--text-sec);line-height:1.5;}
-  .desktop-notif .dn-close{position:absolute;top:8px;right:10px;background:none;border:none;color:var(--text-muted);font-size:14px;cursor:pointer;padding:2px 6px;border-radius:4px;}
-  .desktop-notif .dn-close:hover{background:#F0F0F0;}
-</style>
-</head>
-<body>
-<div class="landing" id="landing">
-  <h1>Voice-First, Context-Aware Editing</h1>
-  <p class="sub" style="text-align:left;max-width:520px;">
-    &#8226; You have drafted a proposal your CVP asked for yesterday.<br/>
-    &#8226; Now you're refining it by voice while you simultaneously attend to other tasks on your desktop.<br/>
-    &#8226; Copilot adapts its behavior based on <strong>audience stakes</strong>, <strong>time pressure</strong>, and shows <strong>confidence levels</strong> on every suggestion.
-  </p>
-  <button class="start-btn" onclick="startDemo()">Start →</button>
-</div>
-<div class="shell">
-  <div class="word-main">
-    <div class="word-topbar"><span class="w-logo">W</span><span class="w-title">Platform_Investment_Proposal_H2.docx</span><span style="font-size:11px;color:var(--text-muted);margin-left:auto;">Editing</span></div>
-    <div class="word-ribbon"><button class="r-active">Home</button><button>Insert</button><button>Layout</button><button>Review</button><button>View</button><button>Help</button></div>
-    <div class="word-canvas" id="canvas">
-      <div class="word-page" id="docPage">
-        <div class="meta" style="color:var(--blue);font-size:10px;">CONFIDENTIAL — Leadership Review Draft</div>
-        <h1>Platform Investment Proposal — H2 FY26</h1>
-        <p class="meta">Engineering Platform Team · Prepared for CVP Review · Draft v1.0</p>
-        <h2>1. Executive Summary</h2>
-        <p id="exec-summary">This proposal recommends a <strong>$12M investment</strong> in platform infrastructure for H2 FY26, focused on three pillars: developer velocity, AI workload scaling, and reliability engineering. The investment addresses a growing gap between product ambition and platform capacity that has resulted in 23% longer deployment cycles and 3 P0 incidents in the last quarter.</p>
-        <h2>2. Problem Statement</h2>
-        <p>The current platform stack was architected for 40 services. We now run 127 services across 3 regions.</p>
-        <ul><li><strong>Deployment time:</strong> 4.2 hours, up from 1.8 hours</li><li><strong>Incident rate:</strong> 3 P0 incidents in Q1</li><li><strong>Developer NPS:</strong> Dropped from 72 to 41</li></ul>
-        <h2>3. Proposed Investment</h2>
-        <p id="dev-velocity"><strong>Developer Velocity ($4.5M):</strong> Unified CI/CD with canary deployments, automated rollback. Target: under 45 minutes.</p>
-        <p id="ai-scaling"><strong>AI Workload Scaling ($5M):</strong> Dedicated GPU tier with auto-scaling. Current AI workloads consume 38% of compute.</p>
-        <p id="reliability"><strong>Reliability Engineering ($2.5M):</strong> Observability, chaos engineering, SRE expansion 4→8. Target: P0s &lt;1/quarter.</p>
-        <h2>4. ROI & Payback</h2>
-        <p id="roi-content">Based on current incident costs ($180K per P0) and developer time savings, projected payback period is 14 months.</p>
-        <h2>5. Ask</h2>
-        <p id="ask-section">We are requesting <strong>$12M in H2 FY26 budget allocation</strong> with quarterly milestone reviews.</p>
-      </div>
-    </div>
-  </div>
-  <div class="copilot-pane">
-    <div style="padding:0;border-bottom:none;">
-      <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAW0AAABFCAYAAACBibfNAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAAFiUAABYlAUlSJPAAAAheSURBVHhe7d3pb1TXGYDx/AlZpYgtLBWgNJQKJc2XfIhA7CBVuEql4tQYlaV2EOBEAqHgErt2yyKHBkJVIVlQqGs2Jw5GpQiMF+KdNQQ7crzVBoyDbYwxNlbat3pvNGbmHo89kBnPnPFj6SfBPXPvnU+P75x77viZ/v5+AQDY4Rn3BgBA5CLaAGARog0AFiHaAGARog0AFiHaAGARog0AFiHaAGARog0AFiHaAGARog0AFiHaAGARog0AFiHaAGARog0AFiHaAGARog0AFiHaAGARog0AFiHaAGARog0AFiHaAGARog0AFiHaQAT5V2WrJH76lby54UsZF5svL//m3BPT/XR/PY4ez30O2I1oAxHgSl2n/CrtkhHgYNDj6vHd54SdiDYQZqcrW+WVuPNGbINJj6/ncZ8b9iHaQBjpFXCog+2h5+GK235EGwijUE2J+KPnc78H2IVoA2GiNwndUR0J3Jy0G9EOsfbudkk9kyrLDiyTvOt5xjhGL13d4Q7qSNDzut8L7EG0Q6Srp0t25e+SCX+cINO3T5f47Hh5fuvzMuevc6SgtsB4PUYfXZbnDuqPNSHuvBw82yIzE4qNMQ89r/u9wB5WRruiokIyMzOfSHFxsXGcYLvWck0+KfpEYg7GyJiUMfLaztdkf+l+6entccYb7jZI4olEeekPL8nMXTNl/WfrJedqjty9f9c4FqLfcOuwxyzPl1//6bKkZNXKrhP1PnYer5efJ17wef3EFeel8Kt2Ka3ulEkrCozjeeh5Hw3yfkabpqYmpyXu7f48evRITp48aWwfaVZG++jRo7Jhw4YncuDAAeM4waRTIM9++KyMTx0vK/65wonxw76HxuuUxluvwuf9bZ48t/U5J+L139Ubr0N0c8fU2/h386W6+YHoT03zAym50enjyxsdMmdzuU+wi693SMU392RyvP9gexDtfqmqqpJFixZJWVmZMeamwU5PT5eVK1c6/3aPjyQrox2J9Apa9fb1GmNDudN1xwl9RWPgv/ERHdwh9Zbw6dfS0/e9/GJ9iTHm5gn2xdoumbJy+GArov0D/QS+ePFiKS0tNcY8+vr6JCUlReLj4+Xu3fB/KibaQZJwPEE++vdHxvZATEqbRLRHIXdIve3La5K88jZju5sGW6+urzXcDzjYimg/puHWK+7Bwq3B3rp1a8QEWxHtINGr7ECirR+t1hxbIx988cHAtsnpk4n2KOQOqbesgluy+7MGY7s3T7Bv/Kdbpv6u0BgfCtH2NVi4e3t7nWCvWrUqYoKtiHaQBHqlra+blTHLmRbxbONKe3Ryh9TbcNH2Dvb01UXG+HCItskT7qKiIifYW7ZscYLd2RlZT5FaGe3s7GzjRuOTSkpKksbGRuPYT+u9E+8Z0dYbktdvXh/4//u57zurRprbm31ep1falU2VxjER3dwh9faP8zf9RltvNJbVdMo3LQ/kp2sfB3tsbL4czr8p494delWKCna0jx075swNJycn+2zfuHGjLFmyRE6fPj2wrbq6WmJiYiQ2Nlba2tqMY4XThQsXZOHChbJu3TpZu3ZtxAVbWRnturo6587vj3Xv3j3j2E9rc95m2ZS3yWebrs2e+uep8m3bt864/rvuuzpj3xeTX5TatlpjO6KbO6Te/F1p67y1XmHXtz70CbbSKZL/icirAVx5Bzva27Ztk9mzZ8vSpUsHVld0d3fLvHnznO0ZGRkDr9WA6zZ1+fJl41jh1NPT48Ra31tOTo4xHgmsjHYk2lu8V5YfXu6zTVeSxGXFOQ/YTEmfItW3q439mjua5YXkF6T7YbcxhujmDqk3f1faR4puOcH+2SAPz/xkZYET7emrhp/fDna0GxoaJC0tzXge4ty5c85Suebmx58uNeZ79uyRQ4cOhX35nDcNtn4ySEhIkJKSEmeq5MyZM8brwo1oB0lVU5VMTJtoxFfD/XHBx3K15aqxjzpYcVAW7V9kbEf0c4fUm79oJ+77Wmb83gy2Cme0bae/SDTYq1evHvgEXl5eLgsWLIi4cBPtINIbjPpEpHv7UN7e97Zklmca2xH93CH15m96ZCjhnB6xmQZb57D1wZmOjg6fMZ3jnj9/vpw6dcrYL1ysjHZra6sxPz2UkbrZcbjqsIxLHSctHS3G2GAyCjJkxs4Zcr/nvjGG6OcOqTe9obj786eL9rQAlv8R7R94gh0XF+d3WV9hYaEzNx8p4bYy2nqH2nMjIxA7duwwjhEqOof91t63pK1r6F8UWRezZGzKWCmtNxf0Y3Rwh9RbRk6DfFF2x9g+lN/uuip9/f+VMcvNMTei3S9dXV0Dwb5z5/ES3MGcPXtW5s6dGxHhtjLakazvUZ/zRVCv735dalprjHGd495+brtM2z5NyhvLjXGMHu6Qelu6rcr53pG/5DbKq2uGnu7QpX6/TLnoLAMM5ClKRbT7JTc311l2ePv2bWNsMHl5ec5UiT4l6R4bSUQ7RI5cOuI8NJOUmyRN7U1OzLMvZTvz3u/8/R251XnL2Aejy3Df8rcps0b6v9cJj8B+9Euk3MsAB8O3/NmNaIeQzm3rVbdOg+jc9Ru735DjV44br8PoFMj3aeuTjws+rJRlqZf80qvsWeuGP5YH36dtN6I9AjofdPLEIwz85Ro8DaINhAl/IxJPg2gDYcRfY8eTItpAGF2p65RX4s4bcQ0FPY+ez/0eYBeiDYTZ6crWkIdbj6/ncZ8b9iHaQATQK+BQTZXocbnCjh5EG4ggepNQV3fosrzh1nH7o/vp/nocbjpGH6INABYh2gBgEaINABYh2gBgEaINABYh2gBgEaINABYh2gBgEaINABYh2gBgEaINABYh2gBgEaINABYh2gBgkf8DnOkjCMQVUN0AAAAASUVORK5CYII=" style="width:100%;display:block;" alt="Copilot in Word" />
-    </div>
-    <div class="cp-messages" id="messages">
-      <!-- Simple initial greeting -->
-      <div style="font-size:11px;line-height:1.6;margin-top:4px;">
-        <div style="font-size:10px;font-weight:600;color:var(--text);margin-bottom:3px;display:flex;align-items:center;gap:4px;"><img src="data:image/png;base64,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" style="height:16px;"> Copilot</div>
-        <div style="color:var(--text-sec);">I'm ready to help edit your proposal. Speak naturally or type a command.</div>
-      </div>
-      <!-- Big obvious start prompt -->
-      <div id="startPrompt" style="flex:1;display:flex;align-items:center;justify-content:center;margin:20px 0;" onclick="advanceStep()">
-        <div style="text-align:center;cursor:pointer;">
-          <div style="font-size:32px;margin-bottom:8px;">🎤</div>
-          <div style="background:var(--blue);color:white;padding:10px 28px;border-radius:24px;font-size:14px;font-weight:600;animation:pulseBlue 1.5s ease infinite;cursor:pointer;">Click here to speak</div>
-          <div style="font-size:10px;color:var(--text-muted);margin-top:6px;">or press → arrow key</div>
-        </div>
-      </div>
-    </div>
-    <!-- Input bar matching main prototype -->
-    <div style="padding:10px 12px;border-top:1px solid var(--border);flex-shrink:0;">
-      <div id="micBtn" onclick="advanceStep()" style="border:1px solid var(--border);border-radius:10px;overflow:hidden;background:#FAFAFA;cursor:pointer;">
-        <div style="display:flex;align-items:center;padding:10px 12px 4px;gap:8px;">
-          <span id="voiceDot" style="width:8px;height:8px;border-radius:50%;background:#999;flex-shrink:0;"></span>
-          <span style="font-size:12px;color:var(--text-muted);flex:1;" id="micLabel">Message Copilot</span>
-          <span style="font-size:14px;">🎤</span>
-        </div>
-        <div style="display:flex;align-items:center;justify-content:space-between;padding:2px 8px 8px;">
-          <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAI4AAAAsCAYAAACzKYDtAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAAFiUAABYlAUlSJPAAAARqSURBVHhe7ZrZK31RFMf9bcbIlKEoGTKlREryohSRQvEgShEelCFFRKIkDzwgSUqKlMzzlFi/vqv26dzt3OO07+/6/dyzPrXD2etM93zu2mvvI4oEwYAofYMgeEHEEYwQcQQjRBzBCBFHMELEEYwQcQQjRBzBiJDF+fz8pPn5eXp7e9O7hAgmZHFOT08pOjqadnZ29K6I4ObmhhYWFmhsbIx2d3f1bt8i4riATJqQkMD3p1ptbS09Pz/rob5DxAkCMk1cXByVlJTQ1tYWXV9fU19fH9/r4OCgHu47fCXO+Pg41dTUeGrFxcV8X9PT09b+7+/vlJycTKmpqQGxw8PDAef5H2lubub7WVlZ0buM8JU4eMD2YcdLcxJHj6mvrw84TzDUw3NriAkHIs4PcXR0xPdVVlZG29vbdHl5aQ1VnZ2dergnuru7KScnh1t2djbFxsZyw+9qO2LCgYjzg7S3t3/JCJmZmXzPoXJxcUG5ubnc8Hu4EXF+EKxRjY6OWrVMY2PjX3vIIk4EixNO3MTBdH9gYICysrL4s8VwhtndxsYGy2zn5OSEGhoaKCkpiWPxE4KfnZ0FxOnifHx80OLiIuXn51NMTAy30tJSPp4XXMXBopeeqkNpvb29+il8SzBxHh4eOLvh88KwiAdeVVVl1UNTU1NWLBYk09PT+aFDrNbWVsrLy+N9UTcdHh5asbo4k5OTvF9aWhr3oUGivb09ax83XMV5eXnhNQy3trS0xBeEG9L79HZ/f6+fwrcEE6e/v58/T8gDiRTLy8u8GFlQUMCFOvoqKir44Y+MjFiZCDO/trY2PgaKeLVdF0f9jeMqXl9fPS9uuorjBRmqzHASB19UCBMfH0/r6+sB8U9PT1RZWWn17e/vc7YoLCzkxUo7yERYNrD36eIoQXH+mZkZz8IoRJx/hJM4kAPDUkpKiuOQYX/46Ecc4rGfHadj6+JAlK6uLuuVCn729PRw1vGCiENEBwcHNDExQbOzs3R+fq53hwWnh6vEccs4iYmJPOwrcdwyTnl5uVUe6OIoIBBe4mINCf1eV8F9LQ7qgaamJr5+1VCAYlIQbpzEAd/VOEVFRXR1deWpxkFGcapxkFWOj48DZmiYYaEfcV7wtTgo6HHtHR0dPH3FtxjfeGzzOi01JZg4yHjqPZk+q8JU217MQgJsc5pVQTD7QqVdHGSv6upq3geSoQ/1Eo4zNzdn7eOGr8TRX3JmZGTwh3V3d2fFrK6u8v1gaqq/+AzWvKZ3O8HEAY+Pj1xvYKqNa0GmqaurC5heK7ANfapWwT7YF8ewYxcHWUlfJ4JokFJfJwqGr8QZGhria7U3XZy1tbUvMd81ry85IwlfiaOD/6vBtWO9A0MEhiqkcGzb3NzUwwUbIYuDtNfS0vIrF/fwz1mqJrA3LOEL7oQszm/n9vaWZ1aqXsHYj/c4gju+F0cwQ8QRjBBxBCNEHMEIEUcwQsQRjBBxBCNEHMEIEUcwQsQRjBBxBCNEHMEIEUcw4g/GyjwYm09AbwAAAABJRU5ErkJggg==" style="height:18px;" alt="Tools" />
-          <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAF4AAAAvCAYAAABqrH0KAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAAFiUAABYlAUlSJPAAAANmSURBVHhe7ZjdK2xRFMD9bUYzZjIoRUbyMN6MNzHNixApCSXNFC9EvHgYHzVlknkRXqSEpHwUQpSvxue6rdU907nr3OnOOXOy93TXr1ZZsz/O9ps9e5+9y0BQQhn/QPgZRLwiRLwiRLwiRLwiRLwiRLwiRLwiRLwiRLwiRLwiRLwiRLwiRLwiRLwiXBO/vb0Nw8PD0NXVBUNDQ7C+vs6rCCZcEZ9IJKC8vNwS/f39vGrJ8v7+DslkEp6fn3mRI4oWv7W1ZRFujqWlJd6kJNnZ2aH/Z2VlhRc5omjxHR0dFtnmCIfDvElJsrm56epEKlp8XV2dRbY5Kioq4PPzkzfTnq+vL7i8vMzlxi97eXk599nV1RV8fHzkcjsULb6ystIim8fj4yNvpj3z8/M09ru7O8q5eFzzvV4vTExMsJaFIeLzMDk5SWM/PT2lnC81uMliPjg4yFoWhojPg4j/IY6Pj2FgYICWEGRqaorGfnZ2Rjlfal5eXv4Q//39TeeXvb09U6/5EfG/mZmZobEeHh5Sblc87gWYj42NmXrNj23x19fX0N3dDQ8PD5QHAgGLaB5PT080I/Bn6tYBxG0M8QcHB5TbXWpub28pHxkZMfWaH9vi8SoAH7CxsUF5dXW1RTSPbDYL+/v79Pfi4iLvUgu0F7+7u0sPmJ2dpTwSiVhEmyMUClG9tbU1yjOZDOtRD7QXj7PX4/FAX18f5QsLCxbZ5ojH41QP1z7MzYcSndBePNLa2gp+v582FDzhtbe3W4RjtLS00BeF9aqqqih0BX+JtbW1cH9/T7ndzfXt7Q3q6+sLvlJwJN5Y53t6eijHYzPOkObmZvD5fNDU1ASjo6Pw+vpK5Z2dnVR/enqa9aQvdme8XRyJR/CdFR+MV7/41vI3cKZHo1Gq19bWRm82pYK24vHia3x8nB6OF2U4w1OpFG2+eG+NAwoGg1Qei8Xyfjm6YuxdNzc3lPOlBg9auNyiAyc4Fm+QTqehoaGBBsWjpqYG5ubmeJOSAPeu8/PzXM7FI/iigGu7E4oWb3ByckKzHgfX29sLR0dHJbW0/Au+1BSLa+IRtwenE8aMX11d5UWOEPEFgq+ZeFVycXHBixzhqngcXGNjY8E3dP8zrooXCkfEK0LEK0LEK0LEK0LEK0LEK0LEK+IX1vpxDmvtWvAAAAAASUVORK5CYII=" style="height:18px;" alt="Actions" />
-        </div>
-      </div>
-      <div style="font-size:10px;color:var(--text-muted);text-align:center;margin-top:4px;">AI-generated content may be incorrect</div><div id='micHintLabel' style='text-align:center;margin-top:4px;'><span style='display:inline-block;background:var(--blue);color:white;font-size:10px;padding:3px 12px;border-radius:12px;font-weight:600;animation:pulseBlue 1.5s ease infinite;'>Click here to speak</span></div>
-    </div>
-  </div>
-</div>
-<div class="ann" id="ann1" style="bottom:200px;"><div class="ann-tag">Audience-Aware Mode</div><div class="ann-body">Copilot detected CVP audience and switched to <strong>suggest mode</strong> — previewing changes instead of auto-applying. Stakes determine the UX posture.</div></div>
-<div class="ann" id="ann2" style="bottom:200px;"><div class="ann-tag">Confidence Indicators</div><div class="ann-body">Each suggestion shows <strong>confidence level</strong>: high (data-backed), medium (inferred). The user sees how sure Copilot is before approving.</div></div>
-<div class="ann" id="ann3" style="bottom:200px;"><div class="ann-tag">Calibrated Confidence</div><div class="ann-body">Copilot flags what it <strong>can't verify</strong> and asks the user. It distinguishes doc facts from unverified claims. Uncertainty is surfaced, not hidden.</div></div>
-<div class="ann" id="ann4" style="bottom:200px;"><div class="ann-tag">Graceful Correction</div><div class="ann-body">User corrects a number and Copilot <strong>adapts downstream</strong> — recalculating payback automatically. Correction flows forward, not just to the edited field.</div></div>
-
-<!-- Desktop notification toast -->
-<div class="desktop-notif" id="desktopNotif">
-  <div class="dn-icon"><svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" fill="white" fill-opacity="0.2"/><path d="M8 12l3 3 5-5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-  <div class="dn-content">
-    <div class="dn-app">Copilot in Word · Agent Mode <span class="dn-time">now</span></div>
-    <div class="dn-title" id="dnTitle">Input needed</div>
-    <div class="dn-body" id="dnBody">I found a data point I can't verify — need your confirmation before proceeding.</div>
-  </div>
-  <button class="dn-close" onclick="hideNotif()">×</button>
-</div>
-
-<div class="fin-overlay" id="finOverlay"><div class="sub" style="font-size:18px;color:white;">End of demo</div><div class="sub" style="margin-top:12px;font-size:12px;">press any key</div></div>
+:root{--bg:#F0F0F0;--surface:#FFF;--border:#E0E0E0;--text:#242424;--ts:#616161;--tm:#999;--blue:#0F6CBD;--green:#107C10;--gl:#E8F5E9;--wb:#185ABD;--orange:#E87400;--pw:380px;--f:'Segoe UI Variable','Segoe UI',sans-serif;}
+*{margin:0;padding:0;box-sizing:border-box;}body{font-family:var(--f);background:var(--bg);color:var(--text);height:100vh;overflow:hidden;}
+.landing{position:fixed;inset:0;z-index:200;background:linear-gradient(145deg,#0F0F2D,#1B1050 40%,#2D1A5E);display:flex;flex-direction:column;align-items:center;justify-content:center;color:#fff;transition:opacity .5s,visibility .5s;}.landing.hidden{opacity:0;visibility:hidden;pointer-events:none;}
+.landing h1{font-size:38px;font-weight:600;margin-bottom:14px;background:linear-gradient(90deg,#fff,#8ECDF7);-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+.landing .sub{font-size:14px;color:rgba(255,255,255,.6);max-width:520px;text-align:left;line-height:1.7;margin-bottom:24px;}
+.start-btn{padding:14px 36px;border-radius:28px;border:none;background:var(--blue);color:#fff;font-size:15px;font-weight:600;cursor:pointer;}
+.shell{display:flex;height:100vh;}
+.word-main{flex:1;display:flex;flex-direction:column;min-width:0;}
+.word-topbar{height:40px;display:flex;align-items:center;padding:0 12px;background:var(--surface);border-bottom:1px solid var(--border);gap:10px;}
+.w-logo{width:20px;height:20px;background:var(--wb);border-radius:3px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:10px;font-weight:700;}
+.word-ribbon{height:32px;display:flex;align-items:center;padding:0 12px;border-bottom:1px solid var(--border);background:var(--surface);gap:2px;}.word-ribbon button{padding:4px 10px;font-size:11px;color:var(--ts);border:none;background:transparent;border-radius:3px;font-family:var(--f);}.word-ribbon .ra{color:var(--blue);font-weight:600;}
+.word-canvas{flex:1;overflow-y:auto;background:var(--bg);padding:30px;}
+.word-page{max-width:680px;margin:0 auto;background:#fff;padding:50px 60px;box-shadow:0 1px 6px rgba(0,0,0,.1);min-height:700px;font-size:13px;line-height:1.8;}
+.word-page h1{font-size:22px;font-weight:700;margin-bottom:4px;}.word-page h2{font-size:16px;color:var(--blue);margin:24px 0 10px;}.word-page .meta{font-size:11px;color:var(--tm);margin-bottom:20px;}.word-page p{margin-bottom:12px;}.word-page ul{margin:8px 0 12px 24px;}.word-page li{margin-bottom:6px;}
+.ef{animation:ef 1.5s ease;}@keyframes ef{0%{background:rgba(15,108,189,.15);}100%{background:transparent;}}
+.so{background:rgba(15,108,189,.06);border:2px dashed var(--blue);border-radius:8px;padding:12px 14px;margin:10px 0;position:relative;opacity:0;transform:translateY(4px);transition:all .5s;font-size:13px;line-height:1.7;}.so.v{opacity:1;transform:translateY(0);}.so .sb{position:absolute;top:-10px;left:12px;background:var(--blue);color:#fff;font-size:9px;padding:2px 8px;border-radius:8px;font-weight:600;}.so .sc{position:absolute;top:-10px;right:12px;font-size:9px;padding:2px 8px;border-radius:8px;font-weight:600;background:var(--green);color:#fff;}
+.cp{width:var(--pw);min-width:var(--pw);height:100%;border-left:1px solid var(--border);background:var(--surface);display:flex;flex-direction:column;}
+.cpm{flex:1;overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:10px;}
+.msg{padding:10px 14px;border-radius:10px;font-size:12px;line-height:1.6;max-width:95%;opacity:0;transform:translateY(6px);transition:all .4s;}.msg.v{opacity:1;transform:translateY(0);}
+.msg.u{background:#F0F0F0;align-self:flex-end;border-bottom-right-radius:2px;max-width:85%;}.msg.u .ml{color:var(--text);font-size:10px;font-weight:600;margin-bottom:4px;display:flex;align-items:center;gap:4px;}
+.msg.c{background:transparent;align-self:flex-start;padding:6px 0;}.msg.c .ml{color:var(--text);font-size:10px;font-weight:600;margin-bottom:4px;}
+.ci{display:inline-flex;align-items:center;gap:4px;font-size:10px;font-weight:600;padding:3px 8px;border-radius:8px;margin-top:6px;}
+.cpib{padding:10px 12px;border-top:1px solid var(--border);flex-shrink:0;}
+.micb{border:1px solid var(--border);border-radius:10px;overflow:hidden;background:#FAFAFA;padding:10px 12px;}
+.micb .row{display:flex;align-items:center;gap:8px;}.micb .dot{width:8px;height:8px;border-radius:50%;background:#999;flex-shrink:0;transition:all .3s;}.micb .lbl{font-size:12px;color:var(--tm);flex:1;}
+@keyframes pd{0%,100%{box-shadow:0 0 0 0 rgba(16,124,16,.4);}50%{box-shadow:0 0 0 6px rgba(16,124,16,0);}}
+.ann{position:fixed;z-index:91;background:rgba(30,30,30,.94);color:#fff;padding:14px 18px;border-radius:10px;font-size:12px;line-height:1.65;backdrop-filter:blur(12px);box-shadow:0 6px 24px rgba(0,0,0,.25);border-left:3px solid var(--blue);max-width:260px;opacity:0;transition:all .4s;display:none;}.ann.v{opacity:1;display:block;transform:translateY(0);}.ann .at{font-size:12px;text-transform:uppercase;letter-spacing:1px;color:var(--blue);margin-bottom:6px;font-weight:700;}.ann .ab{color:rgba(255,255,255,.85);}
+.fo{position:fixed;inset:0;z-index:300;background:rgba(0,0,0,.7);display:flex;flex-direction:column;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .6s;}.fo.v{opacity:1;pointer-events:auto;}.fo .st{font-size:18px;color:#fff;}.fo .ss{font-size:12px;color:rgba(255,255,255,.5);margin-top:8px;}
+.dn{position:fixed;bottom:-100px;right:20px;z-index:250;width:340px;background:#fff;border-radius:12px;box-shadow:0 8px 32px rgba(0,0,0,.18);padding:14px 16px;display:flex;gap:12px;align-items:flex-start;transition:bottom .5s cubic-bezier(.4,0,.2,1);}.dn.v{bottom:20px;}.dn .di{width:36px;height:36px;border-radius:8px;background:var(--blue);display:flex;align-items:center;justify-content:center;flex-shrink:0;}.dn .da{font-size:10px;color:var(--tm);margin-bottom:2px;}.dn .dt{font-size:12px;font-weight:600;margin-bottom:2px;}.dn .db{font-size:11px;color:var(--ts);line-height:1.5;}.dn .dx{position:absolute;top:8px;right:10px;background:none;border:none;color:var(--tm);font-size:14px;cursor:pointer;}
+</style></head><body>
+<div class="landing" id="L"><h1>Voice-First, Context-Aware Editing</h1><p class="sub">&#8226; You have drafted a proposal your CVP asked for yesterday.<br/>&#8226; Now you&#8217;re refining it by voice while attending to other tasks.<br/>&#8226; Copilot adapts based on <strong>audience stakes</strong>, <strong>time pressure</strong>, and shows <strong>confidence levels</strong>.</p><button class="start-btn" onclick="go()">Start &#8594;</button></div>
+<div class="shell"><div class="word-main">
+<div class="word-topbar"><span class="w-logo">W</span><span style="font-size:12px;font-weight:500;flex:1;">Platform_Investment_Proposal_H2.docx</span><span style="font-size:11px;color:var(--tm);margin-left:auto;">Editing</span></div>
+<div class="word-ribbon"><button class="ra">Home</button><button>Insert</button><button>Layout</button><button>Review</button><button>View</button><button>Help</button></div>
+<div class="word-canvas"><div class="word-page">
+<div class="meta" style="color:var(--blue);font-size:10px;">CONFIDENTIAL &#8212; Leadership Review Draft</div>
+<h1>Platform Investment Proposal &#8212; H2 FY26</h1><p class="meta">Engineering Platform Team &#183; Prepared for CVP Review &#183; Draft v1.0</p>
+<h2>1. Executive Summary</h2><p id="P1">This proposal recommends a <strong>$12M investment</strong> in platform infrastructure for H2 FY26, focused on three pillars: developer velocity, AI workload scaling, and reliability engineering. The investment addresses a growing gap between product ambition and platform capacity that has resulted in 23% longer deployment cycles and 3 P0 incidents in the last quarter.</p>
+<h2>2. Problem Statement</h2><p>The current platform stack was architected for 40 services. We now run 127 services across 3 regions.</p><ul><li><strong>Deployment time:</strong> 4.2 hours, up from 1.8 hours</li><li><strong>Incident rate:</strong> 3 P0 incidents in Q1</li><li><strong>Developer NPS:</strong> Dropped from 72 to 41</li></ul>
+<h2>3. Proposed Investment</h2><p><strong>Developer Velocity ($4.5M):</strong> Unified CI/CD with canary deployments, automated rollback. Target: under 45 minutes.</p><p><strong>AI Workload Scaling ($5M):</strong> Dedicated GPU tier with auto-scaling. Current AI workloads consume 38% of compute.</p><p><strong>Reliability Engineering ($2.5M):</strong> Observability, chaos engineering, SRE expansion 4&#8594;8. Target: P0s &lt;1/quarter.</p>
+<h2>4. ROI &amp; Payback</h2><p id="P2">Based on current incident costs ($180K per P0) and developer time savings, projected payback period is 14 months.</p>
+<h2>5. Ask</h2><p id="P3">We are requesting <strong>$12M in H2 FY26 budget allocation</strong> with quarterly milestone reviews.</p>
+</div></div></div>
+<div class="cp"><div style="padding:0;"><img src="data:image/png;base64,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" style="width:100%;display:block;"/></div>
+<div class="cpm" id="M"><div class="msg c v"><div class="ml"><img src="data:image/png;base64,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" style="height:16px;vertical-align:-3px;margin-right:2px;"> Copilot</div>I&#8217;m ready to help edit your proposal. Speak naturally &#8212; I&#8217;ll listen and make changes.</div></div>
+<div class="cpib"><div class="micb"><div class="row"><span class="dot" id="D"></span><span class="lbl" id="DL">Message Copilot</span><span style="font-size:14px;">&#127908;</span></div></div><div style="font-size:10px;color:var(--tm);text-align:center;margin-top:4px;">AI-generated content may be incorrect</div></div>
+</div></div>
+<div class="ann" id="A1" style="top:50%;transform:translateY(-50%);"><div class="at">Audience-Aware Mode</div><div class="ab">Copilot detected CVP audience and <strong>auto-selected suggest mode</strong>. High-stakes docs get previews, not auto-edits.</div></div>
+<div class="ann" id="A2" style="top:50%;transform:translateY(-50%);"><div class="at">Confidence Indicators</div><div class="ab">Each suggestion shows a <strong>confidence level</strong>. The user sees how sure Copilot is before approving.</div></div>
+<div class="ann" id="A3" style="top:50%;transform:translateY(-50%);"><div class="at">Calibrated Confidence</div><div class="ab">Copilot flags what it <strong>can&#8217;t verify</strong>. Uncertainty is surfaced, not hidden.</div></div>
+<div class="ann" id="A4" style="top:50%;transform:translateY(-50%);"><div class="at">Graceful Correction</div><div class="ab">User corrects a number and Copilot <strong>adapts downstream</strong> &#8212; recalculating payback automatically.</div></div>
+<div class="dn" id="DN"><div class="di"><svg viewBox="0 0 24 24" width="20" height="20"><circle cx="12" cy="12" r="10" fill="rgba(255,255,255,.2)"/><path d="M8 12l3 3 5-5" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div style="flex:1;"><div class="da">Copilot in Word</div><div class="dt" id="DNT">Input needed</div><div class="db" id="DNB">Can&#8217;t verify $180K per P0. Need confirmation.</div></div><button class="dx" onclick="document.getElementById('DN').classList.remove('v')">&#215;</button></div>
+<div class="fo" id="FO"><div class="st">End of demo</div><div class="ss">press any key</div></div>
 <script>
-let step=0;const totalSteps=3;
-let currentScenario='high';
-
-const scenarios = {
-  high: {
-    audience: '<span><strong>Audience:</strong> CVP Leadership <span style="background:#FDECEA;color:#D13438;font-size:9px;padding:1px 6px;border-radius:8px;font-weight:600;">High-Stakes</span></span>',
-    time: '<span><strong>Due:</strong> Today, 2:00 PM <span style="background:#FFF4CE;color:#7A6200;font-size:9px;padding:1px 6px;border-radius:8px;font-weight:600;">20 min left</span></span>',
-    explanation: 'I detected this doc is for your <strong>CVP</strong> and due soon. Switching to <strong style="color:#E87400;">suggest mode</strong> \u2014 I\'ll preview changes with confidence levels instead of auto-applying. You approve what looks right.',
-    modeLabel: 'Copilot \u00b7 Suggest Mode',
-    behavior: 'preview'
-  },
-  med: {
-    audience: '<span><strong>Audience:</strong> Your team <span style="background:#E8F5E9;color:#107C10;font-size:9px;padding:1px 6px;border-radius:8px;font-weight:600;">Low-Stakes</span></span>',
-    time: '<span><strong>Due:</strong> No deadline set</span>',
-    explanation: 'This doc is for your team with no deadline pressure. I\'m in <strong style="color:#107C10;">auto-apply mode</strong> \u2014 I\'ll make changes directly and you can review them as tracked changes. Say "undo" anytime.',
-    modeLabel: 'Copilot \u00b7 Auto-Apply Mode',
-    behavior: 'auto'
-  },
-  low: {
-    audience: '<span><strong>Audience:</strong> Personal draft <span style="background:#F0F0F0;color:#616161;font-size:9px;padding:1px 6px;border-radius:8px;font-weight:600;">Informal</span></span>',
-    time: '<span><strong>Due:</strong> No deadline</span>',
-    explanation: 'This looks like a personal draft. I\'m in <strong style="color:#0F6CBD;">full autonomy mode</strong> \u2014 I\'ll apply changes directly, skip confirmations, and batch edits together. Just tell me what you want and I\'ll handle it.',
-    modeLabel: 'Copilot \u00b7 Full Autonomy',
-    behavior: 'full-auto'
-  }
-};
-
-function setScenario(id) {
-  currentScenario = id;
-  const s = scenarios[id];
-  document.getElementById('ctxAudience').innerHTML = s.audience;
-  document.getElementById('ctxTime').innerHTML = s.time;
-  document.getElementById('modeExplanation').innerHTML = s.explanation;
-  // Update button styles
-  document.querySelectorAll('.scenario-btn').forEach(b => {
-    b.style.border = '1px solid var(--border)';
-    b.style.background = 'var(--surface)';
-    b.style.color = 'var(--text-sec)';
-    b.style.fontWeight = '500';
-  });
-  const activeBtn = document.getElementById('scn' + id.charAt(0).toUpperCase() + id.slice(1));
-  if (activeBtn) {
-    activeBtn.style.border = '1px solid var(--blue)';
-    activeBtn.style.background = 'rgba(15,108,189,0.06)';
-    activeBtn.style.color = 'var(--blue)';
-    activeBtn.style.fontWeight = '600';
-  }
+function go(){document.getElementById('L').classList.add('hidden');setTimeout(autoplay,1500);}
+var T=0;
+function autoplay(){
+var timeline=[
+// 0s: User speaks
+{t:0,fn:function(){sv('on');am('u','&#127908; Voice','&#8220;I need to edit the problem statement into a user story.&#8221;');}},
+// 2s: Copilot detects context, auto-selects suggest mode
+{t:2000,fn:function(){sv('off');
+am('c','Copilot','I detected this doc is for <strong>CVP Leadership</strong> and due in <strong>20 minutes</strong>.<div style="background:#F5F5F5;border:1px solid var(--border);border-radius:8px;padding:8px 10px;margin:8px 0;font-size:11px;"><div style="margin-bottom:2px;"><strong>Audience:</strong> CVP Leadership <span style="background:#FDECEA;color:#D13438;font-size:9px;padding:1px 6px;border-radius:8px;font-weight:600;">High-Stakes</span></div><div><strong>Due:</strong> Today, 2:00 PM <span style="background:#FFF4CE;color:#7A6200;font-size:9px;padding:1px 6px;border-radius:8px;font-weight:600;">20 min left</span></div></div>Auto-selecting <strong>suggest mode</strong> &#8212; I&#8217;ll preview changes with confidence levels. You approve via voice.<div style="margin-top:6px;font-size:10px;color:var(--ts);font-style:italic;">Other modes: &#8220;auto-apply&#8221; &#8212; &#8220;full autonomy&#8221;</div>');
+sa('A1');}},
+// 5s: Copilot shows the edit suggestion
+{t:5000,fn:function(){
+am('c','Copilot','Here&#8217;s the problem statement rewritten as a user story. Previewing:<div class="ci" style="background:#E8F5E9;color:#107C10;">&#9679; High confidence &#8212; restructured from existing content</div>Say &#8220;accept&#8221;, &#8220;edit&#8221;, or &#8220;skip&#8221;.');
+var t=document.getElementById('P1');t.scrollIntoView({behavior:'smooth',block:'center'});
+var o=document.createElement('div');o.className='so';o.id='S1';o.innerHTML='<div class="sb">Copilot Suggestion</div><div class="sc">HIGH CONFIDENCE</div>Requesting <strong>$12M for H2 platform investment</strong> to close a widening gap between product ambition and platform capacity &#8212; 130% longer deploys, 3 P0s last quarter.';
+t.parentNode.insertBefore(o,t.nextSibling);setTimeout(function(){o.classList.add('v');},100);
+sa('A2');}},
+// 8s: User says "Accept"
+{t:8000,fn:function(){sv('on');am('u','&#127908; Voice','&#8220;Accept.&#8221;');}},
+// 9.5s: Copilot applies
+{t:9500,fn:function(){sv('off');
+document.getElementById('P1').innerHTML='Requesting <strong>$12M for H2 platform investment</strong> to close a widening gap between product ambition and platform capacity &#8212; 130% longer deploys, 3 P0s last quarter.';
+document.getElementById('P1').classList.add('ef');var s=document.getElementById('S1');if(s)s.remove();
+am('c','Copilot','<span style="color:var(--green);">&#10003; Executive summary updated.</span>');ha();}},
+// 12s: User asks about ROI
+{t:12000,fn:function(){sv('on');am('u','&#127908; Voice','&#8220;Check the ROI section &#8212; is the $180K per P0 cost still accurate?&#8221;');}},
+// 13s: Desktop notification
+{t:13000,fn:function(){document.getElementById('DN').classList.add('v');}},
+// 14s: Copilot flags it
+{t:14000,fn:function(){sv('off');
+am('c','Copilot','The $180K figure is in your doc but I <strong>can&#8217;t verify it against current data</strong>. It may be from Q1.<div class="ci" style="background:#FFF4CE;color:#7A6200;">&#9679; Medium confidence &#8212; found in doc, unverified</div><span style="color:var(--orange);">&#9888; Flagged for review.</span> What&#8217;s the current number?');
+document.getElementById('P2').scrollIntoView({behavior:'smooth',block:'center'});
+sa('A3');}},
+// 17s: User corrects
+{t:17000,fn:function(){sv('on');am('u','&#127908; Voice','&#8220;It&#8217;s $220K now. Update it and reframe the ask &#8212; say we recommend, don&#8217;t request.&#8221;');document.getElementById('DN').classList.remove('v');}},
+// 19s: Copilot applies both
+{t:19000,fn:function(){sv('off');
+document.getElementById('P2').innerHTML='Based on current incident costs (<strong>$220K per P0</strong>, updated FY26) and developer time savings, projected payback period is <strong>11 months</strong>.';
+document.getElementById('P2').classList.add('ef');
+var a=document.getElementById('P3');a.innerHTML='We <strong>recommend approving $12M in H2 FY26</strong> for platform investment. The cost of inaction &#8212; P0 incidents, developer attrition, AI bottlenecks &#8212; exceeds the investment within two quarters.';
+setTimeout(function(){a.classList.add('ef');},500);
+am('c','Copilot','&#10003; Updated P0 cost to $220K, recalculated payback to 11 months.<br/>&#10003; Ask reframed as recommendation.<div class="ci" style="background:#FFF4CE;color:#7A6200;">&#9679; Medium &#8212; payback recalculated, verify appendix</div><div style="margin-top:10px;font-size:11px;line-height:1.7;border-top:1px solid var(--border);padding-top:8px;"><strong>Session summary:</strong><br/>&#8226; Exec summary: tightened <span style="color:var(--green);">&#9679; high</span><br/>&#8226; P0 cost: $180K &#8594; $220K (user-corrected)<br/>&#8226; Payback: 14mo &#8594; 11mo <span style="color:var(--orange);">&#9679; medium</span><br/>&#8226; Ask: reframed <span style="color:var(--green);">&#9679; high</span></div><div style="margin-top:6px;font-size:10px;color:var(--ts);">&#9888; 1 item needs verification before CVP review.</div>');
+sa('A4');}},
+// 23s: End
+{t:23000,fn:function(){document.getElementById('FO').classList.add('v');}}
+];
+timeline.forEach(function(e){setTimeout(e.fn,e.t);});
 }
-
-function startDemo(){document.getElementById('landing').classList.add('hidden');step=0;}
-function advanceStep(){clearHints();var sp=document.getElementById('startPrompt');if(sp)sp.style.display='none';if(step>=totalSteps)return;step++;playBeat(step);}
-function playBeat(n){const m=document.getElementById('messages');hideAnns();
-if(n===1){setV('listening');setTimeout(()=>{setV('processing');addMsg('user','voice','"Make the executive summary tighter — two sentences max. The CVP skims."');},600);
-setTimeout(()=>{setV('idle');
-var ctxHtml='I detected this doc is for <strong>CVP Leadership</strong> and due in <strong>20 minutes</strong>.';
-ctxHtml+='<div style="background:#F5F5F5;border:1px solid var(--border);border-radius:8px;padding:8px 10px;margin:8px 0;font-size:11px;">';
-ctxHtml+='<div style="margin-bottom:2px;"><strong>Audience:</strong> CVP Leadership <span style="background:#FDECEA;color:#D13438;font-size:9px;padding:1px 6px;border-radius:8px;font-weight:600;">High-Stakes</span></div>';
-ctxHtml+='<div><strong>Due:</strong> Today, 2:00 PM <span style="background:#FFF4CE;color:#7A6200;font-size:9px;padding:1px 6px;border-radius:8px;font-weight:600;">20 min left</span></div></div>';
-ctxHtml+='<div style="font-size:11px;margin-bottom:6px;">How should I handle edits?</div>';
-ctxHtml+='<div style="display:flex;flex-direction:column;gap:4px;">';
-ctxHtml+='<label style="display:flex;align-items:center;gap:6px;padding:4px 8px;border-radius:6px;border:1px solid var(--blue);background:rgba(15,108,189,0.04);cursor:pointer;font-size:11px;" onclick="selectMode(\'suggest\')"><input type="radio" name="mode" checked style="accent-color:var(--blue);"> <strong>Suggest mode</strong> \u2014 preview changes, I approve each one</label>';
-ctxHtml+='<label style="display:flex;align-items:center;gap:6px;padding:4px 8px;border-radius:6px;border:1px solid var(--border);cursor:pointer;font-size:11px;" onclick="selectMode(\'auto\')"><input type="radio" name="mode" style="accent-color:var(--blue);"> <strong>Auto-apply</strong> \u2014 make changes directly, I\'ll review later</label>';
-ctxHtml+='<label style="display:flex;align-items:center;gap:6px;padding:4px 8px;border-radius:6px;border:1px solid var(--border);cursor:pointer;font-size:11px;" onclick="selectMode(\'full\')"><input type="radio" name="mode" style="accent-color:var(--blue);"> <strong>Full autonomy</strong> \u2014 batch edits, skip confirmations</label>';
-ctxHtml+='</div>';
-ctxHtml+='<div class="action-row"><button class="action-btn primary" onclick="proceedBeat1()">Continue with suggestion</button></div>';
-addMsg('copilot','Copilot',ctxHtml);
-},2000);}
-
-else if(n===2){setV('listening');setTimeout(()=>{setV('processing');addMsg('user','voice','"Check the ROI section \u2014 is the $180K per P0 cost still accurate?"');},600);
-setTimeout(()=>{showNotif('Input needed \u2014 Platform_Investment_Proposal','Can\'t verify $180K per P0. Need your confirmation before proceeding.');},1800);
-setTimeout(()=>{setV('idle');
-var html2='The $180K figure is in your doc but I <strong>can\'t verify it against current data</strong>. It may be from Q1.';
-html2+='<div class="conf-indicator" style="background:#FFF4CE;color:#7A6200;margin-top:8px;">\u25cf Medium confidence \u2014 found in doc, unverified</div>';
-html2+='<span style="color:var(--orange);">\u26a0 Flagged for review.</span> What\u2019s the current number?';
-addMsg('copilot','Copilot',html2);
-document.getElementById('roi-content').scrollIntoView({behavior:'smooth',block:'center'});
-showAnn('ann3');showMicHint();},2500);}
-
-else if(n===3){setV('listening');setTimeout(()=>{setV('processing');addMsg('user','voice','"It\'s $220K now. Update it and reframe the ask \u2014 say we recommend, don\'t request."');},600);
-setTimeout(()=>{setV('idle');applyBeat2();},2000);}
-}
-function selectMode(m){/* visual only */}
-function applyBeat2(){clearHints();hideAnns();
-var e=document.getElementById('roi-content');e.innerHTML='Based on current incident costs (<strong>$220K per P0</strong>, updated FY26) and developer time savings, projected payback period is <strong>11 months</strong>.';e.classList.add('edit-flash');
-var a=document.getElementById('ask-section');a.innerHTML='We <strong>recommend approving $12M in H2 FY26</strong> for platform investment. The cost of inaction \u2014 P0 incidents, developer attrition, AI bottlenecks \u2014 exceeds the investment within two quarters.';
-setTimeout(function(){a.classList.add('edit-flash');},500);
-addMsg('copilot','Copilot','\u2713 Updated P0 cost to $220K, recalculated payback to 11 months.<br/>\u2713 Ask reframed as recommendation.<div class="conf-indicator" style="background:#FFF4CE;color:#7A6200;margin-top:4px;">\u25cf Medium \u2014 payback recalculated, verify appendix</div><div style="margin-top:10px;font-size:11px;line-height:1.7;border-top:1px solid var(--border);padding-top:8px;"><strong>Session summary:</strong><br/>\u2022 Exec summary: tightened <span style="color:var(--green);">\u25cf high</span><br/>\u2022 P0 cost: $180K \u2192 $220K (user-corrected)<br/>\u2022 Payback: 14mo \u2192 11mo <span style="color:var(--orange);">\u25cf medium</span><br/>\u2022 Ask: reframed <span style="color:var(--green);">\u25cf high</span></div><div style="margin-top:6px;font-size:10px;color:var(--text-sec);">\u26a0 1 item needs verification before CVP review.</div>');
-showAnn('ann4');
-setTimeout(function(){document.getElementById('finOverlay').classList.add('visible');},2000);}
-function proceedBeat1(){clearHints();hideAnns();showAnn('ann1');document.querySelectorAll('.action-btn').forEach(function(b){b.style.animation='none';b.style.borderColor='var(--border)';});
-addMsg('copilot','Copilot','Here\'s a tighter version. Previewing, not applying:<div class="conf-indicator" style="background:#E8F5E9;color:#107C10;margin-top:8px;">\u25cf High confidence \u2014 restructured from existing content</div><div class="action-row"><button class="action-btn primary" onclick="applyBeat1()">Accept</button><button class="action-btn" onclick="advanceStep()">Skip</button></div>');
-const t=document.getElementById('exec-summary');t.scrollIntoView({behavior:'smooth',block:'center'});
-const o=document.createElement('div');o.className='suggestion-overlay';o.id='s1';o.innerHTML='<div class="so-badge">Copilot Suggestion</div><div class="so-confidence conf-high">HIGH CONFIDENCE</div>Requesting <strong>$12M for H2 platform investment</strong> to close a widening gap between product ambition and platform capacity \u2014 130% longer deploys, 3 P0s last quarter.';
-t.parentNode.insertBefore(o,t.nextSibling);setTimeout(()=>o.classList.add('visible'),100);
-showAnn('ann2');}
-function applyBeat1(){clearHints();const e=document.getElementById('exec-summary');e.innerHTML='Requesting <strong>$12M for H2 platform investment</strong> to close a widening gap between product ambition and platform capacity — 130% longer deploys, 3 P0s last quarter.';e.classList.add('edit-flash');const s=document.getElementById('s1');if(s)s.remove();addMsg('copilot','Copilot','<span style="color:var(--green);">✓ Executive summary updated.</span>');document.querySelectorAll('.action-btn').forEach(function(b){b.style.animation='none';b.style.borderColor='var(--border)';});showMicHint();}
-function correctROI(){clearHints();const e=document.getElementById('roi-content');e.innerHTML='Based on current incident costs (<strong>$220K per P0</strong>, updated FY26) and developer time savings, projected payback period is <strong>11 months</strong>.';e.classList.add('edit-flash');addMsg('copilot','Copilot','<span style="color:var(--green);">✓ Updated P0 cost to $220K, recalculated payback to 11 months.</span><div class="conf-indicator" style="background:#FFF4CE;color:#7A6200;margin-top:4px;">● Medium — payback recalculated, verify appendix formula</div>');}
-function flagROI(){clearHints();addMsg('copilot','Copilot','<span style="color:var(--orange);">⚠ Flagged $180K with review comment.</span>');setTimeout(()=>advanceStep(),1000);}
-function applyAskFinal(){clearHints();document.getElementById('ask-section').innerHTML='We <strong>recommend approving $12M in H2 FY26</strong> for platform investment. The cost of inaction \u2014 P0 incidents, developer attrition, AI bottlenecks \u2014 exceeds the investment within two quarters.';document.getElementById('ask-section').classList.add('edit-flash');addMsg('copilot','Copilot','<span style="color:var(--green);">\u2713 Ask reframed.</span><div style="margin-top:8px;font-size:11px;line-height:1.7;border-top:1px solid var(--border);padding-top:8px;"><strong>Session summary:</strong><br/>\u2022 Exec summary: tightened <span style="color:var(--green);">\u25cf high</span><br/>\u2022 P0 cost: $180K \u2192 $220K (user-corrected)<br/>\u2022 Payback: 14mo \u2192 11mo <span style="color:var(--orange);">\u25cf medium</span><br/>\u2022 Ask: reframed <span style="color:var(--green);">\u25cf high</span></div><div style="margin-top:6px;font-size:10px;color:var(--text-sec);">\u26a0 1 item needs verification before CVP review.</div>');setTimeout(()=>{document.getElementById('finOverlay').classList.add('visible');},1000);}
-function applyAskBFinal(){clearHints();document.getElementById('ask-section').innerHTML='The data supports a <strong>$12M investment in H2 FY26</strong>. At $220K per P0 and accelerating bottlenecks, the platform gap costs more than the fix.';document.getElementById('ask-section').classList.add('edit-flash');addMsg('copilot','Copilot','<span style="color:var(--green);">\u2713 Ask reframed (data-led).</span><div style="margin-top:8px;font-size:11px;line-height:1.7;border-top:1px solid var(--border);padding-top:8px;"><strong>Session summary:</strong><br/>\u2022 Exec summary: tightened <span style="color:var(--green);">\u25cf high</span><br/>\u2022 P0 cost: $180K \u2192 $220K (user-corrected)<br/>\u2022 Payback: 14mo \u2192 11mo <span style="color:var(--orange);">\u25cf medium</span><br/>\u2022 Ask: reframed <span style="color:var(--green);">\u25cf high</span></div><div style="margin-top:6px;font-size:10px;color:var(--text-sec);">\u26a0 1 item needs verification before CVP review.</div>');setTimeout(()=>{document.getElementById('finOverlay').classList.add('visible');},1000);}
-function addMsg(t,l,h){const a=document.getElementById('messages');const d=document.createElement('div');d.className='msg '+t;var labelHtml=l;if(t==='copilot'){labelHtml='<img src="data:image/png;base64,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" style="height:16px;vertical-align:-3px;margin-right:2px;"> Copilot';}d.innerHTML='<div class="msg-label">'+labelHtml+'</div>'+h;a.appendChild(d);setTimeout(()=>d.classList.add('visible'),50);setTimeout(()=>{a.scrollTop=a.scrollHeight;},100);}
-function setV(s){const d=document.getElementById('voiceDot');const lbl=document.getElementById('micLabel');hideMicHint();if(s==='listening'){d.style.background='#107C10';d.style.animation='pulseDot 1.5s ease infinite';lbl.textContent='Listening...';}else if(s==='processing'){d.style.background='#0F6CBD';d.style.animation='pulseDot 0.8s ease infinite';lbl.textContent='Processing...';}else{d.style.background='#999';d.style.animation='none';lbl.textContent='Message Copilot';}}
-function showMicHint(){var h=document.getElementById('micHintInline');if(!h){h=document.createElement('span');h.id='micHintInline';h.style.cssText='display:inline-block;background:var(--blue);color:white;font-size:9px;padding:2px 8px;border-radius:10px;font-weight:600;animation:pulseBlue 1.5s ease infinite;margin-left:6px;';h.textContent='Click here to speak';var bar=document.getElementById('micBtn');if(bar)bar.querySelector('div').appendChild(h);}}
-function hideMicHint(){var h=document.getElementById('micHintInline');if(h)h.remove();}
-function showAnn(id){hideAnns();const e=document.getElementById(id);if(e){var pane=document.querySelector('.copilot-pane');var pRect=pane?pane.getBoundingClientRect():{left:window.innerWidth-380};var l=pRect.left-276;if(l<10)l=10;e.style.left=l+'px';e.style.right='auto';e.style.top='50%';e.style.transform='translateY(-50%)';e.style.bottom='auto';e.classList.add('visible');}}
-function hideAnns(){document.querySelectorAll('.ann').forEach(a=>a.classList.remove('visible'));}
-function showNotif(title,body){document.getElementById('dnTitle').textContent=title;document.getElementById('dnBody').textContent=body;document.getElementById('desktopNotif').classList.add('visible');setTimeout(()=>hideNotif(),6000);}
-function hideNotif(){document.getElementById('desktopNotif').classList.remove('visible');}
-let _h=null;function showHint(t,txt){clearHints();if(!t)return;const h=document.createElement('div');h.className='click-hint';h.textContent=txt;h.addEventListener('click',()=>t.click());document.body.appendChild(h);_h={h,t};posH();requestAnimationFrame(function tk(){if(!_h)return;posH();requestAnimationFrame(tk);});}
-function posH(){if(!_h)return;const r=_h.t.getBoundingClientRect();_h.h.style.left=(r.left-8)+'px';_h.h.style.top=(r.top+r.height/2)+'px';_h.h.style.transform='translate(-100%,-50%)';}
-function clearHints(){document.querySelectorAll('.click-hint').forEach(h=>h.remove());_h=null;}
-document.addEventListener('keydown',(e)=>{if(document.getElementById('finOverlay').classList.contains('visible')){location.reload();return;}if(!document.getElementById('landing').classList.contains('hidden'))return;if(e.key==='ArrowRight'||e.key===' '){e.preventDefault();advanceStep();}});
-</script>
-</body>
-</html>
+function am(t,l,h){var a=document.getElementById('M');var d=document.createElement('div');d.className='msg '+(t==='u'?'u':'c');var lh=l;if(t==='c')lh='<img src="data:image/png;base64,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" style="height:16px;vertical-align:-3px;margin-right:2px;"> Copilot';d.innerHTML='<div class="ml">'+lh+'</div>'+h;a.appendChild(d);setTimeout(function(){d.classList.add('v');},50);setTimeout(function(){a.scrollTop=a.scrollHeight;},100);}
+function sv(s){var d=document.getElementById('D');var l=document.getElementById('DL');if(s==='on'){d.style.background='#107C10';d.style.animation='pd 1.5s ease infinite';l.textContent='Listening...';}else{d.style.background='#999';d.style.animation='none';l.textContent='Message Copilot';}}
+function sa(id){ha();var e=document.getElementById(id);if(e){var p=document.querySelector('.cp');var r=p?p.getBoundingClientRect():{left:380};e.style.left=Math.max(10,r.left-276)+'px';e.style.right='auto';e.style.top='50%';e.style.transform='translateY(-50%)';e.classList.add('v');}}
+function ha(){document.querySelectorAll('.ann').forEach(function(a){a.classList.remove('v');});}
+document.addEventListener('keydown',function(e){if(document.getElementById('FO').classList.contains('v')){location.reload();}});
+</script></body></html>

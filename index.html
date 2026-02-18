@@ -6,116 +6,110 @@
 <title>Hema Sridharan — Senior Product Manager</title>
 <meta name="description" content="Portfolio of Hema Sridharan — Senior PM at Microsoft building AI experiences for hundreds of millions of users.">
 <style>
-/* ───────── Reset & Base ───────── */
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
 :root{
-  --bg:#fafafa;--fg:#1a1a1a;--muted:#6b6b6b;--accent:#4f46e5;--accent-soft:#eef2ff;
+  --bg:#fafafa;--fg:#1a1a1a;--muted:#6b6b6b;--dim:#999;--accent:#4f46e5;--accent-soft:#eef2ff;
   --border:#e5e5e5;--card:#fff;--font:'Segoe UI',system-ui,-apple-system,sans-serif;
   --mono:'Cascadia Code','Fira Code','SF Mono',monospace;
-  --max:860px;--radius:10px;
+  --max:840px;--radius:8px;
 }
-html{scroll-behavior:smooth;font-size:16px}
-body{font-family:var(--font);background:var(--bg);color:var(--fg);line-height:1.65;-webkit-font-smoothing:antialiased}
+html{scroll-behavior:smooth;font-size:15px}
+body{font-family:var(--font);background:var(--bg);color:var(--fg);line-height:1.55;-webkit-font-smoothing:antialiased}
 a{color:var(--accent);text-decoration:none}
 a:hover{text-decoration:underline}
 ::selection{background:var(--accent);color:#fff}
 
-/* ───────── Layout ───────── */
 .container{max-width:var(--max);margin:0 auto;padding:0 24px}
-section{padding:72px 0}
+section{padding:44px 0}
 section+section{border-top:1px solid var(--border)}
 
-/* ───────── Nav ───────── */
-nav{position:sticky;top:0;z-index:100;background:rgba(250,250,250,.85);backdrop-filter:blur(12px);border-bottom:1px solid var(--border)}
-nav .container{display:flex;align-items:center;justify-content:space-between;height:56px}
-nav .logo{font-weight:700;font-size:.95rem;letter-spacing:-.02em;color:var(--fg)}
-nav ul{list-style:none;display:flex;gap:28px}
-nav a{color:var(--muted);font-size:.85rem;font-weight:500;transition:color .2s}
+/* Nav */
+nav{position:sticky;top:0;z-index:100;background:rgba(250,250,250,.88);backdrop-filter:blur(12px);border-bottom:1px solid var(--border)}
+nav .container{display:flex;align-items:center;justify-content:space-between;height:48px}
+nav .logo{font-weight:700;font-size:.9rem;letter-spacing:-.02em}
+nav ul{list-style:none;display:flex;gap:24px}
+nav a{color:var(--muted);font-size:.8rem;font-weight:500;transition:color .15s}
 nav a:hover{color:var(--fg);text-decoration:none}
 
-/* ───────── Hero ───────── */
-.hero{padding:96px 0 72px;text-align:center}
-.hero h1{font-size:2.6rem;font-weight:700;letter-spacing:-.04em;line-height:1.15;margin-bottom:16px}
+/* ──── Hero: dense, narrative ──── */
+.hero{padding:48px 0 20px}
+.hero h1{font-size:2rem;font-weight:700;letter-spacing:-.04em;line-height:1.15;margin-bottom:6px}
 .hero h1 span{background:linear-gradient(135deg,var(--accent),#7c3aed);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
-.hero p{max-width:560px;margin:0 auto;color:var(--muted);font-size:1.05rem}
-.hero .tags{margin-top:24px;display:flex;flex-wrap:wrap;justify-content:center;gap:8px}
-.hero .tags span{background:var(--accent-soft);color:var(--accent);font-size:.78rem;font-weight:600;padding:5px 14px;border-radius:100px}
+.hero .role{font-size:.88rem;color:var(--muted);margin-bottom:20px}
+.hero .role strong{color:var(--fg);font-weight:600}
 
-/* ───────── Section Headings ───────── */
-.section-label{font-size:.72rem;text-transform:uppercase;letter-spacing:.12em;color:var(--accent);font-weight:700;margin-bottom:8px}
-.section-title{font-size:1.6rem;font-weight:700;letter-spacing:-.03em;margin-bottom:12px}
-.section-subtitle{color:var(--muted);max-width:540px;font-size:.95rem;margin-bottom:40px}
+/* Signal grid — the 2-second scan */
+.signals{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--border);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;margin-bottom:0}
+@media(min-width:600px){.signals{grid-template-columns:repeat(3,1fr)}}
+.sig{background:var(--card);padding:14px 18px}
+.sig-label{font-size:.65rem;text-transform:uppercase;letter-spacing:.1em;color:var(--dim);font-weight:600;margin-bottom:3px}
+.sig-value{font-size:.88rem;font-weight:600;color:var(--fg);line-height:1.35}
+.sig-value em{font-style:normal;color:var(--accent);font-weight:700}
 
-/* ───────── Timeline ───────── */
-.timeline{position:relative;padding-left:32px}
-.timeline::before{content:'';position:absolute;left:7px;top:8px;bottom:8px;width:2px;background:var(--border)}
-.tl-item{position:relative;margin-bottom:36px}
+/* Section headings */
+.sh{font-size:.65rem;text-transform:uppercase;letter-spacing:.12em;color:var(--accent);font-weight:700;margin-bottom:6px}
+.st{font-size:1.3rem;font-weight:700;letter-spacing:-.03em;margin-bottom:8px}
+.sd{color:var(--muted);font-size:.88rem;margin-bottom:28px}
+
+/* ──── Timeline ──── */
+.timeline{position:relative;padding-left:28px}
+.timeline::before{content:'';position:absolute;left:6px;top:6px;bottom:6px;width:1.5px;background:var(--border)}
+.tl-item{position:relative;margin-bottom:24px}
 .tl-item:last-child{margin-bottom:0}
-.tl-dot{position:absolute;left:-32px;top:6px;width:16px;height:16px;border-radius:50%;border:3px solid var(--accent);background:var(--bg);z-index:1}
-.tl-item.active .tl-dot{background:var(--accent);box-shadow:0 0 0 4px var(--accent-soft)}
-.tl-year{font-family:var(--mono);font-size:.78rem;color:var(--accent);font-weight:600;margin-bottom:2px}
-.tl-role{font-weight:700;font-size:1.05rem;letter-spacing:-.01em}
-.tl-org{color:var(--muted);font-size:.88rem;margin-bottom:6px}
-.tl-desc{font-size:.88rem;color:var(--muted);line-height:1.6}
-.tl-desc ul{margin-top:6px;padding-left:18px}
-.tl-desc li{margin-bottom:4px}
-.tl-badges{margin-top:8px;display:flex;flex-wrap:wrap;gap:6px}
-.tl-badges span{font-size:.7rem;padding:3px 10px;border-radius:100px;background:#f3f4f6;color:#4b5563;font-weight:600}
-.tl-badges span.patent{background:#fef3c7;color:#92400e}
+.tl-dot{position:absolute;left:-28px;top:5px;width:13px;height:13px;border-radius:50%;border:2.5px solid var(--accent);background:var(--bg);z-index:1}
+.tl-item.active .tl-dot{background:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+.tl-year{font-family:var(--mono);font-size:.72rem;color:var(--accent);font-weight:600}
+.tl-role{font-weight:700;font-size:.95rem;letter-spacing:-.01em}
+.tl-org{color:var(--muted);font-size:.82rem;margin-bottom:4px}
+.tl-desc{font-size:.82rem;color:var(--muted);line-height:1.55}
+.tl-badges{margin-top:6px;display:flex;flex-wrap:wrap;gap:5px}
+.tl-badges span{font-size:.66rem;padding:2px 9px;border-radius:100px;background:#f3f4f6;color:#4b5563;font-weight:600}
+.tl-badges .patent{background:#fef3c7;color:#92400e}
 
-/* ───────── Prototype Cards ───────── */
-.proto-grid{display:grid;grid-template-columns:1fr;gap:20px}
-@media(min-width:640px){.proto-grid{grid-template-columns:1fr 1fr}}
-.proto-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:28px;transition:box-shadow .25s,transform .25s;display:flex;flex-direction:column}
-.proto-card:hover{box-shadow:0 8px 30px rgba(0,0,0,.06);transform:translateY(-2px)}
-.proto-card .proto-number{font-family:var(--mono);font-size:.7rem;color:var(--accent);font-weight:700;margin-bottom:8px}
-.proto-card h3{font-size:1.05rem;font-weight:700;margin-bottom:6px;letter-spacing:-.01em}
-.proto-card p{font-size:.85rem;color:var(--muted);flex:1;margin-bottom:16px;line-height:1.6}
-.proto-card .proto-tags{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:16px}
-.proto-card .proto-tags span{font-size:.68rem;padding:2px 9px;border-radius:100px;background:#f3f4f6;color:#6b7280;font-weight:600}
-.proto-link{display:inline-flex;align-items:center;gap:6px;font-size:.82rem;font-weight:600;color:var(--accent)}
-.proto-link svg{width:14px;height:14px;transition:transform .2s}
-.proto-link:hover svg{transform:translateX(3px)}
-.proto-link:hover{text-decoration:none}
+/* ──── Prototype cards ──── */
+.proto-grid{display:grid;grid-template-columns:1fr;gap:14px}
+@media(min-width:600px){.proto-grid{grid-template-columns:1fr 1fr}}
+.proto-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:20px;transition:box-shadow .2s,transform .2s;display:flex;flex-direction:column}
+.proto-card:hover{box-shadow:0 6px 24px rgba(0,0,0,.06);transform:translateY(-1px)}
+.proto-card .pn{font-family:var(--mono);font-size:.66rem;color:var(--accent);font-weight:700;margin-bottom:6px}
+.proto-card h3{font-size:.95rem;font-weight:700;margin-bottom:4px;letter-spacing:-.01em}
+.proto-card p{font-size:.8rem;color:var(--muted);flex:1;margin-bottom:12px;line-height:1.5}
+.proto-card .pt{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:12px}
+.proto-card .pt span{font-size:.64rem;padding:2px 8px;border-radius:100px;background:#f3f4f6;color:#6b7280;font-weight:600}
+.pl{display:inline-flex;align-items:center;gap:5px;font-size:.78rem;font-weight:600;color:var(--accent)}
+.pl svg{width:13px;height:13px;transition:transform .2s}
+.pl:hover svg{transform:translateX(3px)}
+.pl:hover{text-decoration:none}
 
-/* ───────── Specs / Writing ───────── */
-.spec-list{display:flex;flex-direction:column;gap:14px}
-.spec-item{display:flex;align-items:flex-start;gap:16px;padding:20px 24px;background:var(--card);border:1px solid var(--border);border-radius:var(--radius);transition:box-shadow .25s}
-.spec-item:hover{box-shadow:0 4px 20px rgba(0,0,0,.05)}
-.spec-icon{flex-shrink:0;width:40px;height:40px;border-radius:10px;background:var(--accent-soft);display:flex;align-items:center;justify-content:center;color:var(--accent)}
-.spec-body h4{font-size:.95rem;font-weight:700;margin-bottom:3px}
-.spec-body p{font-size:.82rem;color:var(--muted)}
+/* ──── Spec list ──── */
+.spec-list{display:flex;flex-direction:column;gap:10px}
+.spec-item{display:flex;align-items:center;gap:14px;padding:14px 18px;background:var(--card);border:1px solid var(--border);border-radius:var(--radius);transition:box-shadow .2s;text-decoration:none;color:inherit}
+.spec-item:hover{box-shadow:0 3px 16px rgba(0,0,0,.05);text-decoration:none}
+.spec-icon{flex-shrink:0;width:34px;height:34px;border-radius:8px;background:var(--accent-soft);display:flex;align-items:center;justify-content:center;color:var(--accent)}
+.spec-body h4{font-size:.88rem;font-weight:700;margin-bottom:1px}
+.spec-body p{font-size:.76rem;color:var(--muted)}
 
-/* ───────── Stats ───────── */
-.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:48px}
-@media(max-width:600px){.stats{grid-template-columns:repeat(2,1fr)}}
-.stat{text-align:center;padding:20px 12px;background:var(--card);border:1px solid var(--border);border-radius:var(--radius)}
-.stat .stat-num{font-size:1.8rem;font-weight:800;letter-spacing:-.04em;background:linear-gradient(135deg,var(--accent),#7c3aed);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
-.stat .stat-label{font-size:.72rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);font-weight:600;margin-top:2px}
-
-/* ───────── Footer ───────── */
-footer{padding:40px 0;border-top:1px solid var(--border);text-align:center}
-footer p{font-size:.8rem;color:var(--muted)}
+/* Footer */
+footer{padding:32px 0;border-top:1px solid var(--border);text-align:center}
+footer p{font-size:.75rem;color:var(--muted)}
 footer a{font-weight:600}
 
-/* ───────── Responsive ───────── */
 @media(max-width:600px){
-  .hero h1{font-size:1.9rem}
-  section{padding:56px 0}
-  nav ul{gap:16px}
+  .hero h1{font-size:1.6rem}
+  section{padding:36px 0}
+  nav ul{gap:14px}
 }
 </style>
 </head>
 <body>
 
-<!-- ═══════ Navigation ═══════ -->
 <nav>
   <div class="container">
     <div class="logo">HS</div>
     <ul>
       <li><a href="#journey">Journey</a></li>
       <li><a href="#prototypes">Prototypes</a></li>
-      <li><a href="#writing">Writing</a></li>
+      <li><a href="#writing">Strategy</a></li>
     </ul>
   </div>
 </nav>
@@ -123,101 +117,93 @@ footer a{font-weight:600}
 <!-- ═══════ Hero ═══════ -->
 <section class="hero">
   <div class="container">
-    <h1>Hi, I'm <span>Hema Sridharan</span></h1>
-    <p>Senior Product Manager at Microsoft building AI experiences for hundreds of millions of users. 11 years shipping software — from canvas rendering engines to agentic orchestration.</p>
-    <div class="tags">
-      <span>M365 Copilot</span>
-      <span>Grounding & Trust</span>
-      <span>AI Platform</span>
-      <span>3 US Patents</span>
-      <span>0→1 PM</span>
+    <h1><span>Hema Sridharan</span></h1>
+    <div class="role">Senior PM, <strong>Microsoft Copilot</strong> — Grounding & Trust · M365 AI Platform</div>
+
+    <div class="signals">
+      <div class="sig">
+        <div class="sig-label">Now</div>
+        <div class="sig-value">DRI for <em>Copilot grounding quality</em> — RAG stack, EVALS, competitive parity</div>
+      </div>
+      <div class="sig">
+        <div class="sig-label">Built</div>
+        <div class="sig-value">0→1 agentic charter — solo proposal to <em>SLT-funded</em> roadmap across 10+ orgs</div>
+      </div>
+      <div class="sig">
+        <div class="sig-label">Invented</div>
+        <div class="sig-value"><em>3 US Patents</em> — 2 for GenAI agentic systems, 1 for collaborative UX</div>
+      </div>
+      <div class="sig">
+        <div class="sig-label">Shipped</div>
+        <div class="sig-value"><em>12pt</em> defect reduction, <em>4pt</em> satisfaction lift via semantic snippet strategies</div>
+      </div>
+      <div class="sig">
+        <div class="sig-label">Range</div>
+        <div class="sig-value">SWE → PM → AI — rendering engines, telemetry platforms, agentic orchestration</div>
+      </div>
+      <div class="sig">
+        <div class="sig-label">Returned</div>
+        <div class="sig-value">5-year career pause — came back and shipped harder. Tamil teacher, screenplay writer.</div>
+      </div>
     </div>
   </div>
 </section>
 
-<!-- ═══════ Stats ═══════ -->
-<section style="padding-top:0;border:none">
-  <div class="container">
-    <div class="stats">
-      <div class="stat"><div class="stat-num">11</div><div class="stat-label">Years at Microsoft</div></div>
-      <div class="stat"><div class="stat-num">3</div><div class="stat-label">US Patents</div></div>
-      <div class="stat"><div class="stat-num">12pt</div><div class="stat-label">Defect Reduction</div></div>
-      <div class="stat"><div class="stat-num">10+</div><div class="stat-label">Orgs Aligned</div></div>
-    </div>
-  </div>
-</section>
-
-<!-- ═══════ Journey / Timeline ═══════ -->
+<!-- ═══════ Journey ═══════ -->
 <section id="journey">
   <div class="container">
-    <div class="section-label">Career</div>
-    <div class="section-title">The Journey</div>
-    <div class="section-subtitle">From rendering engines to agentic AI — a career built on shipping, inventing, and connecting the dots.</div>
+    <div class="sh">Career</div>
+    <div class="st">The arc</div>
     <div class="timeline">
 
-      <!-- Now -->
       <div class="tl-item active">
         <div class="tl-dot"></div>
         <div class="tl-year">2025 — Present</div>
         <div class="tl-role">Lead PM & DRI — Grounding & Trust</div>
         <div class="tl-org">Microsoft Copilot</div>
         <div class="tl-desc">
-          DRI for grounding quality across the RAG stack. Defined "Needs Met" evaluation framework benchmarking against Perplexity & Google. Shipped automated EVALS pipelines, achieved 12-point defect reduction and 4-point satisfaction lift through semantic snippet strategies.
+          Own grounding quality across the RAG stack. Defined "Needs Met" framework benchmarking against Perplexity & Google. Shipped automated EVALS pipelines. 12pt defect reduction, 4pt satisfaction lift through semantic snippet strategies and token optimization.
         </div>
         <div class="tl-badges">
-          <span>RAG Optimization</span>
-          <span>Automated EVALS</span>
-          <span>Competitive Parity</span>
-          <span>Responsible AI</span>
+          <span>RAG Optimization</span><span>Automated EVALS</span><span>Competitive Parity</span><span>Responsible AI</span>
         </div>
       </div>
 
-      <!-- Founder PM -->
       <div class="tl-item">
         <div class="tl-dot"></div>
         <div class="tl-year">2022 — 2025</div>
-        <div class="tl-role">0→1 Founder PM — Collab Services & Agent Orchestration</div>
+        <div class="tl-role">0→1 Founder PM — Agent Orchestration</div>
         <div class="tl-org">M365 · Office Product Group</div>
         <div class="tl-desc">
-          Authored the "AI-Productivity Paradox" proposal backed by JTBD research. Secured SLT funding for Document Collaboration Agentic Charter. Rallied 10+ product orgs to a unified roadmap. Designed an app-agnostic reasoning spine for Word, Excel, PPT, and Teams.
+          Authored "AI-Productivity Paradox" proposal from JTBD research. Secured SLT funding. Rallied 10+ product orgs into a unified roadmap. Designed an app-agnostic reasoning spine for Word, Excel, PPT, and Teams.
         </div>
         <div class="tl-badges">
           <span class="patent">Patent — GenAI Agentic System</span>
           <span class="patent">Patent — GenAI Agentic System</span>
-          <span>Charter Bootstrapping</span>
-          <span>Cross-Org Leadership</span>
+          <span>Charter → Roadmap</span><span>Cross-Org</span>
         </div>
       </div>
 
-      <!-- Break -->
       <div class="tl-item">
         <div class="tl-dot"></div>
         <div class="tl-year">2016 — 2021</div>
-        <div class="tl-role">Motherhood, Teaching & Writing</div>
+        <div class="tl-role">Career Pause — Teaching & Writing</div>
         <div class="tl-org">Community</div>
         <div class="tl-desc">
-          Tamil language teacher to first-generation American kids. Screenplay writer for Tamil theater. A deliberate pause that deepened empathy, storytelling instincts, and cross-cultural perspective.
-        </div>
-        <div class="tl-badges">
-          <span>Tamil Teaching</span>
-          <span>Screenplay Writing</span>
+          Motherhood. Tamil teacher for first-generation American kids. Screenplay writer for Tamil theater. A deliberate pause that deepened empathy, storytelling, and cross-cultural instincts.
         </div>
       </div>
 
-      <!-- OneNote -->
       <div class="tl-item">
         <div class="tl-dot"></div>
         <div class="tl-year">2009 — 2015</div>
         <div class="tl-role">Software Engineer → Product Manager</div>
         <div class="tl-org">Microsoft OneNote</div>
         <div class="tl-desc">
-          Led a 12-engineer team in full-stack architecture redesign of the Canvas/Rendering engine across Windows, Mac, and iOS. Built the telemetry platform used across all OneNote endpoints. Transitioned from engineering to product.
+          Led 12-engineer team redesigning Canvas/Rendering across Windows, Mac, iOS. Built the telemetry platform used across all endpoints. Transitioned from engineering to product.
         </div>
         <div class="tl-badges">
-          <span class="patent">Patent — Page Sharing & Notifications</span>
-          <span>Rendering Engine</span>
-          <span>Telemetry Platform</span>
-          <span>Cross-Platform</span>
+          <span class="patent">Patent — Page Sharing</span><span>Rendering Engine</span><span>Telemetry</span><span>Cross-Platform</span>
         </div>
       </div>
 
@@ -228,140 +214,88 @@ footer a{font-weight:600}
 <!-- ═══════ Prototypes ═══════ -->
 <section id="prototypes">
   <div class="container">
-    <div class="section-label">Craft</div>
-    <div class="section-title">Interactive Prototypes</div>
-    <div class="section-subtitle">Hands-on artifacts I built to explore ideas, pressure-test UX principles, and communicate product vision.</div>
+    <div class="sh">Craft</div>
+    <div class="st">Interactive Prototypes</div>
+    <div class="sd">Built to explore ideas, pressure-test UX principles, and communicate vision.</div>
     <div class="proto-grid">
 
-      <!-- One Copilot -->
       <div class="proto-card">
-        <div class="proto-number">01</div>
+        <div class="pn">01</div>
         <h3>The Morning Check-In</h3>
-        <p>An interactive prototype demonstrating coherent M365 Copilot UX across surfaces — 18 UX principles across 12 beats. Covers proactive intelligence, cross-artifact reasoning, intelligent surface handoff, and bidirectional context.</p>
-        <div class="proto-tags">
-          <span>Multi-Turn UX</span>
-          <span>Cross-App Reasoning</span>
-          <span>18 Principles</span>
-          <span>Interactive</span>
-        </div>
-        <a href="one-copi.html" class="proto-link">
-          Experience prototype
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
-        </a>
+        <p>Coherent M365 Copilot UX across surfaces — 18 UX principles, 12 beats. Proactive intelligence, cross-artifact reasoning, intelligent surface handoff, bidirectional context.</p>
+        <div class="pt"><span>Multi-Turn</span><span>Cross-App</span><span>18 Principles</span><span>Interactive</span></div>
+        <a href="one-copi.html" class="pl">Experience prototype <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></a>
       </div>
 
-      <!-- Voice Edit -->
       <div class="proto-card">
-        <div class="proto-number">02</div>
+        <div class="pn">02</div>
         <h3>Voice-First Editing</h3>
-        <p>A prototype exploring voice-driven document editing in Word with Copilot — natural language corrections, contextual rewrites, and hands-free iteration that preserves the user's creative flow.</p>
-        <div class="proto-tags">
-          <span>Voice UX</span>
-          <span>Document Editing</span>
-          <span>Copilot in Word</span>
-        </div>
-        <a href="voice-edit.html" class="proto-link">
-          Experience prototype
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
-        </a>
+        <p>Voice-driven document editing in Word with Copilot — natural language corrections, contextual rewrites, hands-free iteration preserving creative flow.</p>
+        <div class="pt"><span>Voice UX</span><span>Document Editing</span><span>Copilot in Word</span></div>
+        <a href="voice-edit.html" class="pl">Experience prototype <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></a>
       </div>
 
-      <!-- Agent Scorecard -->
       <div class="proto-card">
-        <div class="proto-number">03</div>
+        <div class="pn">03</div>
         <h3>Agent Coherence Dashboard</h3>
-        <p>A trust and quality evaluation dashboard for Copilot agents — measuring coherence, grounding accuracy, and gravity metrics across orchestration layers with real-time scoring.</p>
-        <div class="proto-tags">
-          <span>EVALS</span>
-          <span>Agent Quality</span>
-          <span>Dashboard</span>
-          <span>Trust Metrics</span>
-        </div>
-        <a href="agent-scorecard.html" class="proto-link">
-          Experience prototype
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
-        </a>
+        <p>Trust and quality evaluation for Copilot agents — coherence, grounding accuracy, and gravity metrics across orchestration layers.</p>
+        <div class="pt"><span>EVALS</span><span>Agent Quality</span><span>Dashboard</span><span>Trust</span></div>
+        <a href="agent-scorecard.html" class="pl">Experience prototype <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></a>
       </div>
 
-      <!-- Grounding Playground -->
       <div class="proto-card">
-        <div class="proto-number">04</div>
+        <div class="pn">04</div>
         <h3>Grounding Playground</h3>
-        <p>An experimentation toolkit for testing retrieval-augmented generation strategies — comparing snippet approaches, token budgets, and grounding precision across query types.</p>
-        <div class="proto-tags">
-          <span>RAG</span>
-          <span>Experimentation</span>
-          <span>Token Optimization</span>
-        </div>
-        <a href="GroundingPlayground/" class="proto-link">
-          Explore playground
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
-        </a>
+        <p>Experimentation toolkit for RAG strategies — comparing snippet approaches, token budgets, and grounding precision across query types.</p>
+        <div class="pt"><span>RAG</span><span>Experimentation</span><span>Token Optimization</span></div>
+        <a href="GroundingPlayground/" class="pl">Explore playground <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></a>
       </div>
 
     </div>
   </div>
 </section>
 
-<!-- ═══════ Writing / Specs ═══════ -->
+<!-- ═══════ Writing ═══════ -->
 <section id="writing">
   <div class="container">
-    <div class="section-label">Thinking</div>
-    <div class="section-title">Strategy & Specifications</div>
-    <div class="section-subtitle">Product thinking artifacts — from competitive strategy to system architecture.</div>
+    <div class="sh">Thinking</div>
+    <div class="st">Strategy & Specifications</div>
+    <div class="sd">Product thinking — competitive strategy to system architecture.</div>
     <div class="spec-list">
 
-      <a href="https://github.com/ambitiousmom/cautious-guacamole" class="spec-item" style="text-decoration:none;color:inherit">
-        <div class="spec-icon">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
-        </div>
+      <a href="https://github.com/ambitiousmom/cautious-guacamole" class="spec-item">
+        <div class="spec-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg></div>
         <div class="spec-body">
           <h4>AI-First Enrichment Strategy</h4>
-          <p>Copilot Places — From data licensing to intelligent knowledge. Proposes an AI-First enrichment layer that shifts the question from "what fields can we license?" to "what questions can we answer?"</p>
+          <p>Copilot Places — from "what fields can we license?" to "what questions can we answer?"</p>
         </div>
       </a>
 
-      <a href="https://github.com/ambitiousmom/cautious-guacamole" class="spec-item" style="text-decoration:none;color:inherit">
-        <div class="spec-icon">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
-        </div>
+      <a href="https://github.com/ambitiousmom/cautious-guacamole" class="spec-item">
+        <div class="spec-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg></div>
         <div class="spec-body">
-          <h4>Technical Architecture Specification</h4>
-          <p>System design for the Places enrichment platform — ingestion layer, LLM entity extraction, vector search, knowledge graph traversal, and hybrid retrieval architecture.</p>
+          <h4>Technical Architecture Spec</h4>
+          <p>Ingestion, LLM extraction, vector search, knowledge graph, hybrid retrieval.</p>
         </div>
       </a>
 
-      <a href="https://github.com/ambitiousmom/cautious-guacamole" class="spec-item" style="text-decoration:none;color:inherit">
-        <div class="spec-icon">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
-        </div>
+      <a href="https://github.com/ambitiousmom/cautious-guacamole" class="spec-item">
+        <div class="spec-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg></div>
         <div class="spec-body">
-          <h4>Knowledge Graph Specification</h4>
-          <p>GraphRAG design for Places — schema, multi-hop queries, entity disambiguation, and the hybrid value of graph traversal + vector search for spatial-relational reasoning.</p>
+          <h4>Knowledge Graph Spec</h4>
+          <p>GraphRAG — multi-hop queries, entity disambiguation, graph + vector hybrid.</p>
         </div>
       </a>
 
     </div>
-  </div>
-</section>
-
-<!-- ═══════ Philosophy ═══════ -->
-<section>
-  <div class="container" style="text-align:center;max-width:600px">
-    <div class="section-label">Philosophy</div>
-    <div class="section-title" style="font-size:1.35rem;line-height:1.45">
-      "The best AI products don't feel like AI products — they feel like the work becoming effortless."
-    </div>
-    <p style="color:var(--muted);font-size:.9rem;margin-top:16px">
-      I believe in building with users, not for them. In measuring what matters. In experiments over opinions. In prototypes over slide decks. And in the quiet strength of coming back after a pause with sharper instincts.
-    </p>
   </div>
 </section>
 
 <!-- ═══════ Footer ═══════ -->
 <footer>
   <div class="container">
-    <p>Built with intention · <a href="https://github.com/ambitiousmom/cautious-guacamole">GitHub</a> · Hema Sridharan · 2026</p>
+    <p style="margin-bottom:6px;font-size:.82rem;color:var(--fg)">"Prototypes over slide decks. Experiments over opinions. Come back sharper."</p>
+    <p><a href="https://github.com/ambitiousmom/cautious-guacamole">GitHub</a> · Hema Sridharan · 2026</p>
   </div>
 </footer>
 

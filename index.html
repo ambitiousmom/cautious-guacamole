@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -18,10 +18,8 @@ body{font-family:var(--font);background:var(--bg);color:var(--fg);line-height:1.
 a{color:var(--accent);text-decoration:none}
 a:hover{text-decoration:underline}
 ::selection{background:var(--accent);color:#fff}
-
 .page{max-width:var(--max);margin:0 auto;padding:48px 0 36px}
 section{margin-bottom:32px}
-
 h1{font-size:2rem;font-weight:700;letter-spacing:-.04em;line-height:1.1;margin-bottom:4px}
 h1 span{background:linear-gradient(135deg,var(--accent),#7c3aed);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
 .role{font-size:.86rem;color:var(--muted);line-height:1.45}
@@ -29,9 +27,7 @@ h1 span{background:linear-gradient(135deg,var(--accent),#7c3aed);-webkit-backgro
 .summary{font-size:.88rem;color:var(--muted);line-height:1.6;margin-top:14px;list-style:none;padding-left:0}
 .summary li{margin-bottom:8px;padding-left:16px;position:relative}
 .summary li::before{content:'';position:absolute;left:0;top:9px;width:6px;height:6px;border-radius:50%;background:var(--accent)}
-
 .sl{font-size:.6rem;letter-spacing:.12em;color:var(--accent);font-weight:700;margin-bottom:10px;text-transform:uppercase}
-
 /* ── Signal grid ── */
 .signals{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--border);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden}
 @media(min-width:520px){.signals{grid-template-columns:repeat(4,1fr)}}
@@ -39,7 +35,6 @@ h1 span{background:linear-gradient(135deg,var(--accent),#7c3aed);-webkit-backgro
 .sig-label{font-size:.58rem;text-transform:uppercase;letter-spacing:.1em;color:var(--dim);font-weight:600;margin-bottom:2px}
 .sig-value{font-size:.76rem;font-weight:600;color:var(--fg);line-height:1.35}
 .sig-value em{font-style:normal;color:var(--accent);font-weight:700}
-
 /* ── What I do ── */
 .do-grid{display:grid;grid-template-columns:1fr 1fr;gap:0 24px}
 @media(max-width:480px){.do-grid{grid-template-columns:1fr}}
@@ -48,7 +43,6 @@ h1 span{background:linear-gradient(135deg,var(--accent),#7c3aed);-webkit-backgro
 @media(max-width:480px){.do-item:last-child{border-bottom:none}}
 .do-item h4{font-size:.84rem;font-weight:700;margin-bottom:1px}
 .do-item p{font-size:.76rem;color:var(--muted);line-height:1.5}
-
 /* ── Built cards ── */
 .built-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 @media(max-width:480px){.built-grid{grid-template-columns:1fr}}
@@ -58,21 +52,17 @@ h1 span{background:linear-gradient(135deg,var(--accent),#7c3aed);-webkit-backgro
 .built p{font-size:.74rem;color:var(--muted);line-height:1.5}
 .built .tags{margin-top:7px;display:flex;flex-wrap:wrap;gap:4px}
 .built .tags span{font-size:.58rem;padding:2px 7px;border-radius:100px;background:#f3f4f6;color:#6b7280;font-weight:600}
-
 /* ── Thesis ── */
 .thesis{font-size:.88rem;color:var(--muted);line-height:1.6;border-left:3px solid var(--accent);padding-left:16px}
 .thesis strong{color:var(--fg);font-weight:600}
-
 /* ── Side gig ── */
 .side{display:flex;align-items:flex-start;gap:12px;padding:14px 16px;background:var(--card);border:1px solid var(--border);border-radius:var(--radius)}
 .side-icon{font-size:1.2rem;line-height:1;flex-shrink:0;margin-top:1px}
 .side p{font-size:.78rem;color:var(--muted);line-height:1.5}
 .side strong{color:var(--fg);font-weight:600}
-
 hr{border:none;border-top:1px solid var(--border);margin:32px 0 0}
 .foot{margin-top:16px;font-size:.7rem;color:var(--dim);text-align:center}
 .foot a{font-weight:600}
-
 @media(max-width:500px){
   h1{font-size:1.6rem}
   .page{padding:36px 0 28px}
@@ -81,7 +71,6 @@ hr{border:none;border-top:1px solid var(--border);margin:32px 0 0}
 </head>
 <body>
 <div class="page">
-
 <!-- ═══ Header ═══ -->
 <section>
   <h1><span>Hema Sridharan</span></h1>
@@ -92,7 +81,6 @@ hr{border:none;border-top:1px solid var(--border);margin:32px 0 0}
     <li>I also seek adventures outside work — I came back from a multi-year tech break as a professional screenplay writer.</li>
   </ul>
 </section>
-
 <!-- ═══ Proof points ═══ -->
 <section>
   <div class="sl">Track Record</div>
@@ -131,7 +119,6 @@ hr{border:none;border-top:1px solid var(--border);margin:32px 0 0}
     </div>
   </div>
 </section>
-
 <!-- ═══ Prototypes ═══ -->
 <section>
   <div class="sl" style="text-transform:none">HOW I BUILD AS A PM — POC's</div>
@@ -162,7 +149,6 @@ hr{border:none;border-top:1px solid var(--border);margin:32px 0 0}
     </div>
   </div>
 </section>
-
 <!-- ═══ Side gig ═══ -->
 <section style="margin-top:-16px">
   <div class="side">
@@ -170,10 +156,7 @@ hr{border:none;border-top:1px solid var(--border);margin:32px 0 0}
     <p><strong>Side gig: Screenplay writer</strong> for Tamil-language theater — bringing story structure, audience instinct, and narrative economy to everything I build. Also a Tamil teacher for first-generation American kids.</p>
   </div>
 </section>
-
 </div>
 </body>
 </html>
 < ! - -   c a c h e   b u s t   - - > 
- 
- 

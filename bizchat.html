@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -13,106 +13,108 @@
   --branch:#7c6f64;--detour:#a89984;--hack:#8f6e3f;
   --font:'Segoe UI',system-ui,-apple-system,sans-serif;
   --mono:'Cascadia Code','Fira Code','SF Mono',monospace;
-  --max:900px;--radius:16px;
+  --radius:16px;
 }
 html{font-size:15px;scroll-behavior:smooth}
 body{font-family:var(--font);background:var(--bg);color:var(--fg);line-height:1.6;-webkit-font-smoothing:antialiased}
 ::selection{background:var(--accent);color:#fff}
-.page{max-width:var(--max);margin:0 auto;padding:48px 28px 48px}
+
+.page{max-width:700px;margin:0 auto;padding:48px 28px 64px}
 
 /* Header */
-.header{margin-bottom:28px}
-.header h1{font-size:1.8rem;font-weight:700;letter-spacing:-.03em}
-.header .sub{font-size:.84rem;color:var(--muted);margin-top:4px}
+.header{text-align:center;margin-bottom:12px;opacity:0;animation:fadeUp .6s ease forwards}
+.header h1{font-size:1.9rem;font-weight:700;letter-spacing:-.03em}
+.header .sub{font-size:.82rem;color:var(--muted);margin-top:4px}
 .header .sub strong{color:var(--fg);font-weight:600}
 
 /* Summary */
-.summary{margin-bottom:36px}
-.summary p{font-size:.86rem;color:var(--muted);line-height:1.7;margin-bottom:8px}
+.summary{text-align:center;max-width:560px;margin:0 auto 40px;opacity:0;animation:fadeUp .6s ease .3s forwards}
+.summary p{font-size:.84rem;color:var(--muted);line-height:1.7;margin-bottom:6px}
 .summary p strong{color:var(--fg);font-weight:600}
 
-/* ═══ Git Graph ═══ */
-.graph-label{font-size:.58rem;text-transform:uppercase;letter-spacing:.14em;color:var(--accent);font-weight:700;margin-bottom:16px}
-.graph-hint{font-size:.64rem;color:var(--dim);font-style:italic;margin-top:8px;text-align:center}
+/* ═══ Vertical Timeline ═══ */
+.vt{position:relative;padding:20px 0 0}
 
-.graph-container{position:relative;overflow-x:auto;padding:0 0 16px}
-.graph{position:relative;min-width:860px;height:320px}
+/* The growing line */
+.vt-line{position:absolute;left:28px;top:20px;width:2.5px;background:var(--border);height:0;border-radius:2px;transition:none}
+.vt-line.grow{animation:growLine 4s ease forwards}
+@keyframes growLine{to{height:calc(100% - 20px)}}
 
-/* SVG lines */
-.graph svg{position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none}
-.graph svg line,.graph svg path{fill:none;stroke-width:2.5;stroke-linecap:round}
-.line-main{stroke:var(--fg);stroke-opacity:.25}
-.line-detour{stroke:var(--detour);stroke-dasharray:6 4;stroke-opacity:.4}
-.line-branch{stroke:var(--branch);stroke-opacity:.3}
-.line-hack{stroke:var(--hack);stroke-dasharray:4 4;stroke-opacity:.3}
-.line-merge{stroke:var(--accent);stroke-opacity:.3}
+/* Branch lines (drawn via pseudo or SVG later) */
 
-/* Nodes */
-.node{position:absolute;text-align:center;cursor:pointer;-webkit-tap-highlight-color:transparent;z-index:2}
-.node .dot{width:18px;height:18px;border-radius:50%;border:2.5px solid var(--border);background:var(--bg);margin:0 auto 6px;transition:all .25s;position:relative}
-.node:hover .dot{border-color:var(--accent);transform:scale(1.2);box-shadow:0 0 0 4px var(--accent-soft)}
-.node.now .dot{background:var(--accent);border-color:var(--accent);box-shadow:0 0 0 5px var(--accent-soft)}
-.node.patent .dot{border-color:var(--accent);border-width:3px;background:var(--card2)}
-.node.patent .dot::after{content:'★';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:.5rem;color:var(--accent)}
-.node.hack .dot{border-style:dashed;border-color:var(--hack)}
-.node.hack:hover .dot{border-style:solid;border-color:var(--accent)}
-.node.selected .dot{border-color:var(--accent);background:var(--accent);box-shadow:0 0 0 5px var(--accent-soft);transform:scale(1.2)}
-.node .nlabel{font-size:.62rem;font-weight:700;color:var(--fg);line-height:1.25;max-width:100px;margin:0 auto}
-.node .nsub{font-size:.5rem;color:var(--dim);margin-top:1px}
-.node.hack .nlabel{color:var(--hack)}
-.node.patent .nlabel{color:var(--accent)}
+/* Node row */
+.vt-row{display:flex;align-items:flex-start;gap:20px;margin-bottom:0;padding:16px 0;opacity:0;transform:translateY(12px)}
+.vt-row.show{animation:fadeUp .45s ease forwards}
 
-/* Icon placeholder */
-.node .nicon{width:22px;height:22px;margin:0 auto 4px;border-radius:4px;background:var(--card2);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:.6rem}
+/* Node dot container */
+.vt-dot{position:relative;flex-shrink:0;width:56px;display:flex;flex-direction:column;align-items:center;cursor:pointer;z-index:2}
+.vt-dot .circle{width:20px;height:20px;border-radius:50%;border:2.5px solid var(--border);background:var(--bg);transition:all .25s}
+.vt-dot:hover .circle{border-color:var(--accent);transform:scale(1.15);box-shadow:0 0 0 4px var(--accent-soft)}
+.vt-dot .icon-img{width:26px;height:26px;border-radius:5px;object-fit:contain;transition:transform .25s}
+.vt-dot:hover .icon-img{transform:scale(1.15)}
+.vt-row.now .circle{background:var(--accent);border-color:var(--accent);box-shadow:0 0 0 5px var(--accent-soft)}
+.vt-row.patent .circle{border-color:var(--accent);border-width:3px;background:var(--card2);position:relative}
+.vt-row.patent .circle::after{content:'★';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:.5rem;color:var(--accent)}
+.vt-row.detour .circle{border-style:dashed;border-color:var(--detour)}
+.vt-row.hack .circle{border-style:dashed;border-color:var(--hack)}
+.vt-row.selected .circle,.vt-row.selected .icon-img{border-color:var(--accent);box-shadow:0 0 0 4px var(--accent-soft);transform:scale(1.15)}
 
-/* ═══ Overlay ═══ */
-.overlay{display:none;background:var(--card2);border:1px solid var(--border);border-radius:var(--radius);padding:22px 26px;margin-top:12px;box-shadow:0 8px 40px rgba(0,0,0,.08);position:relative;animation:fadeIn .25s ease}
-.overlay.show{display:block}
-@keyframes fadeIn{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:translateY(0)}}
-.overlay .close{position:absolute;top:10px;right:14px;background:none;border:none;font-size:1rem;color:var(--dim);cursor:pointer;padding:4px 8px;border-radius:8px}
-.overlay .close:hover{color:var(--fg)}
-.overlay .ov-badge{display:inline-block;font-size:.52rem;padding:3px 10px;border-radius:100px;background:var(--accent-soft);color:var(--accent);font-weight:700;margin-bottom:6px}
-.overlay h3{font-size:1rem;font-weight:700;margin-bottom:6px}
-.overlay p{font-size:.8rem;color:var(--muted);line-height:1.6;margin-bottom:6px}
-.overlay p strong{color:var(--fg)}
-.overlay ul{list-style:none;padding:0;margin:6px 0}
-.overlay ul li{font-size:.76rem;color:var(--muted);line-height:1.55;padding-left:14px;position:relative;margin-bottom:4px}
-.overlay ul li::before{content:'';position:absolute;left:0;top:8px;width:5px;height:5px;border-radius:50%;background:var(--accent)}
+/* Node body */
+.vt-body{flex:1;padding-top:2px}
+.vt-body .vt-title{font-size:.82rem;font-weight:700;color:var(--fg);cursor:pointer}
+.vt-body .vt-sub{font-size:.66rem;color:var(--dim);margin-top:1px}
+.vt-body .vt-title:hover{color:var(--accent)}
+
+/* Branch indicator */
+.vt-row.branch{padding-left:36px}
+.vt-row.branch .vt-dot{position:relative}
+.vt-row.branch .vt-dot::before{content:'';position:absolute;right:100%;top:10px;width:36px;height:2px;background:var(--branch);opacity:.3;margin-right:0}
+.vt-row.hack{padding-left:36px}
+.vt-row.hack .vt-dot::before{content:'';position:absolute;right:100%;top:10px;width:36px;height:2px;background:var(--hack);opacity:.3;border-top:2px dashed var(--hack)}
+
+/* ═══ Inline card (expands below node) ═══ */
+.vt-card{display:none;background:var(--card2);border:1px solid var(--border);border-radius:var(--radius);padding:18px 22px;margin:8px 0 4px;box-shadow:0 6px 30px rgba(0,0,0,.06);animation:fadeIn .25s ease}
+.vt-card.show{display:block}
+@keyframes fadeIn{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fadeUp{to{opacity:1;transform:translateY(0)}}
+
+.vt-card .ov-badge{display:inline-block;font-size:.5rem;padding:3px 9px;border-radius:100px;background:var(--accent-soft);color:var(--accent);font-weight:700;margin-bottom:6px}
+.vt-card h3{font-size:.95rem;font-weight:700;margin-bottom:6px}
+.vt-card p{font-size:.78rem;color:var(--muted);line-height:1.6;margin-bottom:6px}
+.vt-card p strong{color:var(--fg)}
+.vt-card ul{list-style:none;padding:0;margin:4px 0}
+.vt-card ul li{font-size:.74rem;color:var(--muted);line-height:1.55;padding-left:13px;position:relative;margin-bottom:3px}
+.vt-card ul li::before{content:'';position:absolute;left:0;top:8px;width:5px;height:5px;border-radius:50%;background:var(--accent)}
 .tag-row{display:flex;flex-wrap:wrap;gap:4px;margin-top:8px}
-.tag-row span{font-size:.52rem;padding:3px 9px;border-radius:100px;background:var(--accent-soft);color:var(--accent);font-weight:600}
+.tag-row span{font-size:.5rem;padding:3px 9px;border-radius:100px;background:var(--accent-soft);color:var(--accent);font-weight:600}
 
-/* Sub grid in overlay */
-.ov-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:10px}
-@media(max-width:520px){.ov-grid{grid-template-columns:1fr}}
-.ov-mini{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:10px 12px}
-.ov-mini h5{font-size:.72rem;font-weight:700;margin-bottom:2px}
-.ov-mini p{font-size:.66rem;color:var(--muted);line-height:1.4;margin:0}
-.ov-mini .mini-tags{display:flex;flex-wrap:wrap;gap:3px;margin-top:5px}
-.ov-mini .mini-tags span{font-size:.48rem;padding:2px 6px;border-radius:100px;background:var(--bg);color:var(--dim);font-weight:600;border:1px solid var(--border)}
+/* Sub grid */
+.ov-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:8px}
+@media(max-width:480px){.ov-grid{grid-template-columns:1fr}}
+.ov-mini{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:10px 12px}
+.ov-mini h5{font-size:.7rem;font-weight:700;margin-bottom:2px}
+.ov-mini p{font-size:.64rem;color:var(--muted);line-height:1.4;margin:0}
 
 /* Hack arch */
-.hack-arch{background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:10px 12px;font-family:var(--mono);font-size:.54rem;line-height:1.7;color:var(--muted);white-space:pre;margin:10px 0;display:inline-block}
+.hack-arch{background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:10px 12px;font-family:var(--mono);font-size:.52rem;line-height:1.7;color:var(--muted);white-space:pre;margin:8px 0;display:inline-block}
 .hack-arch em{color:var(--accent);font-style:normal;font-weight:700}
 .hack-arch strong{color:var(--fg);font-weight:700}
 
 /* Side gig */
-.side-card{display:flex;align-items:flex-start;gap:12px;padding:14px 16px;background:var(--card2);border:1px solid var(--border);border-radius:var(--radius);margin-top:20px}
-.side-card .icon{font-size:1.1rem;flex-shrink:0;margin-top:2px}
+.side-card{display:flex;align-items:flex-start;gap:10px;padding:14px 16px;background:var(--card2);border:1px solid var(--border);border-radius:var(--radius);margin-top:24px;opacity:0}
+.side-card.show{animation:fadeUp .45s ease forwards}
+.side-card .icon{font-size:1rem;flex-shrink:0;margin-top:2px}
 .side-card p{font-size:.74rem;color:var(--muted);line-height:1.55}
 .side-card strong{color:var(--fg);font-weight:600}
 
-/* Legend */
-.legend{display:flex;gap:16px;flex-wrap:wrap;margin-top:12px;padding:10px 0}
-.legend-item{display:flex;align-items:center;gap:5px;font-size:.54rem;color:var(--dim);font-weight:600}
-.legend-item .leg-line{width:20px;height:2.5px;border-radius:2px}
-.leg-main{background:var(--fg);opacity:.25}
-.leg-detour{background:var(--detour);opacity:.4}
-.leg-branch{background:var(--branch);opacity:.3}
-.leg-hack{background:var(--hack);opacity:.3}
+/* Start button */
+.start-btn{display:block;margin:0 auto;padding:10px 28px;background:var(--accent);color:#fff;border:none;border-radius:100px;font-size:.82rem;font-weight:600;cursor:pointer;font-family:var(--font);transition:all .2s;box-shadow:0 4px 16px rgba(196,90,60,.2)}
+.start-btn:hover{background:var(--accent2);transform:translateY(-1px);box-shadow:0 6px 20px rgba(196,90,60,.3)}
+.start-btn.hidden{display:none}
 
 @media(max-width:500px){
   .header h1{font-size:1.5rem}
-  .page{padding:36px 16px 36px}
+  .page{padding:36px 16px 48px}
 }
 </style>
 </head>
@@ -128,255 +130,197 @@ body{font-family:var(--font);background:var(--bg);color:var(--fg);line-height:1.
 <!-- Summary -->
 <div class="summary">
   <p>I am energized by ambiguous and ambitious technical problems — and have <strong>a proven track record of turning them into shipped products at scale</strong>.</p>
-  <p>From authoring a solo proposal that became an SLT-funded agentic charter, to owning grounding quality for Copilot today, I think in <strong>falsifiable hypotheses and feasible prototypes</strong>, measure what matters, and bring people along across orgs.</p>
-  <p>I also seek adventures outside work — I came back from a multi-year tech break as a <strong>professional screenplay writer</strong>.</p>
+  <p>I think in <strong>falsifiable hypotheses and feasible prototypes</strong>, measure what matters, and bring people along across orgs.</p>
 </div>
 
-<!-- ═══ Git-style Graph ═══ -->
-<div>
-  <div class="graph-label">The Arc — click any node</div>
+<!-- Start -->
+<button class="start-btn" id="startBtn" onclick="startJourney()">Begin the journey ↓</button>
 
-  <div class="graph-container">
-    <div class="graph">
+<!-- ═══ Vertical Timeline ═══ -->
+<div class="vt" id="timeline" style="display:none">
+  <div class="vt-line" id="vtLine"></div>
 
-      <!-- SVG lines connecting nodes -->
-      <svg viewBox="0 0 860 320" preserveAspectRatio="none">
-        <!-- Main line: OneNote → Creative → OneNote2 → M365 Founder → MAI Copilot -->
-        <line class="line-main" x1="60" y1="80" x2="180" y2="80"/>
-        <line class="line-detour" x1="180" y1="80" x2="300" y2="80"/>
-        <line class="line-main" x1="300" y1="80" x2="420" y2="80"/>
-        <line class="line-main" x1="420" y1="80" x2="580" y2="80"/>
-        <!-- Merge line from branch back to mainline -->
-        <path class="line-merge" d="M680,80 L740,80"/>
-        <line class="line-main" x1="740" y1="80" x2="800" y2="80"/>
-
-        <!-- Branch up: Collab Services from M365 Founder -->
-        <path class="line-branch" d="M490,80 C490,80 510,30 560,30"/>
-        <line class="line-branch" x1="560" y1="30" x2="660" y2="30"/>
-        <!-- Collab Services merge down -->
-        <path class="line-merge" d="M660,30 C660,30 700,30 740,80"/>
-
-        <!-- Branch down: Collab AI from M365 Founder -->
-        <path class="line-branch" d="M520,80 C520,80 540,140 580,140"/>
-        <line class="line-branch" x1="580" y1="140" x2="660" y2="140"/>
-        <!-- Collab AI merge up -->
-        <path class="line-merge" d="M660,140 C660,140 700,140 740,80"/>
-
-        <!-- Patent markers on mainline -->
-        <circle cx="350" cy="80" r="3" fill="var(--accent)" opacity=".4"/>
-        <circle cx="620" cy="80" r="3" fill="var(--accent)" opacity=".4"/>
-
-        <!-- Hack/Envision parallel track -->
-        <line class="line-hack" x1="420" y1="230" x2="620" y2="230"/>
-        <line class="line-hack" x1="620" y1="230" x2="800" y2="230"/>
-      </svg>
-
-      <!-- ── Main line nodes ── -->
-      <div class="node" style="left:40px;top:62px" data-card="card-onenote1">
-        <div class="dot"></div>
-        <div class="nlabel">OneNote</div>
-        <div class="nsub">Platform · SWE</div>
-      </div>
-
-      <div class="node" style="left:160px;top:62px" data-card="card-creative">
-        <div class="dot" style="border-style:dashed;border-color:var(--detour)"></div>
-        <div class="nlabel" style="color:var(--detour)">Creative Pursuits</div>
-        <div class="nsub">detour</div>
-      </div>
-
-      <div class="node" style="left:280px;top:62px" data-card="card-onenote2">
-        <div class="dot"></div>
-        <div class="nlabel">OneNote</div>
-        <div class="nsub">Rearchitect</div>
-      </div>
-
-      <div class="node" style="left:400px;top:62px" data-card="card-founder">
-        <div class="dot" style="border-color:var(--accent);border-width:3px"></div>
-        <div class="nlabel">M365 Founder</div>
-        <div class="nsub">0→1 Charter</div>
-      </div>
-
-      <!-- Patent node -->
-      <div class="node patent" style="left:560px;top:62px" data-card="card-patents">
-        <div class="dot"></div>
-        <div class="nlabel">Patents</div>
-        <div class="nsub">3 US Patents</div>
-      </div>
-
-      <!-- MAI Copilot (now) -->
-      <div class="node now" style="left:725px;top:62px" data-card="card-copilot">
-        <div class="dot"></div>
-        <div class="nlabel">MAI Copilot</div>
-        <div class="nsub">Grounding · now</div>
-      </div>
-
-      <!-- ── Branch: Collab Services (top) ── -->
-      <div class="node" style="left:540px;top:10px" data-card="card-collabsvc">
-        <div class="dot" style="border-color:var(--branch);width:14px;height:14px"></div>
-        <div class="nlabel" style="font-size:.56rem">Collab Services</div>
-        <div class="nsub">60M sessions</div>
-      </div>
-
-      <!-- ── Branch: Collab AI (bottom-ish) ── -->
-      <div class="node" style="left:560px;top:122px" data-card="card-collabai">
-        <div class="dot" style="border-color:var(--branch);width:14px;height:14px"></div>
-        <div class="nlabel" style="font-size:.56rem">Collab AI</div>
-        <div class="nsub">2 Agents</div>
-      </div>
-
-      <!-- ── Hack/Envision parallel track ── -->
-      <div class="node hack" style="left:400px;top:212px" data-card="card-hack22">
-        <div class="dot"></div>
-        <div class="nlabel">Hack '22</div>
-        <div class="nsub">Envision</div>
-      </div>
-
-      <div class="node hack" style="left:600px;top:212px" data-card="card-envision">
-        <div class="dot"></div>
-        <div class="nlabel">Hack '24</div>
-        <div class="nsub">Holistic Copilot</div>
-      </div>
-
-      <div class="node hack" style="left:780px;top:212px" data-card="card-tinkerer">
-        <div class="dot"></div>
-        <div class="nlabel">Tinkerer</div>
-        <div class="nsub">Agents</div>
-      </div>
-
+  <!-- 1. OneNote Platform -->
+  <div class="vt-row" data-delay="0" id="row-on1">
+    <div class="vt-dot" onclick="toggle('card-on1','row-on1')">
+      <img class="icon-img" id="onenote-icon" src="" alt="OneNote">
+    </div>
+    <div class="vt-body">
+      <div class="vt-title" onclick="toggle('card-on1','row-on1')">OneNote — Platform & SWE</div>
+      <div class="vt-sub">Rendering · Telemetry · Cross-Platform</div>
     </div>
   </div>
-
-  <!-- Legend -->
-  <div class="legend">
-    <div class="legend-item"><div class="leg-line leg-main"></div>Career mainline</div>
-    <div class="legend-item"><div class="leg-line leg-detour" style="border-top:2px dashed var(--detour)"></div>Detour</div>
-    <div class="legend-item"><div class="leg-line leg-branch"></div>Branch</div>
-    <div class="legend-item"><div class="leg-line leg-hack" style="border-top:2px dashed var(--hack)"></div>Envision track</div>
-  </div>
-
-  <div class="graph-hint">↑ Click any node to see details</div>
-
-  <!-- ═══ Overlay cards ═══ -->
-
-  <div class="overlay" id="card-onenote1">
-    <button class="close" onclick="closeCard()">✕</button>
+  <div class="vt-card" id="card-on1">
     <div class="ov-badge">SWE → PM</div>
-    <h3>OneNote Platform — Rendering & Telemetry</h3>
+    <h3>Rendering Engine & Telemetry Platform</h3>
     <ul>
-      <li>Led 12-engineer team in <strong>full-stack architecture redesign</strong> of Canvas/Rendering across Windows, Mac, iOS</li>
-      <li>Built the <strong>telemetry/analytics platform</strong> used across all OneNote endpoints</li>
-      <li>Hands-on with <strong>SDKs, APIs, cross-platform tooling</strong> — transitioned from engineering to product</li>
+      <li>Led 12-engineer team in <strong>full-stack Canvas/Rendering redesign</strong> across Win, Mac, iOS</li>
+      <li>Built the <strong>telemetry platform</strong> used across all OneNote endpoints</li>
+      <li>Hands-on with <strong>SDKs, APIs, cross-platform tooling</strong></li>
     </ul>
-    <div class="tag-row"><span>Rendering Engine</span><span>Telemetry</span><span>Cross-Platform</span><span>SDK/API</span></div>
+    <div class="tag-row"><span>Rendering</span><span>Telemetry</span><span>SDK/API</span><span>Cross-Platform</span></div>
   </div>
 
-  <div class="overlay" id="card-creative">
-    <button class="close" onclick="closeCard()">✕</button>
+  <!-- 2. Creative Pursuits (detour) -->
+  <div class="vt-row detour" data-delay="400" id="row-creative">
+    <div class="vt-dot" onclick="toggle('card-creative','row-creative')">
+      <span class="circle"></span>
+    </div>
+    <div class="vt-body">
+      <div class="vt-title" onclick="toggle('card-creative','row-creative')">Creative Pursuits — Detour</div>
+      <div class="vt-sub">Screenplays · Teaching · Multi-year break</div>
+    </div>
+  </div>
+  <div class="vt-card" id="card-creative">
     <div class="ov-badge">Detour</div>
-    <h3>Creative Pursuits — Screenplays & Teaching</h3>
+    <h3>Screenplays & Teaching</h3>
     <ul>
-      <li><strong>Screenplay writer</strong> for Tamil-language theater — story structure, audience instinct, narrative economy</li>
+      <li><strong>Screenplay writer</strong> for Tamil-language theater</li>
       <li><strong>Tamil teacher</strong> for first-generation American kids</li>
-      <li>Came back with sharper product instincts and a bias for narrative clarity</li>
+      <li>Came back with sharper product instincts and narrative clarity</li>
     </ul>
   </div>
 
-  <div class="overlay" id="card-onenote2">
-    <button class="close" onclick="closeCard()">✕</button>
+  <!-- 3. OneNote Rearchitect -->
+  <div class="vt-row" data-delay="800" id="row-on2">
+    <div class="vt-dot" onclick="toggle('card-on2','row-on2')">
+      <span class="circle"></span>
+    </div>
+    <div class="vt-body">
+      <div class="vt-title" onclick="toggle('card-on2','row-on2')">OneNote — Platform Rearchitect</div>
+      <div class="vt-sub">Augmentation Pipeline · Performance · Scale</div>
+    </div>
+  </div>
+  <div class="vt-card" id="card-on2">
     <div class="ov-badge">Platform Rearchitect</div>
-    <h3>OneNote — Augmentation Platform Redesign</h3>
+    <h3>OneNote Augmentation Pipeline</h3>
     <ul>
-      <li>Redesigned <strong>OneNote's Augmentation Pipeline</strong> — image & ink processing, performance, scale</li>
+      <li>Redesigned <strong>image & ink processing pipeline</strong> — performance and scale</li>
       <li>First platform rearchitect: shared infrastructure consumed by multiple surfaces</li>
     </ul>
-    <div class="tag-row"><span>Platform</span><span>Pipeline</span><span>Performance</span><span>Scale</span></div>
+    <div class="tag-row"><span>Platform</span><span>Pipeline</span><span>Performance</span></div>
   </div>
 
-  <div class="overlay" id="card-founder">
-    <button class="close" onclick="closeCard()">✕</button>
+  <!-- 4. M365 Founder -->
+  <div class="vt-row" data-delay="1200" id="row-founder">
+    <div class="vt-dot" onclick="toggle('card-founder','row-founder')">
+      <span class="circle" style="border-color:var(--accent);border-width:3px"></span>
+    </div>
+    <div class="vt-body">
+      <div class="vt-title" onclick="toggle('card-founder','row-founder')">M365 Modern Collab — 0→1 Founder PM</div>
+      <div class="vt-sub">Charter · Vision · 10+ Orgs</div>
+    </div>
+  </div>
+  <div class="vt-card" id="card-founder">
     <div class="ov-badge">0→1 Founder PM</div>
-    <h3>M365 Modern Collab — Charter & Vision</h3>
+    <h3>Agentic Charter & Cross-Org Vision</h3>
     <ul>
-      <li><strong>Authored "AI-Productivity Paradox" proposal</strong> — JTBD research → SLT-funded charter → multi-year roadmap</li>
-      <li>Rallied <strong>10+ product orgs</strong> across apps & platform (OAI, WXP, Automations, OneDrive Substrate)</li>
+      <li><strong>"AI-Productivity Paradox" proposal</strong> — JTBD research → SLT-funded charter → multi-year roadmap</li>
+      <li>Rallied <strong>10+ product orgs</strong> across apps & platform</li>
       <li>Designed <strong>app-agnostic reasoning spine</strong> for Word, Excel, PPT, Teams</li>
     </ul>
     <div class="tag-row"><span>0→1</span><span>Charter</span><span>Cross-Org</span><span>Platform Strategy</span></div>
   </div>
 
-  <div class="overlay" id="card-collabsvc">
-    <button class="close" onclick="closeCard()">✕</button>
+  <!-- 5. Branch: Collab Services -->
+  <div class="vt-row branch" data-delay="1600" id="row-collabsvc">
+    <div class="vt-dot" onclick="toggle('card-collabsvc','row-collabsvc')">
+      <span class="circle" style="width:15px;height:15px;border-color:var(--branch)"></span>
+    </div>
+    <div class="vt-body">
+      <div class="vt-title" onclick="toggle('card-collabsvc','row-collabsvc')">↳ Collab Services — 60M Sessions/Day</div>
+      <div class="vt-sub">Scale · COGS Optimization</div>
+    </div>
+  </div>
+  <div class="vt-card" id="card-collabsvc" style="margin-left:36px">
     <div class="ov-badge">Branch: Services</div>
-    <h3>Collab Services — Scale & Cost</h3>
+    <h3>Platform Scale & Cost</h3>
     <ul>
-      <li>Owned Office Collab at <strong>60M sessions/day</strong></li>
-      <li>Reduced COGS from <strong>0.41¢ to 0.1¢/session</strong></li>
-      <li>Platform economics at scale — infrastructure that 50+ apps consume</li>
+      <li>Office Collab at <strong>60M sessions/day</strong></li>
+      <li>COGS <strong>0.41¢ → 0.1¢/session</strong></li>
+      <li>Infrastructure consumed by 50+ app surfaces</li>
     </ul>
     <div class="tag-row"><span>60M Scale</span><span>COGS</span><span>Platform Economics</span></div>
   </div>
 
-  <div class="overlay" id="card-collabai">
-    <button class="close" onclick="closeCard()">✕</button>
+  <!-- 6. Branch: Collab AI -->
+  <div class="vt-row branch" data-delay="1900" id="row-collabai">
+    <div class="vt-dot" onclick="toggle('card-collabai','row-collabai')">
+      <span class="circle" style="width:15px;height:15px;border-color:var(--branch)"></span>
+    </div>
+    <div class="vt-body">
+      <div class="vt-title" onclick="toggle('card-collabai','row-collabai')">↳ Collab AI — 2 Agents Shipped</div>
+      <div class="vt-sub">E2E · Orchestration</div>
+    </div>
+  </div>
+  <div class="vt-card" id="card-collabai" style="margin-left:36px">
     <div class="ov-badge">Branch: AI</div>
-    <h3>Collab AI — Agents & Orchestration</h3>
+    <h3>Agent Orchestration</h3>
     <ul>
-      <li>E2E bootstrapped <strong>2 collab agents</strong> — opportunity ID → conceptualization → spec → build → ship → metrics</li>
-      <li>Designed agent orchestration patterns that became <strong>patent material</strong></li>
+      <li>E2E bootstrapped <strong>2 collab agents</strong> — opportunity → concept → spec → build → ship → metrics</li>
+      <li>Agent orchestration patterns became <strong>patent material</strong></li>
     </ul>
     <div class="tag-row"><span>Agents</span><span>Orchestration</span><span>E2E Delivery</span></div>
   </div>
 
-  <div class="overlay" id="card-patents">
-    <button class="close" onclick="closeCard()">✕</button>
+  <!-- 7. Patents -->
+  <div class="vt-row patent" data-delay="2300" id="row-patents">
+    <div class="vt-dot" onclick="toggle('card-patents','row-patents')">
+      <span class="circle"></span>
+    </div>
+    <div class="vt-body">
+      <div class="vt-title" onclick="toggle('card-patents','row-patents')">3 US Patents — Core Inventor</div>
+      <div class="vt-sub">GenAI Agents · Collaboration · Page Sharing</div>
+    </div>
+  </div>
+  <div class="vt-card" id="card-patents">
     <div class="ov-badge">Core Inventor</div>
     <h3>3 US Patents</h3>
     <ul>
-      <li><strong>Patent — GenAI Agent Collaboration</strong> — multi-agent orchestration for document collab</li>
-      <li><strong>Patent — GenAI Agent Orchestration</strong> — agentic system design for cross-app reasoning</li>
-      <li><strong>Patent — OneNote Page Sharing</strong> — real-time collaborative UX</li>
+      <li><strong>GenAI Agent Collaboration</strong> — multi-agent orchestration for document collab</li>
+      <li><strong>GenAI Agent Orchestration</strong> — agentic system design for cross-app reasoning</li>
+      <li><strong>OneNote Page Sharing</strong> — real-time collaborative UX</li>
     </ul>
     <div class="tag-row"><span>GenAI Agents</span><span>Orchestration</span><span>Collaboration</span></div>
   </div>
 
-  <div class="overlay" id="card-copilot">
-    <button class="close" onclick="closeCard()">✕</button>
+  <!-- 8. MAI Copilot (now) -->
+  <div class="vt-row now" data-delay="2700" id="row-copilot">
+    <div class="vt-dot" onclick="toggle('card-copilot','row-copilot')">
+      <img class="icon-img" id="copilot-icon" src="" alt="Copilot">
+    </div>
+    <div class="vt-body">
+      <div class="vt-title" onclick="toggle('card-copilot','row-copilot')">MAI Copilot — Grounding & Trust</div>
+      <div class="vt-sub">Current role · RAG · EVALS · Responsible AI</div>
+    </div>
+  </div>
+  <div class="vt-card" id="card-copilot">
     <div class="ov-badge">Current Role</div>
-    <h3>MAI Copilot — Grounding & Trust</h3>
+    <h3>Grounding & Trust — DRI</h3>
     <ul>
-      <li><strong>DRI for grounding quality</strong> — RAG stack, trust & relevance evaluation across 1P & 3P</li>
-      <li>Defined <strong>"Needs Met" competitive framework</strong> vs. Perplexity & Google</li>
-      <li><strong>17pt defect reduction · 4pt satisfaction lift</strong> — hypothesis-driven experimentation</li>
-      <li>Shipped <strong>automated EVALS pipelines</strong> — data-driven quality gates at scale</li>
-      <li>Built <strong>trust & quality frameworks</strong> with Applied Science & Policy — responsible AI</li>
+      <li><strong>DRI for grounding quality</strong> — RAG stack, trust & relevance across 1P & 3P</li>
+      <li><strong>"Needs Met" competitive framework</strong> vs. Perplexity & Google</li>
+      <li><strong>17pt defect reduction · 4pt satisfaction lift</strong> — hypothesis-driven</li>
+      <li><strong>Automated EVALS pipelines</strong> — quality gates at scale</li>
+      <li><strong>Trust & quality frameworks</strong> with Applied Science & Policy</li>
     </ul>
     <div class="tag-row"><span>RAG</span><span>EVALS</span><span>Grounding</span><span>Competitive Parity</span><span>Responsible AI</span></div>
   </div>
 
-  <div class="overlay" id="card-hack22">
-    <button class="close" onclick="closeCard()">✕</button>
-    <div class="ov-badge">Hackathon</div>
-    <h3>Early Envision Work</h3>
-    <p>Started the practice of building to think — hackathon prototypes that pressure-test product ideas before committing orgs.</p>
-    <div class="ov-grid">
-      <div class="ov-mini">
-        <h5>One Copilot — Cross-App Agent UX</h5>
-        <p>Multi-agent orchestration across M365 — surface handoff, shared context, proactive intelligence.</p>
-        <div class="mini-tags"><span>Multi-Agent</span><span>Cross-App</span></div>
-      </div>
-      <div class="ov-mini">
-        <h5>Multimodal Document Editing</h5>
-        <p>Voice + natural language as input modalities — contextual rewrites, flow-preserving interaction.</p>
-        <div class="mini-tags"><span>Multimodal</span><span>Voice UX</span></div>
-      </div>
+  <!-- 9. Envision (parallel track) -->
+  <div class="vt-row hack" data-delay="3100" id="row-envision">
+    <div class="vt-dot" onclick="toggle('card-envision','row-envision')">
+      <span class="circle"></span>
+    </div>
+    <div class="vt-body">
+      <div class="vt-title" onclick="toggle('card-envision','row-envision')">Envision — Hackathons & POC's</div>
+      <div class="vt-sub">Parallel track since 2022 · Holistic Copilot · Prototypes</div>
     </div>
   </div>
-
-  <div class="overlay" id="card-envision">
-    <button class="close" onclick="closeCard()">✕</button>
-    <div class="ov-badge">🏆 Hackathon 2024</div>
-    <h3>Holistic Copilot — Connectors & Extensibility</h3>
-    <p>Copilot as a cross-boundary AI companion — <strong>3rd-party connectors</strong> (Fitbit, calendars, nutrition), composable <strong>agent library</strong>, privacy-respecting data boundaries. All on the <strong>Copilot connector platform</strong>.</p>
+  <div class="vt-card" id="card-envision" style="margin-left:36px">
+    <div class="ov-badge">🏆 Hackathons & POC's</div>
+    <h3>Holistic Copilot + Interactive Prototypes</h3>
+    <p><strong>Hackathon 2024:</strong> Copilot as cross-boundary AI companion — 3P connectors, composable agent library, privacy-respecting boundaries.</p>
     <div class="hack-arch"><em>Holistic Copilot</em>
 ┌────────────────────┐
 │  <strong>Copilot Homepage</strong>   │
@@ -386,82 +330,107 @@ body{font-family:var(--font);background:var(--bg);color:var(--fg);line-height:1.
 │    └────┬───┘     │
 │   <em>Connectors</em>       │
 │  Fitbit · Nutrition │
-│  Calendar · Tasks  │
 │   <em>Agent Library</em>   │
 │  Shared · Personal │
 └────────────────────┘</div>
     <div class="ov-grid">
-      <div class="ov-mini">
-        <h5>Agent Coherence Dashboard</h5>
-        <p>Trust & quality — coherence scoring, grounding accuracy, gravity metrics.</p>
-        <div class="mini-tags"><span>EVALS</span><span>Agent Quality</span></div>
-      </div>
-      <div class="ov-mini">
-        <h5>Grounding Playground</h5>
-        <p>RAG experimentation — snippet approaches, token budgets, precision.</p>
-        <div class="mini-tags"><span>RAG</span><span>Experimentation</span></div>
-      </div>
+      <div class="ov-mini"><h5>Cross-App Agent UX</h5><p>Multi-agent orchestration, surface handoff, shared context.</p></div>
+      <div class="ov-mini"><h5>Multimodal Editing</h5><p>Voice + NL as input modalities for document editing.</p></div>
+      <div class="ov-mini"><h5>Coherence Dashboard</h5><p>Trust & quality — coherence scoring, grounding accuracy.</p></div>
+      <div class="ov-mini"><h5>Grounding Playground</h5><p>RAG experimentation — snippets, tokens, precision.</p></div>
     </div>
     <div class="tag-row" style="margin-top:10px"><span>Connectors</span><span>3P Extensibility</span><span>Agent Library</span><span>Copilot Platform</span></div>
   </div>
 
-  <div class="overlay" id="card-tinkerer">
-    <button class="close" onclick="closeCard()">✕</button>
-    <div class="ov-badge">Building Now</div>
-    <h3>Tinkerer — Agents I'm Building</h3>
-    <p>Beyond prototypes — working agents that demonstrate platform thinking.</p>
-    <div class="ov-grid">
-      <div class="ov-mini">
-        <h5>Multi-Agent Workflow</h5>
-        <p>Agents collaborating on a task — handoffs, shared context, conflict resolution.</p>
-        <div class="mini-tags"><span>Agent Collab</span><span>Orchestration</span></div>
-      </div>
-      <div class="ov-mini">
-        <h5>Grounding Quality Evaluator</h5>
-        <p>Auto-EVALS agent — grounding accuracy, citation quality, answer relevance.</p>
-        <div class="mini-tags"><span>EVALS</span><span>Grounding</span></div>
-      </div>
+  <!-- 10. Tinkerer -->
+  <div class="vt-row hack" data-delay="3500" id="row-tinkerer">
+    <div class="vt-dot" onclick="toggle('card-tinkerer','row-tinkerer')">
+      <span class="circle"></span>
     </div>
-    <p style="margin-top:10px;font-size:.7rem;font-style:italic;color:var(--dim)">Work in progress — happy to demo in conversation.</p>
+    <div class="vt-body">
+      <div class="vt-title" onclick="toggle('card-tinkerer','row-tinkerer')">Tinkerer — Agents I'm Building</div>
+      <div class="vt-sub">Multi-agent workflow · Grounding evaluator</div>
+    </div>
+  </div>
+  <div class="vt-card" id="card-tinkerer" style="margin-left:36px">
+    <div class="ov-badge">Building Now</div>
+    <h3>Working Agents</h3>
+    <div class="ov-grid">
+      <div class="ov-mini"><h5>Multi-Agent Workflow</h5><p>Agents collaborating — handoffs, shared context, conflict resolution.</p></div>
+      <div class="ov-mini"><h5>Grounding Evaluator</h5><p>Auto-EVALS — grounding accuracy, citation quality, relevance scoring.</p></div>
+    </div>
+    <p style="margin-top:10px;font-size:.68rem;font-style:italic;color:var(--dim)">Work in progress — happy to demo in conversation.</p>
   </div>
 
-</div>
+</div><!-- end .vt -->
 
 <!-- Side gig -->
-<div class="side-card">
+<div class="side-card" id="sideGig">
   <div class="icon">✍️</div>
   <p><strong>Side gig: Screenplay writer</strong> for Tamil-language theater — story structure, audience instinct, and narrative economy inform how I build products.</p>
 </div>
 
-</div>
+</div><!-- end .page -->
 
 <script>
-const nodes = document.querySelectorAll('.node');
-const overlays = document.querySelectorAll('.overlay');
+// Icon base64 injection (kept in JS to avoid bloating HTML)
+const ICONS = {
+  onenote: 'ONENOTE_B64',
+  copilot: 'COPILOT_B64'
+};
 
-nodes.forEach(node => {
-  node.addEventListener('click', () => {
-    const target = node.dataset.card;
-    const card = document.getElementById(target);
-    const isOpen = card && card.classList.contains('show');
+document.getElementById('onenote-icon').src = 'data:image/png;base64,' + ICONS.onenote;
+document.getElementById('copilot-icon').src = 'data:image/png;base64,' + ICONS.copilot;
 
-    overlays.forEach(o => o.classList.remove('show'));
-    nodes.forEach(n => n.classList.remove('selected'));
+// Timeline animation
+function startJourney() {
+  document.getElementById('startBtn').classList.add('hidden');
+  const tl = document.getElementById('timeline');
+  tl.style.display = 'block';
 
-    if (!isOpen && card) {
-      card.classList.add('show');
-      node.classList.add('selected');
-      setTimeout(() => card.scrollIntoView({ behavior:'smooth', block:'nearest' }), 50);
-    }
+  // Grow the line
+  requestAnimationFrame(() => {
+    document.getElementById('vtLine').classList.add('grow');
   });
-});
 
-function closeCard() {
-  overlays.forEach(o => o.classList.remove('show'));
-  nodes.forEach(n => n.classList.remove('selected'));
+  // Reveal nodes one by one
+  const rows = tl.querySelectorAll('.vt-row');
+  rows.forEach(row => {
+    const delay = parseInt(row.dataset.delay || 0);
+    setTimeout(() => {
+      row.classList.add('show');
+    }, delay + 200);
+  });
+
+  // Show side gig at the end
+  setTimeout(() => {
+    document.getElementById('sideGig').classList.add('show');
+  }, 4000);
 }
 
-document.addEventListener('keydown', e => { if (e.key==='Escape') closeCard(); });
+// Toggle card
+function toggle(cardId, rowId) {
+  const card = document.getElementById(cardId);
+  const row = document.getElementById(rowId);
+  const isOpen = card.classList.contains('show');
+
+  // Close all
+  document.querySelectorAll('.vt-card').forEach(c => c.classList.remove('show'));
+  document.querySelectorAll('.vt-row').forEach(r => r.classList.remove('selected'));
+
+  if (!isOpen) {
+    card.classList.add('show');
+    row.classList.add('selected');
+    setTimeout(() => card.scrollIntoView({ behavior:'smooth', block:'nearest' }), 50);
+  }
+}
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') {
+    document.querySelectorAll('.vt-card').forEach(c => c.classList.remove('show'));
+    document.querySelectorAll('.vt-row').forEach(r => r.classList.remove('selected'));
+  }
+});
 </script>
 </body>
 </html>

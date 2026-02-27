@@ -4,125 +4,68 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Hema Sridharan — Senior PM, Microsoft Copilot</title>
+<meta name="description" content="Hema Sridharan — Senior PM at Microsoft Copilot. Grounding, orchestration, agentic AI. 3 US Patents. Builder.">
 <style>
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
 :root{
-  --bg:#0d1117;--bg2:#161b22;--fg:#e6edf3;--muted:#8b949e;--dim:#484f58;
-  --accent:#7c3aed;--accent2:#a78bfa;--accent-soft:rgba(124,58,237,.12);
-  --border:#30363d;--card:#161b22;--card2:#1c2129;
-  --font:'Segoe UI',system-ui,-apple-system,sans-serif;
+  --bg:#fafafa;--fg:#1a1a1a;--muted:#555;--dim:#999;--accent:#4f46e5;--accent-soft:#eef2ff;
+  --border:#e5e5e5;--card:#fff;--font:'Segoe UI',system-ui,-apple-system,sans-serif;
   --mono:'Cascadia Code','Fira Code','SF Mono',monospace;
-  --max:980px;--radius:10px;
+  --max:960px;--radius:8px;
 }
 html{font-size:15px;scroll-behavior:smooth}
-body{font-family:var(--font);background:var(--bg);color:var(--fg);line-height:1.55;-webkit-font-smoothing:antialiased}
-a{color:var(--accent2);text-decoration:none}
+body{font-family:var(--font);background:var(--bg);color:var(--fg);line-height:1.55;-webkit-font-smoothing:antialiased;padding:0 20px}
+a{color:var(--accent);text-decoration:none}
 a:hover{text-decoration:underline}
 ::selection{background:var(--accent);color:#fff}
-
-/* Layout */
-.page{max-width:var(--max);margin:0 auto;padding:0 24px 48px}
-section{margin-bottom:28px}
-
-/* ═══ Hero banner ═══ */
-.hero{background:linear-gradient(135deg,#0d1117 0%,#1a1040 50%,#0d1117 100%);border-bottom:1px solid var(--border);padding:48px 24px 36px;margin-bottom:32px}
-.hero-inner{max-width:var(--max);margin:0 auto}
-.hero h1{font-size:2.2rem;font-weight:700;letter-spacing:-.04em;line-height:1.1;margin-bottom:6px}
-.hero h1 span{background:linear-gradient(135deg,var(--accent2),#c084fc);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-.hero .subtitle{font-size:.88rem;color:var(--muted);line-height:1.5;margin-bottom:16px}
-.hero .subtitle strong{color:var(--fg);font-weight:600}
-.hero .hero-pills{display:flex;flex-wrap:wrap;gap:6px}
-.hero .hero-pills span{font-size:.66rem;padding:4px 12px;border-radius:100px;background:var(--accent-soft);color:var(--accent2);font-weight:600;border:1px solid rgba(124,58,237,.25)}
-
-/* ═══ Summary ═══ */
-.summary{list-style:none;padding:0;margin:0 0 0 0}
-.summary li{font-size:.86rem;color:var(--muted);line-height:1.6;margin-bottom:8px;padding-left:16px;position:relative}
-.summary li::before{content:'';position:absolute;left:0;top:10px;width:6px;height:6px;border-radius:50%;background:var(--accent2)}
-
-/* ═══ Section labels ═══ */
-.sl{font-size:.58rem;text-transform:uppercase;letter-spacing:.14em;color:var(--accent2);font-weight:700;margin-bottom:10px}
-
-/* ═══ Timeline ═══ */
-.timeline-line{position:relative;display:flex;justify-content:space-between;padding:0;margin:0}
+.page{max-width:var(--max);margin:0 auto;padding:48px 0 36px}
+section{margin-bottom:32px}
+h1{font-size:2rem;font-weight:700;letter-spacing:-.04em;line-height:1.1;margin-bottom:4px}
+h1 span{background:linear-gradient(135deg,var(--accent),#7c3aed);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.role{font-size:.86rem;color:var(--muted);line-height:1.45}
+.role strong{color:var(--fg);font-weight:600}
+.summary{font-size:.88rem;color:var(--muted);line-height:1.6;margin-top:14px;list-style:none;padding-left:0}
+.summary li{margin-bottom:8px;padding-left:16px;position:relative}
+.summary li::before{content:'';position:absolute;left:0;top:9px;width:6px;height:6px;border-radius:50%;background:var(--accent)}
+.sl{font-size:.6rem;letter-spacing:.12em;color:var(--accent);font-weight:700;margin-bottom:10px;text-transform:uppercase}
+.signals{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--border);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden}
+@media(min-width:520px){.signals{grid-template-columns:repeat(4,1fr)}}
+.sig{background:var(--card);padding:10px 12px;min-width:0}
+.sig-label{font-size:.58rem;text-transform:uppercase;letter-spacing:.1em;color:var(--dim);font-weight:600;margin-bottom:2px}
+.sig-value{font-size:.76rem;font-weight:600;color:var(--fg);line-height:1.35}
+.sig-value em{font-style:normal;color:var(--accent);font-weight:700}
+.built-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+@media(max-width:480px){.built-grid{grid-template-columns:1fr}}
+.built{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:15px}
+.built-num{font-family:var(--mono);font-size:.6rem;color:var(--accent);font-weight:700;margin-bottom:3px}
+.built h4{font-size:.86rem;font-weight:700;margin-bottom:2px}
+.built p{font-size:.74rem;color:var(--muted);line-height:1.5}
+.built .tags{margin-top:7px;display:flex;flex-wrap:wrap;gap:4px}
+.built .tags span{font-size:.58rem;padding:2px 7px;border-radius:100px;background:#f3f4f6;color:#6b7280;font-weight:600}
+.side{display:flex;align-items:flex-start;gap:12px;padding:14px 16px;background:var(--card);border:1px solid var(--border);border-radius:var(--radius)}
+.side-icon{font-size:1.2rem;line-height:1;flex-shrink:0;margin-top:1px}
+.side p{font-size:.78rem;color:var(--muted);line-height:1.5}
+.side strong{color:var(--fg);font-weight:600}
+/* ── Line diagram ── */
+.timeline-line{position:relative;display:flex;justify-content:space-between;align-items:flex-start;padding:0;margin:0}
 .timeline-line::before{content:'';position:absolute;top:6px;left:0;right:0;height:2px;background:var(--border)}
 .tl-node{position:relative;text-align:center;flex:1}
 .tl-node::before{content:'';display:block;width:13px;height:13px;border-radius:50%;border:2.5px solid var(--accent);background:var(--bg);margin:0 auto 6px;position:relative;z-index:1}
-.tl-node.active::before{background:var(--accent);box-shadow:0 0 0 4px var(--accent-soft)}
-.tl-node .tl-label{font-size:.66rem;font-weight:700;color:var(--fg);line-height:1.3}
-.tl-node .tl-sub{font-size:.56rem;color:var(--dim);margin-top:1px}
-
-/* ═══ Signal grid ═══ */
-.signals{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--border);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden}
-@media(min-width:520px){.signals{grid-template-columns:repeat(4,1fr)}}
-.sig{background:var(--card);padding:10px 12px}
-.sig-label{font-size:.56rem;text-transform:uppercase;letter-spacing:.1em;color:var(--dim);font-weight:600;margin-bottom:2px}
-.sig-value{font-size:.74rem;font-weight:600;color:var(--fg);line-height:1.35}
-.sig-value em{font-style:normal;color:var(--accent2);font-weight:700}
-
-/* ═══ Hackathon spotlight ═══ */
-.hack{background:linear-gradient(135deg,var(--card) 0%,#1a1530 100%);border:1px solid var(--border);border-radius:var(--radius);padding:24px;display:flex;gap:24px;align-items:flex-start}
-@media(max-width:600px){.hack{flex-direction:column}}
-.hack-visual{flex-shrink:0;width:220px;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:16px;text-align:center}
-.hack-visual .arch{font-family:var(--mono);font-size:.6rem;color:var(--muted);line-height:1.8;text-align:left;white-space:pre}
-.hack-visual .arch em{color:var(--accent2);font-style:normal;font-weight:700}
-.hack-body{flex:1}
-.hack-body .hack-badge{display:inline-block;font-size:.58rem;padding:3px 10px;border-radius:100px;background:rgba(251,191,36,.15);color:#fbbf24;font-weight:700;margin-bottom:8px;border:1px solid rgba(251,191,36,.25)}
-.hack-body h3{font-size:1.05rem;font-weight:700;margin-bottom:4px}
-.hack-body p{font-size:.78rem;color:var(--muted);line-height:1.55;margin-bottom:10px}
-.hack-body .hack-tags{display:flex;flex-wrap:wrap;gap:4px}
-.hack-body .hack-tags span{font-size:.56rem;padding:2px 8px;border-radius:100px;background:var(--accent-soft);color:var(--accent2);font-weight:600}
-
-/* ═══ POC cards ═══ */
-.poc-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-@media(max-width:520px){.poc-grid{grid-template-columns:1fr}}
-.poc{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:16px;transition:border-color .2s}
-.poc:hover{border-color:var(--accent)}
-.poc-num{font-family:var(--mono);font-size:.58rem;color:var(--accent2);font-weight:700;margin-bottom:4px}
-.poc h4{font-size:.84rem;font-weight:700;margin-bottom:3px}
-.poc p{font-size:.72rem;color:var(--muted);line-height:1.5;margin-bottom:8px}
-.poc .tags{display:flex;flex-wrap:wrap;gap:4px}
-.poc .tags span{font-size:.54rem;padding:2px 7px;border-radius:100px;background:rgba(255,255,255,.06);color:var(--muted);font-weight:600;border:1px solid var(--border)}
-
-/* ═══ Side gig ═══ */
-.side{display:flex;align-items:flex-start;gap:12px;padding:14px 16px;background:var(--card);border:1px solid var(--border);border-radius:var(--radius)}
-.side-icon{font-size:1.1rem;line-height:1;flex-shrink:0;margin-top:2px}
-.side p{font-size:.76rem;color:var(--muted);line-height:1.5}
-.side strong{color:var(--fg);font-weight:600}
-
-/* ═══ Architecture diagram ═══ */
-.arch-section{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:20px 24px;overflow-x:auto}
-.arch-diagram{font-family:var(--mono);font-size:.62rem;line-height:1.7;color:var(--muted);white-space:pre}
-.arch-diagram em{color:var(--accent2);font-style:normal;font-weight:700}
-.arch-diagram strong{color:var(--fg);font-weight:700}
-
+.tl-node.active::before{background:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+.tl-node .tl-label{font-size:.68rem;font-weight:700;color:var(--fg);line-height:1.3}
+.tl-node .tl-sub{font-size:.58rem;color:var(--dim);margin-top:1px}
 @media(max-width:500px){
-  .hero h1{font-size:1.6rem}
-  .hack-visual{width:100%}
+  h1{font-size:1.6rem}
+  .page{padding:36px 0 28px}
 }
 </style>
 </head>
 <body>
-
-<!-- ═══ Hero ═══ -->
-<div class="hero">
-  <div class="hero-inner">
-    <h1><span>Hema Sridharan</span></h1>
-    <div class="subtitle">Senior PM, <strong>Microsoft Copilot</strong> · 11 years product leadership & software engineering · Core Inventor, <strong>3 US Patents</strong></div>
-    <div class="hero-pills">
-      <span>Orchestration</span>
-      <span>Grounding & Trust</span>
-      <span>Agent Collaboration</span>
-      <span>Cross-App Platform</span>
-      <span>Connectors & Extensibility</span>
-      <span>Responsible AI</span>
-    </div>
-  </div>
-</div>
-
 <div class="page">
 
-<!-- ═══ Summary ═══ -->
 <section>
+  <h1><span>Hema Sridharan</span></h1>
+  <div class="role">Senior PM, <strong>Microsoft Copilot</strong> <span style="color:var(--accent);font-size:1.1em">●</span> 11 years product leadership & software engineering <span style="color:var(--accent);font-size:1.1em">●</span> Core Inventor, <strong>3 US Patents</strong></div>
   <ul class="summary">
     <li>I am energized by ambiguous and ambitious technical problems — and have a proven track record of turning them into shipped products at scale.</li>
     <li>From authoring a solo proposal that became an SLT-funded agentic charter, to owning grounding quality for Copilot today, I think in falsifiable hypotheses and feasible prototypes, measure what matters, and bring people along across orgs.</li>
@@ -130,16 +73,15 @@ section{margin-bottom:28px}
   </ul>
 </section>
 
-<!-- ═══ Timeline ═══ -->
-<section>
+<section style="margin-bottom:24px">
   <div class="timeline-line">
     <div class="tl-node">
       <div class="tl-label">OneNote</div>
-      <div class="tl-sub">Rendering · Telemetry</div>
+      <div class="tl-sub">Rendering &middot; Telemetry</div>
     </div>
     <div class="tl-node">
       <div class="tl-label">Creative Pursuits</div>
-      <div class="tl-sub">Screenplays · Teaching</div>
+      <div class="tl-sub">Screenplays &middot; Teaching</div>
     </div>
     <div class="tl-node">
       <div class="tl-label">OneNote</div>
@@ -147,17 +89,14 @@ section{margin-bottom:28px}
     </div>
     <div class="tl-node">
       <div class="tl-label">M365 Modern Collab</div>
-      <div class="tl-sub">Agents · Orchestration</div>
+      <div class="tl-sub">Agents &middot; Orchestration</div>
     </div>
     <div class="tl-node active">
       <div class="tl-label">MAI Copilot</div>
-      <div class="tl-sub">Grounding · Now</div>
+      <div class="tl-sub">Grounding &middot; Now</div>
     </div>
   </div>
 </section>
-
-<!-- ═══ Track Record ═══ -->
-<section>
   <div class="sl">Track Record</div>
   <div class="signals">
     <div class="sig">
@@ -195,120 +134,40 @@ section{margin-bottom:28px}
   </div>
 </section>
 
-<!-- ═══ Hackathon Spotlight ═══ -->
-<section>
-  <div class="sl">Hackathon — Copilot Platform</div>
-  <div class="hack">
-    <div class="hack-visual">
-      <div class="arch"><em>Holistic Copilot</em>
-┌─────────────────────┐
-│   <strong>Copilot Homepage</strong>    │
-│  ┌──────┐ ┌──────┐  │
-│  │ Work │ │ Life │  │
-│  │ Cal  │ │ Cal  │  │
-│  └──┬───┘ └──┬───┘  │
-│     └────┬───┘      │
-│    <em>Connectors</em>        │
-│  ┌──────────────┐   │
-│  │ Fitbit│Nutrition│ │
-│  │ Calendar│Tasks │ │
-│  └──────────────┘   │
-│    <em>Agent Library</em>    │
-│  Shared · Personal  │
-│  · Work · Family    │
-└─────────────────────┘</div>
-    </div>
-    <div class="hack-body">
-      <div class="hack-badge">🏆 Microsoft Hackathon 2024</div>
-      <h3>Holistic Copilot</h3>
-      <p>Built a vision prototype for Copilot as a cross-boundary AI companion — unifying work and personal contexts through <strong>3rd-party connectors</strong> (Fitbit, calendars, nutrition trackers) and a composable <strong>agent library</strong> where users assemble agents aligned to their priorities.</p>
-      <p>Demonstrated intelligent scheduling, proactive recommendations, and privacy-respecting data boundaries — all powered by the <strong>Copilot connector platform</strong> and out-of-box 3P integrations.</p>
-      <div class="hack-tags">
-        <span>Connectors</span>
-        <span>3P Extensibility</span>
-        <span>Agent Library</span>
-        <span>Cross-Boundary</span>
-        <span>Privacy & Trust</span>
-        <span>Copilot Platform</span>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ═══ How I Think — Architecture ═══ -->
-<section>
-  <div class="sl">How I Think — Platform Architecture</div>
-  <div class="arch-section">
-    <div class="arch-diagram"><strong>Cross-App Copilot Platform</strong> (the problem I've been circling)
-
-  ┌─────────┐ ┌─────────┐ ┌─────────┐ ┌─────────┐ ┌─────────┐
-  │  Word   │ │  Excel  │ │  Teams  │ │ Outlook │ │  50+    │
-  │ Copilot │ │ Copilot │ │ Copilot │ │ Copilot │ │  Apps   │
-  └────┬────┘ └────┬────┘ └────┬────┘ └────┬────┘ └────┬────┘
-       └──────┬────┴──────┬────┴──────┬────┴──────┬────┘
-              ▼                                    ▼
-  ┌──────────────────────────────────────────────────────────┐
-  │              <em>BizChat Platform (Unified)</em>                  │
-  │  ┌────────────┐  ┌────────────┐  ┌────────────────────┐ │
-  │  │Orchestration│  │ Grounding  │  │ Skills & Plugins   │ │
-  │  │  Engine     │  │ & Memory   │  │ (Connectors, 3P)   │ │
-  │  └────────────┘  └────────────┘  └────────────────────┘ │
-  │  ┌────────────┐  ┌────────────┐  ┌────────────────────┐ │
-  │  │ Agent      │  │ Trust &    │  │ App Onboarding     │ │
-  │  │ Collab     │  │ EVALS      │  │ (Project Catalyst) │ │
-  │  └────────────┘  └────────────┘  └────────────────────┘ │
-  └──────────────────────────────────────────────────────────┘
-              ▲                                    ▲
-  ┌───────────┴──────────┐          ┌──────────────┴─────────┐
-  │ <em>Microsoft Graph</em>      │          │ <em>3P Connectors</em>         │
-  │ Search · Substrate   │          │ APIs · Plugins · SDKs  │
-  └──────────────────────┘          └────────────────────────┘
-
-  <strong>Where I've worked across this stack:</strong>
-  <em>Grounding & Trust</em> ← Current role (RAG, EVALS, quality frameworks)
-  <em>Orchestration & Agents</em> ← Founded agentic charter, shipped 2 agents
-  <em>Connectors & Extensibility</em> ← Hackathon: Holistic Copilot
-  <em>Cross-App Platform</em> ← OneNote platform, 60M session collab service
-  <em>App Surface</em> ← Built prototypes for Word, BizChat, cross-app UX</div>
-  </div>
-</section>
-
-<!-- ═══ POC's ═══ -->
-<section>
+<section style="margin-top:12px">
   <div class="sl" style="text-transform:none">HOW I BUILD AS A PM — POC's</div>
-  <div class="poc-grid">
-    <div class="poc">
-      <div class="poc-num">01</div>
+  <div class="built-grid">
+    <div class="built">
+      <div class="built-num">01</div>
       <h4>One Copilot — Cross-App Agent UX</h4>
-      <p>Unified Copilot experience across M365 surfaces — proactive intelligence, cross-artifact reasoning, intelligent surface handoff, shared context across apps.</p>
-      <div class="tags"><span>Multi-Agent</span><span>Orchestration</span><span>Cross-App</span><span>Extensibility</span></div>
+      <p>Interactive prototype exploring multi-agent orchestration unified across M365 surfaces — proactive intelligence, cross-artifact reasoning, intelligent surface handoff, and shared context across apps.</p>
+      <div class="tags"><span>Multi-Agent</span><span>Orchestration</span><span>Cross-App</span><span>Extensibility</span><span>Conversational UX</span></div>
     </div>
-    <div class="poc">
-      <div class="poc-num">02</div>
+    <div class="built">
+      <div class="built-num">02</div>
       <h4>Multimodal Document Editing</h4>
-      <p>Voice and natural language as input modalities — contextual rewrites, hands-free iteration, flow-preserving interaction.</p>
-      <div class="tags"><span>Multimodal</span><span>Voice UX</span><span>Copilot in Word</span></div>
+      <p>Prototype exploring voice and natural language as input modalities for document editing — contextual rewrites, hands-free iteration, and flow-preserving interaction.</p>
+      <div class="tags"><span>Multimodal</span><span>Voice UX</span><span>Copilot in Word</span><span>Agent UX</span></div>
     </div>
-    <div class="poc">
-      <div class="poc-num">03</div>
+    <div class="built">
+      <div class="built-num">03</div>
       <h4>Agent Coherence Dashboard</h4>
-      <p>Trust & quality evaluation — coherence scoring, grounding accuracy, gravity metrics across orchestration layers.</p>
+      <p>Trust & quality evaluation for Copilot agents — coherence scoring, grounding accuracy, gravity metrics across orchestration layers.</p>
       <div class="tags"><span>EVALS</span><span>Agent Quality</span><span>Trust Metrics</span></div>
     </div>
-    <div class="poc">
-      <div class="poc-num">04</div>
+    <div class="built">
+      <div class="built-num">04</div>
       <h4>Grounding Playground</h4>
-      <p>RAG experimentation toolkit — snippet approaches, token budgets, grounding precision across query types.</p>
+      <p>Experimentation toolkit for RAG strategies — snippet approaches, token budgets, grounding precision across query types.</p>
       <div class="tags"><span>RAG</span><span>Experimentation</span><span>Token Optimization</span></div>
     </div>
   </div>
 </section>
 
-<!-- ═══ Side gig ═══ -->
-<section>
+<section style="margin-top:-16px">
   <div class="side">
     <div class="side-icon">✍️</div>
-    <p><strong>Side gig: Screenplay writer</strong> for Tamil-language theater — story structure, audience instinct, and narrative economy inform how I build products. Also a Tamil teacher for first-generation American kids.</p>
+    <p><strong>Side gig: Screenplay writer</strong> for Tamil-language theater — bringing story structure, audience instinct, and narrative economy to everything I build. Also a Tamil teacher for first-generation American kids.</p>
   </div>
 </section>
 

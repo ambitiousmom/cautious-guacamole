@@ -16,312 +16,265 @@
   --radius:16px;
 }
 html{font-size:15px;scroll-behavior:smooth}
-body{font-family:var(--font);background:var(--bg);color:var(--fg);line-height:1.6;-webkit-font-smoothing:antialiased}
+body{font-family:var(--font);background:var(--bg);color:var(--fg);line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden}
 ::selection{background:var(--accent);color:#fff}
 
-.page{max-width:700px;margin:0 auto;padding:48px 28px 64px}
+/* ═══ Top section ═══ */
+.top{max-width:660px;margin:0 auto;padding:48px 28px 32px;text-align:center}
+.top h1{font-size:1.9rem;font-weight:700;letter-spacing:-.03em;opacity:0;animation:fadeUp .6s ease forwards}
+.top .sub{font-size:.82rem;color:var(--muted);margin-top:4px;opacity:0;animation:fadeUp .6s ease .2s forwards}
+.top .sub strong{color:var(--fg);font-weight:600}
+.top .summary{margin-top:20px;opacity:0;animation:fadeUp .6s ease .4s forwards}
+.top .summary p{font-size:.84rem;color:var(--muted);line-height:1.7;margin-bottom:6px}
+.top .summary p strong{color:var(--fg);font-weight:600}
 
-/* Header */
-.header{text-align:center;margin-bottom:12px;opacity:0;animation:fadeUp .6s ease forwards}
-.header h1{font-size:1.9rem;font-weight:700;letter-spacing:-.03em}
-.header .sub{font-size:.82rem;color:var(--muted);margin-top:4px}
-.header .sub strong{color:var(--fg);font-weight:600}
+/* Start */
+.start-btn{display:inline-block;margin-top:20px;padding:10px 28px;background:var(--accent);color:#fff;border:none;border-radius:100px;font-size:.82rem;font-weight:600;cursor:pointer;font-family:var(--font);transition:all .2s;box-shadow:0 4px 16px rgba(196,90,60,.2);opacity:0;animation:fadeUp .5s ease .7s forwards}
+.start-btn:hover{background:var(--accent2);transform:translateY(-1px)}
+.start-btn.hidden{display:none}
 
-/* Summary */
-.summary{text-align:center;max-width:560px;margin:0 auto 40px;opacity:0;animation:fadeUp .6s ease .3s forwards}
-.summary p{font-size:.84rem;color:var(--muted);line-height:1.7;margin-bottom:6px}
-.summary p strong{color:var(--fg);font-weight:600}
+/* ═══ Split layout ═══ */
+.split{display:none;max-width:1100px;margin:0 auto;padding:0 28px 64px}
+.split.active{display:flex;gap:32px;align-items:flex-start}
+.split-left{flex:0 0 340px;position:sticky;top:32px}
+.split-right{flex:1;min-height:300px}
 
-/* ═══ Vertical Timeline ═══ */
-.vt{position:relative;padding:20px 0 0}
+/* ═══ Timeline (left) ═══ */
+.vt{position:relative;padding:8px 0 0}
+.vt-line{position:absolute;left:16px;top:8px;width:2.5px;background:var(--border);border-radius:2px;height:0;transition:height .6s ease}
 
-/* The growing line */
-.vt-line{position:absolute;left:28px;top:20px;width:2.5px;background:var(--border);height:0;border-radius:2px;transition:none}
-.vt-line.grow{animation:growLine 4s ease forwards}
-@keyframes growLine{to{height:calc(100% - 20px)}}
+.vt-row{display:flex;align-items:center;gap:14px;padding:10px 0;opacity:0;transform:translateX(-10px);cursor:pointer;border-radius:12px;transition:background .15s;margin:0 -8px;padding-left:8px;padding-right:8px}
+.vt-row.show{animation:slideIn .35s ease forwards}
+.vt-row:hover{background:rgba(0,0,0,.03)}
+.vt-row.active-node{background:var(--accent-soft)}
 
-/* Branch lines (drawn via pseudo or SVG later) */
-
-/* Node row */
-.vt-row{display:flex;align-items:flex-start;gap:20px;margin-bottom:0;padding:16px 0;opacity:0;transform:translateY(12px)}
-.vt-row.show{animation:fadeUp .45s ease forwards}
-
-/* Node dot container */
-.vt-dot{position:relative;flex-shrink:0;width:56px;display:flex;flex-direction:column;align-items:center;cursor:pointer;z-index:2}
-.vt-dot .circle{width:20px;height:20px;border-radius:50%;border:2.5px solid var(--border);background:var(--bg);transition:all .25s}
-.vt-dot:hover .circle{border-color:var(--accent);transform:scale(1.15);box-shadow:0 0 0 4px var(--accent-soft)}
-.vt-dot .icon-img{width:26px;height:26px;border-radius:5px;object-fit:contain;transition:transform .25s}
-.vt-dot:hover .icon-img{transform:scale(1.15)}
-.vt-row.now .circle{background:var(--accent);border-color:var(--accent);box-shadow:0 0 0 5px var(--accent-soft)}
-.vt-row.patent .circle{border-color:var(--accent);border-width:3px;background:var(--card2);position:relative}
-.vt-row.patent .circle::after{content:'★';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:.5rem;color:var(--accent)}
-.vt-row.detour .circle{border-style:dashed;border-color:var(--detour)}
-.vt-row.hack .circle{border-style:dashed;border-color:var(--hack)}
-.vt-row.selected .circle,.vt-row.selected .icon-img{border-color:var(--accent);box-shadow:0 0 0 4px var(--accent-soft);transform:scale(1.15)}
-
-/* Node body */
-.vt-body{flex:1;padding-top:2px}
-.vt-body .vt-title{font-size:.82rem;font-weight:700;color:var(--fg);cursor:pointer}
-.vt-body .vt-sub{font-size:.66rem;color:var(--dim);margin-top:1px}
-.vt-body .vt-title:hover{color:var(--accent)}
-
-/* Branch indicator */
-.vt-row.branch{padding-left:36px}
-.vt-row.branch .vt-dot{position:relative}
-.vt-row.branch .vt-dot::before{content:'';position:absolute;right:100%;top:10px;width:36px;height:2px;background:var(--branch);opacity:.3;margin-right:0}
-.vt-row.hack{padding-left:36px}
-.vt-row.hack .vt-dot::before{content:'';position:absolute;right:100%;top:10px;width:36px;height:2px;background:var(--hack);opacity:.3;border-top:2px dashed var(--hack)}
-
-/* ═══ Inline card (expands below node) ═══ */
-.vt-card{display:none;background:var(--card2);border:1px solid var(--border);border-radius:var(--radius);padding:18px 22px;margin:8px 0 4px;box-shadow:0 6px 30px rgba(0,0,0,.06);animation:fadeIn .25s ease}
-.vt-card.show{display:block}
-@keyframes fadeIn{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:translateY(0)}}
+@keyframes slideIn{to{opacity:1;transform:translateX(0)}}
 @keyframes fadeUp{to{opacity:1;transform:translateY(0)}}
 
-.vt-card .ov-badge{display:inline-block;font-size:.5rem;padding:3px 9px;border-radius:100px;background:var(--accent-soft);color:var(--accent);font-weight:700;margin-bottom:6px}
-.vt-card h3{font-size:.95rem;font-weight:700;margin-bottom:6px}
-.vt-card p{font-size:.78rem;color:var(--muted);line-height:1.6;margin-bottom:6px}
-.vt-card p strong{color:var(--fg)}
-.vt-card ul{list-style:none;padding:0;margin:4px 0}
-.vt-card ul li{font-size:.74rem;color:var(--muted);line-height:1.55;padding-left:13px;position:relative;margin-bottom:3px}
-.vt-card ul li::before{content:'';position:absolute;left:0;top:8px;width:5px;height:5px;border-radius:50%;background:var(--accent)}
-.tag-row{display:flex;flex-wrap:wrap;gap:4px;margin-top:8px}
-.tag-row span{font-size:.5rem;padding:3px 9px;border-radius:100px;background:var(--accent-soft);color:var(--accent);font-weight:600}
+.vt-row .dot{width:16px;height:16px;border-radius:50%;border:2.5px solid var(--border);background:var(--bg);flex-shrink:0;transition:all .25s;position:relative;z-index:2}
+.vt-row .icon-img{width:22px;height:22px;border-radius:4px;flex-shrink:0;object-fit:contain;position:relative;z-index:2}
+.vt-row.active-node .dot{border-color:var(--accent);background:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+.vt-row.now-dot .dot{background:var(--accent);border-color:var(--accent);box-shadow:0 0 0 4px var(--accent-soft)}
+.vt-row.patent-dot .dot{border-color:var(--accent);border-width:3px;background:var(--card2)}
+.vt-row.patent-dot .dot::after{content:'★';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:.42rem;color:var(--accent)}
+.vt-row.detour-dot .dot{border-style:dashed;border-color:var(--detour)}
+.vt-row.hack-dot .dot{border-style:dashed;border-color:var(--hack)}
+.vt-row.branch-dot{padding-left:28px}
 
-/* Sub grid */
-.ov-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:8px}
-@media(max-width:480px){.ov-grid{grid-template-columns:1fr}}
+.vt-row .row-text{flex:1;min-width:0}
+.vt-row .row-title{font-size:.74rem;font-weight:700;color:var(--fg);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.vt-row .row-sub{font-size:.56rem;color:var(--dim)}
+
+/* ═══ Card panel (right) ═══ */
+.card-panel{background:var(--card2);border:1px solid var(--border);border-radius:var(--radius);padding:28px 32px;box-shadow:0 8px 40px rgba(0,0,0,.06);animation:cardIn .3s ease;min-height:200px}
+@keyframes cardIn{from{opacity:0;transform:translateX(12px)}to{opacity:1;transform:translateX(0)}}
+.card-panel .ov-badge{display:inline-block;font-size:.52rem;padding:3px 10px;border-radius:100px;background:var(--accent-soft);color:var(--accent);font-weight:700;margin-bottom:8px}
+.card-panel h3{font-size:1.05rem;font-weight:700;margin-bottom:8px}
+.card-panel p{font-size:.82rem;color:var(--muted);line-height:1.65;margin-bottom:8px}
+.card-panel p strong{color:var(--fg)}
+.card-panel ul{list-style:none;padding:0;margin:6px 0}
+.card-panel ul li{font-size:.78rem;color:var(--muted);line-height:1.6;padding-left:14px;position:relative;margin-bottom:4px}
+.card-panel ul li::before{content:'';position:absolute;left:0;top:9px;width:5px;height:5px;border-radius:50%;background:var(--accent)}
+.tag-row{display:flex;flex-wrap:wrap;gap:4px;margin-top:10px}
+.tag-row span{font-size:.52rem;padding:3px 10px;border-radius:100px;background:var(--accent-soft);color:var(--accent);font-weight:600}
+
+.ov-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:10px}
 .ov-mini{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:10px 12px}
-.ov-mini h5{font-size:.7rem;font-weight:700;margin-bottom:2px}
-.ov-mini p{font-size:.64rem;color:var(--muted);line-height:1.4;margin:0}
+.ov-mini h5{font-size:.72rem;font-weight:700;margin-bottom:2px}
+.ov-mini p{font-size:.66rem;color:var(--muted);line-height:1.4;margin:0}
 
-/* Hack arch */
-.hack-arch{background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:10px 12px;font-family:var(--mono);font-size:.52rem;line-height:1.7;color:var(--muted);white-space:pre;margin:8px 0;display:inline-block}
+.hack-arch{background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:10px 12px;font-family:var(--mono);font-size:.54rem;line-height:1.7;color:var(--muted);white-space:pre;margin:10px 0;display:inline-block}
 .hack-arch em{color:var(--accent);font-style:normal;font-weight:700}
 .hack-arch strong{color:var(--fg);font-weight:700}
 
+/* Empty state */
+.card-empty{display:flex;align-items:center;justify-content:center;min-height:200px;color:var(--dim);font-size:.8rem;font-style:italic}
+
+/* Advance hint */
+.advance-hint{text-align:center;font-size:.62rem;color:var(--dim);margin-top:12px;opacity:0;transition:opacity .3s}
+.advance-hint.show{opacity:1}
+
 /* Side gig */
-.side-card{display:flex;align-items:flex-start;gap:10px;padding:14px 16px;background:var(--card2);border:1px solid var(--border);border-radius:var(--radius);margin-top:24px;opacity:0}
-.side-card.show{animation:fadeUp .45s ease forwards}
+.side-card{display:flex;align-items:flex-start;gap:10px;padding:14px 16px;background:var(--card2);border:1px solid var(--border);border-radius:var(--radius);margin-top:20px;opacity:0}
+.side-card.show{animation:fadeUp .4s ease forwards}
 .side-card .icon{font-size:1rem;flex-shrink:0;margin-top:2px}
 .side-card p{font-size:.74rem;color:var(--muted);line-height:1.55}
 .side-card strong{color:var(--fg);font-weight:600}
 
-/* Start button */
-.start-btn{display:block;margin:0 auto;padding:10px 28px;background:var(--accent);color:#fff;border:none;border-radius:100px;font-size:.82rem;font-weight:600;cursor:pointer;font-family:var(--font);transition:all .2s;box-shadow:0 4px 16px rgba(196,90,60,.2)}
-.start-btn:hover{background:var(--accent2);transform:translateY(-1px);box-shadow:0 6px 20px rgba(196,90,60,.3)}
-.start-btn.hidden{display:none}
-
-@media(max-width:500px){
-  .header h1{font-size:1.5rem}
-  .page{padding:36px 16px 48px}
+@media(max-width:700px){
+  .split.active{flex-direction:column}
+  .split-left{flex:none;width:100%;position:static}
+  .top h1{font-size:1.5rem}
 }
 </style>
 </head>
 <body>
-<div class="page">
 
-<!-- Header -->
-<div class="header">
+<!-- ═══ Top ═══ -->
+<div class="top" id="topSection">
   <h1>Hema Sridharan</h1>
   <div class="sub">Senior PM, <strong>Microsoft Copilot</strong> · 11 years product leadership & software engineering · Core Inventor, <strong>3 US Patents</strong></div>
+  <div class="summary">
+    <p>I am energized by ambiguous and ambitious technical problems — and have <strong>a proven track record of turning them into shipped products at scale</strong>.</p>
+    <p>I think in <strong>falsifiable hypotheses and feasible prototypes</strong>, measure what matters, and bring people along across orgs.</p>
+  </div>
+  <button class="start-btn" id="startBtn">Begin the journey ↓</button>
 </div>
 
-<!-- Summary -->
-<div class="summary">
-  <p>I am energized by ambiguous and ambitious technical problems — and have <strong>a proven track record of turning them into shipped products at scale</strong>.</p>
-  <p>I think in <strong>falsifiable hypotheses and feasible prototypes</strong>, measure what matters, and bring people along across orgs.</p>
+<!-- ═══ Split: Timeline + Card ═══ -->
+<div class="split" id="splitView">
+  <div class="split-left">
+    <div class="vt" id="timeline">
+      <div class="vt-line" id="vtLine"></div>
+      <!-- Rows injected by JS -->
+    </div>
+    <div class="advance-hint" id="advHint">Press any key for next →</div>
+    <div class="side-card" id="sideGig">
+      <div class="icon">✍️</div>
+      <p><strong>Side gig: Screenplay writer</strong> for Tamil-language theater — story structure, audience instinct, and narrative economy inform how I build products.</p>
+    </div>
+  </div>
+  <div class="split-right" id="cardPanel">
+    <div class="card-empty">Click a node to explore →</div>
+  </div>
 </div>
 
-<!-- Start -->
-<button class="start-btn" id="startBtn" onclick="startJourney()">Begin the journey ↓</button>
+<script>
+// ═══ DATA ═══
+const NODES = [
+  {id:'on1', title:'OneNote — Platform & SWE', sub:'Rendering · Telemetry', type:'', icon:'onenote',
+   badge:'SWE → PM', heading:'Rendering Engine & Telemetry Platform',
+   bullets:['Led 12-engineer team in <strong>full-stack Canvas/Rendering redesign</strong> across Win, Mac, iOS','Built the <strong>telemetry platform</strong> used across all OneNote endpoints','Hands-on with <strong>SDKs, APIs, cross-platform tooling</strong>'],
+   tags:['Rendering','Telemetry','SDK/API','Cross-Platform']},
 
-<!-- ═══ Vertical Timeline ═══ -->
-<div class="vt" id="timeline" style="display:none">
-  <div class="vt-line" id="vtLine"></div>
+  {id:'creative', title:'Creative Pursuits — Detour', sub:'Screenplays · Teaching', type:'detour-dot',
+   badge:'Detour', heading:'Screenplays & Teaching',
+   bullets:['<strong>Screenplay writer</strong> for Tamil-language theater','<strong>Tamil teacher</strong> for first-generation American kids','Came back with sharper product instincts and narrative clarity'],
+   tags:[]},
 
-  <!-- 1. OneNote Platform -->
-  <div class="vt-row" data-delay="0" id="row-on1">
-    <div class="vt-dot" onclick="toggle('card-on1','row-on1')">
-      <img class="icon-img" id="onenote-icon" src="" alt="OneNote">
-    </div>
-    <div class="vt-body">
-      <div class="vt-title" onclick="toggle('card-on1','row-on1')">OneNote — Platform & SWE</div>
-      <div class="vt-sub">Rendering · Telemetry · Cross-Platform</div>
-    </div>
-  </div>
-  <div class="vt-card" id="card-on1">
-    <div class="ov-badge">SWE → PM</div>
-    <h3>Rendering Engine & Telemetry Platform</h3>
-    <ul>
-      <li>Led 12-engineer team in <strong>full-stack Canvas/Rendering redesign</strong> across Win, Mac, iOS</li>
-      <li>Built the <strong>telemetry platform</strong> used across all OneNote endpoints</li>
-      <li>Hands-on with <strong>SDKs, APIs, cross-platform tooling</strong></li>
-    </ul>
-    <div class="tag-row"><span>Rendering</span><span>Telemetry</span><span>SDK/API</span><span>Cross-Platform</span></div>
-  </div>
+  {id:'on2', title:'OneNote — Rearchitect', sub:'Augmentation Pipeline', type:'',
+   badge:'Platform Rearchitect', heading:'OneNote Augmentation Pipeline',
+   bullets:['Redesigned <strong>image & ink processing pipeline</strong> — performance and scale','First platform rearchitect: shared infrastructure consumed by multiple surfaces'],
+   tags:['Platform','Pipeline','Performance','Scale']},
 
-  <!-- 2. Creative Pursuits (detour) -->
-  <div class="vt-row detour" data-delay="400" id="row-creative">
-    <div class="vt-dot" onclick="toggle('card-creative','row-creative')">
-      <span class="circle"></span>
-    </div>
-    <div class="vt-body">
-      <div class="vt-title" onclick="toggle('card-creative','row-creative')">Creative Pursuits — Detour</div>
-      <div class="vt-sub">Screenplays · Teaching · Multi-year break</div>
-    </div>
-  </div>
-  <div class="vt-card" id="card-creative">
-    <div class="ov-badge">Detour</div>
-    <h3>Screenplays & Teaching</h3>
-    <ul>
-      <li><strong>Screenplay writer</strong> for Tamil-language theater</li>
-      <li><strong>Tamil teacher</strong> for first-generation American kids</li>
-      <li>Came back with sharper product instincts and narrative clarity</li>
-    </ul>
-  </div>
+  {id:'founder', title:'M365 Modern Collab — Founder', sub:'0→1 Charter · 10+ Orgs', type:'',
+   badge:'0→1 Founder PM', heading:'Agentic Charter & Cross-Org Vision',
+   bullets:['"<strong>AI-Productivity Paradox</strong>" proposal — JTBD research → SLT-funded charter → multi-year roadmap','Rallied <strong>10+ product orgs</strong> across apps & platform','Designed <strong>app-agnostic reasoning spine</strong> for Word, Excel, PPT, Teams'],
+   tags:['0→1','Charter','Cross-Org','Platform Strategy']},
 
-  <!-- 3. OneNote Rearchitect -->
-  <div class="vt-row" data-delay="800" id="row-on2">
-    <div class="vt-dot" onclick="toggle('card-on2','row-on2')">
-      <span class="circle"></span>
-    </div>
-    <div class="vt-body">
-      <div class="vt-title" onclick="toggle('card-on2','row-on2')">OneNote — Platform Rearchitect</div>
-      <div class="vt-sub">Augmentation Pipeline · Performance · Scale</div>
-    </div>
-  </div>
-  <div class="vt-card" id="card-on2">
-    <div class="ov-badge">Platform Rearchitect</div>
-    <h3>OneNote Augmentation Pipeline</h3>
-    <ul>
-      <li>Redesigned <strong>image & ink processing pipeline</strong> — performance and scale</li>
-      <li>First platform rearchitect: shared infrastructure consumed by multiple surfaces</li>
-    </ul>
-    <div class="tag-row"><span>Platform</span><span>Pipeline</span><span>Performance</span></div>
-  </div>
+  {id:'collabsvc', title:'↳ Collab Services', sub:'60M Sessions/Day', type:'branch-dot',
+   badge:'Branch: Services', heading:'Platform Scale & Cost',
+   bullets:['Office Collab at <strong>60M sessions/day</strong>','COGS <strong>0.41¢ → 0.1¢/session</strong>','Infrastructure consumed by 50+ app surfaces'],
+   tags:['60M Scale','COGS','Platform Economics']},
 
-  <!-- 4. M365 Founder -->
-  <div class="vt-row" data-delay="1200" id="row-founder">
-    <div class="vt-dot" onclick="toggle('card-founder','row-founder')">
-      <span class="circle" style="border-color:var(--accent);border-width:3px"></span>
-    </div>
-    <div class="vt-body">
-      <div class="vt-title" onclick="toggle('card-founder','row-founder')">M365 Modern Collab — 0→1 Founder PM</div>
-      <div class="vt-sub">Charter · Vision · 10+ Orgs</div>
-    </div>
-  </div>
-  <div class="vt-card" id="card-founder">
-    <div class="ov-badge">0→1 Founder PM</div>
-    <h3>Agentic Charter & Cross-Org Vision</h3>
-    <ul>
-      <li><strong>"AI-Productivity Paradox" proposal</strong> — JTBD research → SLT-funded charter → multi-year roadmap</li>
-      <li>Rallied <strong>10+ product orgs</strong> across apps & platform</li>
-      <li>Designed <strong>app-agnostic reasoning spine</strong> for Word, Excel, PPT, Teams</li>
-    </ul>
-    <div class="tag-row"><span>0→1</span><span>Charter</span><span>Cross-Org</span><span>Platform Strategy</span></div>
-  </div>
+  {id:'collabai', title:'↳ Collab AI', sub:'2 Agents Shipped', type:'branch-dot',
+   badge:'Branch: AI', heading:'Agent Orchestration',
+   bullets:['E2E bootstrapped <strong>2 collab agents</strong> — opportunity → concept → spec → build → ship → metrics','Agent orchestration patterns became <strong>patent material</strong>'],
+   tags:['Agents','Orchestration','E2E Delivery']},
 
-  <!-- 5. Branch: Collab Services -->
-  <div class="vt-row branch" data-delay="1600" id="row-collabsvc">
-    <div class="vt-dot" onclick="toggle('card-collabsvc','row-collabsvc')">
-      <span class="circle" style="width:15px;height:15px;border-color:var(--branch)"></span>
-    </div>
-    <div class="vt-body">
-      <div class="vt-title" onclick="toggle('card-collabsvc','row-collabsvc')">↳ Collab Services — 60M Sessions/Day</div>
-      <div class="vt-sub">Scale · COGS Optimization</div>
-    </div>
-  </div>
-  <div class="vt-card" id="card-collabsvc" style="margin-left:36px">
-    <div class="ov-badge">Branch: Services</div>
-    <h3>Platform Scale & Cost</h3>
-    <ul>
-      <li>Office Collab at <strong>60M sessions/day</strong></li>
-      <li>COGS <strong>0.41¢ → 0.1¢/session</strong></li>
-      <li>Infrastructure consumed by 50+ app surfaces</li>
-    </ul>
-    <div class="tag-row"><span>60M Scale</span><span>COGS</span><span>Platform Economics</span></div>
-  </div>
+  {id:'patents', title:'3 US Patents', sub:'Core Inventor', type:'patent-dot',
+   badge:'Core Inventor', heading:'3 US Patents',
+   bullets:['<strong>GenAI Agent Collaboration</strong> — multi-agent orchestration for document collab','<strong>GenAI Agent Orchestration</strong> — agentic design for cross-app reasoning','<strong>OneNote Page Sharing</strong> — real-time collaborative UX'],
+   tags:['GenAI Agents','Orchestration','Collaboration']},
 
-  <!-- 6. Branch: Collab AI -->
-  <div class="vt-row branch" data-delay="1900" id="row-collabai">
-    <div class="vt-dot" onclick="toggle('card-collabai','row-collabai')">
-      <span class="circle" style="width:15px;height:15px;border-color:var(--branch)"></span>
-    </div>
-    <div class="vt-body">
-      <div class="vt-title" onclick="toggle('card-collabai','row-collabai')">↳ Collab AI — 2 Agents Shipped</div>
-      <div class="vt-sub">E2E · Orchestration</div>
-    </div>
-  </div>
-  <div class="vt-card" id="card-collabai" style="margin-left:36px">
-    <div class="ov-badge">Branch: AI</div>
-    <h3>Agent Orchestration</h3>
-    <ul>
-      <li>E2E bootstrapped <strong>2 collab agents</strong> — opportunity → concept → spec → build → ship → metrics</li>
-      <li>Agent orchestration patterns became <strong>patent material</strong></li>
-    </ul>
-    <div class="tag-row"><span>Agents</span><span>Orchestration</span><span>E2E Delivery</span></div>
-  </div>
+  {id:'copilot', title:'MAI Copilot — Now', sub:'Grounding & Trust · DRI', type:'now-dot', icon:'copilot',
+   badge:'Current Role', heading:'Grounding & Trust — DRI',
+   bullets:['<strong>DRI for grounding quality</strong> — RAG stack, trust & relevance across 1P & 3P','<strong>"Needs Met" competitive framework</strong> vs. Perplexity & Google','<strong>17pt defect reduction · 4pt satisfaction lift</strong> — hypothesis-driven','<strong>Automated EVALS pipelines</strong> — quality gates at scale','<strong>Trust & quality frameworks</strong> with Applied Science & Policy'],
+   tags:['RAG','EVALS','Grounding','Competitive Parity','Responsible AI']},
 
-  <!-- 7. Patents -->
-  <div class="vt-row patent" data-delay="2300" id="row-patents">
-    <div class="vt-dot" onclick="toggle('card-patents','row-patents')">
-      <span class="circle"></span>
-    </div>
-    <div class="vt-body">
-      <div class="vt-title" onclick="toggle('card-patents','row-patents')">3 US Patents — Core Inventor</div>
-      <div class="vt-sub">GenAI Agents · Collaboration · Page Sharing</div>
-    </div>
-  </div>
-  <div class="vt-card" id="card-patents">
-    <div class="ov-badge">Core Inventor</div>
-    <h3>3 US Patents</h3>
-    <ul>
-      <li><strong>GenAI Agent Collaboration</strong> — multi-agent orchestration for document collab</li>
-      <li><strong>GenAI Agent Orchestration</strong> — agentic system design for cross-app reasoning</li>
-      <li><strong>OneNote Page Sharing</strong> — real-time collaborative UX</li>
-    </ul>
-    <div class="tag-row"><span>GenAI Agents</span><span>Orchestration</span><span>Collaboration</span></div>
-  </div>
+  {id:'envision', title:'Envision — Hacks & POC\'s', sub:'Parallel track since 2022', type:'hack-dot',
+   badge:'🏆 Hackathons & POC\'s', heading:'Holistic Copilot + Prototypes',
+   desc:'<strong>Hackathon 2024:</strong> Copilot as cross-boundary AI companion — 3P connectors, composable agent library, privacy-respecting boundaries.',
+   arch:true,
+   minis:[{t:'Cross-App Agent UX',d:'Multi-agent orchestration, surface handoff, shared context.'},{t:'Multimodal Editing',d:'Voice + NL as input modalities.'},{t:'Coherence Dashboard',d:'Trust & quality — coherence scoring, grounding accuracy.'},{t:'Grounding Playground',d:'RAG experimentation — snippets, tokens, precision.'}],
+   tags:['Connectors','3P Extensibility','Agent Library','Copilot Platform']},
 
-  <!-- 8. MAI Copilot (now) -->
-  <div class="vt-row now" data-delay="2700" id="row-copilot">
-    <div class="vt-dot" onclick="toggle('card-copilot','row-copilot')">
-      <img class="icon-img" id="copilot-icon" src="" alt="Copilot">
-    </div>
-    <div class="vt-body">
-      <div class="vt-title" onclick="toggle('card-copilot','row-copilot')">MAI Copilot — Grounding & Trust</div>
-      <div class="vt-sub">Current role · RAG · EVALS · Responsible AI</div>
-    </div>
-  </div>
-  <div class="vt-card" id="card-copilot">
-    <div class="ov-badge">Current Role</div>
-    <h3>Grounding & Trust — DRI</h3>
-    <ul>
-      <li><strong>DRI for grounding quality</strong> — RAG stack, trust & relevance across 1P & 3P</li>
-      <li><strong>"Needs Met" competitive framework</strong> vs. Perplexity & Google</li>
-      <li><strong>17pt defect reduction · 4pt satisfaction lift</strong> — hypothesis-driven</li>
-      <li><strong>Automated EVALS pipelines</strong> — quality gates at scale</li>
-      <li><strong>Trust & quality frameworks</strong> with Applied Science & Policy</li>
-    </ul>
-    <div class="tag-row"><span>RAG</span><span>EVALS</span><span>Grounding</span><span>Competitive Parity</span><span>Responsible AI</span></div>
-  </div>
+  {id:'tinkerer', title:'Tinkerer — Agents', sub:'Building now', type:'hack-dot',
+   badge:'Building Now', heading:'Working Agents',
+   desc:'Beyond prototypes — working agents that demonstrate platform thinking.',
+   minis:[{t:'Multi-Agent Workflow',d:'Agents collaborating — handoffs, shared context, conflict resolution.'},{t:'Grounding Evaluator',d:'Auto-EVALS — grounding accuracy, citation quality, relevance.'}],
+   tags:[], note:'Work in progress — happy to demo in conversation.'}
+];
 
-  <!-- 9. Envision (parallel track) -->
-  <div class="vt-row hack" data-delay="3100" id="row-envision">
-    <div class="vt-dot" onclick="toggle('card-envision','row-envision')">
-      <span class="circle"></span>
-    </div>
-    <div class="vt-body">
-      <div class="vt-title" onclick="toggle('card-envision','row-envision')">Envision — Hackathons & POC's</div>
-      <div class="vt-sub">Parallel track since 2022 · Holistic Copilot · Prototypes</div>
-    </div>
-  </div>
-  <div class="vt-card" id="card-envision" style="margin-left:36px">
-    <div class="ov-badge">🏆 Hackathons & POC's</div>
-    <h3>Holistic Copilot + Interactive Prototypes</h3>
-    <p><strong>Hackathon 2024:</strong> Copilot as cross-boundary AI companion — 3P connectors, composable agent library, privacy-respecting boundaries.</p>
-    <div class="hack-arch"><em>Holistic Copilot</em>
+const ICONS = {
+  onenote: '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',
+  copilot: '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'
+};
+
+// ═══ RENDER TIMELINE ROWS ═══
+const timeline = document.getElementById('timeline');
+NODES.forEach((n,i) => {
+  const row = document.createElement('div');
+  row.className = 'vt-row ' + (n.type||'');
+  row.id = 'row-'+n.id;
+  row.dataset.idx = i;
+
+  let dotHtml;
+  if (n.icon) {
+    dotHtml = `<img class="icon-img" src="data:image/png;base64,${ICONS[n.icon]}" alt="${n.title}" style="width:22px;height:22px;border-radius:4px">`;
+  } else {
+    dotHtml = `<span class="dot"></span>`;
+  }
+
+  row.innerHTML = `${dotHtml}<div class="row-text"><div class="row-title">${n.title}</div><div class="row-sub">${n.sub}</div></div>`;
+  row.addEventListener('click', () => showCard(i));
+  timeline.appendChild(row);
+});
+
+// ═══ STATE ═══
+let currentStep = -1;
+let cardOpen = false;
+let journeyStarted = false;
+
+// ═══ START ═══
+document.getElementById('startBtn').addEventListener('click', () => {
+  document.getElementById('startBtn').classList.add('hidden');
+  document.getElementById('splitView').classList.add('active');
+  journeyStarted = true;
+  advanceToNext();
+});
+
+// ═══ ADVANCE ═══
+function advanceToNext() {
+  currentStep++;
+  if (currentStep >= NODES.length) {
+    document.getElementById('sideGig').classList.add('show');
+    document.getElementById('advHint').textContent = 'That\'s the arc. Click any node to revisit.';
+    document.getElementById('advHint').classList.add('show');
+    return;
+  }
+
+  const row = document.getElementById('row-'+NODES[currentStep].id);
+  row.classList.add('show');
+
+  // Grow line
+  const lineH = row.offsetTop + row.offsetHeight / 2;
+  document.getElementById('vtLine').style.height = lineH + 'px';
+
+  // Scroll row into view
+  row.scrollIntoView({ behavior:'smooth', block:'nearest' });
+
+  // Show hint
+  const hint = document.getElementById('advHint');
+  hint.textContent = 'Click node to see details, then press any key for next →';
+  hint.classList.add('show');
+}
+
+// ═══ SHOW CARD ═══
+function showCard(idx) {
+  const n = NODES[idx];
+  const panel = document.getElementById('cardPanel');
+
+  // Highlight active row
+  document.querySelectorAll('.vt-row').forEach(r => r.classList.remove('active-node'));
+  document.getElementById('row-'+n.id).classList.add('active-node');
+
+  let html = `<div class="card-panel">`;
+  html += `<div class="ov-badge">${n.badge}</div>`;
+  html += `<h3>${n.heading}</h3>`;
+  if (n.desc) html += `<p>${n.desc}</p>`;
+  if (n.arch) {
+    html += `<div class="hack-arch"><em>Holistic Copilot</em>
 ┌────────────────────┐
 │  <strong>Copilot Homepage</strong>   │
 │ ┌─────┐  ┌─────┐  │
@@ -332,103 +285,54 @@ body{font-family:var(--font);background:var(--bg);color:var(--fg);line-height:1.
 │  Fitbit · Nutrition │
 │   <em>Agent Library</em>   │
 │  Shared · Personal │
-└────────────────────┘</div>
-    <div class="ov-grid">
-      <div class="ov-mini"><h5>Cross-App Agent UX</h5><p>Multi-agent orchestration, surface handoff, shared context.</p></div>
-      <div class="ov-mini"><h5>Multimodal Editing</h5><p>Voice + NL as input modalities for document editing.</p></div>
-      <div class="ov-mini"><h5>Coherence Dashboard</h5><p>Trust & quality — coherence scoring, grounding accuracy.</p></div>
-      <div class="ov-mini"><h5>Grounding Playground</h5><p>RAG experimentation — snippets, tokens, precision.</p></div>
-    </div>
-    <div class="tag-row" style="margin-top:10px"><span>Connectors</span><span>3P Extensibility</span><span>Agent Library</span><span>Copilot Platform</span></div>
-  </div>
+└────────────────────┘</div>`;
+  }
+  if (n.bullets) {
+    html += `<ul>${n.bullets.map(b=>`<li>${b}</li>`).join('')}</ul>`;
+  }
+  if (n.minis) {
+    html += `<div class="ov-grid">${n.minis.map(m=>`<div class="ov-mini"><h5>${m.t}</h5><p>${m.d}</p></div>`).join('')}</div>`;
+  }
+  if (n.tags && n.tags.length) {
+    html += `<div class="tag-row">${n.tags.map(t=>`<span>${t}</span>`).join('')}</div>`;
+  }
+  if (n.note) {
+    html += `<p style="margin-top:10px;font-size:.7rem;font-style:italic;color:var(--dim)">${n.note}</p>`;
+  }
+  html += `</div>`;
 
-  <!-- 10. Tinkerer -->
-  <div class="vt-row hack" data-delay="3500" id="row-tinkerer">
-    <div class="vt-dot" onclick="toggle('card-tinkerer','row-tinkerer')">
-      <span class="circle"></span>
-    </div>
-    <div class="vt-body">
-      <div class="vt-title" onclick="toggle('card-tinkerer','row-tinkerer')">Tinkerer — Agents I'm Building</div>
-      <div class="vt-sub">Multi-agent workflow · Grounding evaluator</div>
-    </div>
-  </div>
-  <div class="vt-card" id="card-tinkerer" style="margin-left:36px">
-    <div class="ov-badge">Building Now</div>
-    <h3>Working Agents</h3>
-    <div class="ov-grid">
-      <div class="ov-mini"><h5>Multi-Agent Workflow</h5><p>Agents collaborating — handoffs, shared context, conflict resolution.</p></div>
-      <div class="ov-mini"><h5>Grounding Evaluator</h5><p>Auto-EVALS — grounding accuracy, citation quality, relevance scoring.</p></div>
-    </div>
-    <p style="margin-top:10px;font-size:.68rem;font-style:italic;color:var(--dim)">Work in progress — happy to demo in conversation.</p>
-  </div>
+  panel.innerHTML = html;
+  cardOpen = true;
 
-</div><!-- end .vt -->
-
-<!-- Side gig -->
-<div class="side-card" id="sideGig">
-  <div class="icon">✍️</div>
-  <p><strong>Side gig: Screenplay writer</strong> for Tamil-language theater — story structure, audience instinct, and narrative economy inform how I build products.</p>
-</div>
-
-</div><!-- end .page -->
-
-<script>
-// Icon base64 injection (kept in JS to avoid bloating HTML)
-const ICONS = {
-  onenote: 'ONENOTE_B64',
-  copilot: 'COPILOT_B64'
-};
-
-document.getElementById('onenote-icon').src = 'data:image/png;base64,' + ICONS.onenote;
-document.getElementById('copilot-icon').src = 'data:image/png;base64,' + ICONS.copilot;
-
-// Timeline animation
-function startJourney() {
-  document.getElementById('startBtn').classList.add('hidden');
-  const tl = document.getElementById('timeline');
-  tl.style.display = 'block';
-
-  // Grow the line
-  requestAnimationFrame(() => {
-    document.getElementById('vtLine').classList.add('grow');
-  });
-
-  // Reveal nodes one by one
-  const rows = tl.querySelectorAll('.vt-row');
-  rows.forEach(row => {
-    const delay = parseInt(row.dataset.delay || 0);
-    setTimeout(() => {
-      row.classList.add('show');
-    }, delay + 200);
-  });
-
-  // Show side gig at the end
-  setTimeout(() => {
-    document.getElementById('sideGig').classList.add('show');
-  }, 4000);
-}
-
-// Toggle card
-function toggle(cardId, rowId) {
-  const card = document.getElementById(cardId);
-  const row = document.getElementById(rowId);
-  const isOpen = card.classList.contains('show');
-
-  // Close all
-  document.querySelectorAll('.vt-card').forEach(c => c.classList.remove('show'));
-  document.querySelectorAll('.vt-row').forEach(r => r.classList.remove('selected'));
-
-  if (!isOpen) {
-    card.classList.add('show');
-    row.classList.add('selected');
-    setTimeout(() => card.scrollIntoView({ behavior:'smooth', block:'nearest' }), 50);
+  // Update hint
+  const hint = document.getElementById('advHint');
+  if (currentStep < NODES.length - 1) {
+    hint.textContent = 'Press any key for next →';
+  } else {
+    hint.textContent = 'That\'s the arc. Click any node to revisit.';
   }
 }
 
+// ═══ KEYPRESS ═══
 document.addEventListener('keydown', e => {
+  if (!journeyStarted) return;
   if (e.key === 'Escape') {
-    document.querySelectorAll('.vt-card').forEach(c => c.classList.remove('show'));
-    document.querySelectorAll('.vt-row').forEach(r => r.classList.remove('selected'));
+    cardOpen = false;
+    document.getElementById('cardPanel').innerHTML = '<div class="card-empty">Click a node to explore →</div>';
+    document.querySelectorAll('.vt-row').forEach(r => r.classList.remove('active-node'));
+    return;
+  }
+  // Any key advances
+  if (cardOpen) {
+    cardOpen = false;
+    document.getElementById('cardPanel').innerHTML = '<div class="card-empty">Click a node to explore →</div>';
+    document.querySelectorAll('.vt-row').forEach(r => r.classList.remove('active-node'));
+    advanceToNext();
+  } else {
+    // If no card open and we haven't shown all nodes yet, just show next
+    if (currentStep < NODES.length - 1) {
+      advanceToNext();
+    }
   }
 });
 </script>

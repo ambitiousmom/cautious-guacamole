@@ -1,0 +1,315 @@
+# RecipeBot — Family Recipes & Preferences
+# Vegetarian, No Eggs, Dairy OK
+
+## Dietary Rules
+- Strictly vegetarian — no meat, no fish, no eggs
+- Dairy is OK (paneer, yogurt, cream, ghee, cheese, butter)
+- No specific allergies
+
+## Favorite Cuisines (in order)
+1. South Indian
+2. North Indian
+3. Mexican / Chipotle-style
+4. American (breakfast-for-dinner)
+5. Italian
+6. Asian
+
+## Household
+- 4 people
+- Kids like: dosa, pancakes, quesadillas, mac and cheese, paneer butter masala
+- Adults like: sambar, rasam, chole, dal tadka, pad thai (veg)
+
+## Weekly Nutrition Goals
+- Protein: ~400g/week (~57g/day) — HIGH PRIORITY
+- Fiber: ~175g/week (~25g/day) — HIGH PRIORITY
+- Calories: ~14,000 kcal/week (~2,000/day)
+
+---
+
+## SOUTH INDIAN RECIPES
+
+### Sambar Rice
+- Time: 45 min | Difficulty: Easy | Rating: 5/5
+- Protein: 14g | Fiber: 12g | Calories: 350
+- Ingredients: toor dal, tamarind, sambar powder, drumstick, carrot, tomato, rice, mustard seeds, curry leaves
+- Notes: Amma's recipe. Comfort food, works any weeknight.
+
+### Rasam with Rice
+- Time: 30 min | Difficulty: Easy | Rating: 5/5
+- Protein: 10g | Fiber: 6g | Calories: 280
+- Ingredients: toor dal, tamarind, tomato, rasam powder, mustard seeds, curry leaves, ghee, rice
+- Notes: Light meal, perfect when tired. Always satisfying.
+
+### Dosa with Coconut Chutney
+- Time: 30 min | Difficulty: Easy | Rating: 5/5
+- Protein: 12g | Fiber: 4g | Calories: 340
+- Ingredients: dosa batter, coconut, green chili, ginger, urad dal, mustard seeds, curry leaves
+- Notes: Need batter ready. Kids' absolute favorite.
+
+### Idli Sambar
+- Time: 25 min | Difficulty: Easy | Rating: 5/5
+- Protein: 12g | Fiber: 8g | Calories: 280
+- Ingredients: idli batter, toor dal, tamarind, sambar powder, vegetables, mustard seeds, ghee
+- Notes: Quick, light, healthy. Perfect weeknight.
+
+### Pongal (Ven Pongal)
+- Time: 35 min | Difficulty: Easy | Rating: 5/5
+- Protein: 14g | Fiber: 5g | Calories: 360
+- Ingredients: rice, moong dal, black pepper, cumin, ginger, ghee, cashews, curry leaves
+- Notes: Rainy day comfort food.
+
+### Bisi Bele Bath
+- Time: 50 min | Difficulty: Medium | Rating: 5/5
+- Protein: 16g | Fiber: 10g | Calories: 370
+- Ingredients: rice, toor dal, bisi bele bath powder, tamarind, vegetables, ghee, cashews
+- Notes: One-pot meal, very filling. Needs BBB powder.
+
+### Curd Rice (Thayir Sadam)
+- Time: 10 min | Difficulty: Easy | Rating: 5/5
+- Protein: 10g | Fiber: 2g | Calories: 270
+- Ingredients: rice, yogurt, mustard seeds, ginger, green chili, curry leaves, pomegranate
+- Notes: Ultimate quick comfort meal. Uses leftover rice.
+
+### Uttapam
+- Time: 20 min | Difficulty: Easy | Rating: 4/5
+- Protein: 10g | Fiber: 4g | Calories: 280
+- Ingredients: dosa batter, onion, tomato, green chili, cilantro, oil
+- Notes: Great way to use thick batter. Kids like it.
+
+### Tomato Rice
+- Time: 30 min | Difficulty: Easy | Rating: 4/5
+- Protein: 8g | Fiber: 4g | Calories: 310
+- Ingredients: rice, tomato, onion, peanuts, mustard seeds, curry leaves, turmeric
+- Notes: Pantry staple meal. Quick one-pot.
+
+### Lemon Rice
+- Time: 20 min | Difficulty: Easy | Rating: 4/5
+- Protein: 8g | Fiber: 3g | Calories: 300
+- Ingredients: rice, lemon, peanuts, mustard seeds, turmeric, green chili, curry leaves
+- Notes: Uses leftover rice. Great lunchbox item.
+
+### Kootu
+- Time: 45 min | Difficulty: Medium | Rating: 4/5
+- Protein: 16g | Fiber: 10g | Calories: 270
+- Ingredients: chana dal, ash gourd or plantain, coconut, cumin, mustard seeds, curry leaves
+- Notes: High protein + fiber combo.
+
+### Medu Vada
+- Time: 35 min | Difficulty: Medium | Rating: 4/5
+- Protein: 14g | Fiber: 6g | Calories: 330
+- Ingredients: urad dal, ginger, green chili, curry leaves, coconut, oil
+- Notes: Weekend breakfast-for-dinner option.
+
+---
+
+## NORTH INDIAN RECIPES
+
+### Dal Tadka
+- Time: 40 min | Difficulty: Easy | Rating: 5/5
+- Protein: 18g | Fiber: 12g | Calories: 320
+- Ingredients: yellow moong dal, cumin, garlic, tomato, ghee, cilantro, turmeric
+- Notes: Everyday comfort. High protein for vegetarian.
+
+### Palak Paneer
+- Time: 40 min | Difficulty: Medium | Rating: 5/5
+- Protein: 22g | Fiber: 5g | Calories: 310
+- Ingredients: spinach, paneer, onion, garlic, ginger, cream, garam masala
+- Notes: Best protein source in our rotation.
+
+### Chole (Chickpea Curry)
+- Time: 50 min | Difficulty: Medium | Rating: 5/5
+- Protein: 15g | Fiber: 14g | Calories: 340
+- Ingredients: chickpeas, onion, tomato, chole masala, ginger, cilantro, amchur
+- Notes: Weekend favorite. Great with bhature or rice.
+
+### Paneer Butter Masala
+- Time: 40 min | Difficulty: Medium | Rating: 5/5
+- Protein: 24g | Fiber: 3g | Calories: 400
+- Ingredients: paneer, butter, cream, tomato, cashews, garam masala, kasuri methi
+- Notes: Kids' #1 request. Highest protein dish.
+
+### Rajma (Kidney Bean Curry)
+- Time: 50 min | Difficulty: Easy | Rating: 5/5
+- Protein: 16g | Fiber: 16g | Calories: 340
+- Ingredients: rajma, onion, tomato, ginger, garlic, garam masala, rice
+- Notes: Fiber champion. Great meal prep candidate.
+
+### Aloo Gobi
+- Time: 40 min | Difficulty: Easy | Rating: 4/5
+- Protein: 8g | Fiber: 6g | Calories: 260
+- Ingredients: potato, cauliflower, onion, tomato, turmeric, cumin, garam masala, cilantro
+- Notes: Classic dry sabzi, pair with dal + roti.
+
+### Matar Paneer
+- Time: 40 min | Difficulty: Medium | Rating: 4/5
+- Protein: 20g | Fiber: 6g | Calories: 330
+- Ingredients: paneer, peas, onion, tomato, ginger, garlic, garam masala, cream
+- Notes: Good paneer variety when PBM gets repetitive.
+
+### Kadhi Pakora
+- Time: 50 min | Difficulty: Medium | Rating: 4/5
+- Protein: 14g | Fiber: 4g | Calories: 310
+- Ingredients: yogurt, besan, onion, fenugreek, turmeric, cumin, mustard seeds, rice
+- Notes: Rainy day comfort. Pairs with plain rice.
+
+### Poori Aloo
+- Time: 40 min | Difficulty: Medium | Rating: 5/5
+- Protein: 10g | Fiber: 5g | Calories: 410
+- Ingredients: wheat flour, potato, cumin, green chili, turmeric, oil, cilantro
+- Notes: Weekend treat. Kids love it.
+
+### Khichdi
+- Time: 30 min | Difficulty: Easy | Rating: 5/5
+- Protein: 14g | Fiber: 8g | Calories: 320
+- Ingredients: rice, moong dal, ghee, cumin, turmeric, ginger, vegetables
+- Notes: Ultimate comfort one-pot. When nothing else works.
+
+### Jeera Rice + Dal Fry
+- Time: 40 min | Difficulty: Easy | Rating: 5/5
+- Protein: 16g | Fiber: 10g | Calories: 370
+- Ingredients: rice, cumin, ghee, toor dal, onion, tomato, garlic, ginger, cilantro
+- Notes: The reliable everyday combo.
+
+### Aloo Paratha
+- Time: 45 min | Difficulty: Medium | Rating: 5/5
+- Protein: 10g | Fiber: 5g | Calories: 380
+- Ingredients: wheat flour, potato, green chili, cumin, cilantro, ghee, yogurt, pickle
+- Notes: Weekend breakfast-for-dinner. Everyone loves it.
+
+### Bhindi Masala
+- Time: 30 min | Difficulty: Easy | Rating: 4/5
+- Protein: 6g | Fiber: 6g | Calories: 190
+- Ingredients: okra, onion, tomato, turmeric, coriander powder, amchur, oil
+- Notes: Quick sabzi, pair with roti + dal. Low calorie.
+
+### Vegetable Pulao
+- Time: 40 min | Difficulty: Easy | Rating: 4/5
+- Protein: 10g | Fiber: 6g | Calories: 350
+- Ingredients: basmati rice, mixed vegetables, whole spices, ghee, onion, ginger, mint
+- Notes: One-pot, good for lazy evenings.
+
+---
+
+## MEXICAN / CHIPOTLE-STYLE
+
+### Chipotle Burrito Bowl
+- Time: 30 min | Difficulty: Easy | Rating: 5/5
+- Protein: 18g | Fiber: 14g | Calories: 430
+- Ingredients: rice, black beans, corn salsa, guacamole, cheese, sour cream, lettuce, lime
+- Notes: Build-your-own style. Everyone customizes.
+
+### Bean & Cheese Quesadilla
+- Time: 15 min | Difficulty: Easy | Rating: 5/5
+- Protein: 18g | Fiber: 6g | Calories: 350
+- Ingredients: tortillas, cheese, black beans, salsa, sour cream, jalapeño
+- Notes: Fastest meal we make. Kids' go-to.
+
+### Veggie Tacos (Sofritas-style)
+- Time: 30 min | Difficulty: Easy | Rating: 4/5
+- Protein: 16g | Fiber: 6g | Calories: 310
+- Ingredients: tortillas, tofu crumble, chipotle peppers, onion, cilantro, lime, corn, avocado
+- Notes: Chipotle-inspired. Need tofu.
+
+### Black Bean Soup
+- Time: 40 min | Difficulty: Easy | Rating: 4/5
+- Protein: 16g | Fiber: 18g | Calories: 310
+- Ingredients: black beans, onion, garlic, cumin, chipotle, tomato, lime, cilantro, sour cream
+- Notes: Highest fiber meal. One-pot comfort.
+
+### Nachos Supreme
+- Time: 25 min | Difficulty: Easy | Rating: 5/5
+- Protein: 14g | Fiber: 8g | Calories: 410
+- Ingredients: tortilla chips, cheese, black beans, jalapeño, salsa, sour cream, guacamole
+- Notes: Fun dinner. Movie night go-to.
+
+### Enchilada Casserole
+- Time: 45 min | Difficulty: Medium | Rating: 4/5
+- Protein: 18g | Fiber: 10g | Calories: 390
+- Ingredients: tortillas, black beans, enchilada sauce, cheese, onion, bell pepper, sour cream
+- Notes: Great for batch cooking.
+
+---
+
+## AMERICAN / BREAKFAST-FOR-DINNER
+
+### Pancakes with Maple Syrup
+- Time: 25 min | Difficulty: Easy | Rating: 5/5
+- Protein: 8g | Fiber: 2g | Calories: 400
+- Ingredients: flour, milk, butter, baking powder, maple syrup, vanilla, berries
+- Notes: Weekend favorite. Low protein though.
+
+### French Toast (Eggless)
+- Time: 25 min | Difficulty: Easy | Rating: 5/5
+- Protein: 10g | Fiber: 2g | Calories: 380
+- Ingredients: bread, milk, cinnamon, sugar, vanilla, butter, banana, maple syrup
+- Notes: Use thick bread. Banana on top.
+
+### Grilled Cheese & Tomato Soup
+- Time: 30 min | Difficulty: Easy | Rating: 4/5
+- Protein: 16g | Fiber: 4g | Calories: 400
+- Ingredients: bread, cheddar, butter, canned tomatoes, onion, cream, basil
+- Notes: Rainy day classic.
+
+### Mac and Cheese
+- Time: 30 min | Difficulty: Easy | Rating: 5/5
+- Protein: 18g | Fiber: 3g | Calories: 480
+- Ingredients: macaroni, cheddar, milk, butter, flour, mustard powder, breadcrumbs
+- Notes: Kids obsessed. Decent protein.
+
+### Waffle Bar
+- Time: 30 min | Difficulty: Easy | Rating: 5/5
+- Protein: 10g | Fiber: 2g | Calories: 380
+- Ingredients: waffle mix, milk, butter, whipped cream, berries, chocolate chips, maple syrup
+- Notes: Fun dinner concept. Needs waffle iron.
+
+---
+
+## ITALIAN & OTHER
+
+### Pasta Aglio e Olio
+- Time: 20 min | Difficulty: Easy | Rating: 4/5
+- Protein: 12g | Fiber: 3g | Calories: 440
+- Ingredients: spaghetti, garlic, olive oil, red pepper flakes, parsley, parmesan
+- Notes: Fastest pasta. Pure pantry meal.
+
+### Margherita Pizza (Naan base)
+- Time: 25 min | Difficulty: Easy | Rating: 5/5
+- Protein: 16g | Fiber: 3g | Calories: 370
+- Ingredients: naan, marinara sauce, mozzarella, basil, olive oil
+- Notes: Quick, fun, kids love making their own.
+
+### Pasta Primavera
+- Time: 35 min | Difficulty: Easy | Rating: 3/5
+- Protein: 14g | Fiber: 6g | Calories: 400
+- Ingredients: penne, zucchini, bell pepper, cherry tomatoes, garlic, olive oil, parmesan
+- Notes: Healthy but kids are lukewarm.
+
+### Vegetable Fried Rice
+- Time: 25 min | Difficulty: Easy | Rating: 4/5
+- Protein: 10g | Fiber: 4g | Calories: 340
+- Ingredients: rice, mixed vegetables, soy sauce, sesame oil, ginger, garlic, tofu
+- Notes: Uses leftover rice. Quick.
+
+### Paneer Tikka Wrap
+- Time: 30 min | Difficulty: Easy | Rating: 4/5
+- Protein: 22g | Fiber: 4g | Calories: 370
+- Ingredients: paneer, yogurt, tikka masala, tortilla, onion, bell pepper, mint chutney
+- Notes: Fusion favorite. Good protein.
+
+---
+
+## WHAT I USUALLY HAVE IN THE PANTRY
+
+### Always stocked:
+Basmati rice, wheat flour (atta), toor dal, moong dal, chana dal, urad dal, chickpeas, rajma, 
+yogurt/curd, ghee, butter, milk, paneer (usually), onions, garlic, ginger, tomatoes, green chili, 
+cilantro, curry leaves, potatoes, carrots, peas (frozen), bell peppers, lemons, limes,
+mustard seeds, cumin, turmeric, red chili powder, coriander powder, garam masala, sambar powder, 
+rasam powder, chole masala, hing, black pepper, tamarind paste, sesame oil, vegetable oil, olive oil,
+coconut oil, soy sauce, peanuts, cashews, jaggery, papad,
+spaghetti, bread, tortillas, tortilla chips, salsa, maple syrup, cinnamon
+
+### Usually need to buy:
+Dosa/idli batter, fresh coconut, spinach, cauliflower, okra, drumstick, avocado, tofu, 
+cream, sour cream, mozzarella, cheddar, parmesan, naan, waffle mix, berries, 
+bisi bele bath powder, enchilada sauce, chipotle peppers

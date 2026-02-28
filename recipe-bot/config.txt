@@ -1,0 +1,3 @@
+# Save your Outlook calendar ICS URL here.
+# To get it: Outlook → Settings → Calendar → Shared calendars → Publish → Copy ICS link
+# ics=https://outlook.live.com/owa/calendar/YOUR_LINK_HERE

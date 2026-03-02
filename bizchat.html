@@ -57,7 +57,7 @@ h1 span{background:linear-gradient(135deg,var(--accent),#7c3aed);-webkit-backgro
 /* Main node */
 .nd{opacity:0;transform:scale(.7);transition:opacity .35s,transform .35s;cursor:pointer;padding:0 2px}
 .nd.show{opacity:1;transform:scale(1)}
-.nd .dot{width:13px;height:13px;border-radius:50%;border:2.5px solid var(--accent);background:var(--bg);margin:0 auto 6px;transition:all .25s;position:relative;z-index:2}
+.nd .dot{display:block;width:13px;height:13px;min-width:13px;min-height:13px;border-radius:50%;border:2.5px solid var(--accent);background:var(--bg);margin:0 auto 6px;transition:all .25s;position:relative;z-index:2}
 .nd:hover .dot{transform:scale(1.2);box-shadow:0 0 0 4px var(--accent-soft)}
 .nd.active .dot{background:var(--accent);box-shadow:0 0 0 5px var(--accent-soft)}
 .nd .icon-img{width:24px;height:24px;border-radius:4px;margin:0 auto 6px;display:block;object-fit:contain;position:relative;z-index:2}

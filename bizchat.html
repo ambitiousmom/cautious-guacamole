@@ -66,12 +66,15 @@ h1 span{background:linear-gradient(135deg,var(--accent),#7c3aed);-webkit-backgro
 .nd .nlabel{font-size:.82rem;font-weight:700;color:var(--fg);line-height:1.25}
 .nd .nsub{font-size:.66rem;color:var(--dim);margin-top:1px}
 
-/* Leaf node (hanging left of main) */
-.leaf{opacity:0;transition:opacity .3s;position:absolute;left:-8px;top:100%;cursor:pointer;text-align:right;white-space:nowrap}
+/* Leaf node (hanging below main, offset left) */
+.nd-wrap{flex:1;text-align:center;position:relative;z-index:3;overflow:visible}
+.leaf{opacity:0;transition:opacity .3s;margin-top:2px;cursor:pointer;text-align:center;position:relative}
 .leaf.show{opacity:1}
-.leaf .leaf-conn{position:absolute;right:100%;top:-10px;width:20px;height:28px;border-right:1.5px solid var(--border);border-bottom:1.5px solid var(--border);border-bottom-right-radius:14px;margin-right:4px}
-.leaf .leaf-dot{display:inline-flex;align-items:center;justify-content:center;font-size:.7rem;margin-right:4px;vertical-align:middle}
-.leaf .leaf-label{font-size:.76rem;font-weight:700;color:var(--dim);vertical-align:middle}
+.leaf .leaf-conn{width:2px;height:20px;margin:0 auto;position:relative;overflow:visible}
+.leaf .leaf-conn::before{content:'';position:absolute;top:0;left:-8px;width:10px;height:20px;border-left:1.5px solid var(--dim);border-bottom:1.5px solid var(--dim);border-bottom-left-radius:12px}
+.leaf .leaf-content{display:flex;align-items:center;justify-content:center;gap:4px;margin-left:-16px}
+.leaf .leaf-dot{font-size:.7rem;flex-shrink:0}
+.leaf .leaf-label{font-size:.76rem;font-weight:700;color:var(--dim)}
 .leaf .leaf-sub{font-size:.6rem;color:var(--dim);margin-top:1px}
 .leaf:hover .leaf-label{color:var(--accent)}
 
@@ -270,7 +273,7 @@ NODES.forEach((n,i)=>{
     const lf=document.createElement('div');
     lf.className='leaf';
     lf.id='leaf-'+n.leaf.id;
-    lf.innerHTML=`<div class="leaf-conn"></div><span class="leaf-dot">${n.leaf.icon}</span><span class="leaf-label">${n.leaf.label}</span>`;
+    lf.innerHTML=`<div class="leaf-conn"></div><div class="leaf-content"><span class="leaf-dot">${n.leaf.icon}</span><span class="leaf-label">${n.leaf.label}</span></div>`;
     lf.addEventListener('click',(e)=>{e.stopPropagation();openCard(i,'leaf');});
     wrap.appendChild(lf);
   }

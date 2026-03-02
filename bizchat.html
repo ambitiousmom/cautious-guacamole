@@ -14,23 +14,19 @@ body{font-family:var(--font);background:var(--bg);color:var(--fg);line-height:1.
 .header{padding:40px 0 0;opacity:0;animation:fu .6s ease forwards}
 h1{font-size:2rem;font-weight:700;letter-spacing:-.04em;line-height:1.1;margin-bottom:4px}
 h1 span{background:linear-gradient(135deg,var(--accent),#7c3aed);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
-.role{font-size:.82rem;color:var(--muted);line-height:1.45}
-.role strong{color:var(--fg);font-weight:600}
+.role{font-size:.82rem;color:var(--muted);line-height:1.45}.role strong{color:var(--fg);font-weight:600}
 .summary{padding:14px 0 0;list-style:none;opacity:0;animation:fu .6s ease .2s forwards}
 .summary li{font-size:.82rem;color:var(--muted);line-height:1.6;margin-bottom:6px;padding-left:16px;position:relative}
 .summary li::before{content:'';position:absolute;left:0;top:10px;width:6px;height:6px;border-radius:50%;background:var(--accent)}
 .start-wrap{text-align:center;padding:24px 0 0;opacity:0;animation:fu .5s ease .5s forwards}
 .start-btn{padding:12px 32px;background:var(--accent);color:#fff;border:none;border-radius:100px;font-size:.9rem;font-weight:600;cursor:pointer;font-family:var(--font);box-shadow:0 4px 16px rgba(79,70,229,.2);transition:all .2s}
-.start-btn:hover{background:#6d5dd3;transform:translateY(-1px)}
-.start-wrap.gone{display:none}
+.start-btn:hover{background:#6d5dd3;transform:translateY(-1px)}.start-wrap.gone{display:none}
 .tl-area{display:none;padding:28px 0 48px}.tl-area.active{display:block}
 .row-label{font-size:.66rem;letter-spacing:.08em;color:var(--dim);font-weight:700;padding:0 0 4px}
-.row-label.center{text-align:center}
 .tl-row{display:flex;align-items:flex-start;position:relative;padding:0 12px}
 .tl-row::before{content:'';position:absolute;top:6px;left:36px;right:36px;height:2px;background:var(--fg);opacity:.15;border-radius:2px}
 .tl-row.r2{flex-direction:row-reverse}
-.tl-fold{width:2px;height:44px;background:var(--fg);opacity:.15;margin-left:auto;margin-right:36px;border-radius:2px;opacity:0;transition:opacity .3s;position:relative}
-/* Nodes */
+.tl-fold{width:2px;height:44px;background:var(--fg);opacity:.15;margin-left:auto;margin-right:36px;border-radius:2px;opacity:0;transition:opacity .3s}
 .nd-wrap{flex:1;text-align:center;position:relative;z-index:3}
 .nd{opacity:0;transform:scale(.7);transition:opacity .35s,transform .35s;cursor:pointer;padding:0 2px}
 .nd.show{opacity:1;transform:scale(1)}
@@ -41,14 +37,12 @@ h1 span{background:linear-gradient(135deg,var(--accent),#7c3aed);-webkit-backgro
 .nd.now-nd .dot{background:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
 .nd .nlabel{font-size:.82rem;font-weight:700;color:var(--fg);line-height:1.25}
 .nd .nsub{font-size:.66rem;color:var(--dim);margin-top:1px}
-/* Leaf nodes: dot on mainline, vertical drop, label below */
 .nd.leaf-nd .dot{width:8px;height:8px;min-width:8px;min-height:8px;border-color:var(--fg);border-width:2px;opacity:.4;margin-bottom:0}
 .nd.leaf-nd:hover .dot{border-color:var(--accent);opacity:1}
 .nd.leaf-nd.active .dot{background:var(--accent);border-color:var(--accent);opacity:1}
 .nd.leaf-nd .drop-line{width:1.5px;height:24px;background:var(--fg);opacity:.15;margin:0 auto}
 .nd.leaf-nd .nlabel{font-size:.72rem;color:var(--dim);font-weight:600;margin-top:4px}
 .nd.leaf-nd .nsub{display:none}
-/* Dropdown card */
 .dd-wrap{position:relative;width:100%;min-height:0}
 .dd{display:none;position:relative;margin:14px auto;max-width:560px;background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:22px 26px;box-shadow:0 10px 40px rgba(0,0,0,.08);z-index:10;animation:di .25s ease}
 .dd.show{display:block}
@@ -56,8 +50,7 @@ h1 span{background:linear-gradient(135deg,var(--accent),#7c3aed);-webkit-backgro
 @keyframes fu{to{opacity:1;transform:translateY(0)}}
 .dd .badge{display:inline-block;font-size:.52rem;padding:3px 10px;border-radius:100px;background:var(--accent-soft);color:var(--accent);font-weight:700;margin-bottom:6px}
 .dd h3{font-size:.92rem;font-weight:700;margin-bottom:6px}
-.dd p{font-size:.76rem;color:var(--muted);line-height:1.55;margin-bottom:5px}
-.dd p strong{color:var(--fg)}
+.dd p{font-size:.76rem;color:var(--muted);line-height:1.55;margin-bottom:5px}.dd p strong{color:var(--fg)}
 .dd ul{list-style:none;padding:0;margin:4px 0}
 .dd ul li{font-size:.74rem;color:var(--muted);line-height:1.55;padding-left:13px;position:relative;margin-bottom:3px}
 .dd ul li::before{content:'';position:absolute;left:0;top:8px;width:5px;height:5px;border-radius:50%;background:var(--accent)}
@@ -69,8 +62,7 @@ h1 span{background:linear-gradient(135deg,var(--accent),#7c3aed);-webkit-backgro
 .og-m p{font-size:.6rem;color:var(--muted);line-height:1.35;margin:0}
 .og-m .mt{display:flex;flex-wrap:wrap;gap:3px;margin-top:4px}
 .og-m .mt span{font-size:.46rem;padding:2px 6px;border-radius:100px;background:#f3f4f6;color:#6b7280;font-weight:600}
-.hint{text-align:center;font-size:.64rem;color:var(--dim);padding:8px 0;opacity:0;transition:opacity .3s}
-.hint.show{opacity:1}
+.hint{text-align:center;font-size:.64rem;color:var(--dim);padding:8px 0;opacity:0;transition:opacity .3s}.hint.show{opacity:1}
 @media(max-width:600px){h1{font-size:1.6rem}.dd{max-width:95%}.og{grid-template-columns:1fr}}
 </style>
 </head>
@@ -98,122 +90,183 @@ h1 span{background:linear-gradient(135deg,var(--accent),#7c3aed);-webkit-backgro
   <div class="tl-row" id="row1"></div>
   <div class="dd-wrap"><div class="dd" id="dd-row1"></div></div>
   <div class="tl-fold" id="fold1"></div>
-  <div class="row-label center" id="row2label" style="opacity:0">← Earlier</div>
+  <div class="row-label center" id="row2label" style="opacity:0;text-align:center">← Earlier</div>
   <div class="tl-row r2" id="row2"></div>
   <div class="dd-wrap"><div class="dd" id="dd-row2"></div></div>
-  <div class="hint" id="hint">Press any key for next →</div>
+  <div class="hint" id="hint">Press any key or click →</div>
 </div>
 </div>
 <script>
 try{
-const N=[
-// ROW 1: leaf first, then its parent
-{id:'tinkerer',label:'🛠️ Tinkerer/Builder',leaf:true,row:0,
- badge:'🛠️ Builder',h:'Agents I\'m Building + Hackathon: Holistic Copilot',
+// ═══ ALL VISUAL NODES (render order: left to right per row) ═══
+const VIS=[
+// Row 1
+{id:'tinkerer',label:'🛠️ Tinkerer/Builder',leaf:true,row:0},
+{id:'copilot',label:'MAI Copilot',sub:'Grounding & Enrichment',cls:'now-nd',row:0},
+{id:'patents-ai',label:'⭐ Patents',leaf:true,row:0},
+{id:'founder',label:'Collab AI',sub:'E2E Founder PM',row:0},
+{id:'hack-onecopi',label:'🛠️ Hackathon',leaf:true,row:0},
+{id:'collabscale',label:'Doc Collab Platform',sub:'Global Scale',row:0},
+// Row 2
+{id:'on-rearch',label:'OneNote Rearch.',sub:'Augmentation Platform',row:1},
+{id:'techbreak',label:'Tech Break',sub:'Screenplay Writing',bolt:true,row:1},
+{id:'pm-canvas',label:'PM Canvas UX',sub:'OneNote Framework',row:1},
+{id:'patent-page',label:'⭐ Patent',leaf:true,row:1},
+{id:'telemetry',label:'Tech Lead',sub:'Telemetry Platform',row:1},
+{id:'rendering',label:'Rendering',sub:'Platform SWE',row:1}
+];
+
+// ═══ CARD DATA (keyed by id) ═══
+const CARDS={
+copilot:{badge:'Current Role',h:'Copilot Grounding & Enrichment Platform — DRI',
+ bl:['<strong>DRI for grounding quality</strong> across the RAG stack — trust & relevance across 1P & 3P','Defined <strong>"Needs Met" competitive framework</strong> benchmarking against Perplexity & Google','<strong>17pt Defect Reduction · 4pt Satisfaction Lift</strong> — Hypothesis-Driven Experimentation','Shipped <strong>automated EVALS pipelines</strong> — data-driven quality gates at scale','Built <strong>Trust & Quality Evaluation Frameworks</strong> with Applied Science & Policy — Responsible AI'],
+ tg:['RAG','EVALS','Grounding','Competitive Parity','Responsible AI','Trust Frameworks']},
+tinkerer:{badge:'🛠️ Builder',h:'Agents I\'m Building + Hackathon: Holistic Copilot',
  desc:'<strong>Hackathon 2024:</strong> Copilot as cross-boundary AI companion — 3P connectors, agent library, privacy boundaries.',
  mn:[{t:'Multi-Agent Workflow',d:'Agents collaborating — handoffs, shared context.',tg:['Agent Collab','Orchestration']},{t:'Grounding Evaluator',d:'Auto-EVALS — grounding accuracy, citations.',tg:['EVALS','Grounding']},{t:'Holistic Copilot',d:'Cross-boundary AI — 3P connectors, agent library.',tg:['Connectors','3P Extensibility']}],
  tg:['Connectors','Agent Library','Copilot Platform','Tinkering']},
-{id:'copilot',label:'MAI Copilot',sub:'Grounding & Enrichment',cls:'now-nd',row:0,above:'NOW',
- badge:'Current Role',h:'Copilot Grounding & Enrichment Platform — DRI',
- bl:['<strong>DRI for grounding quality</strong> across the RAG stack — trust & relevance across 1P & 3P','Defined <strong>"Needs Met" competitive framework</strong> benchmarking against Perplexity & Google','<strong>17pt defect reduction · 4pt satisfaction lift</strong> — hypothesis-driven experimentation','Shipped <strong>automated EVALS pipelines</strong> — data-driven quality gates at scale','Built <strong>trust & quality evaluation frameworks</strong> with Applied Science & Policy'],
- tg:['RAG','EVALS','Grounding','Competitive Parity','Responsible AI','Trust Frameworks']},
-{id:'patents-ai',label:'⭐ Patents',leaf:true,row:0,
- badge:'⭐ Core Inventor',h:'Patents — GenAI Agentic Systems',
- bl:['<strong>GenAI Agent Collaboration</strong> — multi-agent orchestration for doc collab','<strong>GenAI Agent Orchestration</strong> — agentic design for cross-app reasoning'],
- tg:['GenAI Agents','Orchestration','Collaboration']},
-{id:'founder',label:'Collab AI',sub:'E2E Founder PM',row:0,above:'RECENT →',
- badge:'0→1 Founder PM',h:'E2E Bootstrapper — Collab AI Founder',
- bl:['Authored "<strong>AI-Productivity Paradox</strong>" — User/JTBD Research → SLT-Funded Charter','Rallied <strong>10+ product orgs</strong> across apps & platform','Designed <strong>app-agnostic reasoning spine</strong> for Word, Excel, PPT, Teams','E2E bootstrapped <strong>2 collab agents</strong> — opportunity → ship → metrics'],
+founder:{badge:'0→1 Founder PM',h:'E2E Bootstrapper — Collab AI Founder',
+ bl:['Authored "<strong>AI-Productivity Paradox</strong>" — User/JTBD Research → SLT-Funded Charter → 10+ Orgs Aligned across Apps & Platform','Designed <strong>app-agnostic reasoning spine</strong> for Word, Excel, PPT, Teams — core AI platform capabilities','E2E Bootstrapped <strong>2 Collab Agents</strong> — Opportunity ID → Conceptualization → Spec → Build → Ship → Metrics'],
  tg:['0→1 Charter','Cross-Org','Agent Orchestration','Platform Strategy']},
-{id:'hack-onecopi',label:'🛠️ Hackathon',leaf:true,row:0,
- badge:'🛠️ Envision',h:'Hackathon — One Copilot Vision',
- desc:'Interactive prototype exploring unified Copilot UX across M365 surfaces.',
- mn:[{t:'Cross-App Agent UX',d:'Multi-agent orchestration, surface handoff.',tg:['Multi-Agent','Cross-App']},{t:'Multimodal Editing',d:'Voice + NL as input modalities.',tg:['Multimodal','Voice UX']},{t:'Coherence Dashboard',d:'Trust & quality scoring.',tg:['EVALS','Agent Quality']},{t:'Grounding Playground',d:'RAG experimentation toolkit.',tg:['RAG','Experimentation']}],
- tg:['Cross-App','Conversational UX','Copilot Platform']},
-{id:'collabscale',label:'Doc Collab Platform',sub:'Global Scale',row:0,
- badge:'Scale',h:'Document Collaboration Platform — Global Scale',
- bl:['Owned Office Collab at <strong>60M sessions/day</strong>','Reduced COGS from <strong>0.41¢ to 0.1¢/session</strong>','Platform economics — infrastructure consumed by 50+ app surfaces'],
+'patents-ai':{badge:'⭐ Core Inventor',h:'3 US Patents',
+ bl:['<strong>GenAI Agent Collaboration</strong> — multi-agent orchestration for document collab','<strong>GenAI Agent Orchestration</strong> — agentic system design for cross-app reasoning','<strong>OneNote Page Sharing</strong> — real-time collaborative UX'],
+ tg:['GenAI Agents','Orchestration','Collaboration']},
+collabscale:{badge:'Scale',h:'Document Collaboration Platform — Global Scale',
+ bl:['Owned Office Collab at <strong>60M Sessions/Day</strong> — COGS 0.41¢ → 0.1¢/Session','Platform economics — infrastructure consumed by 50+ app surfaces'],
  tg:['60M Scale','COGS Optimization','Platform Economics']},
-// ROW 2
-{id:'on-rearch',label:'OneNote Rearch.',sub:'Augmentation Platform',row:1,
- badge:'Platform Rearchitect',h:'OneNote Augmentation Platform Redesign',
- bl:['Redesigned <strong>OneNote\'s Augmentation Pipeline</strong> — image & ink processing','Defined <strong>"Time-to-Augment" metric</strong> to measure pipeline performance','First platform rearchitect: <strong>shared infrastructure for multiple surfaces</strong>'],
+'hack-onecopi':{badge:'🛠️ Envision',h:'Hackathon — One Copilot Vision',
+ desc:'Interactive prototype exploring unified Copilot UX across M365 surfaces.',
+ mn:[{t:'Cross-App Agent UX',d:'Multi-agent orchestration, surface handoff, shared context across apps.',tg:['Multi-Agent','Orchestration','Cross-App','Extensibility']},{t:'Multimodal Editing',d:'Voice + NL as input modalities — contextual rewrites, flow-preserving.',tg:['Multimodal','Voice UX','Copilot in Word']},{t:'Coherence Dashboard',d:'Trust & quality — coherence scoring, grounding accuracy, gravity metrics.',tg:['EVALS','Agent Quality','Trust Metrics']},{t:'Grounding Playground',d:'RAG experimentation — snippets, token budgets, precision.',tg:['RAG','Experimentation','Token Optimization']}],
+ tg:['Cross-App','Conversational UX','Copilot Platform']},
+'on-rearch':{badge:'Platform Rearchitect',h:'OneNote Augmentation Platform Redesign',
+ bl:['Redesigned <strong>OneNote Augmentation Platform</strong> — Image & Ink Pipeline, Performance & Scale','Defined <strong>"Time-to-Augment" metric</strong> to measure pipeline performance','First platform rearchitect: <strong>shared infrastructure for multiple surfaces</strong>'],
  tg:['Platform','Pipeline Redesign','Time-to-Augment','Scale']},
-{id:'techbreak',label:'Tech Break',sub:'Screenplay Writing',bolt:true,row:1,
- badge:'⚡ Creative Pursuits',h:'Screenplay Writing & Teaching',
- bl:['<strong>Professional screenplay writer</strong> for Tamil-language theater','<strong>Tamil teacher</strong> for first-generation American kids','Came back with sharper product instincts and narrative clarity'],tg:[]},
-{id:'pm-canvas',label:'PM Canvas UX',sub:'OneNote Framework',row:1,
- badge:'PM',h:'Canvas UX Framework — OneNote',
+'pm-canvas':{badge:'PM',h:'Canvas UX Framework — OneNote',
  bl:['Owned the <strong>Canvas UX framework</strong> across all OneNote endpoints','Full-stack product ownership spanning design, engineering, and telemetry','Transitioned from engineering to product management'],
  tg:['Canvas UX','Cross-Platform','Product Management']},
-{id:'patent-page',label:'⭐ Patent',leaf:true,row:1,
- badge:'⭐ Inventor',h:'Patent — Page Sharing & Notifications',
+'patent-page':{badge:'⭐ Inventor',h:'Patent — Page Sharing & Notifications',
  bl:['<strong>US Patent for "Page Sharing and Notifications"</strong> — real-time collaborative UX','Early innovation in collaborative document systems'],
  tg:['Real-Time Collab','Patent','Shared UX']},
-{id:'telemetry',label:'Tech Lead',sub:'Telemetry Platform',row:1,
- badge:'0→1 Tech Lead',h:'Telemetry Verification Platform & API Evangelism',
+telemetry:{badge:'0→1 Tech Lead',h:'Telemetry Verification Platform & API Evangelism',
  bl:['Built <strong>0→1 Telemetry Verification Platform</strong> for data-driven prioritization','<strong>Evangelized APIs/SDKs</strong> for internal use across engineering teams'],
  tg:['Telemetry','Dev Tools','0→1','API Evangelism']},
-{id:'rendering',label:'Rendering',sub:'Platform SWE',row:1,
- badge:'SWE Foundation',h:'Rendering Platform — Where It Started',
+rendering:{badge:'SWE Foundation',h:'Rendering Platform — Where It Started',
  bl:['Led 12-engineer team in <strong>full-stack Canvas/Rendering redesign</strong> across Win, Mac, iOS','Hands-on with <strong>SDKs, APIs, cross-platform tooling</strong>','The engineering foundation that shapes how I think about platform problems today'],
  tg:['Rendering Engine','SDK/API','Cross-Platform','Full-Stack']}
+};
+
+// ═══ STEPS: [action, nodeId] ═══
+// action: 'show' = reveal node, 'card' = open card, 'leaf' = reveal leaf + open its card
+const STEPS=[
+['show','copilot'],      // 1: show MAI node
+['card','copilot'],      // 2: open MAI card
+['leaf','tinkerer'],     // 3: show Tinkerer + open its card
+['show','founder'],      // 4: show Collab AI node
+['card','founder'],      // 5: open Collab AI card
+['leaf','patents-ai'],   // 6: show Patents + open its card
+['show','collabscale'],  // 7: show Doc Collab
+['card','collabscale'],  // 8: open Doc Collab card
+['leaf','hack-onecopi'], // 9: show Hackathon + open its card
+['show','on-rearch'],    // 10: show OneNote Rearch
+['card','on-rearch'],    // 11: open its card
+['show','techbreak'],    // 12: show Tech Break (no card)
+['show','pm-canvas'],    // 13: show PM Canvas UX
+['card','pm-canvas'],    // 14: open its card
+['leaf','patent-page'],  // 15: show Patent leaf + card
+['show','telemetry'],    // 16: show Telemetry
+['card','telemetry'],    // 17: open its card
+['show','rendering'],    // 18: show Rendering
+['card','rendering'],    // 19: open its card
 ];
+
+// ═══ BUILD VISUAL NODES ═══
 const r1=document.getElementById('row1'),r2=document.getElementById('row2');
-N.forEach((n,i)=>{
+VIS.forEach(n=>{
   const w=document.createElement('div');w.className='nd-wrap';
   const d=document.createElement('div');
   d.className='nd'+(n.cls?' '+n.cls:'')+(n.leaf?' leaf-nd':'');
-  d.id='nd-'+n.id;d.dataset.idx=i;
+  d.id='nd-'+n.id;
   let dot;
   if(n.bolt) dot='<span class="bolt">⚡</span>';
   else if(n.leaf) dot='<span class="dot"></span><div class="drop-line"></div>';
   else dot='<span class="dot"></span>';
-  // No spacers or above labels - handled separately
   d.innerHTML=dot+'<div class="nlabel">'+n.label+'</div>'+(n.sub?'<div class="nsub">'+n.sub+'</div>':'');
-  d.addEventListener('click',()=>openCard(i));
+  d.addEventListener('click',()=>{if(CARDS[n.id])showCard(n.id,n.row);});
   w.appendChild(d);
   if(n.row===0)r1.appendChild(w);else r2.appendChild(w);
 });
-function bld(n){
-  let h='<div class="badge">'+n.badge+'</div><h3>'+n.h+'</h3>';
-  if(n.desc)h+='<p>'+n.desc+'</p>';
-  if(n.bl)h+='<ul>'+n.bl.map(b=>'<li>'+b+'</li>').join('')+'</ul>';
-  if(n.mn)h+='<div class="og">'+n.mn.map(m=>'<div class="og-m"><h5>'+m.t+'</h5><p>'+m.d+'</p>'+(m.tg?'<div class="mt">'+m.tg.map(t=>'<span>'+t+'</span>').join('')+'</div>':'')+'</div>').join('')+'</div>';
-  if(n.tg&&n.tg.length)h+='<div class="tags">'+n.tg.map(t=>'<span>'+t+'</span>').join('')+'</div>';
+
+function bld(c){
+  let h='<div class="badge">'+c.badge+'</div><h3>'+c.h+'</h3>';
+  if(c.desc)h+='<p>'+c.desc+'</p>';
+  if(c.bl)h+='<ul>'+c.bl.map(b=>'<li>'+b+'</li>').join('')+'</ul>';
+  if(c.mn)h+='<div class="og">'+c.mn.map(m=>'<div class="og-m"><h5>'+m.t+'</h5><p>'+m.d+'</p>'+(m.tg?'<div class="mt">'+m.tg.map(t=>'<span>'+t+'</span>').join('')+'</div>':'')+'</div>').join('')+'</div>';
+  if(c.tg&&c.tg.length)h+='<div class="tags">'+c.tg.map(t=>'<span>'+t+'</span>').join('')+'</div>';
   return h;
 }
-let step=-1,started=false;const total=N.length;
+
+let step=-1,started=false;
+const total=STEPS.length;
+
 document.getElementById('startBtn').addEventListener('click',()=>{
   document.getElementById('startWrap').classList.add('gone');
   document.getElementById('tlArea').classList.add('active');
   started=true;advance();
 });
+
 function advance(){
-  closeAll();step++;
+  step++;
   if(step>=total){document.getElementById('hint').classList.remove('show');return;}
-  const n=N[step];document.getElementById('nd-'+n.id).classList.add('show');
-  if(step===1){document.getElementById('nowLabel').style.opacity='1';}
-  if(step===3){document.getElementById('recentLabel').style.opacity='1';}
-  if(n.row===1&&step===N.findIndex(x=>x.row===1)){document.getElementById('fold1').style.opacity='1';document.getElementById('row2label').style.opacity='1';}
-  setTimeout(()=>openCard(step),300);
+  const[action,id]=STEPS[step];
+  const vis=VIS.find(v=>v.id===id);
+
+  if(action==='show'){
+    closeCards();
+    document.getElementById('nd-'+id).classList.add('show');
+    // Labels
+    if(id==='copilot')document.getElementById('nowLabel').style.opacity='1';
+    if(id==='founder')document.getElementById('recentLabel').style.opacity='1';
+    if(vis&&vis.row===1&&id==='on-rearch'){document.getElementById('fold1').style.opacity='1';document.getElementById('row2label').style.opacity='1';}
+    updateHint();
+  }
+  else if(action==='card'){
+    showCard(id,vis?vis.row:0);
+  }
+  else if(action==='leaf'){
+    closeCards();
+    document.getElementById('nd-'+id).classList.add('show');
+    if(CARDS[id])showCard(id,vis?vis.row:0);
+  }
 }
-function openCard(i){
-  closeAll();const n=N[i];document.getElementById('nd-'+n.id).classList.add('active');
-  const dd=document.getElementById(n.row===0?'dd-row1':'dd-row2');
-  dd.innerHTML=bld(n);dd.classList.add('show');
-  const h=document.getElementById('hint');
-  h.textContent=step<total-1?'Press any key for next →':'';
-  h.classList.add('show');
+
+function showCard(id,row){
+  closeCards();
+  document.querySelectorAll('.nd').forEach(d=>d.classList.remove('active'));
+  document.getElementById('nd-'+id).classList.add('active');
+  const dd=document.getElementById(row===0?'dd-row1':'dd-row2');
+  dd.innerHTML=bld(CARDS[id]);dd.classList.add('show');
+  updateHint();
   setTimeout(()=>dd.scrollIntoView({behavior:'smooth',block:'nearest'}),100);
 }
-function closeAll(){
+
+function closeCards(){
   document.querySelectorAll('.dd').forEach(d=>{d.classList.remove('show');d.innerHTML='';});
   document.querySelectorAll('.nd').forEach(d=>d.classList.remove('active'));
 }
+
+function updateHint(){
+  const h=document.getElementById('hint');
+  h.textContent=step<total-1?'Press any key or click →':'';
+  h.classList.add('show');
+}
+
 document.addEventListener('keydown',e=>{
-  if(!started)return;if(e.key==='Escape'){closeAll();return;}
-  closeAll();if(step<total-1)advance();
+  if(!started)return;if(e.key==='Escape'){closeCards();return;}
+  advance();
+});
+document.getElementById('tlArea').addEventListener('click',e=>{
+  if(!started||e.target.closest('.nd')||e.target.closest('.dd'))return;
+  advance();
 });
 }catch(err){document.body.innerHTML+='<pre style="color:red;padding:20px">'+err.message+'\n'+err.stack+'</pre>';}
 </script>

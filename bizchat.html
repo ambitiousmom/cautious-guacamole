@@ -7,328 +7,294 @@
 <style>
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
 :root{
-  --bg:#f5f0e8;--fg:#2d2a24;--muted:#6b6560;--dim:#9b9590;
-  --accent:#c45a3c;--accent2:#d4715a;--accent-soft:rgba(196,90,60,.08);
-  --border:#d9d3c7;--card:#faf7f2;--card2:#fff;
-  --branch:#7c6f64;--detour:#a89984;--hack:#8f6e3f;
-  --font:'Segoe UI',system-ui,-apple-system,sans-serif;
+  --bg:#fafafa;--fg:#1a1a1a;--muted:#555;--dim:#999;--accent:#4f46e5;--accent-soft:#eef2ff;
+  --border:#e5e5e5;--card:#fff;--font:'Segoe UI',system-ui,-apple-system,sans-serif;
   --mono:'Cascadia Code','Fira Code','SF Mono',monospace;
-  --radius:14px;
+  --max:960px;--radius:10px;
 }
-html{font-size:15px}body{font-family:var(--font);background:var(--bg);color:var(--fg);line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden;min-height:100vh;display:flex;flex-direction:column}
+html{font-size:15px;scroll-behavior:smooth}
+body{font-family:var(--font);background:var(--bg);color:var(--fg);line-height:1.55;-webkit-font-smoothing:antialiased;overflow-x:hidden}
 ::selection{background:var(--accent);color:#fff}
 
 /* ═══ Header ═══ */
-.hero{text-align:center;padding:44px 24px 20px;opacity:0;animation:fadeIn .6s ease forwards}
-.hero h1{font-size:1.8rem;font-weight:700;letter-spacing:-.03em}
-.hero .sub{font-size:.82rem;color:var(--muted);margin-top:4px}
-.hero .sub strong{color:var(--fg);font-weight:600}
-.hero .summ{max-width:560px;margin:14px auto 0;font-size:.82rem;color:var(--muted);line-height:1.65}
-.hero .summ strong{color:var(--fg);font-weight:600}
+.header{max-width:var(--max);margin:0 auto;padding:44px 24px 0;opacity:0;animation:fadeUp .6s ease forwards}
+h1{font-size:2rem;font-weight:700;letter-spacing:-.04em;line-height:1.1;margin-bottom:4px}
+h1 span{background:linear-gradient(135deg,var(--accent),#7c3aed);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.role{font-size:.86rem;color:var(--muted);line-height:1.45}
+.role strong{color:var(--fg);font-weight:600}
 
-/* Start */
-.start{text-align:center;padding:16px 0 0;opacity:0;animation:fadeIn .5s ease .4s forwards}
-.start button{padding:10px 28px;background:var(--accent);color:#fff;border:none;border-radius:100px;font-size:.8rem;font-weight:600;cursor:pointer;font-family:var(--font);box-shadow:0 4px 16px rgba(196,90,60,.2);transition:all .2s}
-.start button:hover{background:var(--accent2);transform:translateY(-1px)}
-.start.gone{display:none}
+/* Summary */
+.summary{max-width:var(--max);margin:0 auto;padding:14px 24px 0;list-style:none;opacity:0;animation:fadeUp .6s ease .2s forwards}
+.summary li{font-size:.86rem;color:var(--muted);line-height:1.6;margin-bottom:8px;padding-left:16px;position:relative}
+.summary li::before{content:'';position:absolute;left:0;top:10px;width:6px;height:6px;border-radius:50%;background:var(--accent)}
 
-/* ═══ Timeline Container ═══ */
-.tl-wrap{display:none;flex:1;padding:24px 0 48px;position:relative}
-.tl-wrap.active{display:block}
-.tl-scroll{overflow-x:auto;overflow-y:visible;padding:0 48px 0 48px;-webkit-overflow-scrolling:touch}
-.tl-canvas{position:relative;height:360px;min-width:200px;/* gets sized by JS */}
+/* Start button */
+.start-wrap{text-align:center;padding:24px 0 0;opacity:0;animation:fadeUp .5s ease .5s forwards}
+.start-btn{padding:10px 28px;background:var(--accent);color:#fff;border:none;border-radius:100px;font-size:.82rem;font-weight:600;cursor:pointer;font-family:var(--font);box-shadow:0 4px 16px rgba(79,70,229,.2);transition:all .2s}
+.start-btn:hover{background:#6d5dd3;transform:translateY(-1px)}
+.start-wrap.gone{display:none}
 
-/* Lines (SVG) */
+/* ═══ Timeline area ═══ */
+.tl-area{display:none;padding:24px 0 48px}
+.tl-area.active{display:block}
+.tl-scroll{overflow-x:auto;overflow-y:visible;padding:20px 48px 200px;-webkit-overflow-scrolling:touch}
+.tl-canvas{position:relative;height:100px}
+
+/* SVG line */
 .tl-canvas svg{position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none}
-.tl-canvas svg line,.tl-canvas svg path{fill:none;stroke-width:2.5;stroke-linecap:round}
-.ln-main{stroke:var(--fg);stroke-opacity:.2}
-.ln-branch{stroke:var(--branch);stroke-opacity:.25}
-.ln-dash{stroke:var(--dim);stroke-dasharray:5 4;stroke-opacity:.2}
+.ln{stroke:var(--border);stroke-width:2.5;stroke-linecap:round;fill:none}
 
 /* Nodes */
-.nd{position:absolute;text-align:center;opacity:0;transform:scale(.7);transition:opacity .35s,transform .35s;cursor:pointer;z-index:3;width:90px}
+.nd{position:absolute;top:0;text-align:center;width:110px;opacity:0;transform:scale(.75);transition:opacity .35s,transform .35s;cursor:pointer;z-index:3}
 .nd.show{opacity:1;transform:scale(1)}
-.nd .dot{width:18px;height:18px;border-radius:50%;border:2.5px solid var(--border);background:var(--bg);margin:0 auto 5px;transition:all .2s;position:relative}
+
+.nd .dot{width:18px;height:18px;border-radius:50%;border:2.5px solid var(--border);background:var(--bg);margin:0 auto 6px;transition:all .2s;position:relative}
 .nd:hover .dot{border-color:var(--accent);transform:scale(1.15);box-shadow:0 0 0 4px var(--accent-soft)}
 .nd.active .dot{border-color:var(--accent);background:var(--accent);box-shadow:0 0 0 5px var(--accent-soft)}
-.nd .icon-img{width:24px;height:24px;border-radius:4px;margin:0 auto 5px;display:block;object-fit:contain}
-.nd .bolt{font-size:.75rem;margin:0 auto 3px;display:block;width:18px;height:18px;line-height:18px;text-align:center}
-.nd .nlabel{font-size:.58rem;font-weight:700;color:var(--fg);line-height:1.2}
-.nd .nsub{font-size:.48rem;color:var(--dim);margin-top:1px}
+.nd .icon-img{width:24px;height:24px;border-radius:4px;margin:0 auto 6px;display:block;object-fit:contain}
+.nd .bolt{font-size:.8rem;display:block;margin:0 auto 4px;width:18px;height:18px;line-height:18px;text-align:center}
+.nd.now-nd .dot{background:var(--accent);border-color:var(--accent);box-shadow:0 0 0 5px var(--accent-soft)}
+.nd.patent-nd .dot{border-color:var(--accent);border-width:3px;background:var(--card)}
+.nd.patent-nd .dot::after{content:'★';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:.45rem;color:var(--accent)}
+
+.nd .nlabel{font-size:.62rem;font-weight:700;color:var(--fg);line-height:1.2}
+.nd .nsub{font-size:.5rem;color:var(--dim);margin-top:1px}
 
 /* ═══ Dropdown card ═══ */
-.dd{display:none;position:absolute;left:50%;transform:translateX(-50%);top:100%;width:320px;background:var(--card2);border:1px solid var(--border);border-radius:var(--radius);padding:18px 22px;box-shadow:0 10px 40px rgba(0,0,0,.1);z-index:10;animation:dropIn .25s ease}
+.dd{display:none;position:absolute;left:50%;transform:translateX(-50%);top:calc(100% + 8px);width:360px;max-width:90vw;background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:20px 24px;box-shadow:0 10px 40px rgba(0,0,0,.08);z-index:10;animation:dropIn .25s ease}
 .dd.show{display:block}
 @keyframes dropIn{from{opacity:0;transform:translateX(-50%) translateY(-8px)}to{opacity:1;transform:translateX(-50%) translateY(0)}}
-@keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fadeUp{to{opacity:1;transform:translateY(0)}}
 
-.dd .badge{display:inline-block;font-size:.48rem;padding:3px 9px;border-radius:100px;background:var(--accent-soft);color:var(--accent);font-weight:700;margin-bottom:5px}
-.dd h3{font-size:.9rem;font-weight:700;margin-bottom:5px}
-.dd p{font-size:.74rem;color:var(--muted);line-height:1.55;margin-bottom:5px}
+.dd .badge{display:inline-block;font-size:.5rem;padding:3px 10px;border-radius:100px;background:var(--accent-soft);color:var(--accent);font-weight:700;margin-bottom:6px}
+.dd h3{font-size:.95rem;font-weight:700;margin-bottom:6px}
+.dd p{font-size:.78rem;color:var(--muted);line-height:1.6;margin-bottom:6px}
 .dd p strong{color:var(--fg)}
 .dd ul{list-style:none;padding:0;margin:4px 0}
-.dd ul li{font-size:.7rem;color:var(--muted);line-height:1.5;padding-left:12px;position:relative;margin-bottom:3px}
-.dd ul li::before{content:'';position:absolute;left:0;top:7px;width:4px;height:4px;border-radius:50%;background:var(--accent)}
-.tags{display:flex;flex-wrap:wrap;gap:3px;margin-top:6px}
-.tags span{font-size:.46rem;padding:2px 8px;border-radius:100px;background:var(--accent-soft);color:var(--accent);font-weight:600}
+.dd ul li{font-size:.74rem;color:var(--muted);line-height:1.55;padding-left:13px;position:relative;margin-bottom:3px}
+.dd ul li::before{content:'';position:absolute;left:0;top:8px;width:5px;height:5px;border-radius:50%;background:var(--accent)}
+.tags{display:flex;flex-wrap:wrap;gap:3px;margin-top:8px}
+.tags span{font-size:.5rem;padding:2px 9px;border-radius:100px;background:var(--accent-soft);color:var(--accent);font-weight:600}
 
-.og{display:grid;grid-template-columns:1fr 1fr;gap:4px;margin-top:6px}
-.og-m{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:7px 9px}
-.og-m h5{font-size:.62rem;font-weight:700;margin-bottom:1px}
-.og-m p{font-size:.56rem;color:var(--muted);line-height:1.35;margin:0}
+.og{display:grid;grid-template-columns:1fr 1fr;gap:5px;margin-top:8px}
+.og-m{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:8px 10px}
+.og-m h5{font-size:.68rem;font-weight:700;margin-bottom:1px}
+.og-m p{font-size:.6rem;color:var(--muted);line-height:1.35;margin:0}
+.og-m .mt{display:flex;flex-wrap:wrap;gap:3px;margin-top:4px}
+.og-m .mt span{font-size:.46rem;padding:2px 6px;border-radius:100px;background:#f3f4f6;color:#6b7280;font-weight:600}
 
-.ha{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:8px 10px;font-family:var(--mono);font-size:.48rem;line-height:1.65;color:var(--muted);white-space:pre;margin:6px 0;display:inline-block}
-.ha em{color:var(--accent);font-style:normal;font-weight:700}
-.ha strong{color:var(--fg);font-weight:700}
-
-/* Hint bar */
-.hint{text-align:center;font-size:.62rem;color:var(--dim);padding:8px 0;opacity:0;transition:opacity .3s}
+/* Hint */
+.hint{text-align:center;font-size:.64rem;color:var(--dim);padding:0 0 8px;opacity:0;transition:opacity .3s}
 .hint.show{opacity:1}
 
 /* Side gig */
-.side{display:flex;align-items:flex-start;gap:10px;max-width:600px;margin:8px auto 0;padding:12px 16px;background:var(--card2);border:1px solid var(--border);border-radius:var(--radius);opacity:0;transition:opacity .4s}
+.side{display:flex;align-items:flex-start;gap:10px;max-width:600px;margin:0 auto;padding:14px 16px;background:var(--card);border:1px solid var(--border);border-radius:var(--radius);opacity:0;transition:opacity .4s}
 .side.show{opacity:1}
-.side .ic{font-size:.9rem;flex-shrink:0;margin-top:2px}
-.side p{font-size:.7rem;color:var(--muted);line-height:1.5}
+.side .si{font-size:1rem;flex-shrink:0;margin-top:2px}
+.side p{font-size:.74rem;color:var(--muted);line-height:1.5}
 .side strong{color:var(--fg);font-weight:600}
+
+@media(max-width:600px){
+  h1{font-size:1.6rem}
+  .header{padding-top:32px}
+  .dd{width:300px}
+}
 </style>
 </head>
 <body>
 
-<div class="hero">
-  <h1>Hema Sridharan</h1>
-  <div class="sub">Senior PM, <strong>Microsoft Copilot</strong> · 11 years product leadership & software engineering · Core Inventor, <strong>3 US Patents</strong></div>
-  <div class="summ">I am energized by ambiguous and ambitious technical problems — <strong>proven track record of shipping at scale</strong>. I think in <strong>falsifiable hypotheses and feasible prototypes</strong>.</div>
+<!-- Header (same as index.html) -->
+<div class="header">
+  <h1><span>Hema Sridharan</span></h1>
+  <div class="role">Senior PM, <strong>Microsoft Copilot</strong> <span style="color:var(--accent);font-size:1.1em">●</span> 11 years product leadership & software engineering <span style="color:var(--accent);font-size:1.1em">●</span> Core Inventor, <strong>3 US Patents</strong></div>
 </div>
 
-<div class="start" id="startWrap">
-  <button id="startBtn">Begin the journey →</button>
+<ul class="summary">
+  <li>I am energized by ambiguous and ambitious technical problems — and have a proven track record of turning them into shipped products at scale.</li>
+  <li>From authoring a solo proposal that became an SLT-funded agentic charter, to owning grounding quality for Copilot today, I think in falsifiable hypotheses and feasible prototypes, measure what matters, and bring people along across orgs.</li>
+  <li>I also seek adventures outside work — I came back from a multi-year tech break as a professional screenplay writer.</li>
+</ul>
+
+<div class="start-wrap" id="startWrap">
+  <button class="start-btn" id="startBtn">Start the journey →</button>
 </div>
 
-<div class="tl-wrap" id="tlWrap">
+<!-- Timeline -->
+<div class="tl-area" id="tlArea">
   <div class="tl-scroll" id="tlScroll">
     <div class="tl-canvas" id="canvas">
-      <svg id="svgLines" viewBox="0 0 1400 360" preserveAspectRatio="none"></svg>
-      <!-- nodes injected by JS -->
+      <svg id="svgLine"></svg>
     </div>
   </div>
   <div class="hint" id="hint">Press any key for next →</div>
   <div class="side" id="sideGig">
-    <div class="ic">✍️</div>
-    <p><strong>Screenplay writer</strong> for Tamil-language theater · Tamil teacher for 1st-gen American kids — story structure & narrative economy inform how I build products.</p>
+    <div class="si">✍️</div>
+    <p><strong>Side gig: Screenplay writer</strong> for Tamil-language theater — story structure, audience instinct, and narrative economy inform how I build products. Also a Tamil teacher for first-generation American kids.</p>
   </div>
 </div>
 
 <script>
-// ═══ NODE DATA ═══
-// row: 0 = top line (y=80), 1 = bottom line (y=250)
-// type: '' | 'bolt' | 'icon-on' | 'icon-cp'
-const NODES = [
-  // ── TOP LINE ──
-  {id:'on-swe',row:0,x:60,label:'OneNote SWE',sub:'Rendering Platform',type:'icon-on',
-   badge:'SWE',h:'OneNote — Rendering Platform',
-   bl:['Led 12-engineer <strong>Canvas/Rendering redesign</strong> across Win, Mac, iOS','Hands-on with <strong>SDKs, APIs, cross-platform tooling</strong>'],
-   tg:['Rendering','Cross-Platform','SDK/API']},
+const NODES=[
+{id:'on-swe',x:60,label:'OneNote SWE',sub:'Rendering Platform',type:'icon-on',
+ badge:'SWE → PM',h:'OneNote — Rendering & Telemetry Platform',
+ bl:['Led 12-engineer team in <strong>full-stack Canvas/Rendering redesign</strong> across Win, Mac, iOS','Built the <strong>telemetry/analytics platform</strong> across all OneNote endpoints','Hands-on with <strong>SDKs, APIs, cross-platform tooling</strong> — transitioned from engineering to product'],
+ tg:['Rendering Engine','Telemetry','SDK/API','Cross-Platform']},
 
-  {id:'telemetry',row:0,x:210,label:'DevSDK / API',sub:'Telemetry · Analytics',type:'',
-   badge:'Platform',h:'Telemetry & Analytics Platform',
-   bl:['Built the <strong>telemetry/analytics platform</strong> across all OneNote endpoints','Data-driven prioritization at scale','Internal <strong>dev tools & SDK</strong> for instrumentation'],
-   tg:['Telemetry','Analytics','Dev Tools']},
+{id:'devtools',x:200,label:'DevSDK / API',sub:'Telemetry · Analytics',type:'',
+ badge:'Platform',h:'Developer Tools & Analytics',
+ bl:['Built internal <strong>dev SDK & instrumentation toolkit</strong>','Telemetry platform used across all OneNote endpoints for <strong>data-driven prioritization</strong>'],
+ tg:['Dev Tools','Telemetry','Analytics']},
 
-  {id:'pm-canvas',row:0,x:360,label:'PM Canvas UX',sub:'All Endpoints',type:'',branch:'down',
-   badge:'SWE → PM',h:'Canvas UX for All Endpoints',
-   bl:['Transitioned from SWE to PM','Owned <strong>Canvas UX</strong> across all OneNote endpoints','Full-stack product ownership'],
-   tg:['PM','Canvas UX','Endpoints']},
+{id:'creative',x:340,label:'Creative Pursuits',sub:'Detour ⚡',type:'bolt',
+ badge:'Multi-Year Break',h:'Screenplays & Teaching',
+ bl:['<strong>Screenplay writer</strong> for Tamil-language theater — story structure, audience instinct, narrative economy','<strong>Tamil teacher</strong> for first-generation American kids','Came back with sharper product instincts and a bias for narrative clarity'],
+ tg:[]},
 
-  {id:'techbreak',row:0,x:510,label:'Tech Break',sub:'Screenplays · Teaching',type:'bolt',
-   badge:'Detour ⚡',h:'Creative Pursuits',
-   bl:['<strong>Screenplay writer</strong> for Tamil-language theater','<strong>Tamil teacher</strong> for first-generation American kids','Came back with sharper narrative & product instincts'],
-   tg:[]},
+{id:'on-rearch',x:480,label:'OneNote Rearch.',sub:'Augmentation Platform',type:'',
+ badge:'Platform Rearchitect',h:'OneNote Augmentation Pipeline',
+ bl:['Redesigned <strong>OneNote\'s Augmentation Pipeline</strong> — image & ink processing, performance, scale','First platform rearchitect: <strong>shared infrastructure consumed by multiple surfaces</strong>','The pattern that now defines cross-app platforms — a single service for many apps'],
+ tg:['Platform','Pipeline Redesign','Performance','Scale']},
 
-  {id:'on-rearch',row:0,x:660,label:'OneNote Rearch.',sub:'Ink Aug Platform',type:'',branch:'down',
-   badge:'Platform Rearchitect',h:'OneNote Augmentation Pipeline',
-   bl:['Redesigned <strong>image & ink processing pipeline</strong>','Shared infrastructure consumed by multiple surfaces','Performance & scale improvements'],
-   tg:['Platform','Pipeline','Performance']},
+{id:'founder',x:630,label:'M365 Founder PM',sub:'0→1 Charter',type:'',
+ badge:'0→1 Founder PM',h:'M365 Modern Collab — Agentic Charter',
+ bl:['Authored "<strong>AI-Productivity Paradox</strong>" proposal — User/JTBD Research → SLT-Funded Charter → multi-year roadmap','Rallied <strong>10+ product orgs</strong> (OAI, WXP, Automations, OneDrive Substrate) across Apps & Platform','Designed <strong>app-agnostic reasoning spine</strong> for Word, Excel, PPT, Teams — core AI platform capabilities for 1P & 3P'],
+ tg:['0→1 Charter','Cross-Org','Platform Strategy','JTBD Research']},
 
-  {id:'doc-collab',row:0,x:870,label:'Doc Collab WXP',sub:'Scale!',type:'',branch:'down-right',
-   badge:'0→1 Founder PM',h:'Document Collaboration at Scale',
-   bl:['Authored "<strong>AI-Productivity Paradox</strong>" — JTBD → SLT-funded charter','Rallied <strong>10+ product orgs</strong> across apps & platform','App-agnostic reasoning spine for Word, Excel, PPT, Teams','Office Collab at <strong>60M sessions/day</strong> — COGS 0.41¢ → 0.1¢'],
-   tg:['0→1','Charter','Cross-Org','60M Scale']},
+{id:'collabsvc',x:780,label:'Collab Services',sub:'60M Sessions · Scale',type:'',
+ badge:'Scale',h:'Office Collab Services at Scale',
+ bl:['Owned Office Collab at <strong>60M sessions/day</strong>','Reduced COGS from <strong>0.41¢ to 0.1¢/session</strong>','Platform economics at scale — infrastructure consumed by 50+ app surfaces'],
+ tg:['60M Scale','COGS Optimization','Platform Economics']},
 
-  // ── BOTTOM LINE ──
-  {id:'tinkering',row:1,x:210,label:'Tinkering',sub:'Side builds',type:'bolt',
-   badge:'⚡ Tinkering',h:'Agents I\'m Building',
-   desc:'Beyond prototypes — working agents that demonstrate platform thinking.',
-   mn:[{t:'Multi-Agent Workflow',d:'Agents collaborating — handoffs, shared context.'},{t:'Grounding Evaluator',d:'Auto-EVALS — grounding accuracy, citations.'}],
-   tg:['Agents','EVALS','Orchestration'], note:'Work in progress — happy to demo.'},
+{id:'collabai',x:920,label:'Collab AI',sub:'2 Agents · E2E',type:'',
+ badge:'Branch: AI',h:'Agent Orchestration — E2E Bootstrapper',
+ bl:['E2E bootstrapped <strong>2 collab agents</strong> — Opportunity ID → Conceptualization → Spec → Build → Ship → Metrics','Designed agent orchestration patterns that became <strong>patent material</strong>'],
+ tg:['Agents','Orchestration','E2E Delivery']},
 
-  {id:'mai',row:1,x:430,label:'MAI Copilot',sub:'Grounding · Enrichment',type:'icon-cp',
-   badge:'Current Role',h:'Grounding & Trust — DRI',
-   bl:['<strong>DRI for grounding quality</strong> — RAG stack, 1P & 3P','<strong>"Needs Met" framework</strong> vs. Perplexity & Google','<strong>17pt defect reduction · 4pt satisfaction lift</strong>','<strong>Automated EVALS pipelines</strong> — quality gates at scale','<strong>Trust frameworks</strong> with Applied Science & Policy'],
-   tg:['RAG','EVALS','Grounding','Responsible AI']},
+{id:'patents',x:1060,label:'Patents',sub:'3 US Patents ⚡',type:'bolt',cls:'patent-nd',
+ badge:'Core Inventor ⚡',h:'3 US Patents',
+ bl:['<strong>GenAI Agent Collaboration</strong> — multi-agent orchestration for document collab','<strong>GenAI Agent Orchestration</strong> — agentic system design for cross-app reasoning','<strong>OneNote Page Sharing</strong> — real-time collaborative UX'],
+ tg:['GenAI Agents','Orchestration','Collaboration','Real-Time UX']},
 
-  {id:'patents',row:1,x:620,label:'Patents',sub:'3 US Patents',type:'bolt',
-   badge:'⚡ Core Inventor',h:'3 US Patents',
-   bl:['<strong>GenAI Agent Collaboration</strong> — multi-agent orchestration','<strong>GenAI Agent Orchestration</strong> — cross-app agentic design','<strong>OneNote Page Sharing</strong> — real-time collaborative UX'],
-   tg:['GenAI Agents','Orchestration','Collaboration']},
+{id:'copilot',x:1200,label:'MAI Copilot',sub:'Grounding · Now',type:'icon-cp',cls:'now-nd',
+ badge:'Current Role',h:'Copilot Grounding & Trust — DRI',
+ bl:['<strong>DRI for grounding quality</strong> across the RAG stack — trust & relevance across 1P & 3P','Defined <strong>"Needs Met" competitive framework</strong> benchmarking against Perplexity & Google','<strong>17pt defect reduction · 4pt satisfaction lift</strong> — hypothesis-driven experimentation','Shipped <strong>automated EVALS pipelines</strong> and labeling infrastructure — data-driven quality gates','Built <strong>trust & quality evaluation frameworks</strong> with Applied Science & Policy — responsible AI at scale'],
+ tg:['RAG','EVALS','Grounding','Competitive Parity','Responsible AI','Trust Frameworks']},
 
-  {id:'collab-ai',row:1,x:810,label:'Collab AI',sub:'Bootstrapper',type:'',
-   badge:'Branch: AI',h:'Agent Orchestration — E2E',
-   bl:['E2E bootstrapped <strong>2 collab agents</strong> — opportunity → concept → spec → build → ship','Agent orchestration patterns became <strong>patent material</strong>'],
-   tg:['Agents','Orchestration','E2E']},
+{id:'envision',x:1360,label:'Envision',sub:'Hacks · POC\'s ⚡',type:'bolt',
+ badge:'🏆 Hackathons & POC\'s',h:'Holistic Copilot + Interactive Prototypes',
+ desc:'<strong>Hackathon 2024:</strong> Copilot as cross-boundary AI companion — 3P connectors (Fitbit, calendars, nutrition), composable agent library, privacy-respecting boundaries.',
+ mn:[{t:'Cross-App Agent UX',d:'Multi-agent orchestration, surface handoff, shared context across apps.',tg:['Multi-Agent','Orchestration','Cross-App','Extensibility']},
+     {t:'Multimodal Editing',d:'Voice + NL as input modalities — contextual rewrites, flow-preserving.',tg:['Multimodal','Voice UX','Copilot in Word']},
+     {t:'Coherence Dashboard',d:'Trust & quality — coherence scoring, grounding accuracy, gravity metrics.',tg:['EVALS','Agent Quality','Trust Metrics']},
+     {t:'Grounding Playground',d:'RAG experimentation — snippets, token budgets, precision.',tg:['RAG','Experimentation','Token Optimization']}],
+ tg:['Connectors','3P Extensibility','Agent Library','Copilot Platform']},
 
-  {id:'hackathons',row:1,x:990,label:'Hackathons',sub:'Holistic Copilot',type:'bolt',
-   badge:'🏆 Hackathon 2024',h:'Holistic Copilot — Connectors & Extensibility',
-   desc:'Copilot as cross-boundary AI companion — <strong>3P connectors</strong>, composable <strong>agent library</strong>, privacy-respecting boundaries.',
-   arch:true,
-   mn:[{t:'Cross-App Agent UX',d:'Multi-agent orchestration, surface handoff.'},{t:'Multimodal Editing',d:'Voice + NL as input modalities.'},{t:'Coherence Dashboard',d:'Trust & quality scoring.'},{t:'Grounding Playground',d:'RAG experimentation toolkit.'}],
-   tg:['Connectors','3P Extensibility','Agent Library','Copilot Platform']}
+{id:'tinkerer',x:1520,label:'Tinkerer',sub:'Agents ⚡',type:'bolt',
+ badge:'Building Now ⚡',h:'Agents I\'m Building',
+ desc:'Beyond prototypes — working agents that demonstrate platform thinking.',
+ mn:[{t:'Multi-Agent Workflow',d:'Agents collaborating on a task — handoffs, shared context, conflict resolution.',tg:['Agent Collab','Orchestration']},
+     {t:'Grounding Evaluator',d:'Auto-EVALS agent — grounding accuracy, citation quality, relevance scoring.',tg:['EVALS','Grounding','Quality Gates']}],
+ tg:[], note:'Work in progress — happy to demo in conversation.'}
 ];
 
-const Y_TOP = 80, Y_BOT = 250, SPACING = 140;
-const CANVAS_W = 1100;
+const CANVAS_W=1600;
+const Y=45;
 
-// ═══ ICON DATA ═══
-const ICONS = {
-  'icon-on': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEoAAABHCAYAAACgTtGvAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAAFiUAABYlAUlSJPAAAAxVSURBVHhe7ZyJUxRXHsfzJ2ztVuXYWDEmRkDuQ4zRuDGpTXaTWKnKxtyJ2aggczD3PcMMN8ohgsiloCEeES/wFhVNVOKtKLgRFRDjgawaTKJcfrd+b5ixZxw2M8MMMInfqm+NPTRN96dev/6973vtY/fv34fFfX19j9xvCxOLHuNuPJKtLNBIj9n/8JEeiBpRb28v+xzxoHq6eoBhbPQ9PT2sVY0oULev3ULLyYtoqD2NXaU7URy7GJuyNw4rqK6uLtaqhhzU/b77uNv5K9pb2lFfcwrfVuxF1bz1KIkpQPpbydBNUkEWHI/4cXGY/cRMFMcW2B9iSDUkoLp/7cLtK7dw+cwlHKo8iE2ZVaiQLUPeRzlImpYARbAIEn8+JH58iP15kAYKIQsRQREqhjJCApEfD+WiUvvDDqk8DupOxx20nW7F2doG7FtWi290K1H4eT7m/TMVxsk6KILEkIwTQOIvhDRACEWQCKoIKTRRcmZ1lIxZRY6UMvssKOr9u+92s76ksbYBByq+xdasTVghXY6F72XD+KIW2jAFlIESyPzioQgUQxUihTpMBm2kAroJSmiZFdBGKayQfBpU990udLR24PKZNtTvOIVdBTuwUl6B4s8KkP12BgyRaqgCpFCNN1sTLIMuQgl9pAr6CSokTNRAP9H8bzJBchUU9VNfycrsT21I5RBU2+lL2Le0FpszqlE2uwSZr6chdYoRCeFqaMbLoAmUQRusgD5MiYQoDUzROpgmamHsN8FJiNbAEK1m1kcPDpQ8RISMt5OxIXltvysH7XWJa1CVth5nv2vkXvqAcgiqKmU9pKOF0AYqoA9WIiFMDWOEBqYJOiS9qEcieRJ9EiCLvQdKPUEGWaAQcU/MRtyTs82fHrDg6VgYJmrQfPwi9/IdyiGoTekboQ6QIXlSgtkvGpBkdT8o5qEBRWXC/HdSsSWrGluyq7E5a/DemrMJhTPzET86DluyqriX71AOQW3OqIJmvHzEgPJWH7WnpAa8p+agUr+K1XV9Pb32u1jlE6BEfnEoj/f8U29H/laIxvCQ9loiir8oYGUMlTOXG9vsd/UdUMvES7in6BFtW7gFoud4UAZJIB0rhPg5PgSjYpD6qgmt9a02+/oIKB6WCorxy62f3fLPN+/g7p273EtkuvKfH3F042Gc3Hocp7afwPHqoyiLK4Hw6RiskFfYDC19ApQyXALj33RY9HGu2R+55ux3Mlg54Iwaa89A8rwAeR/kmBOLfvkEKNpWhIghHsOHeAzPZcf+5d/Iez+He4kD6uzeBkhfECJvRjYrti3yCVCKcDGMU7XmFuJWi5qHdSbnWlTDntNmUO/n+B4o6qPKhCUshaCT7/rVRf9yD933urmXOKB8HJR3nnqONCJAUXKgiZBDEy6DOkLuNKj4cXOxXLqUe4pek1dAGaM00IUpoQtVQBssgz5CNTCoKCXUFLWESs2wopwHJQ7go/DLfLScaHbLF49ewNVzV7mXOKA8D2qiHqlTTch6Mx050+dh0Ye5SHs1icUr9qAoh6Lg7ljVYZzd14DmYxdQu3Q31KxlyX4TlOXJR7D1ka5b7heP0tlF3EscUB4FRbeaNkTBsqnbV2/j9rXbrKA7sekoNKFy6KNUNqCUwWIs/CCbjacsajp0DqpQKVThD9LNAUFReRAqhnSswC3HPT4L+R8u4F7igPI4KE2QHIfW1HF/jRVoS2KKoQgQ24GSIHdGpk113Lj3DFRhzoGi9CDznTTsXLSNmcZorphSh8Prvrc514H0w/6zDNRCT9RRFlAHV+zn/hpT475GaMMVLOX0FCh66nmjM+/r7UNvdy96e3rZv3vu9bBEQfRsHIq+WMS+s8jjoHp7+lDGK4XCX8T6Kk+B8kZ6cHDVfja8WfTxQiz6JJfdnpT3q0NlOLjyO5t9PQ6K1FT3A+vUWaua6AFQlEdJPZ9HUXhHaYHMPx7i53gscpGOEyJxih5tZy7Z7OsVUNRpV4iXQe4n8ggoaaAAeZ/msAErmTpcV1y/8yR70tqL+rv40XOxNLYYDbVncGzjYRR+ngfx83xUGlbZ7OsxUDR1daej07pNJ0aQtBGKQYNiDpdAFSx1y6LRcSyUsxeB4j85BxtT1lm/O7OrnuVS+Z5IDxyBajr4Aw6utG1hlBbSvN5gQdG2MkwCub/ILdMkQsEneTbnRmKgnppjM2CmOs9j6YEjUOfrziFvxgJWU1lE97nxJR2k4wTInZHlNiiaYs/7JBv120+gfsdJFrK54uObjuL8oSbr37bIESiv1FFcUJdOtUATLMee4hruobA+cQ2Ez8QOCpS3JheGBVRbfSt7ys17IwU/Xf/J+v2181dZWpA5Pd1tUN4qD4YF1KX6ViRO1rMYdU/pLu7hWAyb+vdE3O10E9S4OCyXeL7gHDZQSVMMrNCc949U3Lxyy/ozCvGLZxWgs/1BS3MFlDwkHulvJjPg6xIrsda0xiWv1nyNfWV7rH/bouEDNdnAhi/0pKkp2M49JI5UHcbNqw/guQKKtmlQLBkrgGQsv//Tec99/EuHg+JhBUX9lDpEhow3UvDftg7rz2mZELcucQUULSbTRiuQ+LKBOclF0xKkct7DCenwggpXsDGewk+EbblbuIe1kSugKLgrmpXPbmHyj2ddc1tDGzpa2u1PwQpqfWKl9Tuvpwf2oDQhcqS8YsSN5odPkOQKKNaZeyE9sIDakPQA1LfL97IxX9FML6UH9qAoj6KqfHOm45UiLoGiyQXRw7fOYEWgJM/zMf/NNFRIlrExn2myHorxYuy16/y9B4paVagMSVMNuNZ0hXt4JldBUR1Fg216wYJ9umF7ESi6zZJfMSL3X1mY/1YatOFyqIKkqPvmgM2+7oMKlOPI2gepIfUdVB5wWxRlURRbVKWv5x6eyRVQijAxTK/o2MDWHS98LwsbU9ban4L51vvrHFQaVrN5PyqI2QqXZ3lYMrvQBq5boGhiQReqZCvzmo9dxLVzV3Fq2wnrU48LijJ0Wg3849nL3D+Bpu/POQ2KtuXBIgifmeuW5/xpJmsx9rJ25pw+yrYzfzBp6h6ofpuitax1pbxsRPLLCQPO6ylDpFj8eR6q529ATeF2fF95ENWZG6GJlFunrv4fKGpRSdMMrA8hL4kpcsmLP83H5vkP95VeLw+4oBIiNTBEqGGINM/pOQJF83q0BknmJ4QsIB7yQBGUoRKn5/VoUEzLp/v6+xp6GrnqgfqoIQHl6kwxm1KPUppnjKMUToPy5lNv5IJyZ+2Brw6KhxoUvR9TErsYHa03mG+0tLvk9ubrLKq21+8OFI319JNUyHg9GenMSS7Z9JIOX0uXcy+R6XcHirZpxR1NTLrjmD9/gYUzHl5x97sDRa94pL5hwmrNCqzWrjR/uuAKSTl2F+3kXiKTI1BUCHtsUDzUoMyDYi899eymqxr3NrAMK+/9bPR0eajgHDJQXszMhaNi8bW4HJcb2tBy/CK+EpVBMCqWfXLlM6C8UUfVLN7OEg5dpJKtN1AEiMB/OgamKXpcOHzeZl/fAGWpzPurbFoIMliTqEXRaIHOkVKOjNeTsEpZgQtHbCGRHIKqTt0AlZ+UgRkJoORhIiS9ZsAyfinK+UtQzisdtJfHlyFregYL6bYt2IxbV27aTH7YyyGo7dlboPaXISFcA12wEtrxcuhDVGyb1m0SGCsoKyzvgbKWB2PMK0484md5bI3BgnczGaTfkkNQd2504nxdE45tOIJdBTtRqV6N/HdzkDEtmUUsFNrR+3zaIDm0wXLow1UwRmtgjPYOKGmQEAs+yMShtXXMlD4M1hTM0XswzkAiOQTlSJ3tnbjWdI3N4detOsCyqPLYEuTPyEXKVCM0QTIox0vMDpRAGypnK1loEEygGDA3QXlrSt0VOQ3KkXq7e3Dv53vs/zM4uuEwdhfXsOKtdFYh0l9LNE9dBcvYQi3qNClqoQWutM7ctfTAB95Sd0c0f3f9grn1Has+yl5vLRcswYJ35yP51QQGR+IngGQcHxJ/AaTjhSyfUkeaIf1hQA0kem+uveU6ezN8d8lOVBpXoSRmMeZNT2UTnNIAAcR+PIj8eRAF8FnfRMMX4Qtz/1igHIlC/c6OTjSfuIhD6+tQU7wDK9RfIfejLJim6ViLmjvqSxTNWWT/q0OqYQc1kLruduHquStsEmL/6u9Qt+aAwzh3qDRiQY00PQLlpB6BclKPQDkpC6j/ATeMObjHKx7RAAAAAElFTkSuQmCC',
-  'icon-cp': 'data:image/png;base64,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'
+const ICONS={
+  'icon-on':'data:image/png;base64,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',
+  'icon-cp':'data:image/png;base64,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'
 };
 
-// ═══ BUILD ═══
-const canvas = document.getElementById('canvas');
-canvas.style.width = CANVAS_W + 'px';
-const svg = document.getElementById('svgLines');
-svg.setAttribute('viewBox', `0 0 ${CANVAS_W} 360`);
+// Build canvas
+const canvas=document.getElementById('canvas');
+canvas.style.width=CANVAS_W+'px';
+const svg=document.getElementById('svgLine');
+svg.setAttribute('viewBox',`0 0 ${CANVAS_W} 100`);
+svg.innerHTML=`<line class="ln" x1="40" y1="${Y}" x2="${CANVAS_W-40}" y2="${Y}"/>`;
 
-// Draw lines
-let svgHtml = '';
-// Top line
-svgHtml += `<line class="ln-main" x1="40" y1="${Y_TOP}" x2="950" y2="${Y_TOP}"/>`;
-// Bottom line (dashed start, then solid)
-svgHtml += `<line class="ln-dash" x1="80" y1="${Y_BOT}" x2="210" y2="${Y_BOT}"/>`;
-svgHtml += `<line class="ln-main" x1="210" y1="${Y_BOT}" x2="1060" y2="${Y_BOT}"/>`;
-// Vertical connections top→bottom
-svgHtml += `<line class="ln-branch" x1="360" y1="${Y_TOP+10}" x2="360" y2="${Y_BOT-10}"/>`;
-svgHtml += `<line class="ln-branch" x1="660" y1="${Y_TOP+10}" x2="660" y2="${Y_BOT-10}"/>`;
-svgHtml += `<path class="ln-branch" d="M870,${Y_TOP+10} C870,${Y_TOP+60} 950,${Y_BOT-60} 950,${Y_BOT-10}"/>`;
-svg.innerHTML = svgHtml;
+// Build nodes
+NODES.forEach((n,i)=>{
+  const nd=document.createElement('div');
+  nd.className='nd'+(n.cls?' '+n.cls:'');
+  nd.id='nd-'+n.id;
+  nd.style.left=(n.x-55)+'px';
+  nd.style.top=(Y-45)+'px';
+  nd.dataset.idx=i;
 
-// Create nodes
-NODES.forEach((n, i) => {
-  const nd = document.createElement('div');
-  nd.className = 'nd';
-  nd.id = 'nd-' + n.id;
-  nd.style.left = (n.x - 45) + 'px';
-  nd.style.top = (n.row === 0 ? Y_TOP - 50 : Y_BOT - 50) + 'px';
-  nd.dataset.idx = i;
+  let dotH;
+  if(n.type==='icon-on'||n.type==='icon-cp') dotH=`<img class="icon-img" src="${ICONS[n.type]}">`;
+  else if(n.type==='bolt') dotH=`<span class="bolt">⚡</span>`;
+  else dotH=`<span class="dot"></span>`;
 
-  let dotHtml;
-  if (n.type === 'icon-on' || n.type === 'icon-cp') {
-    dotHtml = `<img class="icon-img" src="${ICONS[n.type]}" alt="">`;
-  } else if (n.type === 'bolt') {
-    dotHtml = `<span class="bolt">⚡</span>`;
-  } else {
-    dotHtml = `<span class="dot"></span>`;
-  }
+  // Card
+  let ch=`<div class="dd" id="dd-${n.id}"><div class="badge">${n.badge}</div><h3>${n.h}</h3>`;
+  if(n.desc) ch+=`<p>${n.desc}</p>`;
+  if(n.bl) ch+=`<ul>${n.bl.map(b=>`<li>${b}</li>`).join('')}</ul>`;
+  if(n.mn) ch+=`<div class="og">${n.mn.map(m=>`<div class="og-m"><h5>${m.t}</h5><p>${m.d}</p>${m.tg?`<div class="mt">${m.tg.map(t=>`<span>${t}</span>`).join('')}</div>`:''}</div>`).join('')}</div>`;
+  if(n.tg&&n.tg.length) ch+=`<div class="tags">${n.tg.map(t=>`<span>${t}</span>`).join('')}</div>`;
+  if(n.note) ch+=`<p style="margin-top:8px;font-size:.68rem;font-style:italic;color:var(--dim)">${n.note}</p>`;
+  ch+=`</div>`;
 
-  // Card HTML
-  let cardH = `<div class="dd" id="dd-${n.id}">`;
-  cardH += `<div class="badge">${n.badge}</div><h3>${n.h}</h3>`;
-  if (n.desc) cardH += `<p>${n.desc}</p>`;
-  if (n.arch) cardH += `<div class="ha"><em>Holistic Copilot</em>\n┌────────────────────┐\n│  <strong>Copilot Homepage</strong>   │\n│ ┌─────┐  ┌─────┐  │\n│ │Work │  │Life │  │\n│ └──┬──┘  └──┬──┘  │\n│    └────┬───┘     │\n│   <em>Connectors</em>       │\n│  Fitbit · Nutrition │\n│   <em>Agent Library</em>   │\n│  Shared · Personal │\n└────────────────────┘</div>`;
-  if (n.bl) cardH += `<ul>${n.bl.map(b => `<li>${b}</li>`).join('')}</ul>`;
-  if (n.mn) cardH += `<div class="og">${n.mn.map(m => `<div class="og-m"><h5>${m.t}</h5><p>${m.d}</p></div>`).join('')}</div>`;
-  if (n.tg && n.tg.length) cardH += `<div class="tags">${n.tg.map(t => `<span>${t}</span>`).join('')}</div>`;
-  if (n.note) cardH += `<p style="margin-top:6px;font-size:.6rem;font-style:italic;color:var(--dim)">${n.note}</p>`;
-  cardH += `</div>`;
-
-  nd.innerHTML = dotHtml + `<div class="nlabel">${n.label}</div><div class="nsub">${n.sub}</div>` + cardH;
-  nd.addEventListener('click', () => openCard(i));
+  nd.innerHTML=dotH+`<div class="nlabel">${n.label}</div><div class="nsub">${n.sub}</div>`+ch;
+  nd.addEventListener('click',()=>openCard(i));
   canvas.appendChild(nd);
 });
 
-// ═══ STATE ═══
-let step = -1;
-let cardShown = false;
-let started = false;
-const total = NODES.length;
+let step=-1,started=false;
+const total=NODES.length;
 
-// ═══ START ═══
-document.getElementById('startBtn').addEventListener('click', () => {
+document.getElementById('startBtn').addEventListener('click',()=>{
   document.getElementById('startWrap').classList.add('gone');
-  document.getElementById('tlWrap').classList.add('active');
-  started = true;
+  document.getElementById('tlArea').classList.add('active');
+  started=true;
   advance();
 });
 
-// ═══ ADVANCE ═══
-function advance() {
-  // Close any open card
-  closeAllCards();
+function advance(){
+  closeAll();
   step++;
-  if (step >= total) {
+  if(step>=total){
     document.getElementById('sideGig').classList.add('show');
-    document.getElementById('hint').textContent = "That's the arc. Click any node to revisit.";
+    document.getElementById('hint').textContent="That's the arc. Click any node to revisit.";
     document.getElementById('hint').classList.add('show');
     return;
   }
-  const n = NODES[step];
-  const nd = document.getElementById('nd-' + n.id);
+  const n=NODES[step];
+  const nd=document.getElementById('nd-'+n.id);
   nd.classList.add('show');
-
-  // Scroll into view
-  const scroll = document.getElementById('tlScroll');
-  const ndLeft = n.x - scroll.offsetWidth / 2;
-  scroll.scrollTo({ left: Math.max(0, ndLeft), behavior: 'smooth' });
-
+  // Scroll
+  const sc=document.getElementById('tlScroll');
+  sc.scrollTo({left:Math.max(0,n.x-sc.offsetWidth/2),behavior:'smooth'});
   // Auto-open card
-  setTimeout(() => openCard(step), 350);
+  setTimeout(()=>openCard(step),350);
 }
 
-// ═══ OPEN CARD ═══
-function openCard(idx) {
-  closeAllCards();
-  const n = NODES[idx];
-  const nd = document.getElementById('nd-' + n.id);
-  const dd = document.getElementById('dd-' + n.id);
-  nd.classList.add('active');
-  dd.classList.add('show');
-  cardShown = true;
-
-  // Update hint
-  const hint = document.getElementById('hint');
-  if (step < total - 1) {
-    hint.textContent = 'Press any key for next →';
-  } else {
-    hint.textContent = "That's the arc. Click any node to revisit.";
-  }
-  hint.classList.add('show');
+function openCard(idx){
+  closeAll();
+  const n=NODES[idx];
+  document.getElementById('nd-'+n.id).classList.add('active');
+  document.getElementById('dd-'+n.id).classList.add('show');
+  const h=document.getElementById('hint');
+  h.textContent=step<total-1?'Press any key for next →':"That's the arc. Click any node to revisit.";
+  h.classList.add('show');
 }
 
-// ═══ CLOSE ═══
-function closeAllCards() {
-  document.querySelectorAll('.dd').forEach(d => d.classList.remove('show'));
-  document.querySelectorAll('.nd').forEach(d => d.classList.remove('active'));
-  cardShown = false;
+function closeAll(){
+  document.querySelectorAll('.dd').forEach(d=>d.classList.remove('show'));
+  document.querySelectorAll('.nd').forEach(d=>d.classList.remove('active'));
 }
 
-// ═══ KEYPRESS ═══
-document.addEventListener('keydown', e => {
-  if (!started) return;
-  if (e.key === 'Escape') { closeAllCards(); return; }
-  // Any key: close card and advance
-  closeAllCards();
-  if (step < total - 1) {
-    advance();
-  }
+document.addEventListener('keydown',e=>{
+  if(!started)return;
+  if(e.key==='Escape'){closeAll();return;}
+  closeAll();
+  if(step<total-1)advance();
 });
 
-// Also allow clicking canvas background to advance
-document.getElementById('canvas').addEventListener('click', e => {
-  if (!started) return;
-  if (e.target.closest('.nd')) return; // node click handled separately
-  closeAllCards();
-  if (step < total - 1) advance();
+canvas.addEventListener('click',e=>{
+  if(!started||e.target.closest('.nd'))return;
+  closeAll();
+  if(step<total-1)advance();
 });
 </script>
 </body>

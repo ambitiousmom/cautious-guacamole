@@ -24,7 +24,8 @@ h1 span{background:linear-gradient(135deg,var(--accent),#7c3aed);-webkit-backgro
 .tl-area{display:none;padding:28px 0 48px}.tl-area.active{display:block}
 .row-label{font-size:.66rem;letter-spacing:.08em;color:var(--dim);font-weight:700;padding:0 0 4px}
 .tl-row{display:flex;align-items:flex-start;position:relative;padding:0 12px}
-.tl-row::before{content:'';position:absolute;top:6px;left:12px;right:12px;height:2px;background:var(--fg);opacity:.15;border-radius:2px}
+.tl-row::before{content:'';position:absolute;top:6px;left:12px;right:0;height:2px;background:var(--fg);opacity:.15;border-radius:0}
+.tl-row.r2::before{left:0;right:12px}
 .tl-row.r2{flex-direction:row-reverse}
 .tl-fold{width:2px;height:44px;background:var(--fg);margin-left:auto;margin-right:12px;border-radius:0;opacity:0;transition:opacity .3s}
 .nd-wrap{flex:1;text-align:center;position:relative;z-index:3}
@@ -38,11 +39,11 @@ h1 span{background:linear-gradient(135deg,var(--accent),#7c3aed);-webkit-backgro
 .nd.now-nd .dot{background:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
 .nd .nlabel{font-size:.82rem;font-weight:700;color:var(--fg);line-height:1.25}
 .nd .nsub{font-size:.66rem;color:var(--dim);margin-top:1px}
-.nd.leaf-nd .dot{width:8px;height:8px;min-width:8px;min-height:8px;border-color:var(--fg);border-width:2px;opacity:.15;margin-bottom:0}
-.nd.leaf-nd:hover .dot{border-color:var(--accent);opacity:1}
-.nd.leaf-nd.active .dot{background:var(--accent);border-color:var(--accent);opacity:1}
-.nd.leaf-nd .drop-line{width:1.5px;height:24px;background:var(--fg);opacity:.15;margin:0 auto}
-.nd.leaf-nd .nlabel{font-size:.72rem;color:var(--dim);font-weight:600;margin-top:4px}
+.nd.leaf-nd .dot{width:8px;height:8px;min-width:8px;min-height:8px;border-color:var(--fg);border-width:2px;opacity:1;margin-bottom:0}
+.nd.leaf-nd:hover .dot{border-color:var(--accent)}
+.nd.leaf-nd.active .dot{background:var(--accent);border-color:var(--accent)}
+.nd.leaf-nd .drop-line{width:1.5px;height:24px;background:var(--fg);opacity:.35;margin:0 auto}
+.nd.leaf-nd .nlabel{font-size:.72rem;color:var(--fg);font-weight:600;margin-top:4px}
 .nd.leaf-nd .nsub{display:none}
 .dd-wrap{position:relative;width:100%;min-height:0}
 .dd{display:none;position:relative;margin:14px auto;max-width:560px;background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:22px 26px;box-shadow:0 10px 40px rgba(0,0,0,.08);z-index:10;animation:di .25s ease}

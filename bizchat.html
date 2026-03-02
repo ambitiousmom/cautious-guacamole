@@ -12,7 +12,7 @@
   --mono:'Cascadia Code','Fira Code','SF Mono',monospace;
   --max:960px;--radius:10px;
 }
-html{font-size:17px;scroll-behavior:smooth}
+html{font-size:15px;scroll-behavior:smooth}
 body{font-family:var(--font);background:var(--bg);color:var(--fg);line-height:1.55;-webkit-font-smoothing:antialiased;overflow-x:hidden}
 ::selection{background:var(--accent);color:#fff}
 .page{max-width:var(--max);margin:0 auto;padding:0 24px}
@@ -64,15 +64,15 @@ h1 span{background:linear-gradient(135deg,var(--accent),#7c3aed);-webkit-backgro
 .nd .icon-img{width:24px;height:24px;border-radius:4px;margin:0 auto 6px;display:block;object-fit:contain;position:relative;z-index:2}
 .nd .bolt{font-size:.85rem;display:block;margin:0 auto 4px;width:20px;height:20px;line-height:20px;text-align:center;position:relative;z-index:2}
 .nd.now-nd .dot{background:var(--accent);border-color:var(--accent);box-shadow:0 0 0 5px var(--accent-soft)}
-.nd .nlabel{font-size:.68rem;font-weight:700;color:var(--fg);line-height:1.25}
-.nd .nsub{font-size:.54rem;color:var(--dim);margin-top:1px}
+.nd .nlabel{font-size:.82rem;font-weight:700;color:var(--fg);line-height:1.25}
+.nd .nsub{font-size:.66rem;color:var(--dim);margin-top:1px}
 
 /* Leaf node (hanging off main) */
 .leaf{opacity:0;transition:opacity .3s;margin-top:8px;cursor:pointer}
 .leaf.show{opacity:1}
 .leaf .leaf-line{width:1.5px;height:16px;background:var(--border);margin:0 auto}
 .leaf .leaf-dot{width:14px;height:14px;margin:0 auto 4px;display:flex;align-items:center;justify-content:center;font-size:.65rem;position:relative;z-index:2}
-.leaf .leaf-label{font-size:.52rem;font-weight:600;color:var(--dim)}
+.leaf .leaf-label{font-size:.64rem;font-weight:600;color:var(--dim)}
 .leaf:hover .leaf-label{color:var(--accent)}
 
 /* Dropdown card */

@@ -66,14 +66,13 @@ h1 span{background:linear-gradient(135deg,var(--accent),#7c3aed);-webkit-backgro
 .nd .nlabel{font-size:.82rem;font-weight:700;color:var(--fg);line-height:1.25}
 .nd .nsub{font-size:.66rem;color:var(--dim);margin-top:1px}
 
-/* Leaf node (swooping curve to left per sketch) */
+/* Leaf node (side branch between nodes on the track) */
 .nd-wrap{flex:1;text-align:center;position:relative;z-index:3;overflow:visible}
-.leaf{opacity:0;transition:opacity .3s;position:relative;cursor:pointer}
+.leaf{opacity:0;transition:opacity .3s;position:absolute;top:calc(100% + 4px);right:60%;cursor:pointer;white-space:nowrap;z-index:4}
 .leaf.show{opacity:1}
-.leaf-hang{position:relative;display:flex;align-items:flex-end;justify-content:flex-end;padding-right:calc(50% - 1px);height:36px}
-.leaf-hang .lh-curve{position:absolute;right:calc(50% - 1px);top:0;width:28px;height:36px}
-.leaf-hang .lh-curve img{width:100%;height:100%;object-fit:contain;opacity:.45}
-.leaf-hang .lh-content{position:absolute;right:calc(50% + 26px);bottom:2px;display:flex;align-items:center;gap:3px;white-space:nowrap}
+.leaf .leaf-inner{display:flex;align-items:flex-start;gap:0}
+.leaf .leaf-conn-img{width:20px;height:28px;object-fit:contain;opacity:.45;flex-shrink:0}
+.leaf .leaf-text{display:flex;align-items:center;gap:3px;padding-top:16px}
 .leaf .leaf-dot{font-size:.7rem;flex-shrink:0}
 .leaf .leaf-label{font-size:.76rem;font-weight:700;color:var(--dim)}
 .leaf:hover .leaf-label{color:var(--accent)}
@@ -274,7 +273,7 @@ NODES.forEach((n,i)=>{
     const lf=document.createElement('div');
     lf.className='leaf';
     lf.id='leaf-'+n.leaf.id;
-    lf.innerHTML=`<div class="leaf-hang"><div class="lh-curve"><img src="${CONNECTOR_IMG}" alt=""></div><div class="lh-content"><span class="leaf-dot">${n.leaf.icon}</span><span class="leaf-label">${n.leaf.label}</span></div></div>`;
+    lf.innerHTML=`<div class="leaf-inner"><div class="leaf-text"><span class="leaf-dot">${n.leaf.icon}</span><span class="leaf-label">${n.leaf.label}</span></div><img class="leaf-conn-img" src="${CONNECTOR_IMG}" alt=""></div>`;
     lf.addEventListener('click',(e)=>{e.stopPropagation();openCard(i,'leaf');});
     wrap.appendChild(lf);
   }

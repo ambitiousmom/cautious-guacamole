@@ -158,27 +158,27 @@ rendering:{badge:'SWE Foundation',h:'OneNote Rendering',
 };
 
 // ═══ STEPS: [action, nodeId] ═══
-// action: 'show' = reveal node, 'card' = open card, 'leaf' = reveal leaf + open its card
+// Chronological: start from Rendering, build forward to MAI Copilot
 const STEPS=[
-['show','copilot'],      // 1: show MAI node
-['card','copilot'],      // 2: open MAI card
-['show','tinkerer'],     // 3: show Tinkerer (no card)
-['show','founder'],      // 4: show Collab AI node
-['card','founder'],      // 5: open Collab AI card
-['show','patents-ai'],   // 6: show Patents (no card)
-['show','collabscale'],  // 7: show Doc Collab
-['card','collabscale'],  // 8: open Doc Collab card
-['show','hack-onecopi'], // 9: show Hackathon (no card)
-['show','on-rearch'],    // 10: show OneNote Rearch
-['card','on-rearch'],    // 11: open its card
-['show','techbreak'],    // 12: show Tech Break (no card)
-['show','pm-canvas'],    // 13: show PM Canvas UX
-['card','pm-canvas'],    // 14: open its card
-['show','patent-page'],  // 15: show Patent leaf (no card)
-['show','telemetry'],    // 16: show Telemetry
-['card','telemetry'],    // 17: open its card
-['show','rendering'],    // 18: show Rendering
-['card','rendering'],    // 19: open its card
+['show','rendering'],    // 1: OneNote Rendering
+['card','rendering'],    // 2: its card
+['show','telemetry'],    // 3: Telemetry Systems
+['card','telemetry'],    // 4: its card
+['show','patent-page'],  // 5: Share a Page Patent (no card)
+['show','pm-canvas'],    // 6: OneNote UX Canvas
+['card','pm-canvas'],    // 7: its card
+['show','techbreak'],    // 8: Tech Break (no card)
+['show','on-rearch'],    // 9: OneNote Ink & Image
+['card','on-rearch'],    // 10: its card
+['show','hack-onecopi'], // 11: Hack-marathon (no card)
+['show','collabscale'],  // 12: WXP Doc Collab Platform
+['card','collabscale'],  // 13: its card
+['show','patents-ai'],   // 14: GenAI Patents (no card)
+['show','founder'],      // 15: Collab AI
+['card','founder'],      // 16: its card
+['show','tinkerer'],     // 17: Tinkerer (no card)
+['show','copilot'],      // 18: MAI Copilot
+['card','copilot'],      // 19: its card
 ];
 
 // ═══ BUILD VISUAL NODES ═══
@@ -226,9 +226,10 @@ function advance(){
     closeCards();
     document.getElementById('nd-'+id).classList.add('show');
     // Labels
-    if(id==='copilot')document.getElementById('nowLabel').style.opacity='1';
+    if(id==='rendering'){document.getElementById('fold1').style.opacity='.15';document.getElementById('row2label').style.opacity='1';}
+    if(id==='collabscale'){}
     if(id==='founder')document.getElementById('recentLabel').style.opacity='1';
-    if(vis&&vis.row===1&&id==='on-rearch'){document.getElementById('fold1').style.opacity='.15';document.getElementById('row2label').style.opacity='1';}
+    if(id==='copilot')document.getElementById('nowLabel').style.opacity='1';
     updateHint();
   }
   else if(action==='card'){

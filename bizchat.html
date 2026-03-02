@@ -66,12 +66,12 @@ h1 span{background:linear-gradient(135deg,var(--accent),#7c3aed);-webkit-backgro
 .nd .nlabel{font-size:.82rem;font-weight:700;color:var(--fg);line-height:1.25}
 .nd .nsub{font-size:.66rem;color:var(--dim);margin-top:1px}
 
-/* Leaf node: vertical line down, text offset left, half-level below dot */
+/* Leaf: separate branch forking left from the main dot */
 .nd-wrap{flex:1;text-align:center;position:relative;z-index:3;overflow:visible}
-.leaf{opacity:0;transition:opacity .3s;position:absolute;left:-4px;top:calc(100% + 2px);cursor:pointer;z-index:4}
+.leaf{opacity:0;transition:opacity .3s;position:absolute;right:50%;top:50%;transform:translateY(-50%);cursor:pointer;z-index:4;display:flex;align-items:center;gap:0;white-space:nowrap;margin-top:12px}
 .leaf.show{opacity:1}
-.leaf .leaf-line{width:1.5px;height:14px;background:var(--dim);opacity:.35;margin:0 auto 0 calc(50% + 3px)}
-.leaf .leaf-text{display:flex;align-items:center;gap:3px;white-space:nowrap}
+.leaf .leaf-text{display:flex;align-items:center;gap:3px;padding-right:6px}
+.leaf .leaf-bar{width:12px;height:1.5px;background:var(--dim);opacity:.4;flex-shrink:0}
 .leaf .leaf-dot{font-size:.7rem;flex-shrink:0}
 .leaf .leaf-label{font-size:.76rem;font-weight:700;color:var(--dim)}
 .leaf:hover .leaf-label{color:var(--accent)}
@@ -272,7 +272,7 @@ NODES.forEach((n,i)=>{
     const lf=document.createElement('div');
     lf.className='leaf';
     lf.id='leaf-'+n.leaf.id;
-    lf.innerHTML=`<div class="leaf-line"></div><div class="leaf-text"><span class="leaf-dot">${n.leaf.icon}</span><span class="leaf-label">${n.leaf.label}</span></div>`;
+    lf.innerHTML=`<div class="leaf-text"><span class="leaf-dot">${n.leaf.icon}</span><span class="leaf-label">${n.leaf.label}</span></div><span class="leaf-bar"></span>`;
     lf.addEventListener('click',(e)=>{e.stopPropagation();openCard(i,'leaf');});
     wrap.appendChild(lf);
   }

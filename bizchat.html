@@ -15,9 +15,11 @@ body{font-family:var(--font);background:var(--bg);color:var(--fg);line-height:1.
 h1{font-size:2rem;font-weight:700;letter-spacing:-.04em;line-height:1.1;margin-bottom:4px}
 h1 span{background:linear-gradient(135deg,var(--accent),#7c3aed);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
 .role{font-size:.82rem;color:var(--muted);line-height:1.45}.role strong{color:var(--fg);font-weight:600}
-.summary{padding:14px 0 0;list-style:none;opacity:0;animation:fu .6s ease .2s forwards}
-.summary li{font-size:.82rem;color:var(--muted);line-height:1.6;margin-bottom:6px;padding-left:16px;position:relative}
-.summary li::before{content:'';position:absolute;left:0;top:10px;width:6px;height:6px;border-radius:50%;background:var(--accent)}
+.summary{padding:18px 0 0;list-style:none;opacity:0;animation:fu .6s ease .2s forwards;border-left:3px solid var(--accent);padding-left:18px;margin-top:16px}
+.summary li{font-size:.88rem;color:var(--fg);line-height:1.65;margin-bottom:10px;position:relative}
+.summary li:first-child{font-weight:600;font-size:.92rem}
+.summary li:last-child{color:var(--muted);font-style:italic;font-size:.84rem}
+.summary li::before{display:none}
 .start-wrap{text-align:center;padding:24px 0 0;opacity:0;animation:fu .5s ease .5s forwards}
 .start-btn{padding:12px 32px;background:var(--accent);color:#fff;border:none;border-radius:100px;font-size:.9rem;font-weight:600;cursor:pointer;font-family:var(--font);box-shadow:0 4px 16px rgba(79,70,229,.2);transition:all .2s}
 .start-btn:hover{background:#6d5dd3;transform:translateY(-1px)}.start-wrap.gone{display:none}
@@ -75,9 +77,9 @@ h1 span{background:linear-gradient(135deg,var(--accent),#7c3aed);-webkit-backgro
   <div class="role">Senior PM, <strong>Microsoft Copilot</strong> <span style="color:var(--accent);font-size:1.1em">●</span> 11 years product leadership & software engineering <span style="color:var(--accent);font-size:1.1em">●</span> Core Inventor, <strong>3 US Patents</strong></div>
 </div>
 <ul class="summary">
-  <li>I am energized by ambiguous and ambitious technical problems — and have a proven track record of turning them into shipped products at scale.</li>
-  <li>From authoring a solo proposal that became an SLT-funded agentic charter, to owning grounding quality for Copilot today, I think in falsifiable hypotheses and feasible prototypes, measure what matters, and bring people along across orgs.</li>
-  <li>I also seek adventures outside work — I came back from a multi-year tech break as a professional screenplay writer.</li>
+  <li>Energized by ambiguous, ambitious technical problems — with a proven track record of turning them into shipped products at scale.</li>
+  <li>From authoring a solo proposal that became an SLT-funded agentic charter, to owning grounding quality for Copilot today — I think in falsifiable hypotheses and feasible prototypes, measure what matters, and bring people along across orgs.</li>
+  <li>Came back from a multi-year tech break as a professional screenplay writer. I seek adventures.</li>
 </ul>
 <div class="start-wrap" id="startWrap"><button class="start-btn" id="startBtn">Start the journey →</button></div>
 <div class="tl-area" id="tlArea">

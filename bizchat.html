@@ -345,7 +345,7 @@ document.addEventListener('keydown',e=>{
   if(e.key==='Escape'){closeAll();return;}
   closeAll();
   if(step<total-1)advance();
-  else{document.getElementById('sideGig').classList.add('show');document.getElementById('hint').classList.remove('show');}
+  else{const sg2=document.getElementById('sideGig');if(sg2)sg2.classList.add('show');document.getElementById('hint').classList.remove('show');}
 });
 </script>
 </body>

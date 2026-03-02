@@ -88,10 +88,10 @@ h1 span{background:linear-gradient(135deg,var(--accent),#7c3aed);-webkit-backgro
 <div class="start-wrap" id="startWrap"><button class="start-btn" id="startBtn">Start the journey →</button></div>
 <div class="tl-area" id="tlArea">
   <div style="display:flex;padding:0 12px;margin-bottom:-4px">
+    <div style="flex:1"></div>
     <div style="flex:1;text-align:center"><span class="row-label" id="nowLabel" style="opacity:0">NOW</span></div>
     <div style="flex:1"></div>
-    <div style="flex:3;text-align:center"><span class="row-label" id="recentLabel" style="opacity:0">RECENT →</span></div>
-    <div style="flex:1"></div>
+    <div style="flex:1;text-align:center"><span class="row-label" id="recentLabel" style="opacity:0">RECENT →</span></div>
     <div style="flex:1"></div>
     <div style="flex:1"></div>
   </div>
@@ -107,33 +107,33 @@ h1 span{background:linear-gradient(135deg,var(--accent),#7c3aed);-webkit-backgro
 <script>
 try{
 const N=[
-// ROW 1
-{id:'copilot',label:'MAI Copilot',sub:'Grounding & Enrichment',cls:'now-nd',row:0,above:'NOW',
- badge:'Current Role',h:'Copilot Grounding & Enrichment Platform — DRI',
- bl:['<strong>DRI for grounding quality</strong> across the RAG stack — trust & relevance across 1P & 3P','Defined <strong>"Needs Met" competitive framework</strong> benchmarking against Perplexity & Google','<strong>17pt defect reduction · 4pt satisfaction lift</strong> — hypothesis-driven experimentation','Shipped <strong>automated EVALS pipelines</strong> — data-driven quality gates at scale','Built <strong>trust & quality evaluation frameworks</strong> with Applied Science & Policy'],
- tg:['RAG','EVALS','Grounding','Competitive Parity','Responsible AI','Trust Frameworks']},
+// ROW 1: leaf first, then its parent
 {id:'tinkerer',label:'🛠️ Tinkerer/Builder',leaf:true,row:0,
  badge:'🛠️ Builder',h:'Agents I\'m Building + Hackathon: Holistic Copilot',
  desc:'<strong>Hackathon 2024:</strong> Copilot as cross-boundary AI companion — 3P connectors, agent library, privacy boundaries.',
  mn:[{t:'Multi-Agent Workflow',d:'Agents collaborating — handoffs, shared context.',tg:['Agent Collab','Orchestration']},{t:'Grounding Evaluator',d:'Auto-EVALS — grounding accuracy, citations.',tg:['EVALS','Grounding']},{t:'Holistic Copilot',d:'Cross-boundary AI — 3P connectors, agent library.',tg:['Connectors','3P Extensibility']}],
  tg:['Connectors','Agent Library','Copilot Platform','Tinkering']},
-{id:'founder',label:'Collab AI',sub:'E2E Founder PM',row:0,above:'RECENT →',
- badge:'0→1 Founder PM',h:'E2E Bootstrapper — Collab AI Founder',
- bl:['Authored "<strong>AI-Productivity Paradox</strong>" — User/JTBD Research → SLT-Funded Charter','Rallied <strong>10+ product orgs</strong> across apps & platform','Designed <strong>app-agnostic reasoning spine</strong> for Word, Excel, PPT, Teams','E2E bootstrapped <strong>2 collab agents</strong> — opportunity → ship → metrics'],
- tg:['0→1 Charter','Cross-Org','Agent Orchestration','Platform Strategy']},
+{id:'copilot',label:'MAI Copilot',sub:'Grounding & Enrichment',cls:'now-nd',row:0,above:'NOW',
+ badge:'Current Role',h:'Copilot Grounding & Enrichment Platform — DRI',
+ bl:['<strong>DRI for grounding quality</strong> across the RAG stack — trust & relevance across 1P & 3P','Defined <strong>"Needs Met" competitive framework</strong> benchmarking against Perplexity & Google','<strong>17pt defect reduction · 4pt satisfaction lift</strong> — hypothesis-driven experimentation','Shipped <strong>automated EVALS pipelines</strong> — data-driven quality gates at scale','Built <strong>trust & quality evaluation frameworks</strong> with Applied Science & Policy'],
+ tg:['RAG','EVALS','Grounding','Competitive Parity','Responsible AI','Trust Frameworks']},
 {id:'patents-ai',label:'⭐ Patents',leaf:true,row:0,
  badge:'⭐ Core Inventor',h:'Patents — GenAI Agentic Systems',
  bl:['<strong>GenAI Agent Collaboration</strong> — multi-agent orchestration for doc collab','<strong>GenAI Agent Orchestration</strong> — agentic design for cross-app reasoning'],
  tg:['GenAI Agents','Orchestration','Collaboration']},
-{id:'collabscale',label:'Doc Collab Platform',sub:'Global Scale',row:0,
- badge:'Scale',h:'Document Collaboration Platform — Global Scale',
- bl:['Owned Office Collab at <strong>60M sessions/day</strong>','Reduced COGS from <strong>0.41¢ to 0.1¢/session</strong>','Platform economics — infrastructure consumed by 50+ app surfaces'],
- tg:['60M Scale','COGS Optimization','Platform Economics']},
+{id:'founder',label:'Collab AI',sub:'E2E Founder PM',row:0,above:'RECENT →',
+ badge:'0→1 Founder PM',h:'E2E Bootstrapper — Collab AI Founder',
+ bl:['Authored "<strong>AI-Productivity Paradox</strong>" — User/JTBD Research → SLT-Funded Charter','Rallied <strong>10+ product orgs</strong> across apps & platform','Designed <strong>app-agnostic reasoning spine</strong> for Word, Excel, PPT, Teams','E2E bootstrapped <strong>2 collab agents</strong> — opportunity → ship → metrics'],
+ tg:['0→1 Charter','Cross-Org','Agent Orchestration','Platform Strategy']},
 {id:'hack-onecopi',label:'🛠️ Hackathon',leaf:true,row:0,
  badge:'🛠️ Envision',h:'Hackathon — One Copilot Vision',
  desc:'Interactive prototype exploring unified Copilot UX across M365 surfaces.',
  mn:[{t:'Cross-App Agent UX',d:'Multi-agent orchestration, surface handoff.',tg:['Multi-Agent','Cross-App']},{t:'Multimodal Editing',d:'Voice + NL as input modalities.',tg:['Multimodal','Voice UX']},{t:'Coherence Dashboard',d:'Trust & quality scoring.',tg:['EVALS','Agent Quality']},{t:'Grounding Playground',d:'RAG experimentation toolkit.',tg:['RAG','Experimentation']}],
  tg:['Cross-App','Conversational UX','Copilot Platform']},
+{id:'collabscale',label:'Doc Collab Platform',sub:'Global Scale',row:0,
+ badge:'Scale',h:'Document Collaboration Platform — Global Scale',
+ bl:['Owned Office Collab at <strong>60M sessions/day</strong>','Reduced COGS from <strong>0.41¢ to 0.1¢/session</strong>','Platform economics — infrastructure consumed by 50+ app surfaces'],
+ tg:['60M Scale','COGS Optimization','Platform Economics']},
 // ROW 2
 {id:'on-rearch',label:'OneNote Rearch.',sub:'Augmentation Platform',row:1,
  badge:'Platform Rearchitect',h:'OneNote Augmentation Platform Redesign',
@@ -193,8 +193,8 @@ function advance(){
   closeAll();step++;
   if(step>=total){document.getElementById('hint').classList.remove('show');return;}
   const n=N[step];document.getElementById('nd-'+n.id).classList.add('show');
-  if(step===0){document.getElementById('nowLabel').style.opacity='1';}
-  if(step===2){document.getElementById('recentLabel').style.opacity='1';}
+  if(step===1){document.getElementById('nowLabel').style.opacity='1';}
+  if(step===3){document.getElementById('recentLabel').style.opacity='1';}
   if(n.row===1&&step===N.findIndex(x=>x.row===1)){document.getElementById('fold1').style.opacity='1';document.getElementById('row2label').style.opacity='1';}
   setTimeout(()=>openCard(step),300);
 }

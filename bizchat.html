@@ -45,7 +45,7 @@ h1 span{background:linear-gradient(135deg,var(--accent),#7c3aed);-webkit-backgro
 
 /* Row */
 .tl-row{display:flex;align-items:flex-start;position:relative;padding:0 12px}
-.tl-row::before{content:'';position:absolute;top:23px;left:36px;right:36px;height:2.5px;background:var(--border);border-radius:2px}
+.tl-row::before{content:'';position:absolute;top:18px;left:36px;right:36px;height:2px;background:var(--border);border-radius:2px}
 .tl-row.r2{flex-direction:row-reverse}
 
 /* Fold */
@@ -57,12 +57,12 @@ h1 span{background:linear-gradient(135deg,var(--accent),#7c3aed);-webkit-backgro
 /* Main node */
 .nd{opacity:0;transform:scale(.7);transition:opacity .35s,transform .35s;cursor:pointer;padding:0 2px}
 .nd.show{opacity:1;transform:scale(1)}
-.nd .dot{width:20px;height:20px;border-radius:50%;border:2.5px solid var(--border);background:var(--bg);margin:0 auto 6px;transition:all .2s;position:relative;z-index:2}
-.nd:hover .dot{border-color:var(--accent);transform:scale(1.15);box-shadow:0 0 0 4px var(--accent-soft)}
-.nd.active .dot{border-color:var(--accent);background:var(--accent);box-shadow:0 0 0 5px var(--accent-soft)}
+.nd .dot{width:13px;height:13px;border-radius:50%;border:2.5px solid var(--accent);background:var(--bg);margin:0 auto 6px;transition:all .25s;position:relative;z-index:2}
+.nd:hover .dot{transform:scale(1.2);box-shadow:0 0 0 4px var(--accent-soft)}
+.nd.active .dot{background:var(--accent);box-shadow:0 0 0 5px var(--accent-soft)}
 .nd .icon-img{width:24px;height:24px;border-radius:4px;margin:0 auto 6px;display:block;object-fit:contain;position:relative;z-index:2}
 .nd .bolt{font-size:.85rem;display:block;margin:0 auto 4px;width:20px;height:20px;line-height:20px;text-align:center;position:relative;z-index:2}
-.nd.now-nd .dot{background:var(--accent);border-color:var(--accent);box-shadow:0 0 0 5px var(--accent-soft)}
+.nd.now-nd .dot{background:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
 .nd .nlabel{font-size:.82rem;font-weight:700;color:var(--fg);line-height:1.25}
 .nd .nsub{font-size:.66rem;color:var(--dim);margin-top:1px}
 

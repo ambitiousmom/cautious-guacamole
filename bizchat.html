@@ -140,8 +140,8 @@ collabscale:{badge:'Global Scale',h:'WXP Document Collaboration Platform',
  desc:'Interactive prototype exploring unified Copilot UX across M365 surfaces.',
  mn:[{t:'Cross-App Agent UX',d:'Multi-agent orchestration, surface handoff, shared context across apps.',tg:['Multi-Agent','Orchestration','Cross-App','Extensibility']},{t:'Multimodal Editing',d:'Voice + NL as input modalities — contextual rewrites, flow-preserving.',tg:['Multimodal','Voice UX','Copilot in Word']},{t:'Coherence Dashboard',d:'Trust & quality — coherence scoring, grounding accuracy, gravity metrics.',tg:['EVALS','Agent Quality','Trust Metrics']},{t:'Grounding Playground',d:'RAG experimentation — snippets, token budgets, precision.',tg:['RAG','Experimentation','Token Optimization']}],
  tg:['Cross-App','Conversational UX','Copilot Platform']},
-'on-rearch':{badge:'Platform Rearchitect',h:'OneNote Augmentation Platform Redesign',
- bl:['Redesigned <strong>OneNote Augmentation Platform</strong> — Image & Ink Pipeline, Performance & Scale','Defined <strong>"Time-to-Augment" metric</strong> to measure pipeline performance','First platform rearchitect: <strong>shared infrastructure for multiple surfaces</strong>'],
+'on-rearch':{badge:'Platform Rearchitect',h:'OneNote Ink & Image Platform',
+ bl:['Redesigned <strong>OneNote Augmentation Platform</strong> — image & ink processing pipeline','Reduced <strong>Time-to-Augmentation from 7+ days to &lt;36 hours</strong>'],
  tg:['Platform','Pipeline Redesign','Time-to-Augment','Scale']},
 'pm-canvas':{badge:'PM',h:'OneNote UX Canvas',
  bl:['Led <strong>12-engineer team</strong> in full-stack Canvas UX redesign across all OneNote endpoints','Full-stack product ownership spanning design, engineering, and telemetry','Transitioned from engineering to product management'],
@@ -153,8 +153,8 @@ telemetry:{badge:'0→1 Tech Lead',h:'Telemetry Verification Platform & API Evan
  bl:['Built <strong>0→1 Telemetry Verification Platform</strong> for data-driven prioritization','<strong>Evangelized APIs/SDKs</strong> for internal use across engineering teams'],
  tg:['Telemetry','Dev Tools','0→1','API Evangelism']},
 rendering:{badge:'SWE Foundation',h:'OneNote Rendering',
- bl:['Worked on <strong>rendering pipelines across endpoints</strong> — Windows, Mac, iOS','Hands-on with <strong>SDKs, APIs, cross-platform tooling</strong>','The engineering foundation that shapes how I think about platform problems today'],
- tg:['Rendering','SDK/API','Cross-Platform','Full-Stack']}
+ bl:['Worked on <strong>rendering pipelines across endpoints</strong> — Windows, Mac, iOS','The engineering foundation that shapes how I think about platform problems today'],
+ tg:['Rendering','Cross-Platform','Full-Stack']}
 };
 
 // ═══ STEPS: [action, nodeId] ═══
@@ -165,16 +165,16 @@ const STEPS=[
 ['show','tinkerer'],     // 3: show Tinkerer (no card)
 ['show','founder'],      // 4: show Collab AI node
 ['card','founder'],      // 5: open Collab AI card
-['leaf','patents-ai'],   // 6: show Patents + open its card
+['show','patents-ai'],   // 6: show Patents (no card)
 ['show','collabscale'],  // 7: show Doc Collab
 ['card','collabscale'],  // 8: open Doc Collab card
-['leaf','hack-onecopi'], // 9: show Hackathon + open its card
+['show','hack-onecopi'], // 9: show Hackathon (no card)
 ['show','on-rearch'],    // 10: show OneNote Rearch
 ['card','on-rearch'],    // 11: open its card
 ['show','techbreak'],    // 12: show Tech Break (no card)
 ['show','pm-canvas'],    // 13: show PM Canvas UX
 ['card','pm-canvas'],    // 14: open its card
-['leaf','patent-page'],  // 15: show Patent leaf + card
+['show','patent-page'],  // 15: show Patent leaf (no card)
 ['show','telemetry'],    // 16: show Telemetry
 ['card','telemetry'],    // 17: open its card
 ['show','rendering'],    // 18: show Rendering

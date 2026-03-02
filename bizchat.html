@@ -27,7 +27,7 @@ h1 span{background:linear-gradient(135deg,var(--accent),#7c3aed);-webkit-backgro
 .row-label{font-size:.66rem;letter-spacing:.08em;color:var(--dim);font-weight:700;padding:0 0 4px}
 .row-label.center{text-align:center}
 .tl-row{display:flex;align-items:flex-start;position:relative;padding:0 12px}
-.tl-row::before{content:'';position:absolute;top:18px;left:36px;right:36px;height:2px;background:var(--fg);opacity:.15;border-radius:2px}
+.tl-row::before{content:'';position:absolute;top:6px;left:36px;right:36px;height:2px;background:var(--fg);opacity:.15;border-radius:2px}
 .tl-row.r2{flex-direction:row-reverse}
 .tl-fold{width:2px;height:44px;background:var(--fg);opacity:.15;margin-left:auto;margin-right:36px;border-radius:2px;opacity:0;transition:opacity .3s;position:relative}
 /* Nodes */
@@ -41,14 +41,13 @@ h1 span{background:linear-gradient(135deg,var(--accent),#7c3aed);-webkit-backgro
 .nd.now-nd .dot{background:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
 .nd .nlabel{font-size:.82rem;font-weight:700;color:var(--fg);line-height:1.25}
 .nd .nsub{font-size:.66rem;color:var(--dim);margin-top:1px}
-/* Small leaf nodes hanging below the line */
-.nd.leaf-nd{margin-top:-6px}
-.nd.leaf-nd .nlabel{font-size:.72rem;color:var(--dim);font-weight:600;margin-top:0}
+/* Leaf nodes: dot on mainline, vertical drop, label below */
+.nd.leaf-nd .dot{width:8px;height:8px;min-width:8px;min-height:8px;border-color:var(--fg);border-width:2px;opacity:.4;margin-bottom:0}
+.nd.leaf-nd:hover .dot{border-color:var(--accent);opacity:1}
+.nd.leaf-nd.active .dot{background:var(--accent);border-color:var(--accent);opacity:1}
+.nd.leaf-nd .drop-line{width:1.5px;height:24px;background:var(--fg);opacity:.15;margin:0 auto}
+.nd.leaf-nd .nlabel{font-size:.72rem;color:var(--dim);font-weight:600;margin-top:4px}
 .nd.leaf-nd .nsub{display:none}
-.nd.leaf-nd .dot{width:8px;height:8px;min-width:8px;min-height:8px;border-color:var(--dim);border-width:2px;margin-bottom:0}
-.nd.leaf-nd:hover .dot{border-color:var(--accent)}
-.nd.leaf-nd.active .dot{background:var(--accent);border-color:var(--accent)}
-.nd.leaf-nd .drop-line{width:1.5px;height:22px;background:var(--fg);opacity:.15;margin:0 auto 4px}
 /* Dropdown card */
 .dd-wrap{position:relative;width:100%;min-height:0}
 .dd{display:none;position:relative;margin:14px auto;max-width:560px;background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:22px 26px;box-shadow:0 10px 40px rgba(0,0,0,.08);z-index:10;animation:di .25s ease}
@@ -88,6 +87,14 @@ h1 span{background:linear-gradient(135deg,var(--accent),#7c3aed);-webkit-backgro
 </ul>
 <div class="start-wrap" id="startWrap"><button class="start-btn" id="startBtn">Start the journey →</button></div>
 <div class="tl-area" id="tlArea">
+  <div style="display:flex;padding:0 12px;margin-bottom:-4px">
+    <div style="flex:1;text-align:center"><span class="row-label" id="nowLabel" style="opacity:0">NOW</span></div>
+    <div style="flex:1"></div>
+    <div style="flex:3;text-align:center"><span class="row-label" id="recentLabel" style="opacity:0">RECENT →</span></div>
+    <div style="flex:1"></div>
+    <div style="flex:1"></div>
+    <div style="flex:1"></div>
+  </div>
   <div class="tl-row" id="row1"></div>
   <div class="dd-wrap"><div class="dd" id="dd-row1"></div></div>
   <div class="tl-fold" id="fold1"></div>
@@ -158,13 +165,11 @@ N.forEach((n,i)=>{
   const d=document.createElement('div');
   d.className='nd'+(n.cls?' '+n.cls:'')+(n.leaf?' leaf-nd':'');
   d.id='nd-'+n.id;d.dataset.idx=i;
-  // Above label
-  if(n.above){const lb=document.createElement('div');lb.className='row-label';lb.textContent=n.above;lb.style.textAlign='center';if(n.above.startsWith('RECENT')){lb.style.visibility='hidden';lb.id='recentLabel';}w.appendChild(lb);}
-  else if(n.row===0&&!n.leaf){const sp=document.createElement('div');sp.style.height='1rem';w.appendChild(sp);}
   let dot;
   if(n.bolt) dot='<span class="bolt">⚡</span>';
   else if(n.leaf) dot='<span class="dot"></span><div class="drop-line"></div>';
   else dot='<span class="dot"></span>';
+  // No spacers or above labels - handled separately
   d.innerHTML=dot+'<div class="nlabel">'+n.label+'</div>'+(n.sub?'<div class="nsub">'+n.sub+'</div>':'');
   d.addEventListener('click',()=>openCard(i));
   w.appendChild(d);
@@ -188,7 +193,8 @@ function advance(){
   closeAll();step++;
   if(step>=total){document.getElementById('hint').classList.remove('show');return;}
   const n=N[step];document.getElementById('nd-'+n.id).classList.add('show');
-  if(step===2){const rl=document.getElementById('recentLabel');if(rl)rl.style.visibility='visible';}
+  if(step===0){document.getElementById('nowLabel').style.opacity='1';}
+  if(step===2){document.getElementById('recentLabel').style.opacity='1';}
   if(n.row===1&&step===N.findIndex(x=>x.row===1)){document.getElementById('fold1').style.opacity='1';document.getElementById('row2label').style.opacity='1';}
   setTimeout(()=>openCard(step),300);
 }

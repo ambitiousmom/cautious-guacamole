@@ -301,7 +301,7 @@ function advance(){
   closeAll();
   step++;
   if(step>=total){
-    document.getElementById('sideGig').classList.add('show');
+    const sg=document.getElementById('sideGig');if(sg)sg.classList.add('show');
     document.getElementById('hint').classList.remove('show');
     return;
   }

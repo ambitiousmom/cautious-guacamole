@@ -66,13 +66,13 @@ h1 span{background:linear-gradient(135deg,var(--accent),#7c3aed);-webkit-backgro
 .nd .nlabel{font-size:.82rem;font-weight:700;color:var(--fg);line-height:1.25}
 .nd .nsub{font-size:.66rem;color:var(--dim);margin-top:1px}
 
-/* Leaf node (hanging off main) */
-.leaf{opacity:0;transition:opacity .3s;margin-top:6px;cursor:pointer}
+/* Leaf node (hanging left of main) */
+.leaf{opacity:0;transition:opacity .3s;position:absolute;left:-8px;top:100%;cursor:pointer;text-align:right;white-space:nowrap}
 .leaf.show{opacity:1}
-.leaf .leaf-line{width:0;height:0;border-left:1.5px solid var(--border);border-bottom:1.5px solid var(--border);border-bottom-left-radius:10px;width:16px;height:20px;margin:0 auto}
-.leaf .leaf-dot{width:16px;height:16px;margin:0 auto 4px;display:flex;align-items:center;justify-content:center;font-size:.72rem;position:relative;z-index:2}
-.leaf .leaf-label{font-size:.82rem;font-weight:700;color:var(--dim)}
-.leaf .leaf-sub{font-size:.66rem;color:var(--dim);margin-top:1px}
+.leaf .leaf-conn{position:absolute;right:100%;top:-10px;width:20px;height:28px;border-right:1.5px solid var(--border);border-bottom:1.5px solid var(--border);border-bottom-right-radius:14px;margin-right:4px}
+.leaf .leaf-dot{display:inline-flex;align-items:center;justify-content:center;font-size:.7rem;margin-right:4px;vertical-align:middle}
+.leaf .leaf-label{font-size:.76rem;font-weight:700;color:var(--dim);vertical-align:middle}
+.leaf .leaf-sub{font-size:.6rem;color:var(--dim);margin-top:1px}
 .leaf:hover .leaf-label{color:var(--accent)}
 
 /* Dropdown card */
@@ -234,7 +234,7 @@ NODES.forEach((n,i)=>{
   nd.id='nd-'+n.id;
   nd.dataset.idx=i;
   let dotH;
-  if(n.type==='icon-on'||n.type==='icon-cp') dotH=`<img class="icon-img" src="${ICONS[n.type]}">`;
+  if(n.type==='icon-on'||n.type==='icon-cp') dotH=`<span class="dot"></span>`;
   else if(n.type==='bolt') dotH=`<span class="bolt">⚡</span>`;
   else dotH=`<span class="dot"></span>`;
 
@@ -270,7 +270,7 @@ NODES.forEach((n,i)=>{
     const lf=document.createElement('div');
     lf.className='leaf';
     lf.id='leaf-'+n.leaf.id;
-    lf.innerHTML=`<div class="leaf-line"></div><div class="leaf-dot">${n.leaf.icon}</div><div class="leaf-label">${n.leaf.label}</div>`;
+    lf.innerHTML=`<div class="leaf-conn"></div><span class="leaf-dot">${n.leaf.icon}</span><span class="leaf-label">${n.leaf.label}</span>`;
     lf.addEventListener('click',(e)=>{e.stopPropagation();openCard(i,'leaf');});
     wrap.appendChild(lf);
   }

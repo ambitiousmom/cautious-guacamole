@@ -105,10 +105,10 @@ const VIS=[
 // Row 1
 {id:'tinkerer',label:'🛠️ Tinkerer/Builder',leaf:true,row:0},
 {id:'copilot',label:'MAI Copilot',sub:'Grounding & Enrichment',cls:'now-nd',row:0},
-{id:'founder',label:'Collab AI',sub:'E2E Founder PM',row:0},
 {id:'patents-ai',label:'⭐ Patents for GenAI Collab Systems',leaf:true,row:0},
-{id:'collabscale',label:'WXP Doc Collab Platform',sub:'Global Scale',row:0},
+{id:'founder',label:'Collab AI',sub:'E2E Founder PM',row:0},
 {id:'hack-onecopi',label:'🛠️ Hack-marathon',leaf:true,row:0},
+{id:'collabscale',label:'WXP Doc Collab Platform',sub:'Global Scale',row:0},
 // Row 2
 {id:'on-rearch',label:'OneNote Ink & Image Platform',sub:'Augmentation',row:1},
 {id:'techbreak',label:'Tech Break',sub:'Screenplay Writing',bolt:true,row:1},
@@ -170,12 +170,12 @@ const STEPS=[
 ['show','techbreak'],    // 8: Tech Break (no card)
 ['show','on-rearch'],    // 9: OneNote Ink & Image
 ['card','on-rearch'],    // 10: its card
-['show','hack-onecopi'], // 11: Hack-marathon (no card)
-['show','collabscale'],  // 12: WXP Doc Collab Platform
-['card','collabscale'],  // 13: its card
-['show','patents-ai'],   // 14: GenAI Patents (no card)
-['show','founder'],      // 15: Collab AI
-['card','founder'],      // 16: its card
+['show','collabscale'],  // 11: WXP Doc Collab Platform
+['card','collabscale'],  // 12: its card
+['show','hack-onecopi'], // 13: Hack-marathon (no card)
+['show','founder'],      // 14: Collab AI
+['card','founder'],      // 15: its card
+['show','patents-ai'],   // 16: GenAI Patents (no card)
 ['show','tinkerer'],     // 17: Tinkerer (no card)
 ['show','copilot'],      // 18: MAI Copilot
 ['card','copilot'],      // 19: its card
@@ -228,7 +228,7 @@ function advance(){
     // Labels
     if(id==='rendering'){document.getElementById('fold1').style.opacity='.15';document.getElementById('row2label').style.opacity='1';}
     if(id==='collabscale'){}
-    if(id==='collabscale')document.getElementById('recentLabel').style.opacity='1';
+    if(id==='founder')document.getElementById('recentLabel').style.opacity='1';
     if(id==='copilot')document.getElementById('nowLabel').style.opacity='1';
     updateHint();
   }

@@ -121,14 +121,14 @@ const VIS=[
 // ═══ CARD DATA (keyed by id) ═══
 const CARDS={
 copilot:{badge:'Grounding & Enrichment',h:'Copilot Grounding & Enrichment Platform — DRI',
- bl:['Served as <strong>DRI over multiple cycles</strong> testing falsifiable hypothesized experiments across the RAG stack','Defined <strong>"Needs Met" competitive framework</strong> benchmarking against Perplexity & Google','<strong>17pt Defect Reduction · 4pt Satisfaction Lift</strong> — Hypothesis-Driven Experimentation','Performed <strong>competitive benchmarking and EVALS</strong> and identified differentiating opportunities','Built <strong>Trust & Quality Evaluation Frameworks</strong> with Applied Science & Policy — Responsible AI'],
+ bl:['Served as <strong>DRI over multiple cycles</strong> testing falsifiable hypothesized experiments across the RAG stack','Defined <strong>"Needs Met" competitive framework</strong> benchmarking against Perplexity & Google','<strong>17pt Defect Reduction · 4pt Satisfaction Lift</strong> — Hypothesis-Driven Experimentation','Performed <strong>competitive benchmarking and EVALS</strong> and identified differentiating opportunities','Built <strong>AI Regulations and Compliance Framework</strong> with Applied Science & Policy — Responsible AI'],
  tg:['RAG','EVALS','Grounding','Competitive Parity','Responsible AI','Trust Frameworks']},
 tinkerer:{badge:'🛠️ Builder',h:'Agents I\'m Building + Hackathon: Holistic Copilot',
  desc:'<strong>Hackathon 2024:</strong> Copilot as cross-boundary AI companion — 3P connectors, agent library, privacy boundaries.',
  mn:[{t:'Multi-Agent Workflow',d:'Agents collaborating — handoffs, shared context.',tg:['Agent Collab','Orchestration']},{t:'Grounding Evaluator',d:'Auto-EVALS — grounding accuracy, citations.',tg:['EVALS','Grounding']},{t:'Holistic Copilot',d:'Cross-boundary AI — 3P connectors, agent library.',tg:['Connectors','3P Extensibility']}],
  tg:['Connectors','Agent Library','Copilot Platform','Tinkering']},
-founder:{badge:'0→1 Founder PM',h:'E2E Bootstrapper — Collab AI Founder',
- bl:['Authored "<strong>AI-Productivity Paradox</strong>" — User/JTBD Research → SLT-Funded Charter → 10+ Orgs Aligned across Apps & Platform','Designed <strong>app-agnostic reasoning spine</strong> for Word, Excel, PPT, Teams — core AI platform capabilities','E2E Bootstrapped <strong>2 Collab Agents</strong> — Opportunity ID → Conceptualization → Spec → Build → Ship → Metrics'],
+founder:{badge:'0→1 Founder PM',h:'E2E Bootstrapper — Collab AI',
+ bl:['<strong>Gap & JTBD Analysis</strong> — Identified the AI-Productivity Paradox through user research','<strong>SLT Alignment & Charter</strong> — Secured funding, established multi-year roadmap','<strong>Cross-Org Rally</strong> — 10+ product orgs aligned across apps & platform','<strong>Platform Design</strong> — App-agnostic reasoning spine for Word, Excel, PPT, Teams','<strong>Agent Build & Ship</strong> — E2E bootstrapped 2 Collab Agents from concept to metrics'],
  tg:['0→1 Charter','Cross-Org','Agent Orchestration','Platform Strategy']},
 'patents-ai':{badge:'⭐ Core Inventor',h:'3 US Patents',
  bl:['<strong>GenAI Agent Collaboration</strong> — multi-agent orchestration for document collab','<strong>GenAI Agent Orchestration</strong> — agentic system design for cross-app reasoning','<strong>OneNote Page Sharing</strong> — real-time collaborative UX'],
@@ -162,7 +162,7 @@ rendering:{badge:'SWE Foundation',h:'Rendering Platform — Where It Started',
 const STEPS=[
 ['show','copilot'],      // 1: show MAI node
 ['card','copilot'],      // 2: open MAI card
-['leaf','tinkerer'],     // 3: show Tinkerer + open its card
+['show','tinkerer'],     // 3: show Tinkerer (no card)
 ['show','founder'],      // 4: show Collab AI node
 ['card','founder'],      // 5: open Collab AI card
 ['leaf','patents-ai'],   // 6: show Patents + open its card

@@ -237,13 +237,14 @@ NODES.forEach((n,i)=>{
   if(n.type==='icon-on'||n.type==='icon-cp') dotH=`<img class="icon-img" src="${ICONS[n.type]}">`;
   else if(n.type==='bolt') dotH=`<span class="bolt">⚡</span>`;
   else dotH=`<span class="dot"></span>`;
-  // Add "NOW" label above first node, "RECENT →" after it
+
+  // Add labels BEFORE the node
   if(i===0 && n.row===0){
     const nowLabel=document.createElement('div');
     nowLabel.className='row-label';
     nowLabel.textContent='NOW';
     nowLabel.style.textAlign='center';
-    wrap.insertBefore(nowLabel, nd);
+    wrap.appendChild(nowLabel);
   }
   if(i===1 && n.row===0){
     const recentLabel=document.createElement('div');
@@ -252,13 +253,12 @@ NODES.forEach((n,i)=>{
     recentLabel.style.textAlign='center';
     recentLabel.style.visibility='hidden';
     recentLabel.id='recentLabel';
-    wrap.insertBefore(recentLabel, nd);
+    wrap.appendChild(recentLabel);
   }
   if(i>1 && n.row===0){
-    // spacer to keep alignment with labeled nodes
     const sp=document.createElement('div');
     sp.style.height='1.1rem';
-    wrap.insertBefore(sp, nd);
+    wrap.appendChild(sp);
   }
 
   nd.innerHTML=dotH+`<div class="nlabel">${n.label}</div><div class="nsub">${n.sub}</div>`;

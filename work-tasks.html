@@ -20,11 +20,11 @@
     --green-light: #DFF6DD;
     --red: #D13438;
     --yellow: #FFB900;
-    --orange: #E89B35;
     --blue-light: #EBF3FC;
     --purple-light: #F3EEFF;
     --font: 'Segoe UI Variable', 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
     --transition: 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    --sidebar-w: 220px;
   }
   * { margin: 0; padding: 0; box-sizing: border-box; }
   body { font-family: var(--font); background: var(--bg); color: var(--text); height: 100vh; overflow: hidden; }
@@ -38,209 +38,140 @@
   }
   .landing.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
   .landing-badge { font-size: 11px; letter-spacing: 2.5px; text-transform: uppercase; color: rgba(255,255,255,0.4); margin-bottom: 24px; }
-  .landing h1 { font-size: 44px; font-weight: 600; margin-bottom: 12px; background: linear-gradient(90deg, #fff, #C8B8FF); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-  .landing h2 { font-size: 22px; font-weight: 400; color: rgba(255,255,255,0.6); margin-bottom: 28px; }
-  .landing .sub { font-size: 17px; color: rgba(255,255,255,0.55); max-width: 680px; text-align: center; line-height: 1.65; margin-bottom: 32px; }
-  .landing .journey-box { background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 20px 28px; max-width: 520px; margin-bottom: 36px; }
-  .journey-box .jb-label { font-size: 10px; text-transform: uppercase; letter-spacing: 1.5px; color: #B4A0FF; margin-bottom: 10px; font-weight: 600; }
-  .journey-box .beat { display: flex; gap: 10px; align-items: flex-start; font-size: 13px; color: rgba(255,255,255,0.75); padding: 5px 0; line-height: 1.5; }
-  .journey-box .beat-num { background: rgba(255,255,255,0.12); border-radius: 4px; padding: 1px 7px; font-size: 11px; font-weight: 600; color: #B4A0FF; flex-shrink: 0; margin-top: 1px; }
-  .start-btn { padding: 14px 40px; border-radius: 28px; border: none; background: linear-gradient(135deg, #7B57FF, #0F6CBD); color: white; font-size: 15px; font-weight: 600; cursor: pointer; box-shadow: 0 4px 20px rgba(123,87,255,0.4); transition: transform 0.2s, box-shadow 0.2s; }
+  .landing h1 { font-size: 48px; font-weight: 600; margin-bottom: 8px; background: linear-gradient(90deg, #fff, #C8B8FF); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+  .landing h2 { font-size: 20px; font-weight: 400; color: rgba(255,255,255,0.5); margin-bottom: 32px; letter-spacing: 1px; }
+  .landing .sub { font-size: 16px; color: rgba(255,255,255,0.55); max-width: 600px; text-align: center; line-height: 1.7; margin-bottom: 36px; }
+  .landing .journey-box { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 20px 28px; max-width: 480px; margin-bottom: 40px; }
+  .journey-box .jb-label { font-size: 10px; text-transform: uppercase; letter-spacing: 1.5px; color: #B4A0FF; margin-bottom: 12px; font-weight: 600; }
+  .journey-box .beat { display: flex; gap: 10px; align-items: flex-start; font-size: 13px; color: rgba(255,255,255,0.65); padding: 4px 0; line-height: 1.5; }
+  .journey-box .beat-num { background: rgba(255,255,255,0.1); border-radius: 4px; padding: 1px 7px; font-size: 11px; font-weight: 600; color: #B4A0FF; flex-shrink: 0; margin-top: 1px; }
+  .start-btn { padding: 14px 44px; border-radius: 28px; border: none; background: linear-gradient(135deg, #7B57FF, #0F6CBD); color: white; font-size: 15px; font-weight: 600; cursor: pointer; box-shadow: 0 4px 20px rgba(123,87,255,0.4); transition: transform 0.2s, box-shadow 0.2s; }
   .start-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 28px rgba(123,87,255,0.5); }
-  .landing .meta { margin-top: 28px; font-size: 11px; color: rgba(255,255,255,0.25); }
-  .landing .vs { margin-top: 12px; display: flex; gap: 24px; font-size: 12px; color: rgba(255,255,255,0.35); }
-  .landing .vs .col { text-align: center; }
-  .landing .vs .col-header { font-weight: 600; color: rgba(255,255,255,0.5); margin-bottom: 4px; }
+  .landing .meta { margin-top: 32px; font-size: 11px; color: rgba(255,255,255,0.2); }
 
   /* ═══ Shell ═══ */
   .shell { display: flex; height: 100vh; width: 100vw; }
 
   /* ═══ Sidebar ═══ */
   .sidebar {
-    width: 220px; min-width: 220px; height: 100%;
+    width: var(--sidebar-w); min-width: var(--sidebar-w); height: 100%;
     background: var(--surface); border-right: 1px solid var(--border-light);
-    display: flex; flex-direction: column; overflow: hidden;
+    display: flex; flex-direction: column;
   }
   .sidebar-top { padding: 12px 14px; display: flex; align-items: center; gap: 10px; }
-  .copilot-logo { width: 28px; height: 28px; border-radius: 6px; display: flex; align-items: center; justify-content: center; background: #242424; color: white; font-size: 14px; }
-  .sidebar-title { font-size: 14px; font-weight: 600; color: var(--text); }
-  .sidebar-divider { height: 1px; background: var(--border-light); margin: 4px 14px; }
+  .copilot-logo { width: 28px; height: 28px; border-radius: 6px; display: flex; align-items: center; justify-content: center; background: #242424; flex-shrink: 0; }
+  .copilot-logo svg { width: 18px; height: 18px; }
+  .sidebar-label { font-size: 14px; font-weight: 600; }
   .sidebar-nav { padding: 4px 8px; }
-  .nav-item { display: flex; align-items: center; gap: 10px; padding: 8px 10px; border-radius: 6px; font-size: 13px; color: var(--text-secondary); cursor: pointer; transition: background 0.15s; }
+  .nav-item { display: flex; align-items: center; gap: 10px; padding: 7px 10px; border-radius: 6px; font-size: 13px; color: var(--text-secondary); cursor: pointer; }
   .nav-item:hover { background: var(--surface-hover); }
-  .nav-item.active { background: var(--blue-light); color: var(--brand-blue); font-weight: 600; }
+  .nav-item.active { color: var(--brand-blue); font-weight: 600; background: var(--blue-light); }
   .nav-icon { width: 18px; text-align: center; font-size: 14px; }
-  .task-count { margin-left: auto; background: var(--copilot-purple); color: white; font-size: 10px; font-weight: 600; padding: 1px 6px; border-radius: 10px; }
-  .sidebar-section { padding: 4px 8px; }
-  .section-header { font-size: 11px; font-weight: 600; color: var(--text-secondary); padding: 8px 10px 4px; text-transform: uppercase; letter-spacing: 0.5px; }
-  .task-item { display: flex; align-items: center; gap: 10px; padding: 7px 10px; border-radius: 6px; font-size: 12px; color: var(--text-secondary); cursor: pointer; border-left: 3px solid transparent; }
-  .task-item:hover { background: var(--surface-hover); }
-  .task-item.active { background: var(--blue-light); border-left-color: var(--brand-blue); color: var(--text); font-weight: 500; }
-  .task-status-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
-  .task-status-dot.pending { background: var(--yellow); }
-  .task-status-dot.running { background: var(--copilot-purple); animation: pulse 2s infinite; }
-  .task-status-dot.done { background: var(--green); }
+  .sidebar-divider { height: 1px; background: var(--border-light); margin: 6px 14px; }
+  .section-header { font-size: 11px; font-weight: 600; color: var(--text-muted); padding: 8px 18px 4px; text-transform: uppercase; letter-spacing: 0.5px; }
+  .task-list-item { display: flex; align-items: center; gap: 10px; padding: 6px 10px; margin: 0 8px; border-radius: 6px; font-size: 12px; color: var(--text-secondary); cursor: pointer; border-left: 3px solid transparent; }
+  .task-list-item:hover { background: var(--surface-hover); }
+  .task-list-item.active { background: var(--blue-light); border-left-color: var(--brand-blue); color: var(--text); font-weight: 500; }
+  .tdot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+  .tdot.running { background: var(--copilot-purple); animation: pulse 2s infinite; }
+  .tdot.pending { background: var(--yellow); }
+  .tdot.done { background: var(--green); }
   .sidebar-bottom { margin-top: auto; padding: 10px 14px; border-top: 1px solid var(--border-light); }
   .user-row { display: flex; align-items: center; gap: 8px; }
   .user-avatar { width: 24px; height: 24px; border-radius: 50%; background: linear-gradient(135deg, #E89B35, #D4782F); display: flex; align-items: center; justify-content: center; font-size: 10px; color: white; font-weight: 600; }
-  .user-info { font-size: 12px; }
-  .user-name { color: var(--text); font-weight: 500; }
-  .user-sub { color: var(--text-muted); font-size: 10px; }
 
-  /* ═══ Main Content ═══ */
-  .main-content { flex: 1; display: flex; flex-direction: column; min-width: 0; height: 100%; }
-  .topbar { height: 48px; display: flex; align-items: center; padding: 0 20px; border-bottom: 1px solid var(--border-light); background: var(--surface); gap: 12px; }
-  .topbar-title { font-size: 14px; font-weight: 600; color: var(--text); }
-  .topbar-badge { font-size: 11px; color: var(--copilot-purple); background: var(--purple-light); padding: 2px 8px; border-radius: 4px; font-weight: 500; }
-  .topbar-right { margin-left: auto; display: flex; align-items: center; gap: 8px; }
-  .topbar-btn { padding: 4px 12px; border: 1px solid var(--border); border-radius: 6px; font-size: 12px; background: transparent; cursor: pointer; color: var(--text-secondary); font-family: var(--font); }
+  /* ═══ Main ═══ */
+  .main { flex: 1; display: flex; flex-direction: column; min-width: 0; }
+  .topbar { height: 48px; display: flex; align-items: center; padding: 0 20px; border-bottom: 1px solid var(--border-light); background: var(--surface); gap: 10px; flex-shrink: 0; }
+  .topbar-title { font-size: 14px; font-weight: 600; }
+  .topbar-tag { font-size: 10px; color: var(--copilot-purple); background: var(--purple-light); padding: 2px 8px; border-radius: 10px; font-weight: 600; letter-spacing: 0.3px; }
 
   /* Conversation */
   .convo-area { flex: 1; overflow-y: auto; padding: 24px 0; display: flex; flex-direction: column; align-items: center; }
-  .convo-inner { width: 100%; max-width: 700px; padding: 0 24px; display: flex; flex-direction: column; gap: 4px; }
-  .user-msg { align-self: flex-end; max-width: 80%; margin: 8px 0; }
-  .user-msg .bubble { background: #F0F0F0; padding: 10px 16px; border-radius: 12px 12px 2px 12px; font-size: 14px; line-height: 1.6; }
-  .copilot-msg { margin: 8px 0; }
-  .copilot-msg .agent-label { display: flex; align-items: center; gap: 6px; margin-bottom: 6px; font-size: 13px; font-weight: 600; }
-  .copilot-msg .body { font-size: 14px; line-height: 1.7; }
-  .copilot-msg .body p { margin-bottom: 10px; }
+  .convo-inner { width: 100%; max-width: 660px; padding: 0 20px; display: flex; flex-direction: column; gap: 6px; }
 
-  .agent-icon { width: 22px; height: 22px; border-radius: 4px; display: inline-flex; align-items: center; justify-content: center; font-size: 10px; color: white; font-weight: 700; }
-  .agent-icon.word { background: #185ABD; }
-  .agent-icon.excel { background: #107C10; }
-  .agent-icon.ppt { background: #D24726; }
-  .agent-icon.outlook { background: #0078D4; }
-  .agent-icon.teams { background: #6264A7; }
-  .agent-icon.planner { background: #31752F; }
-  .agent-icon.sm { width: 16px; height: 16px; font-size: 8px; border-radius: 3px; }
+  /* User message */
+  .user-msg { align-self: flex-end; max-width: 80%; margin: 10px 0; }
+  .user-msg .bubble { background: #F0F0F0; padding: 11px 16px; border-radius: 12px 12px 2px 12px; font-size: 14px; line-height: 1.65; }
 
-  /* ── Task Plan Card ── */
-  .task-plan-card {
+  /* Copilot message */
+  .cp-msg { margin: 10px 0; }
+  .cp-msg .cp-label { display: flex; align-items: center; gap: 6px; margin-bottom: 6px; font-size: 13px; font-weight: 600; color: var(--text); }
+  .cp-msg .cp-body { font-size: 14px; line-height: 1.7; }
+  .cp-msg .cp-body p { margin-bottom: 8px; }
+
+  /* Small icons */
+  .app-icon { width: 16px; height: 16px; border-radius: 3px; display: inline-flex; align-items: center; justify-content: center; font-size: 8px; color: white; font-weight: 700; vertical-align: -2px; flex-shrink: 0; }
+  .app-icon.ol { background: #0078D4; }
+  .app-icon.tm { background: #6264A7; }
+  .app-icon.xl { background: #107C10; }
+  .app-icon.wd { background: #185ABD; }
+  .app-icon.cal { background: #0078D4; }
+
+  /* ── Card (unified) ── */
+  .card {
     background: var(--surface); border: 1px solid var(--border);
     border-radius: 12px; margin: 12px 0; overflow: hidden;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
   }
-  .task-plan-header {
+  .card-header {
     display: flex; align-items: center; gap: 8px;
-    padding: 14px 16px; background: linear-gradient(90deg, rgba(123,87,255,0.08), rgba(15,108,189,0.04));
-    border-bottom: 1px solid var(--border-light); font-size: 13px; font-weight: 600; color: var(--copilot-purple);
-  }
-  .task-plan-header .plan-icon { font-size: 16px; }
-  .task-plan-body { padding: 0; }
-  .plan-step { display: flex; align-items: flex-start; gap: 12px; padding: 12px 16px; border-bottom: 1px solid var(--border-light); font-size: 13px; line-height: 1.6; transition: background 0.3s; }
-  .plan-step:last-child { border-bottom: none; }
-  .plan-step.active { background: rgba(123,87,255,0.04); }
-  .plan-step.completed { background: rgba(16,124,16,0.03); }
-  .plan-step-num { width: 22px; height: 22px; border-radius: 50%; border: 2px solid var(--border); display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 700; color: var(--text-muted); flex-shrink: 0; margin-top: 1px; }
-  .plan-step.active .plan-step-num { border-color: var(--copilot-purple); color: var(--copilot-purple); background: var(--purple-light); }
-  .plan-step.completed .plan-step-num { border-color: var(--green); color: white; background: var(--green); }
-  .plan-step-content { flex: 1; }
-  .plan-step-title { font-weight: 600; color: var(--text); }
-  .plan-step-detail { font-size: 12px; color: var(--text-secondary); margin-top: 2px; }
-  .plan-step-source { display: inline-flex; align-items: center; gap: 4px; background: #F0F0F0; border: 1px solid var(--border); border-radius: 4px; padding: 1px 8px; font-size: 10px; color: var(--text-secondary); margin-top: 4px; }
-
-  /* ── Compliance Card ── */
-  .compliance-card {
-    background: var(--surface); border: 1px solid var(--border);
-    border-radius: 12px; margin: 12px 0; overflow: hidden;
-    box-shadow: 0 1px 4px rgba(0,0,0,0.06);
-  }
-  .compliance-header {
-    padding: 12px 16px; background: linear-gradient(90deg, rgba(255,185,0,0.08), transparent);
-    border-bottom: 1px solid var(--border-light);
-    font-size: 12px; font-weight: 600; color: var(--orange);
-    display: flex; align-items: center; gap: 6px;
-  }
-  .compliance-body { padding: 14px 16px; }
-  .access-item { display: flex; align-items: center; gap: 10px; padding: 6px 0; font-size: 12px; }
-  .access-item + .access-item { border-top: 1px solid var(--border-light); padding-top: 8px; }
-  .access-check { color: var(--green); font-size: 14px; }
-  .access-label { flex: 1; color: var(--text-secondary); }
-  .dlp-badge { display: inline-flex; align-items: center; gap: 4px; background: var(--green-light); color: var(--green); font-size: 11px; font-weight: 600; padding: 3px 10px; border-radius: 12px; margin-top: 8px; }
-
-  /* ── Execution Card (results) ── */
-  .execution-card {
-    background: var(--surface); border: 1px solid var(--border);
-    border-radius: 12px; margin: 12px 0; overflow: hidden;
-    box-shadow: 0 1px 4px rgba(0,0,0,0.06);
-  }
-  .exec-header {
-    padding: 12px 16px; background: linear-gradient(90deg, rgba(123,87,255,0.06), transparent);
-    border-bottom: 1px solid var(--border-light);
-    font-size: 12px; font-weight: 600; color: var(--copilot-purple);
-    display: flex; align-items: center; gap: 8px;
-  }
-  .exec-step { display: flex; align-items: flex-start; gap: 10px; padding: 12px 16px; border-bottom: 1px solid var(--border-light); font-size: 13px; }
-  .exec-step:last-child { border-bottom: none; }
-  .exec-step .step-icon { font-size: 16px; flex-shrink: 0; margin-top: 2px; }
-  .exec-step .step-content { flex: 1; line-height: 1.6; }
-  .exec-step .step-content strong { color: var(--text); }
-
-  /* ── Draft Card ── */
-  .draft-card {
-    background: var(--surface); border: 1px solid var(--border);
-    border-radius: 12px; margin: 12px 0; overflow: hidden;
-    box-shadow: 0 1px 4px rgba(0,0,0,0.06);
-  }
-  .draft-header {
     padding: 12px 16px; border-bottom: 1px solid var(--border-light);
-    font-size: 12px; font-weight: 600; color: var(--text);
-    display: flex; align-items: center; gap: 8px;
+    font-size: 12px; font-weight: 600; color: var(--copilot-purple);
+    background: linear-gradient(90deg, rgba(123,87,255,0.04), transparent);
   }
-  .draft-body { padding: 16px; }
-  .draft-text { background: #FAFAFA; border-left: 3px solid var(--copilot-purple); padding: 14px 18px; border-radius: 0 8px 8px 0; font-size: 13px; font-style: italic; color: var(--text-secondary); line-height: 1.8; }
+  .card-body { padding: 14px 16px; }
+  .card-footer { display: flex; gap: 8px; padding: 10px 16px; border-top: 1px solid var(--border-light); background: #FAFAFA; align-items: center; }
+
+  /* Plan steps */
+  .plan-step { display: flex; align-items: flex-start; gap: 12px; padding: 10px 0; font-size: 13px; line-height: 1.5; }
+  .plan-step + .plan-step { border-top: 1px solid var(--border-light); }
+  .pn { width: 20px; height: 20px; border-radius: 50%; border: 1.5px solid var(--border); display: flex; align-items: center; justify-content: center; font-size: 9px; font-weight: 700; color: var(--text-muted); flex-shrink: 0; margin-top: 1px; transition: all 0.3s; }
+  .pn.active { border-color: var(--copilot-purple); color: var(--copilot-purple); background: var(--purple-light); }
+  .pn.done { border-color: var(--green); color: white; background: var(--green); }
+  .plan-title { font-weight: 600; color: var(--text); }
+  .plan-sub { font-size: 11px; color: var(--text-muted); margin-top: 1px; }
+  .src-pill { display: inline-flex; align-items: center; gap: 3px; font-size: 10px; color: var(--text-muted); background: #F5F5F5; padding: 1px 6px; border-radius: 3px; margin-top: 3px; margin-right: 4px; }
+
+  /* Access list */
+  .access-row { display: flex; align-items: center; gap: 8px; padding: 6px 0; font-size: 12px; color: var(--text-secondary); }
+  .access-row + .access-row { border-top: 1px solid var(--border-light); }
+  .access-check { color: var(--green); font-size: 12px; flex-shrink: 0; }
+
+  /* Execution steps */
+  .exec-row { display: flex; align-items: flex-start; gap: 10px; padding: 10px 0; font-size: 13px; line-height: 1.6; }
+  .exec-row + .exec-row { border-top: 1px solid var(--border-light); }
+
+  /* Draft text */
+  .draft-block { background: #FAFAFA; border-left: 3px solid var(--copilot-purple); padding: 14px 18px; border-radius: 0 8px 8px 0; font-size: 13px; line-height: 1.8; color: var(--text-secondary); }
   .cite-row { margin-top: 8px; display: flex; gap: 6px; flex-wrap: wrap; }
-  .cite-pill { display: inline-flex; align-items: center; gap: 4px; background: #F0F0F0; border: 1px solid var(--border); border-radius: 4px; padding: 2px 8px; font-size: 11px; color: var(--text-secondary); }
+  .cite-pill { display: inline-flex; align-items: center; gap: 3px; background: #F0F0F0; border: 1px solid var(--border); border-radius: 4px; padding: 2px 8px; font-size: 10px; color: var(--text-secondary); }
 
-  /* ── Meeting Prep Card ── */
-  .meeting-card {
-    background: var(--surface); border: 1px solid var(--border);
-    border-radius: 12px; margin: 8px 0; overflow: hidden;
-  }
-  .meeting-card-inner { padding: 14px 16px; }
-  .meeting-title { font-size: 13px; font-weight: 600; display: flex; align-items: center; gap: 8px; }
-  .meeting-time { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
-  .meeting-prep { margin-top: 8px; font-size: 12px; color: var(--text-secondary); line-height: 1.6; background: #FAFAFA; padding: 10px 12px; border-radius: 6px; border-left: 3px solid var(--brand-blue); }
-  .meeting-delta { margin-top: 6px; font-size: 11px; color: var(--red); display: flex; align-items: center; gap: 4px; }
+  /* Meeting */
+  .mtg { background: #FAFAFA; border-radius: 8px; padding: 12px 14px; margin: 6px 0; border-left: 3px solid var(--brand-blue); }
+  .mtg-title { font-size: 13px; font-weight: 600; display: flex; align-items: center; gap: 6px; }
+  .mtg-time { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
+  .mtg-note { font-size: 12px; color: var(--text-secondary); margin-top: 6px; line-height: 1.6; }
+  .mtg-delta { font-size: 11px; color: var(--red); margin-top: 4px; }
+  .mtg.changed { border-left-color: var(--red); }
+  .mtg.ok { border-left-color: var(--green); }
 
-  /* ── Recurring Task Card ── */
-  .recurring-card {
-    background: var(--surface); border: 1px solid var(--border);
-    border-radius: 12px; margin: 12px 0; overflow: hidden;
-  }
-  .recurring-header { padding: 12px 16px; border-bottom: 1px solid var(--border-light); display: flex; align-items: center; gap: 8px; font-size: 12px; font-weight: 600; color: var(--brand-blue); }
-  .recurring-body { padding: 14px 16px; font-size: 13px; line-height: 1.6; color: var(--text-secondary); }
+  /* Audit row */
+  .audit-row { display: flex; gap: 10px; padding: 4px 0; font-size: 11px; color: var(--text-muted); }
+  .audit-time { width: 52px; flex-shrink: 0; }
 
-  /* ── Action Buttons ── */
-  .actions-row { display: flex; gap: 8px; padding: 12px 16px; border-top: 1px solid var(--border-light); background: #FAFAFA; }
-  .action-btn { padding: 7px 18px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; font-family: var(--font); border: none; transition: all 0.15s; }
-  .action-btn.primary { background: #E0E0E0; color: #5A3EC8; font-weight: 700; }
-  .action-btn.primary:hover { background: #D0D0D0; }
-  .action-btn.secondary { background: transparent; color: var(--text-secondary); border: 1px solid var(--border); }
-  .action-btn.ghost { background: transparent; color: var(--text-muted); border: none; }
+  /* Confirm chip */
+  .confirm-chip { display: inline-flex; align-items: center; gap: 6px; background: var(--green-light); border-radius: 8px; padding: 8px 14px; font-size: 13px; color: var(--green); font-weight: 500; }
 
-  /* ── Confirm chip ── */
-  .confirm-chip { display: inline-flex; align-items: center; gap: 6px; background: var(--green-light); border-radius: 8px; padding: 8px 14px; font-size: 13px; color: var(--green); font-weight: 500; margin: 4px 0; }
+  /* DLP badge */
+  .dlp { display: inline-flex; align-items: center; gap: 4px; background: var(--green-light); color: var(--green); font-size: 11px; font-weight: 500; padding: 3px 10px; border-radius: 12px; margin-top: 8px; }
 
-  /* ── Audit Trail ── */
-  .audit-card {
-    background: var(--surface); border: 1px solid var(--border);
-    border-radius: 12px; margin: 12px 0; overflow: hidden;
-  }
-  .audit-header { padding: 12px 16px; border-bottom: 1px solid var(--border-light); font-size: 12px; font-weight: 600; color: var(--text-secondary); display: flex; align-items: center; gap: 6px; }
-  .audit-row { display: flex; align-items: center; gap: 10px; padding: 8px 16px; font-size: 11px; color: var(--text-secondary); border-bottom: 1px solid var(--border-light); }
-  .audit-row:last-child { border-bottom: none; }
-  .audit-time { width: 60px; color: var(--text-muted); flex-shrink: 0; }
-  .audit-action { flex: 1; }
-  .audit-source { font-size: 10px; color: var(--text-muted); }
-
-  /* ── Input Bar ── */
-  .input-bar-container { padding: 12px 15%; border-top: 1px solid var(--border-light); background: var(--surface); flex-shrink: 0; }
-  .input-bar { display: flex; align-items: center; gap: 10px; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 10px 16px; }
-  .input-bar input { flex: 1; border: none; outline: none; font-size: 14px; font-family: var(--font); background: transparent; color: var(--text); }
-  .input-bar input::placeholder { color: var(--text-muted); }
-  .input-bar .send-btn { width: 32px; height: 32px; border-radius: 50%; background: var(--copilot-purple); color: white; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 16px; }
-  .input-disclaimer { text-align: center; font-size: 11px; color: var(--text-muted); margin-top: 6px; }
+  /* Action buttons */
+  .btn { padding: 7px 18px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; font-family: var(--font); border: none; transition: all 0.15s; }
+  .btn.primary { background: #E0E0E0; color: #5A3EC8; font-weight: 700; }
+  .btn.primary:hover { background: #D0D0D0; }
+  .btn.secondary { background: transparent; color: var(--text-secondary); border: 1px solid var(--border); }
+  .btn.ghost { background: transparent; color: var(--text-muted); }
 
   /* ═══ Step Controls ═══ */
   .step-controls {
@@ -249,50 +180,45 @@
     background: rgba(36,36,36,0.92); padding: 8px 16px; border-radius: 28px;
     box-shadow: 0 4px 20px rgba(0,0,0,0.3);
   }
-  .step-btn { width: 32px; height: 32px; border-radius: 50%; border: none; background: rgba(255,255,255,0.15); color: white; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 14px; transition: background 0.2s; }
+  .step-btn { width: 32px; height: 32px; border-radius: 50%; border: none; background: rgba(255,255,255,0.15); color: white; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 14px; }
   .step-btn:hover:not(:disabled) { background: rgba(255,255,255,0.25); }
   .step-btn:disabled { opacity: 0.3; cursor: default; }
-  .step-label { color: rgba(255,255,255,0.6); font-size: 12px; font-family: var(--font); min-width: 50px; text-align: center; }
+  .step-label { color: rgba(255,255,255,0.6); font-size: 12px; min-width: 50px; text-align: center; font-family: var(--font); }
   .step-reset { background: rgba(209,52,56,0.3); }
-  .step-reset:hover { background: rgba(209,52,56,0.5); }
 
   /* ═══ End Overlay ═══ */
   .end-overlay {
     position: fixed; inset: 0; z-index: 300;
-    background: rgba(0,0,0,0.7); display: flex; align-items: center; justify-content: center;
+    background: rgba(0,0,0,0.65); display: flex; align-items: center; justify-content: center;
     opacity: 0; visibility: hidden; transition: opacity 0.5s, visibility 0.5s;
   }
   .end-overlay.visible { opacity: 1; visibility: visible; }
-  .end-card { background: white; border-radius: 16px; padding: 40px 48px; max-width: 520px; text-align: center; box-shadow: 0 8px 40px rgba(0,0,0,0.3); }
-  .end-card h2 { font-size: 24px; margin-bottom: 12px; }
-  .end-card p { font-size: 14px; color: var(--text-secondary); line-height: 1.7; margin-bottom: 8px; }
-  .end-principles { text-align: left; margin: 20px 0; }
-  .end-principles .ep { display: flex; gap: 8px; padding: 6px 0; font-size: 13px; }
-  .end-principles .ep-icon { flex-shrink: 0; }
+  .end-card { background: white; border-radius: 16px; padding: 40px 48px; max-width: 480px; text-align: center; box-shadow: 0 8px 40px rgba(0,0,0,0.3); }
+  .end-card h2 { font-size: 22px; margin-bottom: 8px; }
+  .end-card .end-sub { font-size: 14px; color: var(--text-secondary); line-height: 1.6; margin-bottom: 20px; }
+  .end-list { text-align: left; margin: 0 0 20px; }
+  .end-list .el { display: flex; gap: 8px; padding: 5px 0; font-size: 13px; line-height: 1.5; color: var(--text-secondary); }
+  .end-list .el strong { color: var(--text); }
 
-  /* ═══ Animations ═══ */
-  .hidden { display: none !important; }
-  .anim-fadeinup { animation: fadeInUp 0.5s ease both; }
-  @keyframes fadeInUp { from { opacity:0; transform: translateY(12px); } to { opacity:1; transform: translateY(0); } }
-  @keyframes pulse { 0%,100% { opacity:1; } 50% { opacity:0.4; } }
-
-  /* ═══ Annotation Cards ═══ */
+  /* ═══ Annotations ═══ */
   .ann {
     position: fixed; z-index: 90;
     background: white; border: 1px solid var(--border); border-radius: 10px;
-    padding: 12px 16px; max-width: 260px; font-size: 12px; line-height: 1.5;
-    box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+    padding: 12px 16px; max-width: 240px; font-size: 12px; line-height: 1.5;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.1);
     opacity: 0; visibility: hidden; transition: opacity 0.4s, visibility 0.4s;
     pointer-events: none;
   }
   .ann.visible { opacity: 1; visibility: visible; }
-  .ann .ann-title { font-weight: 700; color: var(--copilot-purple); font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px; }
-  .ann .ann-body { color: var(--text-secondary); }
+  .ann-tag { font-weight: 700; color: var(--copilot-purple); font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px; display: flex; align-items: center; gap: 6px; }
+  .ann-num { background: var(--copilot-purple); color: white; font-size: 9px; padding: 1px 5px; border-radius: 3px; }
+  .ann-body { color: var(--text-secondary); }
 
-  /* ═══ Comparison Badge ═══ */
-  .vs-badge { display: inline-flex; align-items: center; gap: 6px; font-size: 10px; padding: 3px 8px; border-radius: 4px; margin-top: 6px; }
-  .vs-badge.personal { background: #FFF3E0; color: #E65100; }
-  .vs-badge.work { background: var(--purple-light); color: var(--copilot-purple); }
+  /* ═══ Animations ═══ */
+  .hidden { display: none !important; }
+  .anim-in { animation: fadeInUp 0.45s ease both; }
+  @keyframes fadeInUp { from { opacity:0; transform: translateY(10px); } to { opacity:1; transform: translateY(0); } }
+  @keyframes pulse { 0%,100% { opacity:1; } 50% { opacity:0.35; } }
 </style>
 </head>
 <body>
@@ -301,337 +227,249 @@
 <div class="landing" id="landing">
   <div class="landing-badge">Interactive Prototype</div>
   <h1>Copilot Tasks</h1>
-  <h2>For Work</h2>
-  <p class="sub">What if Copilot Tasks — autonomous AI that acts, not just chats — worked inside your enterprise context? With org-aware compliance, multi-app orchestration, and full audit trails.</p>
+  <h2>for Work</h2>
+  <p class="sub">Copilot Tasks shipped for personal use — browsing the web, tracking prices, handling personal email. What does it look like when Tasks works inside your enterprise?</p>
 
   <div class="journey-box">
-    <div class="jb-label">The Experience</div>
-    <div class="beat"><span class="beat-num">1</span> User creates a recurring work task in natural language</div>
-    <div class="beat"><span class="beat-num">2</span> Copilot generates a plan with visible sub-tasks across M365 apps</div>
-    <div class="beat"><span class="beat-num">3</span> Compliance + data access surface shows what will be accessed</div>
-    <div class="beat"><span class="beat-num">4</span> Copilot executes across Outlook, Teams, Excel, Word</div>
-    <div class="beat"><span class="beat-num">5</span> Draft with provenance — every claim has a source</div>
-    <div class="beat"><span class="beat-num">6</span> Steerability checkpoint before external actions</div>
-    <div class="beat"><span class="beat-num">7</span> Meeting prep with change detection</div>
-    <div class="beat"><span class="beat-num">8</span> Recurring schedule + audit trail</div>
+    <div class="jb-label">What you'll see</div>
+    <div class="beat"><span class="beat-num">1</span> Natural language → multi-app task plan</div>
+    <div class="beat"><span class="beat-num">2</span> Enterprise compliance + data access surface</div>
+    <div class="beat"><span class="beat-num">3</span> Cross-app execution with reasoning</div>
+    <div class="beat"><span class="beat-num">4</span> Draft with provenance — every claim sourced</div>
+    <div class="beat"><span class="beat-num">5</span> Steerability checkpoint before sending</div>
+    <div class="beat"><span class="beat-num">6</span> Change-aware meeting prep</div>
+    <div class="beat"><span class="beat-num">7</span> Recurring schedule + enterprise audit trail</div>
   </div>
 
-  <button class="start-btn" onclick="startDemo()">Start the Experience →</button>
-
-  <div class="vs">
-    <div class="col"><div class="col-header">Personal Tasks (shipped)</div>Browses web, tracks prices, personal email</div>
-    <div class="col" style="color: rgba(255,255,255,0.55); font-weight: 600;"><div class="col-header" style="color: #C8B8FF;">Work Tasks (this prototype)</div>M365 Graph, compliance, multi-stakeholder, audit</div>
-  </div>
-
-  <div class="meta">Prototype by Hema Sridharan · Click-through demo · Not functional</div>
+  <button class="start-btn" onclick="startDemo()">Start →</button>
+  <div class="meta">Prototype by Hema Sridharan · Click-through demo</div>
 </div>
 
-<!-- ═══ MAIN SHELL ═══ -->
+<!-- ═══ SHELL ═══ -->
 <div class="shell">
+
   <!-- Sidebar -->
   <div class="sidebar">
     <div class="sidebar-top">
-      <div class="copilot-logo">✦</div>
-      <span class="sidebar-title">Copilot</span>
+      <div class="copilot-logo">
+        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" fill="white" opacity="0.9"/></svg>
+      </div>
+      <span class="sidebar-label">Copilot</span>
     </div>
     <div class="sidebar-nav">
       <div class="nav-item"><span class="nav-icon">💬</span> Chat</div>
-      <div class="nav-item active"><span class="nav-icon">⚡</span> Tasks <span class="task-count">3</span></div>
-      <div class="nav-item"><span class="nav-icon">📋</span> Planner</div>
+      <div class="nav-item active"><span class="nav-icon">⚡</span> Tasks</div>
     </div>
     <div class="sidebar-divider"></div>
-    <div class="sidebar-section">
-      <div class="section-header">Active Tasks</div>
-      <div class="task-item active" id="taskMonday">
-        <span class="task-status-dot running"></span>
-        Monday Morning Prep
-      </div>
-      <div class="task-item">
-        <span class="task-status-dot pending"></span>
-        Weekly metrics digest
-      </div>
-      <div class="task-item">
-        <span class="task-status-dot done"></span>
-        Track competitor releases
-      </div>
-    </div>
+    <div class="section-header">Active</div>
+    <div class="task-list-item active"><span class="tdot running"></span> Monday Morning Prep</div>
+    <div class="task-list-item"><span class="tdot pending"></span> Weekly metrics digest</div>
     <div class="sidebar-divider"></div>
-    <div class="sidebar-section">
-      <div class="section-header">Completed</div>
-      <div class="task-item" style="opacity:0.5;">
-        <span class="task-status-dot done"></span>
-        Prep QBR deck (Mar 14)
-      </div>
-    </div>
+    <div class="section-header">Done</div>
+    <div class="task-list-item" style="opacity:0.4;"><span class="tdot done"></span> QBR deck prep (Mar 14)</div>
     <div class="sidebar-bottom">
       <div class="user-row">
         <div class="user-avatar">HS</div>
-        <div class="user-info">
-          <div class="user-name">Hema S.</div>
-          <div class="user-sub">Work · Contoso</div>
-        </div>
+        <div style="font-size:12px;"><div style="font-weight:500;">Hema S.</div><div style="font-size:10px; color:var(--text-muted);">Work · Contoso</div></div>
       </div>
     </div>
   </div>
 
-  <!-- Main content -->
-  <div class="main-content">
+  <!-- Main -->
+  <div class="main">
     <div class="topbar">
       <span class="topbar-title">Monday Morning Prep</span>
-      <span class="topbar-badge">⚡ Recurring Task</span>
-      <div class="topbar-right">
-        <button class="topbar-btn">⏸ Pause</button>
-        <button class="topbar-btn">⚙ Settings</button>
-      </div>
+      <span class="topbar-tag">⚡ Recurring</span>
     </div>
 
     <div class="convo-area" id="convoArea">
       <div class="convo-inner" id="convoInner">
 
-        <!-- ═══ BEAT 1: User creates task ═══ -->
+        <!-- BEAT 1: User message -->
         <div class="user-msg hidden" id="beat1">
-          <div class="bubble">Every Monday at 7am, prepare my week: summarize last week's unresolved threads across email and Teams, pull the latest numbers from the Q1 Tracker in Excel, draft a 3-bullet status update for my skip-level, and flag any meetings this week where I need to prep.</div>
+          <div class="bubble">Every Monday at 7am, prepare my week: summarize unresolved threads across Outlook and Teams, pull the latest numbers from Q1 Tracker, draft a 3-bullet status update for my skip-level, and flag meetings where I need to prep.</div>
         </div>
 
-        <!-- ═══ BEAT 2: Plan generation ═══ -->
-        <div class="copilot-msg hidden" id="beat2">
-          <div class="agent-label">✦ Copilot Tasks</div>
-          <div class="body"><p>I've broken this into a 4-step plan. Here's what I'll do each Monday:</p></div>
-          <div class="task-plan-card">
-            <div class="task-plan-header"><span class="plan-icon">📋</span> Task Plan · Monday Morning Prep</div>
-            <div class="task-plan-body">
-              <div class="plan-step" id="planStep1">
-                <div class="plan-step-num">1</div>
-                <div class="plan-step-content">
-                  <div class="plan-step-title">Scan unresolved threads</div>
-                  <div class="plan-step-detail">Check Outlook inbox + 3 Teams channels for threads with unanswered questions or action items from last week</div>
-                  <div><span class="plan-step-source"><span class="agent-icon outlook sm">O</span> Outlook</span> <span class="plan-step-source"><span class="agent-icon teams sm">T</span> Teams · 3 channels</span></div>
+        <!-- BEAT 2: Plan -->
+        <div class="cp-msg hidden" id="beat2">
+          <div class="cp-label">✦ Copilot</div>
+          <div class="cp-body"><p>Here's the plan I'll run each Monday:</p></div>
+          <div class="card">
+            <div class="card-header">📋 Task Plan</div>
+            <div class="card-body">
+              <div class="plan-step">
+                <div class="pn" id="pn1">1</div>
+                <div>
+                  <div class="plan-title">Scan unresolved threads</div>
+                  <div class="plan-sub">Outlook inbox + Teams channels from last 7 days</div>
+                  <div><span class="src-pill"><span class="app-icon ol">O</span> Outlook</span><span class="src-pill"><span class="app-icon tm">T</span> Teams</span></div>
                 </div>
               </div>
-              <div class="plan-step" id="planStep2">
-                <div class="plan-step-num">2</div>
-                <div class="plan-step-content">
-                  <div class="plan-step-title">Pull latest metrics</div>
-                  <div class="plan-step-detail">Read Q1_Tracker.xlsx for updated revenue, pipeline, and headcount numbers</div>
-                  <div><span class="plan-step-source"><span class="agent-icon excel sm">X</span> Q1_Tracker.xlsx</span></div>
+              <div class="plan-step">
+                <div class="pn" id="pn2">2</div>
+                <div>
+                  <div class="plan-title">Pull latest metrics</div>
+                  <div class="plan-sub">Revenue, pipeline, headcount from Q1_Tracker.xlsx</div>
+                  <div><span class="src-pill"><span class="app-icon xl">X</span> Q1_Tracker.xlsx</span></div>
                 </div>
               </div>
-              <div class="plan-step" id="planStep3">
-                <div class="plan-step-num">3</div>
-                <div class="plan-step-content">
-                  <div class="plan-step-title">Draft skip-level status update</div>
-                  <div class="plan-step-detail">Cross-reference threads + metrics → generate 3-bullet summary for VP</div>
-                  <div><span class="plan-step-source"><span class="agent-icon word sm">W</span> New draft</span></div>
+              <div class="plan-step">
+                <div class="pn" id="pn3">3</div>
+                <div>
+                  <div class="plan-title">Draft skip-level update</div>
+                  <div class="plan-sub">Cross-reference threads + metrics → 3-bullet summary</div>
+                  <div><span class="src-pill"><span class="app-icon wd">W</span> Draft</span></div>
                 </div>
               </div>
-              <div class="plan-step" id="planStep4">
-                <div class="plan-step-num">4</div>
-                <div class="plan-step-content">
-                  <div class="plan-step-title">Flag meetings needing prep</div>
-                  <div class="plan-step-detail">Scan this week's calendar, cross-reference with recent context to identify meetings where data has changed since last discussion</div>
-                  <div><span class="plan-step-source"><span class="agent-icon outlook sm">O</span> Calendar</span></div>
+              <div class="plan-step">
+                <div class="pn" id="pn4">4</div>
+                <div>
+                  <div class="plan-title">Flag meetings needing prep</div>
+                  <div class="plan-sub">Calendar scan + change detection since last discussion</div>
+                  <div><span class="src-pill"><span class="app-icon cal">C</span> Calendar</span></div>
                 </div>
               </div>
             </div>
-            <div class="actions-row">
-              <button class="action-btn primary" onclick="nextStep()">✓ Approve plan</button>
-              <button class="action-btn secondary">Edit steps</button>
-              <button class="action-btn ghost">Cancel</button>
-            </div>
-          </div>
-          <div class="vs-badge personal">Personal Tasks: browses web with its own browser</div>
-          <div class="vs-badge work">Work Tasks: orchestrates across your M365 apps with org context</div>
-        </div>
-
-        <!-- ═══ BEAT 3: Compliance surface ═══ -->
-        <div class="copilot-msg hidden" id="beat3">
-          <div class="agent-label">🔒 Data Access Review</div>
-          <div class="body"><p>Before I execute, here's exactly what I'll access:</p></div>
-          <div class="compliance-card">
-            <div class="compliance-header">⚠️ Enterprise Data Access — Review Required</div>
-            <div class="compliance-body">
-              <div class="access-item">
-                <span class="access-check">✓</span>
-                <span class="agent-icon outlook sm">O</span>
-                <span class="access-label"><strong>Outlook inbox</strong> — your threads from last 7 days</span>
-              </div>
-              <div class="access-item">
-                <span class="access-check">✓</span>
-                <span class="agent-icon teams sm">T</span>
-                <span class="access-label"><strong>Teams channels</strong> — #product-launches, #eng-standup, #design-reviews</span>
-              </div>
-              <div class="access-item">
-                <span class="access-check">✓</span>
-                <span class="agent-icon excel sm">X</span>
-                <span class="access-label"><strong>Q1_Tracker.xlsx</strong> — shared with Finance team (read-only)</span>
-              </div>
-              <div class="access-item">
-                <span class="access-check">✓</span>
-                <span class="agent-icon outlook sm">O</span>
-                <span class="access-label"><strong>Calendar</strong> — this week's meetings + attendee context</span>
-              </div>
-              <div class="dlp-badge">🛡 Contoso DLP policy applied · No external sharing · Audit logged</div>
-            </div>
-            <div class="actions-row">
-              <button class="action-btn primary" onclick="nextStep()">✓ Proceed</button>
-              <button class="action-btn secondary">Modify access</button>
-            </div>
-          </div>
-          <div class="vs-badge personal">Personal Tasks: no compliance layer</div>
-          <div class="vs-badge work">Work Tasks: transparent access control + DLP enforcement</div>
-        </div>
-
-        <!-- ═══ BEAT 4: Execution with cross-app reasoning ═══ -->
-        <div class="copilot-msg hidden" id="beat4">
-          <div class="agent-label">✦ Executing across apps...</div>
-          <div class="execution-card">
-            <div class="exec-header">🔄 Cross-app execution · Monday Morning Prep</div>
-            <div class="exec-step">
-              <span class="step-icon"><span class="agent-icon outlook sm">O</span></span>
-              <div class="step-content"><strong>Outlook:</strong> Found <strong>4 unresolved threads</strong> — 2 from PM leads asking about timeline, 1 from Legal re: compliance review, 1 from VP asking for metrics update</div>
-            </div>
-            <div class="exec-step">
-              <span class="step-icon"><span class="agent-icon teams sm">T</span></span>
-              <div class="step-content"><strong>Teams:</strong> Correlated — <strong>3 Teams threads map to the same 2 Outlook threads</strong>. The PM timeline question was discussed in #product-launches (conclusion: April launch) but never replied to in email. The Legal thread has no Teams discussion.</div>
-            </div>
-            <div class="exec-step">
-              <span class="step-icon"><span class="agent-icon excel sm">X</span></span>
-              <div class="step-content"><strong>Q1_Tracker.xlsx:</strong> Revenue at <strong>$4.1M</strong> (up 12% from last week's $3.66M). Pipeline: 23 deals, 8 at negotiation stage. Headcount: 47/50 approved (ML Engineer still open).</div>
-            </div>
-            <div class="exec-step">
-              <span class="step-icon">⚡</span>
-              <div class="step-content"><strong>Cross-reference:</strong> VP's email asks about "revenue trajectory" — the Q1 tracker shows this week's 12% jump directly answers it. <em>I'll use this in the status update draft.</em></div>
+            <div class="card-footer">
+              <button class="btn primary" onclick="nextStep()">Approve plan</button>
+              <button class="btn secondary">Edit</button>
+              <button class="btn ghost">Cancel</button>
             </div>
           </div>
         </div>
 
-        <!-- ═══ BEAT 5: Draft with provenance ═══ -->
-        <div class="copilot-msg hidden" id="beat5">
-          <div class="agent-label">✦ Draft ready for review</div>
-          <div class="body"><p>Here's your skip-level status update — every claim has a source:</p></div>
-          <div class="draft-card">
-            <div class="draft-header"><span class="agent-icon word sm">W</span> Status Update for VP · Week of Mar 20</div>
-            <div class="draft-body">
-              <div class="draft-text">
-                <strong>1. Revenue momentum:</strong> Q1 revenue hit $4.1M this week, up 12% from $3.66M last week. Pipeline has 23 active deals with 8 at negotiation stage — strongest position since Q4.<br/><br/>
-                <strong>2. Product launch on track:</strong> April launch confirmed per cross-team alignment in #product-launches. PM leads' timeline concerns have been addressed (Teams thread, Mar 17). Outstanding: Legal compliance review pending response (email thread, Mar 14 — needs follow-up).<br/><br/>
-                <strong>3. Headcount:</strong> 47 of 50 approved roles filled. ML Engineer role still open — 4 candidates in pipeline, avg 6 weeks to fill. On track for Q1 close if offer goes out this week.
+        <!-- BEAT 3: Compliance -->
+        <div class="cp-msg hidden" id="beat3">
+          <div class="cp-label">🔒 Data Access</div>
+          <div class="cp-body"><p>Before executing, here's what I'll access:</p></div>
+          <div class="card">
+            <div class="card-header" style="color: #B8860B; background: linear-gradient(90deg, rgba(255,185,0,0.06), transparent);">⚠️ Review Required</div>
+            <div class="card-body">
+              <div class="access-row"><span class="access-check">✓</span><span class="app-icon ol">O</span> Your Outlook inbox — threads from last 7 days</div>
+              <div class="access-row"><span class="access-check">✓</span><span class="app-icon tm">T</span> Teams — #product-launches, #eng-standup, #design-reviews</div>
+              <div class="access-row"><span class="access-check">✓</span><span class="app-icon xl">X</span> Q1_Tracker.xlsx — shared with Finance (read-only)</div>
+              <div class="access-row"><span class="access-check">✓</span><span class="app-icon cal">C</span> Calendar — this week's meetings + attendee list</div>
+              <div class="dlp">🛡 Contoso DLP policy applied · Audit logged</div>
+            </div>
+            <div class="card-footer">
+              <button class="btn primary" onclick="nextStep()">Proceed</button>
+              <button class="btn secondary">Modify access</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- BEAT 4: Execution -->
+        <div class="cp-msg hidden" id="beat4">
+          <div class="cp-label">✦ Working across your apps...</div>
+          <div class="card">
+            <div class="card-header">🔄 Cross-App Execution</div>
+            <div class="card-body">
+              <div class="exec-row">
+                <span class="app-icon ol">O</span>
+                <div>Found <strong>4 unresolved threads</strong> — 2 from PM leads on timeline, 1 from Legal on compliance review, 1 from VP asking for a metrics update.</div>
+              </div>
+              <div class="exec-row">
+                <span class="app-icon tm">T</span>
+                <div><strong>3 Teams threads map to the same 2 email threads.</strong> The PM timeline question was resolved in #product-launches (April launch) but never replied to in email.</div>
+              </div>
+              <div class="exec-row">
+                <span class="app-icon xl">X</span>
+                <div>Revenue: <strong>$4.1M</strong> (up 12% from $3.66M last week). Pipeline: 23 deals, 8 at negotiation. Headcount: 47/50 filled.</div>
+              </div>
+              <div class="exec-row">
+                <span style="font-size:14px;">⚡</span>
+                <div>VP's email asks about "revenue trajectory" — the 12% jump this week directly answers it. <em>Using this in the draft.</em></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- BEAT 5: Draft with provenance + send -->
+        <div class="cp-msg hidden" id="beat5">
+          <div class="cp-label">✦ Draft ready</div>
+          <div class="cp-body"><p>Status update for your skip-level — every claim sourced:</p></div>
+          <div class="card">
+            <div class="card-header"><span class="app-icon wd">W</span> &nbsp;Status Update · Week of Mar 20</div>
+            <div class="card-body">
+              <div class="draft-block">
+                <strong>1. Revenue momentum:</strong> Q1 revenue hit $4.1M, up 12% week-over-week. 23 active deals with 8 at negotiation — strongest pipeline since Q4.<br/><br/>
+                <strong>2. Product launch on track:</strong> April launch confirmed per #product-launches (Mar 17). PM timeline concerns resolved. Legal compliance review still pending (needs follow-up).<br/><br/>
+                <strong>3. Headcount:</strong> 47/50 roles filled. ML Engineer open — 4 candidates in pipeline, ~6 weeks to fill.
               </div>
               <div class="cite-row">
-                <span class="cite-pill"><span class="agent-icon excel sm">X</span> Q1_Tracker.xlsx · B4:D14</span>
-                <span class="cite-pill"><span class="agent-icon teams sm">T</span> #product-launches · Mar 17</span>
-                <span class="cite-pill"><span class="agent-icon outlook sm">O</span> Legal thread · Mar 14</span>
-                <span class="cite-pill"><span class="agent-icon outlook sm">O</span> VP email · Mar 18</span>
+                <span class="cite-pill"><span class="app-icon xl">X</span> Q1_Tracker · B4:D14</span>
+                <span class="cite-pill"><span class="app-icon tm">T</span> #product-launches · Mar 17</span>
+                <span class="cite-pill"><span class="app-icon ol">O</span> Legal thread · Mar 14</span>
               </div>
             </div>
-            <div class="actions-row">
-              <span style="font-size:11px; color:var(--red); display:flex; align-items:center; gap:4px;">⚠️ Sending to: 1 VP recipient</span>
+            <div class="card-footer">
+              <span style="font-size:11px; color:var(--red);">⚠️ 1 VP recipient</span>
               <div style="margin-left:auto; display:flex; gap:8px;">
-                <button class="action-btn secondary">Edit draft</button>
-                <button class="action-btn primary" onclick="nextStep()">Send to VP</button>
+                <button class="btn secondary">Edit</button>
+                <button class="btn primary" onclick="nextStep()">Send to VP</button>
               </div>
             </div>
           </div>
-          <div class="vs-badge personal">Personal Tasks: no sourcing, no citations</div>
-          <div class="vs-badge work">Work Tasks: every claim traceable to a specific file, thread, or cell</div>
         </div>
 
-        <!-- ═══ BEAT 6: Sent + Meeting flags ═══ -->
-        <div class="copilot-msg hidden" id="beat6">
+        <!-- BEAT 6: Sent + meeting prep -->
+        <div class="cp-msg hidden" id="beat6">
           <div class="confirm-chip">✓ Status update sent to VP</div>
-          <div class="body" style="margin-top: 12px;">
-            <p><strong>Meetings this week that need prep:</strong></p>
+          <div class="cp-body" style="margin-top: 14px;"><p><strong>Meetings needing prep this week:</strong></p></div>
+
+          <div class="mtg changed">
+            <div class="mtg-title">QBR with VP <span style="font-size:10px; color:var(--red); font-weight:400;">· data changed</span></div>
+            <div class="mtg-time">Wednesday 2:00 PM</div>
+            <div class="mtg-note">You last discussed revenue on Mar 7 ($3.2M). It's now $4.1M — up 28% since that meeting. ML Engineer gap was flagged; still open.</div>
+            <div class="mtg-delta">↑ Significant data shift — prep recommended</div>
           </div>
-          <div class="meeting-card">
-            <div class="meeting-card-inner">
-              <div class="meeting-title">🗓️ QBR with VP <span style="font-size:11px; font-weight:400; color:var(--red);">⚠ data changed</span></div>
-              <div class="meeting-time">Wednesday 2:00 PM · 60 min · Conf Room 4B</div>
-              <div class="meeting-prep">
-                <strong>AI prep note:</strong> You last discussed Q1 revenue on Mar 7 when it was $3.2M. It's now $4.1M (+28% since that meeting). The ML Engineer hiring gap was flagged — still open. Consider leading with the revenue momentum.
-              </div>
-              <div class="meeting-delta">📊 Data has changed significantly since your last discussion — review recommended</div>
-            </div>
+
+          <div class="mtg">
+            <div class="mtg-title">Legal Compliance Sync</div>
+            <div class="mtg-time">Thursday 10:00 AM</div>
+            <div class="mtg-note">Legal's email from Mar 14 is unanswered. Suggest acknowledging the delay and bringing the latest timeline.</div>
           </div>
-          <div class="meeting-card">
-            <div class="meeting-card-inner">
-              <div class="meeting-title">🗓️ Legal Compliance Sync</div>
-              <div class="meeting-time">Thursday 10:00 AM · 30 min · Virtual</div>
-              <div class="meeting-prep">
-                <strong>AI prep note:</strong> Legal's compliance review email (Mar 14) is unanswered. This meeting appears to be a follow-up. Suggest acknowledging the delay and bringing the latest product timeline.
-              </div>
-            </div>
-          </div>
-          <div class="meeting-card">
-            <div class="meeting-card-inner">
-              <div class="meeting-title">🗓️ Eng Standup <span style="font-size:11px; font-weight:400; color:var(--green);">✓ no prep needed</span></div>
-              <div class="meeting-time">Daily · 9:15 AM · Virtual</div>
-            </div>
+
+          <div class="mtg ok">
+            <div class="mtg-title">Eng Standup <span style="font-size:10px; color:var(--green); font-weight:400;">· no prep needed</span></div>
+            <div class="mtg-time">Daily · 9:15 AM</div>
           </div>
         </div>
 
-        <!-- ═══ BEAT 7: Recurring confirmation + Audit ═══ -->
-        <div class="copilot-msg hidden" id="beat7">
-          <div class="agent-label">✦ Task Complete</div>
-          <div class="recurring-card">
-            <div class="recurring-header">🔁 Recurring Schedule Set</div>
-            <div class="recurring-body">
-              I'll run this every <strong>Monday at 7:00 AM</strong>. You'll get a notification with results before your first meeting. You can pause, edit, or cancel anytime from the Tasks panel.<br/><br/>
-              Next run: <strong>Monday, March 27 · 7:00 AM</strong>
+        <!-- BEAT 7: Recurring + audit -->
+        <div class="cp-msg hidden" id="beat7">
+          <div class="cp-label">✦ Task complete</div>
+          <div class="card">
+            <div class="card-header">🔁 Recurring · Every Monday at 7:00 AM</div>
+            <div class="card-body" style="font-size: 13px; color: var(--text-secondary); line-height: 1.6;">
+              You'll get a notification with results before your first meeting. Pause, edit, or cancel anytime.<br/>
+              <span style="color: var(--text); font-weight: 500;">Next run: Monday, March 27</span>
             </div>
           </div>
-          <div class="audit-card">
-            <div class="audit-header">📝 Audit Trail · This Execution</div>
-            <div class="audit-row">
-              <span class="audit-time">7:00 AM</span>
-              <span class="audit-action">Task started · 4 sub-tasks queued</span>
-            </div>
-            <div class="audit-row">
-              <span class="audit-time">7:01 AM</span>
-              <span class="audit-action">Read: Outlook inbox (47 messages scanned, 4 flagged)</span>
-              <span class="audit-source">DLP: ✓</span>
-            </div>
-            <div class="audit-row">
-              <span class="audit-time">7:01 AM</span>
-              <span class="audit-action">Read: Teams channels (3 channels, 12 threads scanned)</span>
-              <span class="audit-source">DLP: ✓</span>
-            </div>
-            <div class="audit-row">
-              <span class="audit-time">7:02 AM</span>
-              <span class="audit-action">Read: Q1_Tracker.xlsx (cells B4:D14)</span>
-              <span class="audit-source">DLP: ✓</span>
-            </div>
-            <div class="audit-row">
-              <span class="audit-time">7:02 AM</span>
-              <span class="audit-action">Cross-referenced 3 sources · 1 conflict detected (email vs Teams on timeline)</span>
-            </div>
-            <div class="audit-row">
-              <span class="audit-time">7:03 AM</span>
-              <span class="audit-action">Draft generated · Awaiting user approval</span>
-            </div>
-            <div class="audit-row">
-              <span class="audit-time">7:15 AM</span>
-              <span class="audit-action">User approved · Email sent to VP</span>
-              <span class="audit-source">Recipient: 1</span>
-            </div>
-            <div class="audit-row">
-              <span class="audit-time">7:15 AM</span>
-              <span class="audit-action">Meeting prep notes generated for 3 events</span>
+          <div class="card">
+            <div class="card-header" style="color: var(--text-secondary); background: none;">📝 Audit Trail</div>
+            <div class="card-body">
+              <div class="audit-row"><span class="audit-time">7:00</span> Task started · 4 steps queued</div>
+              <div class="audit-row"><span class="audit-time">7:01</span> Read Outlook inbox (47 messages, 4 flagged) · DLP ✓</div>
+              <div class="audit-row"><span class="audit-time">7:01</span> Read Teams (3 channels, 12 threads) · DLP ✓</div>
+              <div class="audit-row"><span class="audit-time">7:02</span> Read Q1_Tracker.xlsx (B4:D14) · DLP ✓</div>
+              <div class="audit-row"><span class="audit-time">7:02</span> Cross-referenced 3 sources · 1 discrepancy found</div>
+              <div class="audit-row"><span class="audit-time">7:03</span> Draft generated · Awaiting approval</div>
+              <div class="audit-row"><span class="audit-time">7:15</span> <strong>User approved · Email sent</strong> · 1 recipient</div>
             </div>
           </div>
-          <div class="vs-badge personal">Personal Tasks: no audit trail</div>
-          <div class="vs-badge work">Work Tasks: every data access, every action, fully auditable</div>
         </div>
 
       </div>
     </div>
 
-    <!-- Input bar -->
-    <div class="input-bar-container">
-      <div class="input-bar">
-        <input type="text" placeholder="Create a new task or ask about this one..." readonly />
-        <button class="send-btn">↑</button>
+    <!-- Input -->
+    <div style="padding: 12px 18%; border-top: 1px solid var(--border-light); background: var(--surface); flex-shrink: 0;">
+      <div style="display:flex; align-items:center; gap:10px; border:1px solid var(--border); border-radius:12px; padding:10px 14px; background:var(--surface);">
+        <input type="text" placeholder="Create a new task..." readonly style="flex:1; border:none; outline:none; font-size:14px; font-family:var(--font); background:transparent; color:var(--text);" />
+        <button style="width:30px; height:30px; border-radius:50%; background:var(--copilot-purple); color:white; border:none; cursor:pointer; font-size:14px;">↑</button>
       </div>
-      <div class="input-disclaimer">AI-generated content may be incorrect</div>
+      <div style="text-align:center; font-size:11px; color:var(--text-muted); margin-top:6px;">AI-generated content may be incorrect</div>
     </div>
   </div>
 </div>
@@ -647,129 +485,123 @@
 <!-- ═══ END OVERLAY ═══ -->
 <div class="end-overlay" id="endOverlay">
   <div class="end-card">
-    <h2>Copilot Tasks — For Work</h2>
-    <p>This prototype shows what happens when autonomous AI (Tasks) meets enterprise context.</p>
-    <div class="end-principles">
-      <div class="ep"><span class="ep-icon">📋</span> <strong>Plan visibility</strong> — user sees every step before execution</div>
-      <div class="ep"><span class="ep-icon">🔒</span> <strong>Compliance-first</strong> — transparent data access + DLP enforcement</div>
-      <div class="ep"><span class="ep-icon">🔗</span> <strong>Cross-app orchestration</strong> — Outlook + Teams + Excel + Word + Calendar in one flow</div>
-      <div class="ep"><span class="ep-icon">📎</span> <strong>Provenance</strong> — every claim traces to a specific source</div>
-      <div class="ep"><span class="ep-icon">✋</span> <strong>Steerability</strong> — user approves before external actions</div>
-      <div class="ep"><span class="ep-icon">📊</span> <strong>Change detection</strong> — AI flags when data has shifted since last discussion</div>
-      <div class="ep"><span class="ep-icon">🔁</span> <strong>Recurring autonomy</strong> — set it once, it works every week</div>
-      <div class="ep"><span class="ep-icon">📝</span> <strong>Audit trail</strong> — every access and action logged for enterprise trust</div>
+    <h2>Copilot Tasks, for Work</h2>
+    <p class="end-sub">What Personal Tasks does for your browser, Work Tasks does across your enterprise graph — with compliance, provenance, and accountability baked in.</p>
+    <div class="end-list">
+      <div class="el"><strong>Plan visibility</strong> — see every step before execution</div>
+      <div class="el"><strong>Compliance-first</strong> — transparent data access, DLP enforcement</div>
+      <div class="el"><strong>Cross-app reasoning</strong> — Outlook + Teams + Excel + Calendar</div>
+      <div class="el"><strong>Provenance</strong> — every claim traces to a source</div>
+      <div class="el"><strong>Steerability</strong> — approve before external actions</div>
+      <div class="el"><strong>Change detection</strong> — flags when data has shifted</div>
+      <div class="el"><strong>Audit trail</strong> — every access logged</div>
     </div>
-    <p style="font-size:12px; color:var(--text-muted); margin-top:16px;">The gap between Personal Tasks and Work Tasks is the enterprise experience layer — compliance, provenance, multi-stakeholder awareness, and audit.</p>
-    <button class="start-btn" onclick="resetDemo()" style="margin-top: 20px; font-size: 13px; padding: 10px 28px;">Restart ↺</button>
+    <button class="start-btn" onclick="resetDemo()" style="font-size:13px; padding:10px 28px;">Restart ↺</button>
   </div>
 </div>
 
-<!-- ═══ ANNOTATION CARDS ═══ -->
-<div class="ann" id="ann1" style="top: 180px; right: 30px;">
-  <div class="ann-title">Natural Language Task Creation</div>
-  <div class="ann-body">User describes what they want done — no forms, no templates. Same as Personal Tasks but scoped to work context.</div>
+<!-- ═══ ANNOTATIONS ═══ -->
+<div class="ann" id="ann1" style="top:200px; right:28px;">
+  <div class="ann-tag"><span class="ann-num">1</span> Natural Language → Plan</div>
+  <div class="ann-body">Same as Personal Tasks: describe what you want done. But this one orchestrates <strong>across M365 apps</strong>, not a web browser.</div>
 </div>
-<div class="ann" id="ann2" style="top: 120px; right: 30px;">
-  <div class="ann-title">Visible Plan with Sources</div>
-  <div class="ann-body">Each step shows which M365 app it accesses. The user sees the full plan before anything executes. Personal Tasks uses a browser; Work Tasks orchestrates across your org's apps.</div>
+<div class="ann" id="ann2" style="top:140px; right:28px;">
+  <div class="ann-tag"><span class="ann-num">2</span> Visible Plan</div>
+  <div class="ann-body">Each step shows <strong>which app and which data</strong>. The user sees the full plan before anything runs. Personal Tasks shows a plan too — but Work Tasks maps to your org's specific files and channels.</div>
 </div>
-<div class="ann" id="ann3" style="top: 140px; right: 30px;">
-  <div class="ann-title">Enterprise Compliance Surface</div>
-  <div class="ann-body">This doesn't exist in Personal Tasks. Work Tasks must show what data it accesses, confirm DLP compliance, and get user consent before touching org data.</div>
+<div class="ann" id="ann3" style="top:160px; right:28px;">
+  <div class="ann-tag"><span class="ann-num">3</span> Enterprise Compliance</div>
+  <div class="ann-body">This surface <strong>doesn't exist in Personal Tasks</strong>. Work data requires transparent access control, DLP enforcement, and user consent before touching org files.</div>
 </div>
-<div class="ann" id="ann4" style="top: 100px; right: 30px;">
-  <div class="ann-title">Cross-App Reasoning</div>
-  <div class="ann-body">Copilot correlates across Outlook, Teams, and Excel — finding that a Teams thread answers an Outlook email. This cross-artifact intelligence is uniquely possible in the enterprise graph.</div>
+<div class="ann" id="ann4" style="top:120px; right:28px;">
+  <div class="ann-tag"><span class="ann-num">4</span> Cross-App Reasoning</div>
+  <div class="ann-body">Copilot found that a <strong>Teams thread answers an Outlook email</strong> that was never replied to. This cross-artifact intelligence only works inside the enterprise graph.</div>
 </div>
-<div class="ann" id="ann5" style="top: 120px; right: 30px;">
-  <div class="ann-title">Provenance + Steerability</div>
-  <div class="ann-body">Every bullet traces to a specific file, cell, or thread. The user approves before sending to a VP. "It's not autopilot — it's a copilot" applies doubly in enterprise.</div>
+<div class="ann" id="ann5" style="top:140px; right:28px;">
+  <div class="ann-tag"><span class="ann-num">5</span> Provenance + Steerability</div>
+  <div class="ann-body">Every bullet traces to a file, cell, or thread. The user <strong>approves before sending to a VP</strong>. Trust through traceability.</div>
 </div>
-<div class="ann" id="ann6" style="top: 100px; right: 30px;">
-  <div class="ann-title">Change-Aware Meeting Prep</div>
-  <div class="ann-body">AI doesn't just list your meetings — it detects that data has changed since the last discussion and prepares you for the conversation. This requires persistent memory + cross-session awareness.</div>
+<div class="ann" id="ann6" style="top:120px; right:28px;">
+  <div class="ann-tag"><span class="ann-num">6</span> Change-Aware Prep</div>
+  <div class="ann-body">AI detects that <strong>data has shifted since the last meeting</strong> and prepares you for the conversation. This requires persistent memory across sessions.</div>
 </div>
-<div class="ann" id="ann7" style="top: 120px; right: 30px;">
-  <div class="ann-title">Audit Trail + Recurring Autonomy</div>
-  <div class="ann-body">Every data access is logged. The task runs autonomously every Monday. Enterprise trust requires both: the autonomy of Tasks with the accountability of an audit trail.</div>
+<div class="ann" id="ann7" style="top:140px; right:28px;">
+  <div class="ann-tag"><span class="ann-num">7</span> Recurring + Audit</div>
+  <div class="ann-body">Runs every Monday autonomously. Every data access is <strong>logged with DLP status</strong>. Enterprise trust = autonomy + accountability.</div>
 </div>
 
 <script>
-var step = 0;
-var totalSteps = 7;
+var step = 0, total = 7;
 
 function startDemo() {
   document.getElementById('landing').classList.add('hidden');
   document.getElementById('stepControls').style.display = 'flex';
-  step = 1;
-  showStep(1);
+  step = 1; showStep(1);
 }
 
 function resetDemo() {
   document.getElementById('endOverlay').classList.remove('visible');
   document.getElementById('landing').classList.remove('hidden');
   document.getElementById('stepControls').style.display = 'none';
-  // Hide all beats
-  for (var i = 1; i <= 7; i++) {
+  for (var i = 1; i <= total; i++) {
     var el = document.getElementById('beat' + i);
-    if (el) { el.classList.add('hidden'); el.classList.remove('anim-fadeinup'); }
+    if (el) { el.classList.add('hidden'); el.classList.remove('anim-in'); }
   }
-  hideAllAnns();
+  hideAnns();
+  // Reset plan numbers
+  for (var j = 1; j <= 4; j++) {
+    var pn = document.getElementById('pn' + j);
+    if (pn) { pn.classList.remove('done','active'); pn.textContent = j; }
+  }
   step = 0;
 }
 
 function nextStep() {
-  if (step < totalSteps) {
-    step++;
-    showStep(step);
-  }
+  if (step < total) { step++; showStep(step); }
 }
 
 function prevStep() {
   if (step <= 1) return;
-  // Hide current beat
   var el = document.getElementById('beat' + step);
-  if (el) { el.classList.add('hidden'); el.classList.remove('anim-fadeinup'); }
-  hideAllAnns();
-  step--;
-  showStep(step);
+  if (el) { el.classList.add('hidden'); el.classList.remove('anim-in'); }
+  hideAnns(); step--; showStep(step);
 }
 
 function showStep(n) {
-  document.getElementById('stepLabel').textContent = n + ' / ' + totalSteps;
+  document.getElementById('stepLabel').textContent = n + ' / ' + total;
   document.getElementById('stepPrev').disabled = (n <= 1);
-  hideAllAnns();
+  hideAnns();
 
-  // Reveal the beat
   var el = document.getElementById('beat' + n);
-  if (el) {
-    el.classList.remove('hidden');
-    el.classList.add('anim-fadeinup');
-  }
+  if (el) { el.classList.remove('hidden'); el.classList.add('anim-in'); }
 
-  // Show annotation
   var ann = document.getElementById('ann' + n);
   if (ann) setTimeout(function() { ann.classList.add('visible'); }, 400);
 
-  // Mark plan steps as active/completed
+  // Mark plan steps done after compliance approved
   if (n >= 4) {
     for (var i = 1; i <= 4; i++) {
-      var ps = document.getElementById('planStep' + i);
-      if (ps) { ps.classList.remove('active'); ps.classList.add('completed'); }
+      var pn = document.getElementById('pn' + i);
+      if (pn) { pn.classList.remove('active'); pn.classList.add('done'); pn.textContent = '✓'; }
+    }
+  } else if (n === 3) {
+    // Mark all as active during compliance
+    for (var i = 1; i <= 4; i++) {
+      var pn = document.getElementById('pn' + i);
+      if (pn) { pn.classList.add('active'); pn.classList.remove('done'); pn.textContent = i; }
     }
   }
 
   // Scroll
   var area = document.getElementById('convoArea');
-  setTimeout(function() { area.scrollTop = area.scrollHeight; }, 200);
+  setTimeout(function() { area.scrollTop = area.scrollHeight; }, 150);
 
-  // End overlay
-  if (n === totalSteps) {
-    setTimeout(function() { document.getElementById('endOverlay').classList.add('visible'); }, 3000);
+  if (n === total) {
+    setTimeout(function() { document.getElementById('endOverlay').classList.add('visible'); }, 3500);
   }
 }
 
-function hideAllAnns() {
+function hideAnns() {
   document.querySelectorAll('.ann').forEach(function(el) { el.classList.remove('visible'); });
 }
 </script>

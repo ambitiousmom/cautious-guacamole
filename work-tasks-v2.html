@@ -135,9 +135,39 @@
   /* ═══ Task conversation view ═══ */
   .task-view { display: none; flex-direction: column; height: 100%; }
   .task-view.active { display: flex; }
+  .task-content { display: flex; flex: 1; overflow: hidden; }
+  .task-main { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
 
   .task-convo { flex: 1; overflow-y: auto; padding: 24px 0; display: flex; flex-direction: column; align-items: center; scroll-behavior: smooth; }
-  .task-convo-inner { width: 100%; max-width: 660px; padding: 0 20px; display: flex; flex-direction: column; gap: 6px; }
+  .task-convo-inner { width: 100%; max-width: 580px; padding: 0 20px; display: flex; flex-direction: column; gap: 6px; }
+
+  /* ═══ Thinking Rail ═══ */
+  .thinking-rail {
+    width: 220px; min-width: 220px; height: 100%;
+    border-left: 1px solid var(--border-light); background: var(--bg);
+    padding: 20px 16px; overflow-y: auto; font-size: 12px;
+  }
+  .rail-title { font-size: 11px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 16px; }
+  .rail-step { display: flex; gap: 10px; align-items: flex-start; position: relative; padding-bottom: 20px; }
+  .rail-step:last-child { padding-bottom: 0; }
+  .rail-step::before {
+    content: ''; position: absolute; left: 9px; top: 22px;
+    width: 1px; height: calc(100% - 22px); background: var(--border-light);
+  }
+  .rail-step:last-child::before { display: none; }
+  .rail-dot {
+    width: 20px; height: 20px; border-radius: 50%; flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 10px; font-weight: 700; transition: all 0.3s;
+  }
+  .rail-dot.done { background: var(--green-light); color: var(--green); }
+  .rail-dot.active { background: var(--blue-light); color: var(--brand-blue); border: 1.5px solid var(--brand-blue); }
+  .rail-dot.pending { background: #F0F0F0; color: var(--text-muted); }
+  .rail-info { flex: 1; }
+  .rail-label { font-size: 12px; font-weight: 600; color: var(--text); line-height: 1.4; }
+  .rail-label.muted { color: var(--text-muted); font-weight: 400; }
+  .rail-sub { font-size: 11px; color: var(--text-muted); margin-top: 2px; display: flex; align-items: center; gap: 4px; }
+  .rail-sub-pill { background: #F0F0F0; border-radius: 8px; padding: 2px 8px; font-size: 10px; color: var(--text-muted); }
 
   /* ── Chat-style user bubble ── */
   .user-msg { display: flex; justify-content: flex-end; margin: 8px 0 16px; }
@@ -418,13 +448,15 @@
 
     <!-- ═══ TASK CONVERSATION: BUDGET ═══ -->
     <div class="task-view" id="taskBudget">
+      <div class="task-content">
+      <div class="task-main">
       <div class="task-convo" id="budgetConvo">
         <div class="task-convo-inner">
 
           <!-- Prior context (partially visible at top) -->
           <div class="cp-msg" style="margin-top:-30px;">
             <div class="cp-body" style="font-size:13px;">
-              <p>Revised marketing to 28%. 3 tracked changes saved to OneDrive.</p>
+              <p>Reviewed Q3_Budget_Proposal.docx. Marketing at 33% ($1.4M) — above 22% benchmark. Suggested 28% with $350K reallocated to engineering. 3 tracked changes saved.</p>
             </div>
           </div>
 
@@ -436,122 +468,62 @@
             <span class="thinking-dot"></span>
           </div>
 
-          <!-- Beat 1: Pre-computed update (shows instantly) -->
+          <!-- Beat 1: Since you were last here (one-copi content) -->
           <div class="cp-msg hidden" id="b1">
             <div class="cp-label">✦ Copilot</div>
             <div class="cp-body">
               <p><strong>Since you were last here:</strong></p>
-              <p>• <strong>Sarah (CFO)</strong> wants a risk section for ML hiring gap</p>
-              <p>• Revenue at <strong>$4.1M</strong> (+12% WoW) — VP's trajectory question answered</p>
-              <p>• PM timeline <strong>resolved in Teams</strong>, Outlook email still open</p>
-              <p>• Legal email (Mar 14) — no reply anywhere → flagged</p>
-              <p>• <strong>2 meetings</strong> where data shifted</p>
-            </div>
-            <div class="detail-toggle" onclick="toggleDetail('dlp1')">Data accessed ▾</div>
-            <div class="detail-content" id="dlp1">
-              Outlook · Teams · Q1_Tracker.xlsx · Calendar
+              <p>• <strong>Sarah Chen (CFO) left 2 comments</strong> on Q3_Budget_Proposal.docx</p>
+              <p style="color:var(--text-secondary); padding-left:14px; font-style:italic; font-size:13px;">"Can we revisit the marketing allocation rationale?"</p>
+              <p style="color:var(--text-secondary); padding-left:14px; font-style:italic; font-size:13px;">"Timeline seems aggressive for the engineering ramp"</p>
+              <p>• <strong>Q3_Actuals.xlsx</strong> updated by Finance · 3 hours ago</p>
+              <p>• <strong>Hiring_Plan_H2.xlsx</strong> pipeline data refreshed overnight</p>
             </div>
           </div>
 
-          <!-- Beat 2: Draft + email -->
+          <!-- Beat 2: Suggested reply to comment 1 (one-copi pattern) -->
           <div class="cp-msg hidden" id="b2">
-            <div class="cp-body"><p>VP status update drafted. Hiring pipeline pulled:</p></div>
-            <div style="background:#F9F9F9; border-radius:12px; padding:12px 16px; margin:8px 0; font-size:12px;">
-              <div style="font-size:11px; font-weight:600; color:var(--text-muted); margin-bottom:6px;">Hiring_Plan_H2.xlsx</div>
-              <table style="width:100%; border-collapse:collapse; font-size:12px;">
-                <tr style="border-bottom:1px solid rgba(0,0,0,0.06);">
-                  <th style="text-align:left; padding:5px 8px; font-weight:600; color:var(--text);">Role</th>
-                  <th style="text-align:left; padding:5px 8px; font-weight:600; color:var(--text);">Pipeline</th>
-                  <th style="text-align:left; padding:5px 8px; font-weight:600; color:var(--text);">Fill</th>
-                  <th style="text-align:left; padding:5px 8px; font-weight:600; color:var(--text);">Start</th>
-                </tr>
-                <tr style="border-bottom:1px solid rgba(0,0,0,0.04);"><td style="padding:5px 8px; color:var(--text-secondary);">ML Eng (×2)</td><td style="padding:5px 8px;">4</td><td style="padding:5px 8px;">6w</td><td style="padding:5px 8px;">Apr 15</td></tr>
-                <tr style="border-bottom:1px solid rgba(0,0,0,0.04);"><td style="padding:5px 8px; color:var(--text-secondary);">Full-stack (×2)</td><td style="padding:5px 8px;">7</td><td style="padding:5px 8px;">4w</td><td style="padding:5px 8px;">Mar 28</td></tr>
-                <tr><td style="padding:5px 8px; color:var(--text-secondary);">Platform (×1)</td><td style="padding:5px 8px;">2</td><td style="padding:5px 8px;">8w</td><td style="padding:5px 8px;">May 1</td></tr>
-              </table>
+            <div class="cp-body">
+              <p>Regarding Sarah's first comment — cross-referenced Q3 actuals with the allocation:</p>
             </div>
-            <div style="background:white; border:1px solid var(--border); border-radius:12px; margin:8px 0; overflow:hidden;">
-              <div style="display:flex; align-items:center; gap:8px; padding:8px 14px; background:#F9F9F9; border-bottom:1px solid var(--border-light); font-size:11px;">
-                <span style="width:16px; height:16px; background:#185ABD; border-radius:3px; display:inline-flex; align-items:center; justify-content:center; color:white; font-size:8px; font-weight:700;">W</span>
-                <span style="font-weight:600; color:var(--text);">Q3_Budget_Proposal.docx</span>
-              </div>
-              <div style="padding:16px 20px; font-size:13px; line-height:1.7; color:var(--text-secondary); max-height:160px; overflow-y:auto;">
-                <p><strong>1. Revenue:</strong> $4.1M, +12% WoW. 23 deals, 8 at negotiation.</p>
-                <div style="background:#E8F5E9; border-left:3px solid var(--green); padding:6px 10px; border-radius:0 6px 6px 0; margin:6px 0; font-size:12px; position:relative;">
-                  <span style="position:absolute; right:6px; top:-7px; background:var(--green); color:white; font-size:8px; padding:1px 5px; border-radius:6px;">Copilot</span>
-                  Revenue updated from Q1_Tracker.xlsx. Previous: $3.2M.
-                </div>
-                <p><strong>2. Launch:</strong> April confirmed. Legal pending.</p>
-                <p><strong>3. Headcount:</strong> 47/50. ML Eng — 4 candidates, ~6w.</p>
-              </div>
-            </div>
-            <div style="background:#F9F9F9; border-radius:12px; margin:10px 0; overflow:hidden;">
-              <div style="padding:10px 16px; font-size:11px; font-weight:600; color:var(--text-muted); border-bottom:1px solid rgba(0,0,0,0.04);">Draft email</div>
-              <div style="padding:10px 16px; font-size:12px;">
-                <div style="color:var(--text-secondary); margin-bottom:6px;"><strong>To:</strong> Sarah Chen (VP) · <strong>Re:</strong> Q3 Budget — Weekly Update</div>
-                <div style="color:var(--text-secondary); line-height:1.6; font-style:italic;">"Revenue at $4.1M (+12%), launch on track, headcount 47/50. Doc attached with tracked changes."</div>
-                <div style="margin-top:6px; font-size:11px; color:var(--text-muted);">Q3_Budget_Proposal.docx attached</div>
+            <div style="background:#F9F9F9; border-radius:12px; overflow:hidden; margin:8px 0;">
+              <div style="padding:10px 16px; font-size:11px; font-weight:600; color:var(--text-muted); border-bottom:1px solid rgba(0,0,0,0.04);">Suggested reply to CFO's comment</div>
+              <div style="padding:12px 16px;">
+                <div style="font-size:13px; color:var(--text-secondary); line-height:1.7; font-style:italic; border-left:3px solid var(--text-muted); padding-left:14px;">"The revised marketing allocation is grounded in Q3 actual ROI data — campaign efficiency held at reduced spend levels. The 28% target balances growth investment with the engineering ramp funding. Happy to walk through the numbers in our Thursday sync."</div>
+                <div style="margin-top:8px; font-size:11px; color:var(--text-muted);">Q3_Actuals.xlsx · Q3_Budget_Proposal §2</div>
               </div>
               <div style="display:flex; align-items:center; gap:8px; padding:8px 16px; border-top:1px solid rgba(0,0,0,0.04);">
-                <span style="font-size:11px; color:var(--red);">⚠ 1 executive</span>
-                <div style="margin-left:auto; display:flex; gap:8px;">
-                  <button class="btn sec" style="font-size:12px; padding:6px 14px;">Edit</button>
-                  <button class="btn pri" style="font-size:12px; padding:6px 14px;" onclick="sendVP()">Send</button>
-                </div>
+                <button class="btn pri" style="font-size:12px; padding:6px 14px;" onclick="sendVP()">✓ Post as reply</button>
+                <button class="btn sec" style="font-size:12px; padding:6px 14px;">Edit first</button>
+                <button class="btn sec" style="font-size:12px; padding:6px 14px; color:var(--text-muted); border:none;">Dismiss</button>
               </div>
             </div>
           </div>
 
-          <!-- Beat 3: Sent + meetings -->
+          <!-- Beat 3: Reply posted + comment 2 addressed + data pull -->
           <div class="cp-msg hidden" id="b3">
-            <div class="confirm-line"><span class="check">✓</span> Email sent to Sarah Chen (VP)</div>
+            <div class="confirm-line"><span class="check">✓</span> Reply posted to Q3_Budget_Proposal.docx, Section 2</div>
+            <div class="cp-body" style="margin-top:12px;">
+              <p>Sarah's second comment: <em>"Timeline seems aggressive for the engineering ramp."</em></p>
+              <p>Pulled hiring pipeline from <strong>Hiring_Plan_H2.xlsx</strong>:</p>
+            </div>
+            <div style="background:#F9F9F9; border-radius:12px; padding:12px 16px; margin:8px 0; font-size:12px;">
+              <table style="width:100%; border-collapse:collapse; font-size:12px;">
+                <tr style="border-bottom:1px solid rgba(0,0,0,0.06);">
+                  <th style="text-align:left; padding:5px 8px; font-weight:600;">Role</th>
+                  <th style="text-align:left; padding:5px 8px; font-weight:600;">Pipeline</th>
+                  <th style="text-align:left; padding:5px 8px; font-weight:600;">Fill</th>
+                  <th style="text-align:left; padding:5px 8px; font-weight:600;">Start</th>
+                </tr>
+                <tr style="border-bottom:1px solid rgba(0,0,0,0.04);"><td style="padding:5px 8px;">ML Eng (×2)</td><td style="padding:5px 8px;">4</td><td style="padding:5px 8px;">6w</td><td style="padding:5px 8px;">Apr 15</td></tr>
+                <tr style="border-bottom:1px solid rgba(0,0,0,0.04);"><td style="padding:5px 8px;">Full-stack (×2)</td><td style="padding:5px 8px;">7</td><td style="padding:5px 8px;">4w</td><td style="padding:5px 8px;">Mar 28</td></tr>
+                <tr><td style="padding:5px 8px;">Platform (×1)</td><td style="padding:5px 8px;">2</td><td style="padding:5px 8px;">8w</td><td style="padding:5px 8px;">May 1</td></tr>
+              </table>
+            </div>
             <div class="cp-body">
-              <p>Watching for reply. <strong>Meetings with shifted data:</strong></p>
+              <p>Ramp completable by end of Q3 <strong>if offers go out by March 15</strong>.</p>
             </div>
-            <div class="smooth-card">
-              <div class="mtg-item">
-                <div class="mtg-name"><a href="#">QBR with VP</a> — <span class="mtg-time">Wed 2 PM</span></div>
-                <div class="mtg-note">$3.2M → $4.1M (+28%)</div>
-                <div class="mtg-flag">↑ Review recommended</div>
-              </div>
-              <div class="mtg-item">
-                <div class="mtg-name"><a href="#">Legal Sync</a> — <span class="mtg-time">Thu 10 AM</span></div>
-                <div class="mtg-note">Mar 14 email unanswered</div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Beat 4: Loop-back -->
-          <div class="cp-msg hidden" id="b4">
-            <div class="cp-label">✦ Update</div>
-            <div class="comment-thread">
-              <div class="comment-author">Sarah Chen (CFO)</div>
-              <div class="comment-text">"Add a risk section for the ML hiring gap?"</div>
-            </div>
-            <div class="cp-body"><p>Drafted and inserted risk section:</p></div>
-            <div style="background:white; border:1px solid var(--border); border-radius:12px; margin:8px 0; overflow:hidden;">
-              <div style="display:flex; align-items:center; gap:8px; padding:8px 14px; background:#F9F9F9; border-bottom:1px solid var(--border-light); font-size:11px;">
-                <span style="width:16px; height:16px; background:#185ABD; border-radius:3px; display:inline-flex; align-items:center; justify-content:center; color:white; font-size:8px; font-weight:700;">W</span>
-                <span style="font-weight:600;">Q3_Budget_Proposal.docx</span>
-                <span style="color:var(--green); font-size:10px; margin-left:auto;">✓ Comment resolved</span>
-              </div>
-              <div style="padding:14px 20px; font-size:13px; line-height:1.7;">
-                <div style="background:#E8F5E9; border-left:3px solid var(--green); padding:8px 12px; border-radius:0 6px 6px 0; position:relative; font-size:12px;">
-                  <span style="position:absolute; right:6px; top:-7px; background:var(--green); color:white; font-size:8px; padding:1px 5px; border-radius:6px;">Copilot</span>
-                  <strong>Risk:</strong> 2 ML Eng roles, 4 candidates, 6w fill. Offers past Mar 15 → 3w slip. Mitigation: contractor bridge.
-                </div>
-              </div>
-            </div>
-            <div class="action-row">
-              <button class="btn pri">Accept</button>
-              <button class="btn sec">Edit in Word</button>
-            </div>
-            <div style="background:#F9F9F9; border-radius:10px; padding:10px 14px; margin-top:12px; font-size:12px; line-height:1.5; color:var(--text-secondary);">
-              <span style="color:var(--green);">✓</span> VP update sent ·
-              <span style="color:var(--green);">✓</span> Comment resolved ·
-              <span style="color:var(--green);">✓</span> Risk section added ·
-              <span style="color:var(--text-muted);">◻</span> Accept changes
-            </div>
+            <div class="confirm-line" style="margin-top:8px;"><span class="check">✓</span> Table inserted into §3 · <span class="check">✓</span> Reply posted · <span class="check">✓</span> Both comments resolved</div>
           </div>
 
         </div>
@@ -566,6 +538,48 @@
         </div>
         <div class="task-disclaimer">AI-generated content may be incorrect</div>
       </div>
+      </div><!-- /task-main -->
+
+      <!-- ═══ THINKING RAIL ═══ -->
+      <div class="thinking-rail" id="thinkingRail">
+        <div class="rail-title">Copilot is working</div>
+        <div class="rail-step" id="rs1">
+          <div class="rail-dot done" id="rd1">✓</div>
+          <div class="rail-info">
+            <div class="rail-label">Scanned inbox & channels</div>
+            <div class="rail-sub"><span class="rail-sub-pill">Outlook</span> <span class="rail-sub-pill">Teams</span></div>
+          </div>
+        </div>
+        <div class="rail-step" id="rs2">
+          <div class="rail-dot done" id="rd2">✓</div>
+          <div class="rail-info">
+            <div class="rail-label">Pulled latest data</div>
+            <div class="rail-sub"><span class="rail-sub-pill">Q1_Tracker</span> <span class="rail-sub-pill">Hiring_Plan</span></div>
+          </div>
+        </div>
+        <div class="rail-step" id="rs3">
+          <div class="rail-dot done" id="rd3">✓</div>
+          <div class="rail-info">
+            <div class="rail-label">Drafted VP update</div>
+            <div class="rail-sub"><span class="rail-sub-pill">Word</span> tracked changes</div>
+          </div>
+        </div>
+        <div class="rail-step" id="rs4">
+          <div class="rail-dot active" id="rd4">●</div>
+          <div class="rail-info">
+            <div class="rail-label" id="rl4">Reply to CFO comment 1</div>
+            <div class="rail-sub" id="rsub4">Waiting for approval</div>
+          </div>
+        </div>
+        <div class="rail-step" id="rs5">
+          <div class="rail-dot pending" id="rd5">○</div>
+          <div class="rail-info">
+            <div class="rail-label muted" id="rl5">Address CFO comment 2</div>
+            <div class="rail-sub" id="rsub5"></div>
+          </div>
+        </div>
+      </div>
+      </div><!-- /task-content -->
     </div>
 
   </div>
@@ -612,7 +626,7 @@
 <script>
 /* ═══ State ═══ */
 var beat = 0;
-var beatSequence = ['b1','b2','b3','b4'];
+var beatSequence = ['b1','b2','b3'];
 var waitingForSend = false;
 var inTask = false;
 var animating = false;
@@ -668,7 +682,6 @@ function advance() {
         show(currentBeatId);
         scrollConvo();
         showAnn(beat);
-        document.getElementById('xrefHiring').style.display = '';
         document.getElementById('xrefStrategy').style.display = '';
         waitingForSend = true;
         animating = false;
@@ -689,9 +702,9 @@ function advance() {
       showAnn(beat);
       // Show cross-ref badges after data pull beat
       if (currentBeatId === 'b2') {
-        document.getElementById('xrefHiring').style.display = '';
         document.getElementById('xrefStrategy').style.display = '';
       }
+      // Update rail when beat 3 appears (already handled in sendVP)
       animating = false;
     }, 300);
   }, 800);
@@ -784,7 +797,7 @@ function resetDemo() {
   document.getElementById('taskBudget').classList.remove('active');
   document.getElementById('topTitle').textContent = '';
   // Reset all elements
-  ['thinkDots','b1','b2','b3','b4'].forEach(function(id) {
+  ['thinkDots','b1','b2','b3'].forEach(function(id) {
     var el = document.getElementById(id);
     if (el) { el.classList.add('hidden'); el.classList.remove('anim-in'); el.style = ''; }
   });
@@ -798,6 +811,16 @@ function resetDemo() {
   document.getElementById('task2Sub').textContent = 'Pending reply · 6d overdue';
   document.getElementById('xrefHiring').style.display = 'none';
   document.getElementById('xrefStrategy').style.display = 'none';
+  // Reset rail
+  document.getElementById('rd4').className = 'rail-dot active';
+  document.getElementById('rd4').textContent = '●';
+  document.getElementById('rl4').textContent = 'Reply to CFO comment 1';
+  document.getElementById('rsub4').textContent = 'Waiting for approval';
+  document.getElementById('rd5').className = 'rail-dot pending';
+  document.getElementById('rd5').textContent = '○';
+  document.getElementById('rl5').className = 'rail-label muted';
+  document.getElementById('rl5').textContent = 'Address CFO comment 2';
+  document.getElementById('rsub5').textContent = '';
   document.querySelectorAll('.detail-content').forEach(function(el) { el.classList.remove('open'); });
   hideAnns();
   beat = 0; waitingForSend = false; inTask = false; animating = false;

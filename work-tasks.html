@@ -23,7 +23,6 @@
     --blue-light: #EBF3FC;
     --purple-light: #F3EEFF;
     --font: 'Segoe UI Variable', 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
-    --transition: 0.5s cubic-bezier(0.4, 0, 0.2, 1);
     --sidebar-w: 220px;
   }
   * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -40,11 +39,7 @@
   .landing-badge { font-size: 11px; letter-spacing: 2.5px; text-transform: uppercase; color: rgba(255,255,255,0.4); margin-bottom: 24px; }
   .landing h1 { font-size: 48px; font-weight: 600; margin-bottom: 8px; background: linear-gradient(90deg, #fff, #C8B8FF); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
   .landing h2 { font-size: 20px; font-weight: 400; color: rgba(255,255,255,0.5); margin-bottom: 32px; letter-spacing: 1px; }
-  .landing .sub { font-size: 16px; color: rgba(255,255,255,0.55); max-width: 580px; text-align: center; line-height: 1.7; margin-bottom: 36px; }
-  .landing .journey-box { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 20px 28px; max-width: 480px; margin-bottom: 40px; }
-  .journey-box .jb-label { font-size: 10px; text-transform: uppercase; letter-spacing: 1.5px; color: #B4A0FF; margin-bottom: 12px; font-weight: 600; }
-  .journey-box .beat { display: flex; gap: 10px; align-items: flex-start; font-size: 13px; color: rgba(255,255,255,0.65); padding: 4px 0; line-height: 1.5; }
-  .journey-box .beat-num { background: rgba(255,255,255,0.1); border-radius: 4px; padding: 1px 7px; font-size: 11px; font-weight: 600; color: #B4A0FF; flex-shrink: 0; margin-top: 1px; }
+  .landing .sub { font-size: 16px; color: rgba(255,255,255,0.55); max-width: 560px; text-align: center; line-height: 1.7; margin-bottom: 40px; }
   .start-btn { padding: 14px 44px; border-radius: 28px; border: none; background: linear-gradient(135deg, #7B57FF, #0F6CBD); color: white; font-size: 15px; font-weight: 600; cursor: pointer; box-shadow: 0 4px 20px rgba(123,87,255,0.4); transition: transform 0.2s, box-shadow 0.2s; }
   .start-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 28px rgba(123,87,255,0.5); }
   .landing .meta { margin-top: 32px; font-size: 11px; color: rgba(255,255,255,0.2); }
@@ -59,7 +54,7 @@
     display: flex; flex-direction: column;
   }
   .sidebar-top { padding: 12px 14px; display: flex; align-items: center; gap: 10px; }
-  .copilot-logo { width: 28px; height: 28px; border-radius: 6px; display: flex; align-items: center; justify-content: center; background: #242424; flex-shrink: 0; }
+  .copilot-logo { width: 28px; height: 28px; border-radius: 6px; background: #242424; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
   .copilot-logo svg { width: 18px; height: 18px; }
   .sidebar-label { font-size: 14px; font-weight: 600; }
   .sidebar-nav { padding: 4px 8px; }
@@ -67,106 +62,79 @@
   .nav-item:hover { background: var(--surface-hover); }
   .nav-item.active { color: var(--brand-blue); font-weight: 600; background: var(--blue-light); }
   .nav-icon { width: 18px; text-align: center; font-size: 14px; }
+  .badge { margin-left: auto; background: var(--copilot-purple); color: white; font-size: 9px; font-weight: 700; padding: 1px 6px; border-radius: 10px; }
   .sidebar-divider { height: 1px; background: var(--border-light); margin: 6px 14px; }
-  .section-header { font-size: 11px; font-weight: 600; color: var(--text-muted); padding: 8px 18px 4px; text-transform: uppercase; letter-spacing: 0.5px; }
-  .task-list-item { display: flex; align-items: center; gap: 10px; padding: 6px 10px; margin: 0 8px; border-radius: 6px; font-size: 12px; color: var(--text-secondary); cursor: pointer; border-left: 3px solid transparent; }
-  .task-list-item:hover { background: var(--surface-hover); }
-  .task-list-item.active { background: var(--blue-light); border-left-color: var(--brand-blue); color: var(--text); font-weight: 500; }
-  .tdot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
-  .tdot.running { background: var(--copilot-purple); animation: pulse 2s infinite; }
-  .tdot.done { background: var(--green); }
+  .section-header { font-size: 10px; font-weight: 600; color: var(--text-muted); padding: 8px 18px 4px; text-transform: uppercase; letter-spacing: 0.8px; }
+  .project-item { display: flex; align-items: center; gap: 8px; padding: 5px 10px; margin: 0 8px; border-radius: 6px; font-size: 12px; color: var(--text-secondary); cursor: pointer; }
+  .project-item:hover { background: var(--surface-hover); }
+  .project-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
   .sidebar-bottom { margin-top: auto; padding: 10px 14px; border-top: 1px solid var(--border-light); }
-  .user-row { display: flex; align-items: center; gap: 8px; }
-  .user-avatar { width: 24px; height: 24px; border-radius: 50%; background: linear-gradient(135deg, #E89B35, #D4782F); display: flex; align-items: center; justify-content: center; font-size: 10px; color: white; font-weight: 600; }
 
   /* ═══ Main ═══ */
   .main { flex: 1; display: flex; flex-direction: column; min-width: 0; }
-  .topbar { height: 48px; display: flex; align-items: center; padding: 0 20px; border-bottom: 1px solid var(--border-light); background: var(--surface); gap: 10px; flex-shrink: 0; }
-  .topbar-title { font-size: 14px; font-weight: 600; }
-  .topbar-tag { font-size: 10px; color: var(--copilot-purple); background: var(--purple-light); padding: 2px 8px; border-radius: 10px; font-weight: 600; }
+  .topbar { height: 52px; display: flex; align-items: center; padding: 0 24px; border-bottom: 1px solid var(--border-light); background: var(--surface); gap: 12px; flex-shrink: 0; }
+  .topbar-title { font-size: 16px; font-weight: 600; }
+  .topbar-sub { font-size: 12px; color: var(--text-muted); margin-left: 4px; }
+  .topbar-right { margin-left: auto; display: flex; align-items: center; gap: 10px; }
+  .filter-btn { padding: 4px 12px; border: 1px solid var(--border); border-radius: 16px; font-size: 11px; background: transparent; cursor: pointer; color: var(--text-secondary); font-family: var(--font); }
+  .filter-btn.active { background: var(--purple-light); color: var(--copilot-purple); border-color: rgba(123,87,255,0.3); font-weight: 600; }
 
-  /* Conversation */
-  .convo-area { flex: 1; overflow-y: auto; padding: 24px 0; display: flex; flex-direction: column; align-items: center; }
-  .convo-inner { width: 100%; max-width: 660px; padding: 0 20px; display: flex; flex-direction: column; gap: 6px; }
+  /* ═══ Feed ═══ */
+  .feed { flex: 1; overflow-y: auto; padding: 16px 0; }
+  .feed-inner { max-width: 700px; margin: 0 auto; padding: 0 24px; }
 
-  /* User message */
-  .user-msg { align-self: flex-end; max-width: 80%; margin: 10px 0; }
-  .user-msg .bubble { background: #F0F0F0; padding: 11px 16px; border-radius: 12px 12px 2px 12px; font-size: 14px; line-height: 1.65; }
+  /* Time group */
+  .time-group { margin-bottom: 20px; }
+  .time-label { font-size: 11px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; padding: 0 0 8px; display: flex; align-items: center; gap: 8px; }
+  .time-label::after { content: ''; flex: 1; height: 1px; background: var(--border-light); }
 
-  /* Copilot message */
-  .cp-msg { margin: 10px 0; }
-  .cp-label { display: flex; align-items: center; gap: 6px; margin-bottom: 6px; font-size: 13px; font-weight: 600; color: var(--text); }
-  .cp-body { font-size: 14px; line-height: 1.7; }
-  .cp-body p { margin-bottom: 8px; }
+  /* Task item */
+  .task-item {
+    display: flex; gap: 12px; padding: 14px 16px; margin-bottom: 6px;
+    background: white; border: 1px solid var(--border-light); border-radius: 10px;
+    transition: all 0.3s; cursor: default;
+    opacity: 0; transform: translateY(8px);
+  }
+  .task-item.visible { opacity: 1; transform: translateY(0); transition: opacity 0.4s ease, transform 0.4s ease; }
+  .task-item:hover { box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
+  .task-item.needs-you { border-left: 3px solid var(--copilot-purple); }
+  .task-item.handled { opacity: 0.7; }
+  .task-item.handled.visible { opacity: 0.7; }
+
+  .task-status { flex-shrink: 0; width: 20px; margin-top: 2px; font-size: 14px; }
+  .task-main { flex: 1; min-width: 0; }
+  .task-project { font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-muted); margin-bottom: 2px; }
+  .task-title { font-size: 13px; font-weight: 600; line-height: 1.4; margin-bottom: 3px; }
+  .task-detail { font-size: 12px; color: var(--text-secondary); line-height: 1.5; }
+  .task-source { display: inline-flex; align-items: center; gap: 3px; font-size: 10px; color: var(--text-muted); margin-top: 4px; }
+  .task-actions { flex-shrink: 0; display: flex; flex-direction: column; gap: 4px; align-items: flex-end; justify-content: center; }
+  .task-btn { padding: 4px 12px; border-radius: 5px; font-size: 11px; font-weight: 600; cursor: pointer; font-family: var(--font); border: none; }
+  .task-btn.primary { background: var(--copilot-purple); color: white; }
+  .task-btn.primary:hover { background: #6A49E0; }
+  .task-btn.secondary { background: transparent; color: var(--text-secondary); border: 1px solid var(--border); font-weight: 500; }
+  .task-time { font-size: 10px; color: var(--text-muted); white-space: nowrap; }
 
   /* App icons */
-  .ai { width: 16px; height: 16px; border-radius: 3px; display: inline-flex; align-items: center; justify-content: center; font-size: 8px; color: white; font-weight: 700; vertical-align: -2px; flex-shrink: 0; }
+  .ai { width: 14px; height: 14px; border-radius: 2px; display: inline-flex; align-items: center; justify-content: center; font-size: 7px; color: white; font-weight: 700; vertical-align: -1px; }
   .ai.ol { background: #0078D4; }
   .ai.tm { background: #6264A7; }
   .ai.xl { background: #107C10; }
   .ai.wd { background: #185ABD; }
+  .ai.pp { background: #D24726; }
 
-  /* ── Proactive Card ── */
-  .proactive-card {
-    background: var(--surface); border: 1px solid var(--border);
-    border-radius: 12px; margin: 12px 0; overflow: hidden;
-    box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+  /* Expandable draft */
+  .task-expand { display: none; margin-top: 8px; padding: 10px 14px; background: #FAFAFA; border-radius: 6px; border-left: 3px solid var(--copilot-purple); font-size: 12px; line-height: 1.7; color: var(--text-secondary); }
+  .task-expand.open { display: block; animation: fadeInUp 0.3s ease; }
+  .cite-row { margin-top: 6px; display: flex; gap: 4px; flex-wrap: wrap; }
+  .cite-pill { display: inline-flex; align-items: center; gap: 3px; background: #F0F0F0; border: 1px solid var(--border); border-radius: 3px; padding: 1px 6px; font-size: 9px; color: var(--text-muted); }
+
+  /* Summary bar */
+  .summary-bar {
+    padding: 10px 24px; border-top: 1px solid var(--border-light); background: var(--surface);
+    display: flex; align-items: center; gap: 16px; font-size: 12px; color: var(--text-secondary); flex-shrink: 0;
   }
-  .pc-header {
-    display: flex; align-items: center; gap: 8px;
-    padding: 12px 16px; background: linear-gradient(90deg, rgba(123,87,255,0.06), rgba(15,108,189,0.04));
-    border-bottom: 1px solid var(--border-light); font-size: 12px; font-weight: 600; color: var(--copilot-purple);
-  }
-  .pc-body { padding: 14px 16px; }
-  .update-item { display: flex; align-items: flex-start; gap: 10px; padding: 8px 0; font-size: 13px; line-height: 1.6; }
-  .update-item + .update-item { border-top: 1px solid var(--border-light); }
-  .update-icon { font-size: 14px; flex-shrink: 0; margin-top: 3px; }
-  .quote { font-style: italic; color: var(--text-secondary); }
-
-  /* ── Draft ── */
-  .draft-block { background: #FAFAFA; border-left: 3px solid var(--copilot-purple); padding: 14px 18px; border-radius: 0 8px 8px 0; font-size: 13px; line-height: 1.8; color: var(--text-secondary); margin: 8px 0; }
-  .cite-row { margin-top: 8px; display: flex; gap: 6px; flex-wrap: wrap; }
-  .cite-pill { display: inline-flex; align-items: center; gap: 3px; background: #F0F0F0; border: 1px solid var(--border); border-radius: 4px; padding: 2px 8px; font-size: 10px; color: var(--text-secondary); }
-
-  /* ── Suggestion Card (for approve/steer) ── */
-  .suggestion-card {
-    background: var(--surface); border: 1px solid var(--border);
-    border-radius: 12px; margin: 12px 0; overflow: hidden;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
-  }
-  .sc-header { padding: 12px 16px; background: linear-gradient(90deg, rgba(123,87,255,0.05), transparent); border-bottom: 1px solid var(--border-light); font-size: 12px; color: var(--copilot-purple); font-weight: 600; display: flex; align-items: center; gap: 6px; }
-  .sc-body { padding: 14px 16px; font-size: 13px; line-height: 1.7; }
-  .sc-actions { display: flex; gap: 8px; padding: 10px 16px; border-top: 1px solid var(--border-light); background: #FAFAFA; align-items: center; }
-
-  /* Meeting */
-  .mtg { background: #FAFAFA; border-radius: 8px; padding: 12px 14px; margin: 6px 0; border-left: 3px solid var(--brand-blue); }
-  .mtg-title { font-size: 13px; font-weight: 600; display: flex; align-items: center; gap: 6px; }
-  .mtg-time { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
-  .mtg-note { font-size: 12px; color: var(--text-secondary); margin-top: 6px; line-height: 1.6; }
-  .mtg-delta { font-size: 11px; color: var(--red); margin-top: 4px; }
-  .mtg.changed { border-left-color: var(--red); }
-  .mtg.ok { border-left-color: var(--green); }
-
-  /* Confirm + buttons */
-  .confirm-chip { display: inline-flex; align-items: center; gap: 6px; background: var(--green-light); border-radius: 8px; padding: 8px 14px; font-size: 13px; color: var(--green); font-weight: 500; }
-  .btn { padding: 7px 18px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; font-family: var(--font); border: none; transition: all 0.15s; }
-  .btn.primary { background: #E0E0E0; color: #5A3EC8; font-weight: 700; }
-  .btn.primary:hover { background: #D0D0D0; }
-  .btn.secondary { background: transparent; color: var(--text-secondary); border: 1px solid var(--border); }
-  .btn.ghost { background: transparent; color: var(--text-muted); }
-
-  /* Expandable detail */
-  .detail-toggle { font-size: 12px; color: var(--brand-blue); cursor: pointer; margin-top: 8px; display: inline-flex; align-items: center; gap: 4px; }
-  .detail-toggle:hover { text-decoration: underline; }
-  .detail-content { display: none; margin-top: 8px; padding: 10px 14px; background: #F8F8F8; border-radius: 8px; font-size: 12px; line-height: 1.6; color: var(--text-secondary); border: 1px solid var(--border-light); }
-  .detail-content.open { display: block; }
-
-  /* Audit (inside expandable) */
-  .audit-row { display: flex; gap: 10px; padding: 3px 0; font-size: 11px; color: var(--text-muted); }
-  .audit-time { width: 48px; flex-shrink: 0; }
-
-  /* DLP inline */
-  .dlp-inline { font-size: 11px; color: var(--green); display: inline-flex; align-items: center; gap: 4px; }
+  .summary-stat { display: flex; align-items: center; gap: 4px; }
+  .summary-dot { width: 8px; height: 8px; border-radius: 50%; }
 
   /* ═══ Step Controls ═══ */
   .step-controls {
@@ -204,14 +172,11 @@
     pointer-events: none;
   }
   .ann.visible { opacity: 1; visibility: visible; }
-  .ann-tag { font-weight: 700; color: var(--copilot-purple); font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px; display: flex; align-items: center; gap: 6px; }
-  .ann-num { background: var(--copilot-purple); color: white; font-size: 9px; padding: 1px 5px; border-radius: 3px; }
+  .ann-tag { font-weight: 700; color: var(--copilot-purple); font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px; }
   .ann-body { color: var(--text-secondary); }
 
-  /* ═══ Animations ═══ */
   .hidden { display: none !important; }
-  .anim-in { animation: fadeInUp 0.45s ease both; }
-  @keyframes fadeInUp { from { opacity:0; transform: translateY(10px); } to { opacity:1; transform: translateY(0); } }
+  @keyframes fadeInUp { from { opacity:0; transform: translateY(8px); } to { opacity:1; transform: translateY(0); } }
   @keyframes pulse { 0%,100% { opacity:1; } 50% { opacity:0.35; } }
 </style>
 </head>
@@ -222,186 +187,198 @@
   <div class="landing-badge">Interactive Prototype</div>
   <h1>Copilot Tasks</h1>
   <h2>for Work</h2>
-  <p class="sub">Personal Tasks browses the web for you. Work Tasks operates across your enterprise — autonomously, transparently, with one human checkpoint where it matters.</p>
-
-  <div class="journey-box">
-    <div class="jb-label">The Monday Morning</div>
-    <div class="beat"><span class="beat-num">1</span> You open Copilot. Your weekly prep task already ran at 7am.</div>
-    <div class="beat"><span class="beat-num">2</span> It found threads, pulled metrics, cross-referenced across apps.</div>
-    <div class="beat"><span class="beat-num">3</span> Your skip-level update is drafted — every claim sourced.</div>
-    <div class="beat"><span class="beat-num">4</span> One approval: send to VP. Everything else is done.</div>
-    <div class="beat"><span class="beat-num">5</span> Meetings flagged. Data shifts detected. You're ready.</div>
-  </div>
-
-  <button class="start-btn" onclick="startDemo()">Start →</button>
+  <p class="sub">Not a scheduled prompt. Not a wizard. A running feed of small tasks across your projects — handled, flagged, or waiting for one decisive action from you. Copilot works in the background. You glance when you're ready.</p>
+  <button class="start-btn" onclick="startDemo()">Open your Monday morning →</button>
   <div class="meta">Prototype by Hema Sridharan · Click-through demo</div>
 </div>
 
 <!-- ═══ SHELL ═══ -->
 <div class="shell">
-
-  <!-- Sidebar -->
   <div class="sidebar">
     <div class="sidebar-top">
-      <div class="copilot-logo">
-        <svg viewBox="0 0 24 24" fill="none"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" fill="white" opacity="0.9"/></svg>
-      </div>
+      <div class="copilot-logo"><svg viewBox="0 0 24 24" fill="none"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" fill="white" opacity="0.9"/></svg></div>
       <span class="sidebar-label">Copilot</span>
     </div>
     <div class="sidebar-nav">
       <div class="nav-item"><span class="nav-icon">💬</span> Chat</div>
-      <div class="nav-item active"><span class="nav-icon">⚡</span> Tasks</div>
+      <div class="nav-item active"><span class="nav-icon">⚡</span> Tasks <span class="badge">3</span></div>
     </div>
     <div class="sidebar-divider"></div>
-    <div class="section-header">Active</div>
-    <div class="task-list-item active"><span class="tdot done"></span> Monday Morning Prep</div>
-    <div class="task-list-item"><span class="tdot running"></span> Weekly metrics digest</div>
-    <div class="sidebar-divider"></div>
-    <div class="section-header">Done</div>
-    <div class="task-list-item" style="opacity:0.4;"><span class="tdot done"></span> QBR deck prep (Mar 14)</div>
+    <div class="section-header">Projects</div>
+    <div class="project-item"><span class="project-dot" style="background:#0F6CBD;"></span> Q3 Budget Review</div>
+    <div class="project-item"><span class="project-dot" style="background:#D24726;"></span> Product Strategy H2</div>
+    <div class="project-item"><span class="project-dot" style="background:#107C10;"></span> Hiring Pipeline</div>
+    <div class="project-item"><span class="project-dot" style="background:#6264A7;"></span> Legal Compliance</div>
     <div class="sidebar-bottom">
-      <div class="user-row">
-        <div class="user-avatar">HS</div>
+      <div style="display:flex; align-items:center; gap:8px;">
+        <div style="width:24px; height:24px; border-radius:50%; background:linear-gradient(135deg,#E89B35,#D4782F); display:flex; align-items:center; justify-content:center; font-size:10px; color:white; font-weight:600;">HS</div>
         <div style="font-size:12px;"><div style="font-weight:500;">Hema S.</div><div style="font-size:10px; color:var(--text-muted);">Work · Contoso</div></div>
       </div>
     </div>
   </div>
 
-  <!-- Main -->
   <div class="main">
     <div class="topbar">
-      <span class="topbar-title">Monday Morning Prep</span>
-      <span class="topbar-tag">✓ Completed at 7:03 AM</span>
+      <span class="topbar-title">Your Tasks</span>
+      <span class="topbar-sub">Monday, March 20 · 7:45 AM</span>
+      <div class="topbar-right">
+        <button class="filter-btn active">All</button>
+        <button class="filter-btn">Needs you</button>
+        <button class="filter-btn">Handled</button>
+      </div>
     </div>
 
-    <div class="convo-area" id="convoArea">
-      <div class="convo-inner" id="convoInner">
+    <div class="feed" id="feed">
+      <div class="feed-inner" id="feedInner">
 
-        <!-- ═══ BEAT 1: Proactive — task already ran ═══ -->
-        <div class="cp-msg hidden" id="beat1">
-          <div class="cp-label">✦ Copilot</div>
-          <div class="proactive-card">
-            <div class="pc-header">
-              <span>⚡</span> Monday Morning Prep · ran at 7:00 AM
-            </div>
-            <div class="pc-body">
-              <div class="update-item">
-                <span class="update-icon"><span class="ai ol">O</span></span>
-                <div>Scanned your <strong>Outlook inbox + 3 Teams channels</strong> — found <strong>4 unresolved threads</strong> from last week</div>
-              </div>
-              <div class="update-item">
-                <span class="update-icon"><span class="ai xl">X</span></span>
-                <div>Pulled latest from <strong>Q1_Tracker.xlsx</strong> — revenue at <strong>$4.1M</strong>, up 12% from last week</div>
-              </div>
-              <div class="update-item">
-                <span class="update-icon"><span class="ai wd">W</span></span>
-                <div><strong>Skip-level status update drafted</strong> — ready for your review</div>
-              </div>
-              <div class="update-item">
-                <span class="update-icon">🗓️</span>
-                <div>Flagged <strong>2 meetings</strong> this week where data has changed since your last discussion</div>
+        <!-- ═══ TIME GROUP: This morning ═══ -->
+        <div class="time-group hidden" id="group1">
+          <div class="time-label">This morning · 7:00 AM</div>
+
+          <div class="task-item needs-you" id="t1">
+            <div class="task-status">👉</div>
+            <div class="task-main">
+              <div class="task-project" style="color:#0F6CBD;">Q3 Budget Review</div>
+              <div class="task-title">Status update for VP — ready to send</div>
+              <div class="task-detail">Drafted from Q1 Tracker ($4.1M, +12% WoW), PM timeline resolution in Teams, and Legal gap. Every claim sourced.</div>
+              <div class="task-source"><span class="ai xl">X</span>&nbsp;Q1_Tracker · <span class="ai tm">T</span>&nbsp;#product-launches · <span class="ai ol">O</span>&nbsp;Legal thread</div>
+              <div class="task-expand" id="expand1">
+                <strong>1. Revenue momentum:</strong> Q1 revenue hit $4.1M, up 12% week-over-week. 23 active deals, 8 at negotiation.<br/><br/>
+                <strong>2. Product launch:</strong> April launch confirmed per #product-launches (Mar 17). Legal compliance review pending — needs follow-up.<br/><br/>
+                <strong>3. Headcount:</strong> 47/50 filled. ML Engineer open — 4 candidates, ~6 weeks.
+                <div class="cite-row">
+                  <span class="cite-pill"><span class="ai xl">X</span> Q1_Tracker · B4:D14</span>
+                  <span class="cite-pill"><span class="ai tm">T</span> #product-launches · Mar 17</span>
+                  <span class="cite-pill"><span class="ai ol">O</span> Legal · Mar 14</span>
+                </div>
               </div>
             </div>
-          </div>
-          <div class="detail-toggle" onclick="toggleDetail('detail1')">🔒 View data accessed + DLP status ▾</div>
-          <div class="detail-content" id="detail1">
-            <div style="margin-bottom:6px;">✓ <span class="ai ol">O</span> Outlook inbox — 47 messages scanned, 4 flagged &nbsp;<span class="dlp-inline">🛡 DLP ✓</span></div>
-            <div style="margin-bottom:6px;">✓ <span class="ai tm">T</span> Teams — #product-launches, #eng-standup, #design-reviews &nbsp;<span class="dlp-inline">🛡 DLP ✓</span></div>
-            <div style="margin-bottom:6px;">✓ <span class="ai xl">X</span> Q1_Tracker.xlsx (B4:D14, read-only) &nbsp;<span class="dlp-inline">🛡 DLP ✓</span></div>
-            <div>✓ <span class="ai ol">O</span> Calendar — this week's meetings &nbsp;<span class="dlp-inline">🛡 DLP ✓</span></div>
-          </div>
-        </div>
-
-        <!-- ═══ BEAT 2: Cross-app reasoning (what it found) ═══ -->
-        <div class="cp-msg hidden" id="beat2">
-          <div class="cp-body">
-            <p><strong>What I found across your apps:</strong></p>
-            <p><span class="ai tm">T</span> The PM timeline question was <strong>resolved in #product-launches</strong> (April launch confirmed, Mar 17) — but the original Outlook email thread is still unanswered. I used the Teams conclusion in your status update.</p>
-            <p><span class="ai ol">O</span> Legal's compliance review email (Mar 14) has <strong>no response</strong> anywhere — Teams or email. Flagged for follow-up.</p>
-            <p><span class="ai xl">X</span> VP's email asks about "revenue trajectory" — the <strong>12% week-over-week jump</strong> in Q1_Tracker directly answers it. Used this in bullet 1.</p>
-          </div>
-        </div>
-
-        <!-- ═══ BEAT 3: Draft with provenance ═══ -->
-        <div class="cp-msg hidden" id="beat3">
-          <div class="cp-label">✦ Your skip-level update</div>
-          <div class="suggestion-card">
-            <div class="sc-header"><span class="ai wd">W</span> &nbsp;Status Update for VP · Week of Mar 20</div>
-            <div class="sc-body">
-              <div class="draft-block">
-                <strong>1. Revenue momentum:</strong> Q1 revenue hit $4.1M, up 12% week-over-week. 23 active deals with 8 at negotiation — strongest pipeline since Q4.<br/><br/>
-                <strong>2. Product launch on track:</strong> April launch confirmed per #product-launches (Mar 17). PM timeline concerns resolved. Legal compliance review still pending — needs follow-up.<br/><br/>
-                <strong>3. Headcount:</strong> 47/50 roles filled. ML Engineer open — 4 candidates in pipeline, ~6 weeks to fill.
-              </div>
-              <div class="cite-row">
-                <span class="cite-pill"><span class="ai xl">X</span> Q1_Tracker · B4:D14</span>
-                <span class="cite-pill"><span class="ai tm">T</span> #product-launches · Mar 17</span>
-                <span class="cite-pill"><span class="ai ol">O</span> Legal thread · Mar 14</span>
-              </div>
+            <div class="task-actions">
+              <button class="task-btn primary" onclick="sendVP()">Send</button>
+              <button class="task-btn secondary" onclick="toggleExpand('expand1')">Preview</button>
+              <span class="task-time">⚠️ 1 VP</span>
             </div>
-            <div class="sc-actions">
-              <span style="font-size:11px; color:var(--red);">⚠️ 1 VP recipient</span>
-              <div style="margin-left:auto; display:flex; gap:8px;">
-                <button class="btn secondary">Edit first</button>
-                <button class="btn primary" onclick="nextStep()">Send to VP</button>
-              </div>
+          </div>
+
+          <div class="task-item needs-you" id="t2">
+            <div class="task-status">👉</div>
+            <div class="task-main">
+              <div class="task-project" style="color:#6264A7;">Legal Compliance</div>
+              <div class="task-title">Unanswered email from Legal — 6 days old</div>
+              <div class="task-detail">Compliance review request from Mar 14. No reply in email or Teams. You have a sync with them Thursday — suggest responding first.</div>
+              <div class="task-source"><span class="ai ol">O</span>&nbsp;Legal thread · Mar 14</div>
+            </div>
+            <div class="task-actions">
+              <button class="task-btn primary">Draft reply</button>
+              <span class="task-time">6 days</span>
+            </div>
+          </div>
+
+          <div class="task-item needs-you" id="t3">
+            <div class="task-status">🗓️</div>
+            <div class="task-main">
+              <div class="task-project" style="color:#0F6CBD;">Q3 Budget Review</div>
+              <div class="task-title">QBR with VP Wednesday — data changed significantly</div>
+              <div class="task-detail">Revenue was $3.2M when you last discussed on Mar 7. Now $4.1M (+28%). ML Engineer gap was flagged — still open. Lead with the momentum.</div>
+              <div class="task-source"><span class="ai xl">X</span>&nbsp;Q1_Tracker · <span class="ai ol">O</span>&nbsp;Calendar</div>
+            </div>
+            <div class="task-actions">
+              <span class="task-time" style="color:var(--red);">↑ 28% shift</span>
             </div>
           </div>
         </div>
 
-        <!-- ═══ BEAT 4: Sent + meetings ═══ -->
-        <div class="cp-msg hidden" id="beat4">
-          <div class="confirm-chip">✓ Status update sent to VP</div>
-          <div class="cp-body" style="margin-top: 14px;">
-            <p><strong>Meetings needing your attention this week:</strong></p>
+        <!-- ═══ TIME GROUP: Already handled ═══ -->
+        <div class="time-group hidden" id="group2">
+          <div class="time-label">Handled · no action needed</div>
+
+          <div class="task-item handled" id="t4">
+            <div class="task-status">✅</div>
+            <div class="task-main">
+              <div class="task-project" style="color:#0F6CBD;">Q3 Budget Review</div>
+              <div class="task-title">Pulled latest metrics from Q1 Tracker</div>
+              <div class="task-detail">Revenue $4.1M (+12%), pipeline 23 deals, headcount 47/50. Used in your status update draft.</div>
+              <div class="task-source"><span class="ai xl">X</span>&nbsp;Q1_Tracker.xlsx · B4:D14 · <span style="color:var(--green); font-size:10px;">🛡 DLP ✓</span></div>
+            </div>
+            <div class="task-actions"><span class="task-time">7:02 AM</span></div>
           </div>
 
-          <div class="mtg changed">
-            <div class="mtg-title">QBR with VP <span style="font-size:10px; color:var(--red); font-weight:400;">· data changed</span></div>
-            <div class="mtg-time">Wednesday 2:00 PM</div>
-            <div class="mtg-note">You last discussed revenue on Mar 7 when it was $3.2M. It's now $4.1M — <strong>up 28% since that meeting</strong>. The ML Engineer gap was flagged; still open. Consider leading with the momentum.</div>
-            <div class="mtg-delta">↑ Data shifted significantly — review recommended</div>
+          <div class="task-item handled" id="t5">
+            <div class="task-status">✅</div>
+            <div class="task-main">
+              <div class="task-project" style="color:#D24726;">Product Strategy H2</div>
+              <div class="task-title">PM timeline question resolved — Teams answered it</div>
+              <div class="task-detail">PM leads asked about launch timeline in email (Mar 12). Resolution was in #product-launches (Apr launch, Mar 17). Correlated and used in your update.</div>
+              <div class="task-source"><span class="ai tm">T</span>&nbsp;#product-launches · <span class="ai ol">O</span>&nbsp;PM email thread · <span style="color:var(--green); font-size:10px;">🛡 DLP ✓</span></div>
+            </div>
+            <div class="task-actions"><span class="task-time">7:01 AM</span></div>
           </div>
 
-          <div class="mtg">
-            <div class="mtg-title">Legal Compliance Sync</div>
-            <div class="mtg-time">Thursday 10:00 AM</div>
-            <div class="mtg-note">Legal's email from Mar 14 is unanswered. This meeting is likely a follow-up. Suggest acknowledging the delay and bringing the latest product timeline.</div>
+          <div class="task-item handled" id="t6">
+            <div class="task-status">✅</div>
+            <div class="task-main">
+              <div class="task-project" style="color:#107C10;">Hiring Pipeline</div>
+              <div class="task-title">Scanned 4 unresolved Outlook threads</div>
+              <div class="task-detail">47 messages scanned, 4 flagged. 2 from PM leads, 1 Legal, 1 VP (metrics request — answered by Q1 data).</div>
+              <div class="task-source"><span class="ai ol">O</span>&nbsp;Outlook inbox · <span style="color:var(--green); font-size:10px;">🛡 DLP ✓</span></div>
+            </div>
+            <div class="task-actions"><span class="task-time">7:01 AM</span></div>
           </div>
 
-          <div class="mtg ok">
-            <div class="mtg-title">Eng Standup <span style="font-size:10px; color:var(--green); font-weight:400;">✓ no prep needed</span></div>
-            <div class="mtg-time">Daily · 9:15 AM</div>
+          <div class="task-item handled" id="t7">
+            <div class="task-status">✅</div>
+            <div class="task-main">
+              <div class="task-project" style="color:#6264A7;">Legal Compliance</div>
+              <div class="task-title">Legal sync Thursday — prep note generated</div>
+              <div class="task-detail">Meeting at 10:00 AM with Legal. Prep: acknowledge the delayed response, bring latest product timeline. No data shift since last sync.</div>
+              <div class="task-source"><span class="ai ol">O</span>&nbsp;Calendar</div>
+            </div>
+            <div class="task-actions"><span class="task-time">7:03 AM</span></div>
+          </div>
+
+          <div class="task-item handled" id="t8">
+            <div class="task-status">✅</div>
+            <div class="task-main">
+              <div class="task-title" style="color:var(--text-secondary); font-weight:400;">Eng Standup — no prep needed</div>
+            </div>
+            <div class="task-actions"><span class="task-time" style="color:var(--green);">✓</span></div>
           </div>
         </div>
 
-        <!-- ═══ BEAT 5: Wrap + next run ═══ -->
-        <div class="cp-msg hidden" id="beat5">
-          <div class="cp-body">
-            <p>You're prepped for the week. Next run: <strong>Monday, March 27 at 7:00 AM</strong>.</p>
+        <!-- ═══ TIME GROUP: Later today ═══ -->
+        <div class="time-group hidden" id="group3">
+          <div class="time-label">Scheduled · later today</div>
+
+          <div class="task-item" id="t9">
+            <div class="task-status" style="font-size:12px;">🔄</div>
+            <div class="task-main">
+              <div class="task-project" style="color:#D24726;">Product Strategy H2</div>
+              <div class="task-title">Weekly metrics digest — runs at 4:00 PM</div>
+              <div class="task-detail">Will pull Fabric data, summarize key movements, and draft a Slack post for #metrics. You'll review before it posts.</div>
+            </div>
+            <div class="task-actions"><span class="task-time">4:00 PM</span></div>
           </div>
-          <div class="detail-toggle" onclick="toggleDetail('detail2')">📝 View full audit trail ▾</div>
-          <div class="detail-content" id="detail2">
-            <div class="audit-row"><span class="audit-time">7:00</span> Task started · 4 steps</div>
-            <div class="audit-row"><span class="audit-time">7:01</span> Read: Outlook (47 msgs, 4 flagged) · DLP ✓</div>
-            <div class="audit-row"><span class="audit-time">7:01</span> Read: Teams (3 channels, 12 threads) · DLP ✓</div>
-            <div class="audit-row"><span class="audit-time">7:02</span> Read: Q1_Tracker.xlsx (B4:D14) · DLP ✓</div>
-            <div class="audit-row"><span class="audit-time">7:02</span> Cross-referenced 3 sources · 1 discrepancy found</div>
-            <div class="audit-row"><span class="audit-time">7:03</span> Draft generated · Awaiting approval</div>
-            <div class="audit-row"><span class="audit-time">7:15</span> <strong>User approved · Email sent</strong> · 1 recipient</div>
+
+          <div class="task-item" id="t10">
+            <div class="task-status" style="font-size:12px;">🔄</div>
+            <div class="task-main">
+              <div class="task-project" style="color:#107C10;">Hiring Pipeline</div>
+              <div class="task-title">Check for new ML Engineer applicants</div>
+              <div class="task-detail">Scans recruiting pipeline. If any new candidates match L6+ ML criteria, you'll get a notification.</div>
+            </div>
+            <div class="task-actions"><span class="task-time">2:00 PM</span></div>
           </div>
         </div>
 
       </div>
     </div>
 
-    <!-- Input -->
-    <div style="padding: 12px 18%; border-top: 1px solid var(--border-light); background: var(--surface); flex-shrink: 0;">
-      <div style="display:flex; align-items:center; gap:10px; border:1px solid var(--border); border-radius:12px; padding:10px 14px;">
-        <input type="text" placeholder="Ask about this task or create a new one..." readonly style="flex:1; border:none; outline:none; font-size:14px; font-family:var(--font); background:transparent; color:var(--text);" />
-        <button style="width:30px; height:30px; border-radius:50%; background:var(--copilot-purple); color:white; border:none; cursor:pointer; font-size:14px;">↑</button>
-      </div>
-      <div style="text-align:center; font-size:11px; color:var(--text-muted); margin-top:6px;">AI-generated content may be incorrect</div>
+    <!-- Summary bar -->
+    <div class="summary-bar">
+      <div class="summary-stat"><span class="summary-dot" style="background:var(--copilot-purple);"></span> 3 need you</div>
+      <div class="summary-stat"><span class="summary-dot" style="background:var(--green);"></span> 5 handled</div>
+      <div class="summary-stat"><span class="summary-dot" style="background:var(--text-muted);"></span> 2 scheduled</div>
+      <div style="margin-left:auto; font-size:11px; color:var(--text-muted);">Next run: 2:00 PM · All access DLP-audited</div>
     </div>
   </div>
 </div>
@@ -409,7 +386,7 @@
 <!-- ═══ STEP CONTROLS ═══ -->
 <div class="step-controls" id="stepControls" style="display:none;">
   <button class="step-btn" id="stepPrev" onclick="prevStep()" disabled>◀</button>
-  <span class="step-label" id="stepLabel">0 / 5</span>
+  <span class="step-label" id="stepLabel">0 / 4</span>
   <button class="step-btn" id="stepNext" onclick="nextStep()">▶</button>
   <button class="step-btn step-reset" onclick="resetDemo()">↺</button>
 </div>
@@ -418,43 +395,41 @@
 <div class="end-overlay" id="endOverlay">
   <div class="end-card">
     <h2>Copilot Tasks, for Work</h2>
-    <p class="end-sub">The same autonomous AI — but inside your enterprise. Proactive, decisive, transparent. One human checkpoint where it matters.</p>
+    <p class="end-sub">An ambient task feed across your projects. Copilot handles what it can. You act on what matters. Glance when you're ready.</p>
     <div class="end-list">
-      <div class="el"><strong>Autonomous, not prompted</strong> — it ran before you woke up</div>
-      <div class="el"><strong>Cross-app reasoning</strong> — found that Teams resolved an Outlook thread</div>
-      <div class="el"><strong>Provenance</strong> — every claim traces to a file, cell, or thread</div>
-      <div class="el"><strong>One checkpoint</strong> — approve before sending externally</div>
-      <div class="el"><strong>Change detection</strong> — flags when data shifted since last meeting</div>
-      <div class="el"><strong>Transparency on demand</strong> — compliance + audit available, not blocking</div>
+      <div class="el"><strong>Feed, not wizard</strong> — a running list, not a sequence of approvals</div>
+      <div class="el"><strong>Cross-project</strong> — Budget, Strategy, Hiring, Legal in one view</div>
+      <div class="el"><strong>Already done</strong> — most items handled before you arrived</div>
+      <div class="el"><strong>One real decision</strong> — send the VP update. Everything else is context.</div>
+      <div class="el"><strong>Change detection</strong> — flags data shifts since last meeting</div>
+      <div class="el"><strong>Provenance</strong> — every claim sourced, every access DLP-audited</div>
+      <div class="el"><strong>Ambient</strong> — runs throughout the day, surfaces only what matters</div>
     </div>
     <button class="start-btn" onclick="resetDemo()" style="font-size:13px; padding:10px 28px;">Restart ↺</button>
   </div>
 </div>
 
 <!-- ═══ ANNOTATIONS ═══ -->
-<div class="ann" id="ann1" style="top:160px; right:28px;">
-  <div class="ann-tag"><span class="ann-num">1</span> Already Done</div>
-  <div class="ann-body">The task ran at 7am — <strong>before you opened Copilot</strong>. This isn't a prompt waiting for approval. It's results waiting for you. Compliance details are available on demand, not blocking.</div>
+<div class="ann" id="ann1" style="top:120px; right:28px;">
+  <div class="ann-tag">Needs You</div>
+  <div class="ann-body">Only 3 items out of 10 need your attention. The rest are <strong>already handled</strong>. Copilot triaged your morning — you just act on what matters.</div>
 </div>
-<div class="ann" id="ann2" style="top:160px; right:28px;">
-  <div class="ann-tag"><span class="ann-num">2</span> Cross-App Intelligence</div>
-  <div class="ann-body">Copilot found that a <strong>Teams thread resolved an unanswered email</strong>. It also identified a VP's question and matched it to data that answers it. This reasoning spans apps — not just searches one.</div>
+<div class="ann" id="ann2" style="top:130px; right:28px;">
+  <div class="ann-tag">Already Handled</div>
+  <div class="ann-body">Copilot scanned email, correlated with Teams, pulled metrics, generated meeting prep — all before 7:03 AM. <strong>DLP-audited, transparent, no blocking gates.</strong></div>
 </div>
 <div class="ann" id="ann3" style="top:140px; right:28px;">
-  <div class="ann-tag"><span class="ann-num">3</span> Provenance + One Checkpoint</div>
-  <div class="ann-body">Every claim cites a source. The <strong>only approval gate</strong> is sending to a VP — the highest-stakes action. Everything else, Copilot handled. <em>Not autopilot — copilot.</em></div>
+  <div class="ann-tag">Runs Throughout the Day</div>
+  <div class="ann-body">Not just a morning task. <strong>Items arrive as they become relevant</strong> — a new applicant at 2pm, a metrics digest at 4pm. The feed is alive.</div>
 </div>
 <div class="ann" id="ann4" style="top:120px; right:28px;">
-  <div class="ann-tag"><span class="ann-num">4</span> Change-Aware Prep</div>
-  <div class="ann-body">Copilot doesn't just list meetings — it detects that <strong>data has shifted since your last conversation</strong> with the VP and prepares you for the delta. Persistent memory across sessions.</div>
-</div>
-<div class="ann" id="ann5" style="top:200px; right:28px;">
-  <div class="ann-tag"><span class="ann-num">5</span> Autonomy + Accountability</div>
-  <div class="ann-body">Runs every Monday. Full audit trail <strong>available but not in the way</strong>. Enterprise trust = let it work autonomously, make every action auditable.</div>
+  <div class="ann-tag">Sent</div>
+  <div class="ann-body">One decisive action. The VP update is sent, the item moves to handled. <strong>Your whole morning prep took 90 seconds.</strong></div>
 </div>
 
 <script>
-var step = 0, total = 5;
+var step = 0, total = 4;
+var sentVP = false;
 
 function startDemo() {
   document.getElementById('landing').classList.add('hidden');
@@ -466,12 +441,17 @@ function resetDemo() {
   document.getElementById('endOverlay').classList.remove('visible');
   document.getElementById('landing').classList.remove('hidden');
   document.getElementById('stepControls').style.display = 'none';
-  for (var i = 1; i <= total; i++) {
-    var el = document.getElementById('beat' + i);
-    if (el) { el.classList.add('hidden'); el.classList.remove('anim-in'); }
-  }
-  // Close any open details
-  document.querySelectorAll('.detail-content').forEach(function(el) { el.classList.remove('open'); });
+  document.querySelectorAll('.time-group').forEach(function(g) { g.classList.add('hidden'); });
+  document.querySelectorAll('.task-item').forEach(function(t) { t.classList.remove('visible'); });
+  document.querySelectorAll('.task-expand').forEach(function(e) { e.classList.remove('open'); });
+  // Reset sent state
+  sentVP = false;
+  var t1 = document.getElementById('t1');
+  t1.classList.add('needs-you'); t1.classList.remove('handled');
+  t1.querySelector('.task-status').textContent = '👉';
+  t1.querySelector('.task-title').textContent = 'Status update for VP — ready to send';
+  var actions = t1.querySelector('.task-actions');
+  actions.innerHTML = '<button class="task-btn primary" onclick="sendVP()">Send</button><button class="task-btn secondary" onclick="toggleExpand(\'expand1\')">Preview</button><span class="task-time">⚠️ 1 VP</span>';
   hideAnns(); step = 0;
 }
 
@@ -481,8 +461,6 @@ function nextStep() {
 
 function prevStep() {
   if (step <= 1) return;
-  var el = document.getElementById('beat' + step);
-  if (el) { el.classList.add('hidden'); el.classList.remove('anim-in'); }
   hideAnns(); step--; showStep(step);
 }
 
@@ -491,26 +469,54 @@ function showStep(n) {
   document.getElementById('stepPrev').disabled = (n <= 1);
   hideAnns();
 
-  var el = document.getElementById('beat' + n);
-  if (el) { el.classList.remove('hidden'); el.classList.add('anim-in'); }
+  if (n >= 1) showGroup('group1');
+  if (n >= 2) showGroup('group2');
+  if (n >= 3) showGroup('group3');
 
   var ann = document.getElementById('ann' + n);
-  if (ann) setTimeout(function() { ann.classList.add('visible'); }, 400);
+  if (ann) setTimeout(function() { ann.classList.add('visible'); }, 600);
 
-  var area = document.getElementById('convoArea');
-  setTimeout(function() { area.scrollTop = area.scrollHeight; }, 150);
+  var feed = document.getElementById('feed');
+  setTimeout(function() { feed.scrollTop = feed.scrollHeight; }, 300);
 
   if (n === total) {
-    setTimeout(function() { document.getElementById('endOverlay').classList.add('visible'); }, 3500);
+    setTimeout(function() { document.getElementById('endOverlay').classList.add('visible'); }, 3000);
   }
+}
+
+function showGroup(id) {
+  var group = document.getElementById(id);
+  if (group.classList.contains('hidden')) {
+    group.classList.remove('hidden');
+    var items = group.querySelectorAll('.task-item');
+    items.forEach(function(item, i) {
+      setTimeout(function() { item.classList.add('visible'); }, i * 120);
+    });
+  }
+}
+
+function sendVP() {
+  if (sentVP) return;
+  sentVP = true;
+  var t1 = document.getElementById('t1');
+  t1.classList.remove('needs-you');
+  t1.classList.add('handled');
+  t1.querySelector('.task-status').textContent = '✅';
+  t1.querySelector('.task-title').textContent = 'Status update sent to VP ✓';
+  t1.querySelector('.task-actions').innerHTML = '<span class="task-time" style="color:var(--green);">Sent just now</span>';
+  // Close expand if open
+  var exp = document.getElementById('expand1');
+  if (exp) exp.classList.remove('open');
+  // Advance to end
+  step = 4; showStep(4);
+}
+
+function toggleExpand(id) {
+  document.getElementById(id).classList.toggle('open');
 }
 
 function hideAnns() {
   document.querySelectorAll('.ann').forEach(function(el) { el.classList.remove('visible'); });
-}
-
-function toggleDetail(id) {
-  document.getElementById(id).classList.toggle('open');
 }
 </script>
 </body>

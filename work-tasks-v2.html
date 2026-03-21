@@ -309,12 +309,25 @@
 <body>
 
 <!-- ═══ LANDING ═══ -->
-<div class="landing" id="landing">
-  <h1>Copilot Tasks, for Work</h1>
-  <h2>The enterprise experience layer</h2>
-  <p class="sub">Your workstreams run in the background. When you're ready, glance at what matters. Act on what only you can decide.</p>
-  <button class="start-btn" onclick="startDemo()">Open Copilot Work →</button>
-  <div class="meta">Prototype by Hema Sridharan</div>
+<div class="landing" id="landing" style="background:var(--surface); color:var(--text);">
+  <h1 style="font-size:36px; font-weight:700; color:var(--text); -webkit-text-fill-color:var(--text); background:none; margin-bottom:4px;">Copilot Tasks, for Work</h1>
+  <h2 style="color:var(--text-secondary); font-size:15px; margin-bottom:28px;">The enterprise experience layer</h2>
+
+  <div style="background:white; border:1px solid var(--border-light); border-radius:16px; padding:28px 32px; max-width:440px; width:90%; margin-bottom:28px; text-align:left; box-shadow:0 2px 12px rgba(0,0,0,0.04);">
+    <div style="font-size:13px; color:var(--text-secondary); line-height:1.6; margin-bottom:16px;">An ever-running graph of your workstreams — not a to-do pipeline. Copilot handles the complexity, loops back when things change, and brings you in only when it matters.</div>
+    <div style="font-size:12px; line-height:1.8; color:var(--text-secondary);">
+      <div><strong style="color:var(--text);">Proactive</strong> — surfaces what changed before you ask</div>
+      <div><strong style="color:var(--text);">Cross-app</strong> — connects Outlook, Teams, Word, Excel</div>
+      <div><strong style="color:var(--text);">Human in the loop</strong> — you approve before it acts</div>
+      <div><strong style="color:var(--text);">Inline editing</strong> — Word tracked changes in the chat</div>
+      <div><strong style="color:var(--text);">Cross-project sync</strong> — data flows between workstreams</div>
+      <div><strong style="color:var(--text);">Smart priority</strong> — sidebar reorders by actionability</div>
+      <div><strong style="color:var(--text);">Ambient</strong> — watches and loops back when things change</div>
+    </div>
+  </div>
+
+  <button class="start-btn" onclick="startDemo()" style="background:var(--text); color:white; box-shadow:0 4px 16px rgba(0,0,0,0.15);">Enter prototype →</button>
+  <div class="meta" style="color:var(--text-muted);">Prototype by Hema Sridharan</div>
 </div>
 
 <!-- ═══ SHELL ═══ -->
@@ -617,22 +630,11 @@
 
 <!-- ═══ END OVERLAY ═══ -->
 <div class="end-overlay" id="endOverlay">
-  <div class="end-card">
-    <h2>Copilot Tasks, for Work</h2>
-    <p class="end-sub">An ever-running graph of your workstreams — not a to-do pipeline. Copilot handles the complexity, loops back when things change, and brings you in only when it matters.</p>
-    <div class="end-list">
-      <div class="el"><strong>Proactive prep</strong> — morning brief runs before you ask</div>
-      <div class="el"><strong>Cross-app intelligence</strong> — Teams resolved an unanswered email</div>
-      <div class="el"><strong>Provenance</strong> — every claim traces to a file, cell, or thread</div>
-      <div class="el"><strong>Artifact linking</strong> — doc card opens the actual file with tracked changes</div>
-      <div class="el"><strong>One checkpoint</strong> — approve before sending externally</div>
-      <div class="el"><strong>Comment threading</strong> — stakeholder replies shown with draft responses inline</div>
-      <div class="el"><strong>Change detection</strong> — flags when data shifted since last meeting</div>
-      <div class="el"><strong>Smart priority</strong> — sidebar reorders by actionability, not due date</div>
-      <div class="el"><strong>Cross-project sync</strong> — Hiring pipeline data pulled into Budget workstream</div>
-      <div class="el"><strong>Ambient</strong> — "I'll watch and bring it to you when it matters"</div>
+  <div style="text-align:center;">
+    <div style="font-size:48px; font-weight:300; color:white; font-style:italic; font-family:Georgia, serif;">Fin.</div>
+    <div style="margin-top:16px;">
+      <button onclick="resetDemo()" style="background:none; border:1px solid rgba(255,255,255,0.3); color:rgba(255,255,255,0.6); padding:8px 20px; border-radius:20px; font-size:12px; cursor:pointer; font-family:var(--font);">Restart ↺</button>
     </div>
-    <button class="start-btn" onclick="resetDemo()" style="font-size:13px; padding:10px 28px;">Restart ↺</button>
   </div>
 </div>
 

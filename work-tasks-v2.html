@@ -826,12 +826,15 @@ function pillClick(btn, text) {
     t1.style.opacity = '0.4'; t1.style.order = '10'; t1.classList.remove('active');
     document.getElementById('task1Dot').style.background = 'transparent';
     setTimeout(function() { document.getElementById('sbTask2').style.order = '-1'; document.getElementById('sbTask2').classList.add('active'); }, 600);
+    // Clean up sidebar — dim non-relevant tasks
+    document.getElementById('sbTask4').style.opacity = '0.25';
+    document.getElementById('sbTask5').style.opacity = '0.25';
+    document.getElementById('xrefStrategy').style.display = 'none';
     beat = 4;
     setTimeout(function() {
       show('b5'); scrollConvo();
-      // Ensure cross-project badges are visible
+      // Ensure cross-project badge visible
       document.getElementById('xrefHiring').style.display = '';
-      document.getElementById('xrefStrategy').style.display = '';
       pillProcessing = false;
       // Auto-show end overlay
       setTimeout(function() {

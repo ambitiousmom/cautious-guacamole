@@ -489,24 +489,28 @@
             <span class="thinking-dot"></span>
           </div>
 
-          <!-- Beat 1: Since you were last here (one-copi content) -->
+          <!-- Beat 1: Since you were last here -->
           <div class="cp-msg hidden" id="b1">
             <div class="cp-label">✦ Copilot</div>
             <div class="cp-body">
               <p><strong>Since you were last here:</strong></p>
               <p>• <strong><span class="app-icon w">W</span> Sarah Chen (CFO) left 2 comments</strong> on Q3_Budget_Proposal.docx</p>
-              <p style="color:var(--text-secondary); padding-left:14px; font-style:italic; font-size:13px;">"Can we revisit the marketing allocation rationale?"</p>
-              <p style="color:var(--text-secondary); padding-left:14px; font-style:italic; font-size:13px;">"Timeline seems aggressive for the engineering ramp"</p>
               <p>• <span class="app-icon x">X</span> <strong>Q3_Actuals.xlsx</strong> updated by Finance · 3 hours ago</p>
               <p>• <span class="app-icon x">X</span> <strong>Hiring_Plan_H2.xlsx</strong> pipeline data refreshed overnight</p>
             </div>
             <div class="ptag"><span class="ptag-title">What's special?</span>Proactive · Cross-app awareness</div>
+            <div style="display:flex; gap:8px; margin-top:12px;">
+              <button class="btn pri" onclick="pillClick(this, 'Show Sarah\'s comments')">Show comments</button>
+            </div>
           </div>
 
-          <!-- Beat 2: Suggested reply to comment 1 (one-copi pattern) -->
+          <!-- Beat 2: Comments + suggested reply -->
           <div class="cp-msg hidden" id="b2">
             <div class="cp-body">
-              <p>Regarding Sarah's first comment — cross-referenced Q3 actuals with the allocation:</p>
+              <p>Sarah's comments:</p>
+              <p style="color:var(--text-secondary); padding-left:14px; font-style:italic; font-size:13px;">"Can we revisit the marketing allocation rationale?"</p>
+              <p style="color:var(--text-secondary); padding-left:14px; font-style:italic; font-size:13px;">"Timeline seems aggressive for the engineering ramp"</p>
+              <p style="margin-top:12px;">Regarding the first comment — cross-referenced Q3 actuals with the allocation:</p>
             </div>
             <div style="background:#F9F9F9; border-radius:12px; overflow:hidden; margin:8px 0;">
               <div style="padding:10px 16px; font-size:11px; font-weight:600; color:var(--text-muted); border-bottom:1px solid rgba(0,0,0,0.04);">Suggested response to CFO's comment</div>
@@ -684,28 +688,13 @@ function enterTask() {
   document.querySelectorAll('.sb-item').forEach(function(el) { el.classList.remove('active'); });
   document.getElementById('sbTask1').classList.add('active');
 
-  // Beat 1 shows INSTANTLY then auto-chains to beat 2
+  // Beat 1 shows INSTANTLY then auto-clicks "Show comments"
   show('b1');
   scrollConvo();
   beat = 0;
-  // Auto-show beat 2 after reading time
   setTimeout(function() {
-    show('thinkDots');
-    scrollConvo();
-    setTimeout(function() {
-      fadeOut('thinkDots');
-      setTimeout(function() {
-        beat = 1;
-        show('b2');
-        scrollConvo();
-        // Auto-click "Respond to comment" after reading time
-        setTimeout(function() {
-          var respondBtn = document.querySelector('#b2 .btn.pri');
-          if (respondBtn && !respondBtn.classList.contains('used')) pillClick(respondBtn, "Respond to Sarah's comment");
-        }, 3000);
-        animating = false;
-      }, 300);
-    }, 800);
+    var showBtn = document.querySelector('#b1 .btn.pri');
+    if (showBtn && !showBtn.classList.contains('used')) pillClick(showBtn, "Show Sarah's comments");
   }, 2500);
 }
 
@@ -785,7 +774,24 @@ function pillClick(btn, text) {
   inner.appendChild(bubble);
   scrollConvo();
   // Determine which action
-  if (text.indexOf('Respond') >= 0) {
+  if (text.indexOf('Show') >= 0) {
+    beat = 1;
+    setTimeout(function() {
+      show('thinkDots'); scrollConvo();
+      setTimeout(function() {
+        fadeOut('thinkDots');
+        setTimeout(function() {
+          show('b2'); scrollConvo();
+          pillProcessing = false;
+          // Auto-click "Respond" after reading time
+          setTimeout(function() {
+            var respondBtn = document.querySelector('#b2 .btn.pri');
+            if (respondBtn && !respondBtn.classList.contains('used')) pillClick(respondBtn, "Respond to Sarah's comment");
+          }, 3500);
+        }, 300);
+      }, 800);
+    }, 400);
+  } else if (text.indexOf('Respond') >= 0) {
     waitingForSend = false;
     beat = 2;
     setTimeout(function() {

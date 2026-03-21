@@ -254,20 +254,20 @@
     <div class="sidebar-section">
       <div class="section-header"><span style="font-size:13px;">☑</span> Tasks <span style="font-size:8px; color:var(--text-muted); font-weight:600; border:1px solid var(--border); padding:1px 5px; border-radius:3px; margin-left:4px; letter-spacing:0.3px;">PREVIEW</span><span style="font-size:9px; color:var(--copilot-purple); font-weight:600; margin-left:auto;">3 active</span></div>
       <div class="task-rail-item active" id="chatBudget" style="border-left-color: #D13438;">
-        <div class="task-rail-row"><span class="sdot red"></span><span class="task-rail-name">Q3 Budget Review</span></div>
-        <span class="task-rail-sub">Send VP update</span>
+        <div class="task-rail-row"><span class="sdot red"></span><span class="task-rail-name">📋 Send VP status update</span></div>
+        <span class="task-rail-sub">↳ Q3 Budget</span>
       </div>
       <div class="task-rail-item" id="chatHiring" style="border-left-color: #D13438;">
-        <div class="task-rail-row"><span class="sdot red"></span><span class="task-rail-name">Hiring Plan — Eng</span></div>
-        <span class="task-rail-sub">2 new candidates</span>
+        <div class="task-rail-row"><span class="sdot red"></span><span class="task-rail-name">👥 Review ML candidates</span></div>
+        <span class="task-rail-sub">↳ Hiring</span>
       </div>
       <div class="task-rail-item" id="chatLegal" style="border-left-color: #FFB900;">
-        <div class="task-rail-row"><span class="sdot yellow"></span><span class="task-rail-name">Legal Compliance</span></div>
-        <span class="task-rail-sub">6 days unanswered</span>
+        <div class="task-rail-row"><span class="sdot yellow"></span><span class="task-rail-name">⚠️ Reply to Legal</span></div>
+        <span class="task-rail-sub">↳ Compliance · 6d stale</span>
       </div>
       <div class="task-rail-item" id="chatStrategy" style="border-left-color: #107C10;">
-        <div class="task-rail-row"><span class="sdot green"></span><span class="task-rail-name">Product Strategy H2</span></div>
-        <span class="task-rail-sub">On track</span>
+        <div class="task-rail-row"><span class="sdot green"></span><span class="task-rail-name">📊 Weekly metrics digest</span></div>
+        <span class="task-rail-sub">↳ Strategy · on track</span>
       </div>
     </div>
     <div class="sidebar-divider"></div>
@@ -547,7 +547,8 @@ function resetDemo() {
   var cb = document.getElementById('chatBudget');
   cb.style.borderLeftColor = '#D13438';
   cb.querySelector('.sdot').classList.remove('green'); cb.querySelector('.sdot').classList.add('red');
-  cb.querySelector('.task-rail-sub').textContent = 'Send VP update';
+  cb.querySelector('.task-rail-name').textContent = '\U0001f4cb Send VP status update';
+  cb.querySelector('.task-rail-sub').textContent = '\u21b3 Q3 Budget';
   hideAnns(); step = 0;
 }
 

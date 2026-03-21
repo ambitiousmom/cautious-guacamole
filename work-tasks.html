@@ -670,8 +670,7 @@ var animating = false;
 function startDemo() {
   document.getElementById('landing').classList.add('hidden');
   // Auto-click first task after a pause
-  // SCREENSHOT MODE: disabled auto-play
-  // setTimeout(function() { enterTask(); }, 1200);
+  setTimeout(function() { enterTask(); }, 2000);
 }
 
 /* ═══ Home → Task (auto-plays user bubble → thinking → beat 1) ═══ */
@@ -693,9 +692,8 @@ function enterTask() {
   beat = 0;
   setTimeout(function() {
     var showBtn = document.querySelector('#b1 .btn.pri');
-    // SCREENSHOT MODE: disabled auto-play
-    // if (showBtn && !showBtn.classList.contains('used')) pillClick(showBtn, "Show Sarah's comments");
-  }, 2500);
+    if (showBtn && !showBtn.classList.contains('used')) pillClick(showBtn, "Show Sarah's comments");
+  }, 4000);
 }
 
 /* ═══ Advance beats (click / space / →) ═══ */
@@ -783,11 +781,11 @@ function pillClick(btn, text) {
         setTimeout(function() {
           show('b2'); scrollConvo();
           pillProcessing = false;
-          // SCREENSHOT MODE: disabled auto-play
-          // setTimeout(function() {
-          //   var respondBtn = document.querySelector('#b2 .btn.pri');
-          //   if (respondBtn && !respondBtn.classList.contains('used')) pillClick(respondBtn, "Respond to Sarah's comment");
-          // }, 3500);
+          // Auto-click "Respond" after reading time
+          setTimeout(function() {
+            var respondBtn = document.querySelector('#b2 .btn.pri');
+            if (respondBtn && !respondBtn.classList.contains('used')) pillClick(respondBtn, "Respond to Sarah's comment");
+          }, 5000);
         }, 300);
       }, 800);
     }, 400);
@@ -798,12 +796,12 @@ function pillClick(btn, text) {
       show('b3'); scrollConvo();
       document.getElementById('xrefHiring').style.display = '';
       pillProcessing = false;
-      // SCREENSHOT MODE: disabled auto-play
-      // setTimeout(function() {
-      //   var draftBtn = document.querySelector('#b3 .btn.pri');
-      //   if (draftBtn && !draftBtn.classList.contains('used')) pillClick(draftBtn, 'Draft email to Sarah');
-      // }, 5000);
-    }, 1200);
+      // Auto-click "Draft email" after reading time
+      setTimeout(function() {
+        var draftBtn = document.querySelector('#b3 .btn.pri');
+        if (draftBtn && !draftBtn.classList.contains('used')) pillClick(draftBtn, 'Draft email to Sarah');
+      }, 7000);
+    }, 2000);
   } else if (text.indexOf('Draft') >= 0) {
     beat = 3;
     setTimeout(function() {
@@ -813,11 +811,11 @@ function pillClick(btn, text) {
         setTimeout(function() {
           show('b4'); scrollConvo();
           pillProcessing = false;
-          // SCREENSHOT MODE: disabled auto-play
-          // setTimeout(function() {
-          //   var sendBtn = document.querySelector('#b4 .btn.pri');
-          //   if (sendBtn && !sendBtn.classList.contains('used')) pillClick(sendBtn, 'Send email to Sarah');
-          // }, 4000);
+          // Auto-click "Send" after reading time
+          setTimeout(function() {
+            var sendBtn = document.querySelector('#b4 .btn.pri');
+            if (sendBtn && !sendBtn.classList.contains('used')) pillClick(sendBtn, 'Send email to Sarah');
+          }, 5000);
         }, 300);
       }, 800);
     }, 600);
@@ -841,8 +839,8 @@ function pillClick(btn, text) {
       // Auto-show end overlay
       setTimeout(function() {
         document.getElementById('endOverlay').classList.add('visible');
-      }, 999999);
-    }, 1000);
+      }, 4000);
+    }, 2000);
   }
 }
 

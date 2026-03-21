@@ -22,7 +22,7 @@
     --yellow: #FFB900;
     --blue-light: #EBF3FC;
     --purple-light: #F3EEFF;
-    --font: 'Segoe UI Variable', 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
+    --font: 'Segoe UI Variable Display', 'Segoe UI Variable', 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
     --sidebar-w: 240px;
   }
   * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -56,7 +56,6 @@
     font-size: 14px;
   }
   .sb-top { padding: 10px 14px; display: flex; align-items: center; gap: 8px; }
-  .sb-logo { height: 20px; opacity: 0.9; }
   .sb-label { font-size: 13px; font-weight: 500; color: var(--text-secondary); }
   .sb-icons { margin-left: auto; display: flex; gap: 4px; }
   .sb-icon-btn { width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; border: none; background: none; cursor: pointer; color: var(--text-muted); font-size: 14px; border-radius: 4px; }
@@ -69,15 +68,15 @@
 
   .sb-divider { height: 1px; background: var(--border-light); margin: 8px 14px; }
 
-  .sb-section-label { font-size: 12px; font-weight: 700; color: var(--text); padding: 8px 18px 4px; letter-spacing: 0; }
+  .sb-section-label { font-size: 13px; font-weight: 700; color: var(--text); padding: 10px 18px 6px; letter-spacing: -0.2px; }
 
-  .sb-item { display: flex; flex-direction: column; padding: 4px 10px; margin: 0 8px; border-radius: 6px; cursor: pointer; }
+  .sb-item { display: flex; flex-direction: column; padding: 5px 10px; margin: 0 8px; border-radius: 6px; cursor: pointer; }
   .sb-item:hover { background: var(--surface-hover); }
   .sb-item.active { background: var(--surface-hover); font-weight: 500; }
   .sb-item-row { display: flex; align-items: center; gap: 6px; }
   .sb-item-icon { font-size: 12px; opacity: 0.5; width: 16px; text-align: center; }
-  .sb-item-name { font-size: 13px; color: var(--text); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; flex: 1; font-weight: 400; }
-  .sb-item-sub { font-size: 10px; color: var(--text-muted); padding-left: 22px; }
+  .sb-item-name { font-size: 14px; color: var(--text); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; flex: 1; font-weight: 400; }
+  .sb-item-sub { font-size: 11px; color: var(--text-muted); padding-left: 22px; }
   .sb-item-dim { opacity: 0.45; }
 
   .sb-bottom { margin-top: auto; padding: 10px 14px; border-top: 1px solid var(--border-light); }
@@ -257,11 +256,9 @@
   <!-- ═══ SIDEBAR — monochrome, clean ═══ -->
   <div class="sidebar">
     <div class="sb-top">
-      <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACYAAAApCAYAAABZa1t7AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAAFiUAABYlAUlSJPAAAASTSURBVFhH7dRbUFQFHMdx35ppJi/j5A0trWacplJrcqyRi5FKWQqtLKAEGBF5S8UgMVEQNbVQQ0REVAQEFSS1WINlWbmsGIsVCARIboiIixC7C7vscrFvo82QeVY7S9OMD/vweTnzP7/5vpwzpNPUw6NoyP0PHhX2MFvZw2xlD7OVPcxW9jBb2RxW22YhUGXCSWHBUWFhprwbR7mZmbndzMgxMjW2BZdlVUQmNAretYVNYdd1ZqZlGhifpsch1YBDio5xKXrGHtUxJlnH6P23eOw1FcNcLjJqrpqjOTcFG2LZFOab087wfa0M23eT4fu0DIu7edfQu1p43L+akW+WMWH+JZ7xquDdjVcEG2KJDitvNvJE7LV7NDI0VsPwvQ2MiKtndHwdI+b+wIQFl3h6cSUOQbWMW9mAptUs2BJDdNimkiYcDpQzIbGMpw6WMjFJxaSkIp49dJ7nDiuYEV/C2HnlTPSpxCG4jtFrf2PkhmZ8j/+Orssi2Ps3osPmnMrjxZRspqRmMTX1BC+nZfDKsTReTU9henoybjuVnC1uQ/GzjoJKAyUxzRRGackKb+dkuJ78LUbKkk10dAi3rREVVq3V4pwZh0tmLG9k7cb1VAyzs79kTvZ23L7ZxlunoymqaR64rztQT4FPOTLvGrK9NBz3bOaYp5ZjC1sp2tMu2LdGVNiJ2kLcv/0Mj+8+RZITgjRnFT6yT/CVLcdftpSIwuiBW73BTKXfOUolCpQeFzjn/hNnFlSTPb+eU/OvkL9SI9i3RlRYQvluQnL9CM1dzLq8RXye58VGuZQouYQt+R4o6zIGbjsuXeOKNIPLnmdQS3Ipea8QpUcp+R5q5B5qSkOrBPvWiApLVgUQXzCbAwWuJBXM4nCBM0eVTqQqZ5KufJ0bbX//FnRHlDR7JXJVmkqNZyYVC89SLjlHmSSPixI5tV9XCvatERWWVzoXWdE0vi+cgrzoJQqKXqCw+HmKiyejvuj4z/vQ/egX7aLVJ57r3ofQeKVSLz1OrTSTGs8stPKrgn1rRIX9WvUx1SXj+aVkHPWqMTSoRqFRPUmjaiStDZEDd9rc8xiXRdEVuJXO93eg89nFLZ+9tHgn0Ox9kCavJPQ39IJ9a0SF6Tvb6NREYapyo6d0Mn0XJtH/43R6Lodhqi7DVKGmPe0Ijb5+dIeux7RqI6alm+n6cCtdAdvp9N1J56Kv0IccEmw/iKiw+5krsuCgO+x4G8JmQ6AzLe840bZ6CZbIEMzrw/4KXB2BacUmjEujMAZH05mlEGw9yKDC7rid9AFEusEaV277OdE0z4XePR/RG7Ocni9WYdm8FnNEKObwdXSHhdMdugHDda1g50EGHdZzJg7WukKQMzqJI00BbvQf9qcvIZDe2GB6YpbRs2MFlm13ItdglJ0WbDzMoMO66qshaBZdUic0c5wwJbrzx0lvbqf50n/En/7EQPrig+jbG4wlYycGg1Gw8TCDDrujQ57LtdXLubE1AFP6EnrzQ+krjKBXsYnevCgssmi61dkY9OK+xHv9p7D/kz3MVvYwW9nDbGUPs5U9zFZ/AovebfKEAWUDAAAAAElFTkSuQmCC" class="sb-logo" alt="Copilot" />
-      <span class="sb-label">Work</span>
+      <span class="sb-brand">Copilot</span>
       <div class="sb-icons">
-        <button class="sb-icon-btn">☐</button>
-        <button class="sb-icon-btn">✎</button>
+        <button class="sb-icon-btn" title="Toggle sidebar"><svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="#444" stroke-width="1.5"><rect x="2" y="3" width="16" height="14" rx="2"/><line x1="12" y1="3" x2="12" y2="17"/></svg></button>
       </div>
     </div>
 
@@ -305,18 +302,10 @@
     <div class="sb-item">
       <div class="sb-item-row"><span class="sb-item-name">Product Strategy H2</span></div>
     </div>
-    <div class="sb-item sb-item-dim">
+    <div class="sb-item">
       <div class="sb-item-row"><span class="sb-item-name">Hiring Plan — Eng</span></div>
     </div>
-    <div style="padding:0 8px;">
-      <div style="font-size:10px; color:var(--text-muted); padding:4px 10px;">Last Friday</div>
-    </div>
-    <div class="sb-item sb-item-dim">
-      <div class="sb-item-row"><span class="sb-item-name">Meeting Prep — Lead...</span></div>
-    </div>
-    <div class="sb-item sb-item-dim">
-      <div class="sb-item-row"><span class="sb-item-name">Summary Request for...</span></div>
-    </div>
+    
 
     <div class="sb-bottom">
       <div style="font-size:11px; color:var(--text-muted);">Cindy Luo · M365 Copilot</div>

@@ -552,22 +552,38 @@
             <div class="cp-body" style="margin-top:12px;">
               <p>The doc is ready for review:</p>
             </div>
-            <div style="background:white; border:1px solid var(--border); border-radius:12px; margin:8px 0; overflow:hidden;">
-              <div style="display:flex; align-items:center; gap:8px; padding:8px 14px; background:#F9F9F9; border-bottom:1px solid var(--border-light); font-size:11px;">
-                <span class="app-icon w">W</span>
-                <span style="font-weight:600; color:var(--text);">Q3_Budget_Proposal.docx</span>
-                <span style="color:var(--text-muted); margin-left:auto; font-size:10px;">v2.3 · 3 sections updated</span>
+            <div style="background:white; border:1px solid var(--border); border-radius:12px; margin:8px 0; overflow:hidden; box-shadow:0 2px 12px rgba(0,0,0,0.08);">
+              <!-- Word chrome -->
+              <div style="display:flex; align-items:center; gap:8px; padding:6px 12px; background:#F3F3F3; border-bottom:1px solid #E0E0E0;">
+                <span class="app-icon w" style="width:20px; height:20px; font-size:10px;">W</span>
+                <span style="font-size:12px; font-weight:500; color:var(--text);">Q3_Budget_Proposal.docx</span>
+                <span style="font-size:10px; color:var(--text-muted); margin-left:auto;">Editing</span>
+                <span style="font-size:10px; color:white; background:#185ABD; padding:2px 8px; border-radius:3px;">Share</span>
               </div>
-              <div style="padding:16px 20px; font-size:13px; line-height:1.75; color:var(--text-secondary); max-height:180px; overflow-y:auto;">
-                <div style="font-weight:600; color:var(--text); margin-bottom:8px;">Section 2: Marketing Allocation</div>
-                <div style="background:#E8F5E9; border-left:3px solid var(--green); padding:6px 10px; border-radius:0 6px 6px 0; margin:6px 0; font-size:12px; position:relative;">
-                  <span style="position:absolute; right:6px; top:-7px; background:var(--green); color:white; font-size:8px; padding:1px 5px; border-radius:6px;">Copilot</span>
-                  Marketing allocation revised to $1.18M (28%), grounded in Q3 actual ROI data.
+              <!-- Word ribbon -->
+              <div style="display:flex; gap:2px; padding:3px 12px; background:#F9F9F9; border-bottom:1px solid #E8E8E8; font-size:10px; color:var(--text-secondary);">
+                <span style="padding:2px 6px; color:var(--brand-blue); font-weight:600;">Home</span>
+                <span style="padding:2px 6px;">Insert</span>
+                <span style="padding:2px 6px;">Layout</span>
+                <span style="padding:2px 6px;">Review</span>
+                <span style="padding:2px 6px; margin-left:auto; color:#7B57FF; font-weight:600;">Copilot</span>
+              </div>
+              <!-- Word activity bar -->
+              <div style="display:flex; align-items:center; gap:6px; padding:4px 12px; background:#FAFAFA; border-bottom:1px solid #F0F0F0; font-size:10px; color:var(--text-muted);">
+                <span class="app-icon w" style="width:12px; height:12px; font-size:6px;">W</span>
+                <span>Copilot made 2 changes · <span style="color:var(--green);">✓ Sarah's comments resolved</span></span>
+              </div>
+              <!-- Document content -->
+              <div style="padding:20px 28px; font-size:13px; line-height:1.8; color:var(--text-secondary); max-height:200px; overflow-y:auto; background:white;">
+                <div style="font-weight:600; color:var(--text); margin-bottom:8px;">§2 Marketing Allocation</div>
+                <div style="background:#E8F5E9; border-left:3px solid var(--green); padding:8px 12px; border-radius:0 6px 6px 0; margin:6px 0; font-size:12px; position:relative;">
+                  <span style="position:absolute; right:8px; top:-8px; background:var(--green); color:white; font-size:8px; padding:1px 6px; border-radius:8px;">Copilot</span>
+                  Marketing allocation revised to $1.18M (28%), grounded in Q3 actual ROI data showing campaign efficiency held at reduced spend.
                 </div>
-                <div style="font-weight:600; color:var(--text); margin:12px 0 8px;">Section 3: Engineering Headcount</div>
-                <div style="background:#E8F5E9; border-left:3px solid var(--green); padding:6px 10px; border-radius:0 6px 6px 0; margin:6px 0; font-size:12px; position:relative;">
-                  <span style="position:absolute; right:6px; top:-7px; background:var(--green); color:white; font-size:8px; padding:1px 5px; border-radius:6px;">Copilot</span>
-                  Hiring pipeline table added (5 roles, 13 candidates, projected starts Mar 28 – May 1).
+                <div style="font-weight:600; color:var(--text); margin:14px 0 8px;">§3 Engineering Headcount</div>
+                <div style="background:#E8F5E9; border-left:3px solid var(--green); padding:8px 12px; border-radius:0 6px 6px 0; margin:6px 0; font-size:12px; position:relative;">
+                  <span style="position:absolute; right:8px; top:-8px; background:var(--green); color:white; font-size:8px; padding:1px 6px; border-radius:8px;">Copilot</span>
+                  Hiring pipeline: 5 roles, 13 candidates across ML Eng, Full-stack, and Platform. Ramp completable by Q3 if offers out by March 15.
                 </div>
               </div>
             </div>

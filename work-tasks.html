@@ -1,9 +1,9 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Copilot Tasks â€” For Work</title>
+<title>Copilot Tasks — For Work</title>
 <style>
   :root {
     --bg: #FBFBFB;
@@ -28,7 +28,7 @@
   * { margin: 0; padding: 0; box-sizing: border-box; }
   body { font-family: var(--font); background: var(--bg); color: var(--text); height: 100vh; overflow: hidden; }
 
-  /* â•â•â• Landing â•â•â• */
+  /* ═══ Landing ═══ */
   .landing {
     position: fixed; inset: 0; z-index: 200;
     background: linear-gradient(145deg, #0F0F2D 0%, #1B1050 40%, #2D1A5E 100%);
@@ -43,10 +43,10 @@
   .start-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 28px rgba(123,87,255,0.5); }
   .landing .meta { margin-top: 32px; font-size: 11px; color: rgba(255,255,255,0.2); }
 
-  /* â•â•â• Shell â•â•â• */
+  /* ═══ Shell ═══ */
   .shell { display: flex; height: 100vh; width: 100vw; }
 
-  /* â•â•â• Sidebar (original) â•â•â• */
+  /* ═══ Sidebar (original) ═══ */
   .sidebar {
     width: var(--sidebar-w); min-width: var(--sidebar-w); height: 100%;
     background: var(--surface); border-right: 1px solid var(--border-light);
@@ -70,7 +70,7 @@
   .user-name { font-size: 12px; color: var(--text); }
   .premium-badge { font-size: 10px; color: var(--text-muted); }
 
-  /* â•â•â• Main â•â•â• */
+  /* ═══ Main ═══ */
   .main { flex: 1; display: flex; flex-direction: column; min-width: 0; height: 100%; }
 
   /* Topbar (original) */
@@ -88,7 +88,7 @@
   .convo-area { flex: 1; overflow-y: auto; padding: 20px 0; display: flex; flex-direction: column; align-items: center; }
   .convo-inner { width: 100%; max-width: 660px; padding: 0 20px; }
 
-  /* â•â•â• Story Bubbles â•â•â• */
+  /* ═══ Story Bubbles ═══ */
   .stories { display: flex; align-items: flex-start; gap: 18px; justify-content: center; margin-bottom: 20px; padding: 8px 0; }
   .story { display: flex; flex-direction: column; align-items: center; gap: 5px; cursor: pointer; transition: transform 0.2s; }
   .story:hover { transform: scale(1.06); }
@@ -109,18 +109,18 @@
   .story-name { font-size: 10px; color: var(--text-secondary); max-width: 60px; text-align: center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
   .story-sub { font-size: 9px; color: var(--text-muted); }
 
-  /* â•â•â• Morning header â•â•â• */
+  /* ═══ Morning header ═══ */
   .morning { margin-bottom: 16px; text-align: center; }
   .morning h2 { font-size: 18px; font-weight: 600; margin-bottom: 2px; }
   .morning .m-sub { font-size: 12px; color: var(--text-muted); }
   .morning .m-stats { display: flex; gap: 14px; justify-content: center; margin-top: 8px; font-size: 11px; color: var(--text-secondary); }
   .m-dot { width: 7px; height: 7px; border-radius: 50%; display: inline-block; margin-right: 3px; vertical-align: 1px; }
 
-  /* â•â•â• Section labels â•â•â• */
+  /* ═══ Section labels ═══ */
   .sec-label { font-size: 11px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.7px; margin: 16px 0 8px; display: flex; align-items: center; gap: 8px; }
   .sec-label::after { content: ''; flex: 1; height: 1px; background: var(--border-light); }
 
-  /* â•â•â• Task cards â•â•â• */
+  /* ═══ Task cards ═══ */
   .tc {
     display: flex; gap: 12px; padding: 12px 14px; margin-bottom: 6px;
     background: white; border: 1px solid var(--border-light); border-radius: 10px;
@@ -160,7 +160,7 @@
   .cite-row { margin-top: 6px; display: flex; gap: 4px; flex-wrap: wrap; }
   .cite { display: inline-flex; align-items: center; gap: 2px; background: #EFEFEF; border: 1px solid var(--border); border-radius: 3px; padding: 1px 5px; font-size: 9px; color: var(--text-muted); }
 
-  /* â•â•â• Input Bar (original) â•â•â• */
+  /* ═══ Input Bar (original) ═══ */
   .input-bar-container { padding: 12px 20%; border-top: 1px solid var(--border-light); background: var(--surface); flex-shrink: 0; }
   .input-bar { border-radius: 12px; border: 1px solid var(--border); overflow: hidden; background: var(--surface); }
   .input-bar input { width: 100%; border: none; outline: none; font-size: 14px; font-family: var(--font); background: transparent; color: var(--text); padding: 14px 16px 8px; display: block; }
@@ -168,7 +168,7 @@
   .input-bar-bottom { display: flex; align-items: center; justify-content: space-between; padding: 4px 12px 10px; }
   .input-disclaimer { text-align: center; font-size: 11px; color: var(--text-muted); margin-top: 6px; }
 
-  /* â•â•â• Step Controls â•â•â• */
+  /* ═══ Step Controls ═══ */
   .step-controls {
     position: fixed; bottom: 24px; right: 24px; z-index: 100;
     display: flex; align-items: center; gap: 8px;
@@ -181,7 +181,7 @@
   .step-label { color: rgba(255,255,255,0.6); font-size: 12px; min-width: 50px; text-align: center; font-family: var(--font); }
   .step-reset { background: rgba(209,52,56,0.3); }
 
-  /* â•â•â• End Overlay â•â•â• */
+  /* ═══ End Overlay ═══ */
   .end-overlay {
     position: fixed; inset: 0; z-index: 300;
     background: rgba(0,0,0,0.65); display: flex; align-items: center; justify-content: center;
@@ -194,7 +194,7 @@
   .end-list { text-align: left; margin: 0 0 20px; }
   .end-list .el { display: flex; gap: 8px; padding: 4px 0; font-size: 13px; line-height: 1.5; color: var(--text-secondary); }
 
-  /* â•â•â• Annotations â•â•â• */
+  /* ═══ Annotations ═══ */
   .ann {
     position: fixed; z-index: 90;
     background: white; border: 1px solid var(--border); border-radius: 10px;
@@ -216,23 +216,23 @@
 </head>
 <body>
 
-<!-- â•â•â• LANDING â•â•â• -->
+<!-- ═══ LANDING ═══ -->
 <div class="landing" id="landing">
   <h1>Copilot Tasks, for Work</h1>
   <h2>The enterprise experience layer</h2>
   <p class="sub">Your workstreams run in the background. When you're ready, glance at what matters. Tap a project to drill in. Act on what only you can decide.</p>
-  <button class="start-btn" onclick="startDemo()">Open your Monday morning â†’</button>
+  <button class="start-btn" onclick="startDemo()">Open your Monday morning →</button>
   <div class="meta">Prototype by Hema Sridharan</div>
 </div>
 
-<!-- â•â•â• SHELL â•â•â• -->
+<!-- ═══ SHELL ═══ -->
 <div class="shell">
 
-  <!-- â•â•â• SIDEBAR (matching original) â•â•â• -->
+  <!-- ═══ SIDEBAR (matching original) ═══ -->
   <div class="sidebar">
     <div class="sidebar-top">
       <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACYAAAApCAYAAABZa1t7AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAAFiUAABYlAUlSJPAAAASTSURBVFhH7dRbUFQFHMdx35ppJi/j5A0trWacplJrcqyRi5FKWQqtLKAEGBF5S8UgMVEQNbVQQ0REVAQEFSS1WINlWbmsGIsVCARIboiIixC7C7vscrFvo82QeVY7S9OMD/vweTnzP7/5vpwzpNPUw6NoyP0PHhX2MFvZw2xlD7OVPcxW9jBb2RxW22YhUGXCSWHBUWFhprwbR7mZmbndzMgxMjW2BZdlVUQmNAretYVNYdd1ZqZlGhifpsch1YBDio5xKXrGHtUxJlnH6P23eOw1FcNcLjJqrpqjOTcFG2LZFOab087wfa0M23eT4fu0DIu7edfQu1p43L+akW+WMWH+JZ7xquDdjVcEG2KJDitvNvJE7LV7NDI0VsPwvQ2MiKtndHwdI+b+wIQFl3h6cSUOQbWMW9mAptUs2BJDdNimkiYcDpQzIbGMpw6WMjFJxaSkIp49dJ7nDiuYEV/C2HnlTPSpxCG4jtFrf2PkhmZ8j/+Orssi2Ps3osPmnMrjxZRspqRmMTX1BC+nZfDKsTReTU9henoybjuVnC1uQ/GzjoJKAyUxzRRGackKb+dkuJ78LUbKkk10dAi3rREVVq3V4pwZh0tmLG9k7cb1VAyzs79kTvZ23L7ZxlunoymqaR64rztQT4FPOTLvGrK9NBz3bOaYp5ZjC1sp2tMu2LdGVNiJ2kLcv/0Mj+8+RZITgjRnFT6yT/CVLcdftpSIwuiBW73BTKXfOUolCpQeFzjn/hNnFlSTPb+eU/OvkL9SI9i3RlRYQvluQnL9CM1dzLq8RXye58VGuZQouYQt+R4o6zIGbjsuXeOKNIPLnmdQS3Ipea8QpUcp+R5q5B5qSkOrBPvWiApLVgUQXzCbAwWuJBXM4nCBM0eVTqQqZ5KufJ0bbX//FnRHlDR7JXJVmkqNZyYVC89SLjlHmSSPixI5tV9XCvatERWWVzoXWdE0vi+cgrzoJQqKXqCw+HmKiyejvuj4z/vQ/egX7aLVJ57r3ofQeKVSLz1OrTSTGs8stPKrgn1rRIX9WvUx1SXj+aVkHPWqMTSoRqFRPUmjaiStDZEDd9rc8xiXRdEVuJXO93eg89nFLZ+9tHgn0Ox9kCavJPQ39IJ9a0SF6Tvb6NREYapyo6d0Mn0XJtH/43R6Lodhqi7DVKGmPe0Ijb5+dIeux7RqI6alm+n6cCtdAdvp9N1J56Kv0IccEmw/iKiw+5krsuCgO+x4G8JmQ6AzLe840bZ6CZbIEMzrw/4KXB2BacUmjEujMAZH05mlEGw9yKDC7rid9AFEusEaV277OdE0z4XePR/RG7Ocni9WYdm8FnNEKObwdXSHhdMdugHDda1g50EGHdZzJg7WukKQMzqJI00BbvQf9qcvIZDe2GB6YpbRs2MFlm13ItdglJ0WbDzMoMO66qshaBZdUic0c5wwJbrzx0lvbqf50n/En/7EQPrig+jbG4wlYycGg1Gw8TCDDrujQ57LtdXLubE1AFP6EnrzQ+krjKBXsYnevCgssmi61dkY9OK+xHv9p7D/kz3MVvYwW9nDbGUPs5U9zFZ/AovebfKEAWUDAAAAAElFTkSuQmCC" style="height:28px;" alt="Copilot" />
-      <button class="sidebar-toggle">â˜°</button>
+      <button class="sidebar-toggle">☰</button>
     </div>
     <div style="padding:0;">
       <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAR0AAADNCAYAAACFI6TgAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAAFiUAABYlAUlSJPAAABTHSURBVHhe7d3pUxTHGwfw39+2KJ54lFe8FreiMSqoGMX7mJSWpYQkWkQSCdkooVAKT9Qoi/EoDzxINFjRQYOxNKiAiqivn189vTvDTPfs7ixxmmX3++JTzHb39E5ezDd9zDr/+/DhAwEA6PI/uQAAIEgIHQDQCqEDAFohdABAK4QOAGiF0AEArRA6AKAVQgcAtELoAIBWCB0A0AqhAwBaaQ2dzs5OOnXqFH377be0evVq2rVrFzU2NlJvb6/SFgByk5bQ+fvvv6mkpIQKCwtp1apVtHv3btq3bx9t2bKF5s6dK8orKiroxYsXyrkAkFsCDx0eyUycOJHq6uqop6dHqWd//fWXCKOioiK6ffu2Ug8AuSPQ0GloaKBZs2ZRR0eHUueltraWJkyYIEJIrss5ZpTCoTBFTY86gBwWWOiYpkmTJ08Wf+W6VKqrqykSidC7d++UurTEjRyiUCRKplzH11QbTlqnHUIH8lQgoTMwMECLFi2i48ePK3XpvHr1iiZNmiSmZXJdWlbohEIUrlXDLvdCx6RoxPu/FSBbBRI6bW1tYprU39+v1PlRU1NDxcXFSnla1o1ca1DI44ZG6AAMv0BCh9dyvvzyS6Xcr5cvX9LYsWOpq6tLqUvJcSPHDHWa5RU6oiwxOmJGa6KulYPLoJjS1l3G35Pyphf9DPZvf799rTEyHPVyX/L12fWOUZ1SB5DFAgmdnTt3ikVhuTwTPNK5ceOGUp6Sa/QQv5mdN6IcOvJn60aOB0/8fDuEEqMKVzApbdzigeEczZgUNZyhw/05QkwElLN9jAwjJv33qdeEsIGRJJDQKSsro8OHDyvlmZgyZcp/DB31JnaHDAeGOr0RI6TEje4axYi+DTI8ypwjn0GpA0kNEJYuROR6+TNA9gskdHbs2EFVVVVKuV/v37+ngoKCjHe+lNCxQiQRNK7Q8Zie2BKh42rPAcbl/NfZn3MkolxLskDyvlbvEHFPv9zTKK/2ANktkNCpr6+nZcuWKeV+3b17V4ROX1+fUpeS5408OM1SQydFKEj9cXgNTru4LH7Dpx7JpOjf81rdIWKt5ySfTsmfAbJfIKHDP3vgm+XJkydKnR9r164VUzS5PC3PG9kxzeJdLdf0KkVoCFawcNvBAIkHkLtMlaZ/z2t1hohXoMhl8meA7BdI6LCFCxcO6TmdO3fuiMBqaWlR6tLyvJHjxDSLpyeOheN4mbxDZbjOt3ePHNMouyzN9nv6hWT5Wt0h4lxfcn6vM2TkNgDZLrDQ4ed0OEDk8lR4WjV9+nTauHGjUueL541sSayNSEFhh5G0nuPuUxqxJMr8jDBSb3nL1yqPXOTt9Jg6snGsTfm5HoDhFkjo3Lt3T4QOLwjLdcnwP3nBvzbnX6O/fv1aqQeA3BBI6PB2Of97OTxyOXToEBmGQevXrxdTJv6JhNWOQ6m9vV3sdvH/qTdt2pT54jEAjCiBhM7WrVtFiPAvzDlwmpqaxEimtLRUjGbmz59PixcvpvHjx4t2K1asoOvXryv9AEDuCSR0Hjx4QE+fPlXKGU+d+J+u4Af/2KNHj5Q2AJC7AgkdAIBkEDoAoBVCBwC0QugAgFYIHQDQCqEDAFohdABAK4QOAGiF0AEArRA6AKAVQgcAtELoAIBWCB0A0AqhAwBaIXQAQCuEDgBohdABAK0QOgCgFUIHALRC6ACAVggdANAKoQMAWmkNnYcPH9KZM2fowIEDVFNTQ/X19fT8+XOlHQDkLi2hw++5Ki8vp4KCAiorK6O9e/fSV199RV988QWNGzeOqqqq6M2bN8p5AJB7Ag+do0ePird68ps+Ozs7lXrTNEUQFRcX5+grhU2KRkIUrjU96gDyT6Ch09bWJkY3PKWS65zevn1LS5cupXXr1il1GTOjFA6FxOuKLcN7wyN0AJwCDR0evXz//fdKuZfu7m6aOXOmCCq5zrdWg0KhMEVNR5kZJWNYb3iEDoBTYKFz+/ZtsV4zMDCg1CVz8OBB2rx5s1LuV8zIxpsboQPgFFjo1NXV0fLly5XyVC5dukRFRUVKuV8cOqFIlEyPOqWdPf2SRkYfYmS4pmcGxeRzjZjdx2CYxMPFOa0zWgfLuZ3re31cJ0AuCix0KisrfU+tLE+ePBE3ZH9/v1LnjxUY7qBwskLDLpOmZGat4QohOcis4IgHivS9Ur/O0HGfE2+P0Q/ko8BCp7q6WmyNy+Wp/P7772KnSy7P1OCIQgofscgsB1Ka6Y8IpcFz5BBiZm1YKZP7dwVS2nMAcldgoXPy5EmaM2eOUp7KoUOHKBKJKOVDpYxKRIC4p0AWZ+iIQEgyxVJGSmnXkrxDDaED+Sqw0Onp6aHRo0dTe3u7UueFHw6cN28e/fTTT0rdf+G6uTl0Ut7oiWmSs43XSAehAzBkgYUO4+kVb4PzdrhcJ9u9ezdNmzZNhJVc9584Q0NMr+SF4yRtk5R5hU7qAEHoADgFGjr80N+iRYuotLSU3r17p9Sz9+/fU2Njo5jG7N+/X6nPRMzwXq8ZDInEZ+lmt89TQkldmPYKHT8LyQgdgLhAQ4fxTxt465xHPHv27KHr16+LMv49VkNDA4XDYbH2wz/+HDt2LJ09e1bpwy/3Vri6VhOnbm0nX88xKOZjpBOXbKsdoQPgFHjoMB7NtLS00MqVK2nMmDH2jclrOLx4bG2RX7hwQawDnTp1SukDAHKDltDJxPnz50XwNDc3K3UAMPJlXegw/oEo/1D0jz/+UOoAYGTLytBhHR0dYiFaLgeAkS1rQwcAchNCBwC0QugAgFYIHQDQCqEDAFohdABAK4QOAGiF0AEArRA6AKAVQgcAtELoAIBWCB0A0AqhAwBaIXQAQCuEDgBohdABAK0QOgCgFUIHALRC6ACAVggdANAKoQMAWgUSOk+fPqXKykpasWIFVVRUiM9cfu3aNVq/fr146R6/3ZNfwiefCwC5LZDQ2bZtm3iHeU1NDS1evJgMw6A3b95QYWEhbd++naqrq2nChAnijZ7yuQCQ2wIJHR7hHD9+XBzzi/OWLl0qRjv8KuHXr1+L8vLycjp8+LByLgDktkBCh6dPJ06cEMccOsuWLaNnz56J0OERD5evXbvWDh2eZv355590+/btAKdcJkUjIQoZsfhnM0rhUJiiptwOAIIUSOiUlZXRyZMnxfGvv/5KJSUlSUOnu7ubwuEwzZo1iz755BP6+eeflf58SxkkCB2AbBBI6GQy0mlqaqIlS5aIsosXL9Ls2bOV/nzLJEgyaQsAH00goeNnTYdDp7GxUQTN3LlzRVlfX59o8+LFC6VPXzIJkkzaAsBHM2yhYy0k8/SKy3t7e0X5ggULqKWlRenTl5RBEp9ehWtNqW1i2hVKsKZfrnNidhujNV4XMxznOMpdfbfyX643qIrbu/r2uCaAPDDsocPHM2fOpKtXr4rj3bt30549e5Q+fck4dDgQnO1jZLiCxwokqU8zSoYzKFoNdxur70iUTFcbg2LOa0p5vQC5KStCZ9OmTfYCcnNzs3i2R+7Tl5Q3sXfouEYozBUO0uJzUvGwsvvy7Dvel7PMrA376Bsgt2RF6Bw4cIA2bNggjh89ekSjR4+2F5wzknHoeLR1laeY/tgjJY8pVpK+3SGjhhBAPsiK0OGfR8yYMcM+f/LkydTW1qb0m1aSmz3u44VOfD1HnZalC514eWIUxcfO6RdAnsiK0OFFZK7jRWX+7JxuZSTZzS74Cx0xGrHDwCt0pIDxKkvSN+PA4nb8PXKYAeSDrAgdNm/ePPu3WPX19aJe7jetFDe7EiD29MixuJsoGwwDr9BRy6ydLD+hI9aMjChFI0nqAXJc1oQO/yh0//794ri9vV38IFTuNy2PdRZBrKN4hY5zWzsuXcB4fY/R6n+ko+6QAeSXrAkdHt2sXr1aHA8MDNDYsWPp/v37St8jn9f0DCB/BBI6HB78tDEfHzt2jJYvX04vX74UocN/uZzLjh49ap9z69Ytmjp1qggcxs/uXLlyRel7xPN6XgcgjwQSOjzK4R0oHvFwkFjhwj8EnT9/vhj5TJs2jbq6uuxz3r59S3PmzBH1PLUqLS0d2rZ5VksyXQPII4GEDuPp1I0bN+x/NdBy9+5dunnzpggZ+Zznz5+Lc5xhlCvErhjWcgCCCx0AAC8IHQDQCqEDAFohdABAK4QOAGiF0AEArRA6AKAVQgcAtELoAIBWCB0A0AqhAwBaIXQAQCuEDgBohdABAK0QOgCgFUIHALRC6ACAVggdANAKoQMAWiF0AEArhA4AaIXQAQCtAgsdfpPnN998Q52dnUodAOSvQELn/fv34i2f/J4n6/3k/f39dOfOHfEivrq6Orp27Zrnu68AILcFEjpnz56liRMn0uXLl8XbOvn1wM3NzTRlyhQyDIO+/vprWrRokXgLKLeVzweA3BVI6HCwWCOcgwcP0pYtW6ivr0+MdpztOjo6qKioSIx+5D4AIDcFEjobNmygxsZGcXzkyBEqLy9X2lh4ysWjoQcPHih1/0XMCMVf4+tgtKrtAECvQEKnvr5eTJ84SD777DOxhiO3ceJQ4kVnuXxIzCiFQyEK15ru8lZDLfvIxPvKI1EyPeoAIC6Q0OGdq8LCQjG6KCgoEFMruY0Th1RZWZlSnrkYGcM4okHoAKQXSOicPn2a5s2bRz09PbRgwQI6efKkq/7evXu0atUqGj16tDIFYrNnz6Yff/xR6Tcdvze9mHoZMXsKNjgCioeWfS1yX4lRlFpvUjQi/Xc4z5XPM2LKNQHki0BCp7Kykvbs2SOO9+3bRzt37nTVV1RUiC31q1ev0o0bN2jFihW0ceNGccxOnDhBo0aNou7ubqXv5OI3vp8plBU27hGROkoS7RzhETMMiknf5wwQz9ATgROmqJn8PIB8EkjorFu3jg4dOiSOeUGZA8ZZH4lE6OLFi+LYNE0xBbt06ZKrzcKFC6m1tVXpO7n4zexnaiWHCROBIQeBEhhucsjIn63vUoKw1aBQyBlgAPkjkNBZuXKlvQ3OU6vS0lJXfXFxsQgZfn5n+vTpVFJSIh4odLbhBehz584pfSeX4UhHChiv3a44d+go7VKGjse0y4bQgfwUSOjwyIa3yvmYHwrk6dO///4rymtqamjq1KkiVPjm42d4vKZRXN/S0qKUp+IVJl682nmOSJysdZkU0yn5cyajL4B8EUjo8HM6DQ0N4ripqYnWrFkjHgzkIOL1nXHjxomnkru6upRzLUMJnfi0Jfl0yOIVOmpguHnVy2Xy52TfBZDPAgmd7du3208k8y4UP6HsrA+Hw/aaTjKZT6/ixI2vLBK7n9PxDALP53tiZFjt5HUYa+TjDBm5jV0mXY8ZJSPVqAoghwUSOhw4HDx8zH9/+OEHVz2v6fDvsuTznIY00rHIW9TSGopn6Hiel2I9JxKlmDKycazhKGHkfS0A+SaQ0InFYmKHio85YM6fP++q37x5M+3duzfpr8wfPXpE48ePFztbch0AjGyBhE5vb694IpkXkfkvf3bWX7hwQazruP/v78Y7YHK/ADDyBRI6jBeKOTx27dql1DEe5dy6dct+INDp8ePHSnsAyA2Bhc67d++ora1Nef4GAPJbYKEDAOAFoQMAWiF0AEArhA4AaIXQAQCtEDoAoBVCBwC0QugAgFYIHQDQCqEDAFohdABAK4QOAGiF0AEArRA6AKAVQgcAtELoAIBWCB0A0AqhAwBaIXQAQCuEDgBohdABAK2GPXSuX79O0WhUvP+cVVZW0unTp5V2AJAbhi10nj59SuXl5TR9+nQRNGfPnqUjR47Q1q1bqaCgQLwDXT4HAEa+YQmdjo4OmjhxIpWVldGLFy+U+t9++028AbS/v1+pA4CRTUvo8Fs7P//8c5owYQJt27ZNjG6qqqpSvoivqKhIhJNcPtLEjBCFIlEyPeoA8lHgocPTpvHjx9PevXuprq5OTJ0aGxtFXWdnp5hO1dTUKAG0ZMkSOnfunNJfSmaUwh7vRQ/XmmpbTRA6AG6Bhs6TJ09EyPBazYMHD2jy5Ml24Lx580aMeDZv3kxTpkwRoeQ8d/78+XT16lWlz5RE6IQpanrUaWDWhhEwAGkEGjqMw6S4uJimTp1Kv/zyi11+5swZ2rFjhzjmcBkzZgx1d3eLzxxWo0aNEovNcn8pIXQAsl7gocNmz55N3333nausq6uLPv30U+rr6xPhM23aNOrp6RF1HFTr1q1T+kkrTeiIqY4Ri/91TbtMikbcUzKj1XluvJ7bW+cKdsCo51t11nc6r0OEU7LvajUoFDIoJv5iaga5R0voLFy4kJqampTy5uZmmjFjhlhgtqZSvAbEi8gPHz5U2qflJ3Tkm/xDjAy+uZ3BkFgb8gqlwXPj5znXi7xGOnLoKG0S32X3a4WNFFQAuUJL6LS3t4st8HQP/V25ckVspfNul1zni+dC8mAIeS3qKiHgWZ4IHa8Ri+Nc+bP9nfZ5HFRqKLraiNBR2wDkisBDp7e3lyoqKsRohiULnkuXLlFhYaEY6ch1vvkZ6UjBwWWeu1uiL4Ni4vPg9MrZRg4Z+bPynZ6hmOAKHet7AXJP4KFz4cIFcVMdP35cjHg4eHha5WzDi8ocODNnzhTHch++jYjQSRMoCB3IcYGFzsuXL8kwDBoYGKD6+nqxG3X58mUROBxCJ06cEO2OHj0qttU5bDZu3EjV1dVKX74NIXS8gkIt/0ihk1gHcq8pSRA6kOMCCx1+/sYKnWfPntGxY8fEus6CBQtE+aRJk8SDgRxADQ0N4jke3jYf8noOG0LopFpIHgwHf6HjFRjyd8YXs91tzFpj8Jo9+gDIJYGFzj///CN+O8U/6ty5c6co4/Ua3q3ibfJ79+6JJ5H591eRSERsmdfW1ir9ZGRIocMSweOx+BznM3ScW+eJcq/vjAePx3oOQ+hAjgssdN6+fUtr1qyh0tJSev36NV28eFH89WrHobRv3z6lDgByT2Ch09raSiUlJfTq1SuxfsPTqcePHyvtACC/BBY6Tjdv3qT79+8r5QCQf7SEDgCABaEDAFohdABAK4QOAGiF0AEArRA6AKAVQgcAtELoAIBWCB0A0AqhAwBaIXQAQCuEDgBohdABAK0QOgCg1f8BNVABef4TqmcAAAAASUVORK5CYII=" style="width:100%; display:block;" alt="Nav" />
@@ -247,10 +247,10 @@
         <div class="chat-title-row"><span class="chat-title-text">Product Strategy H2</span><span style="width:8px;height:8px;border-radius:50%;background:#0F6CBD;display:inline-block;"></span></div>
       </div>
       <div class="chat-list-item" id="chatHiring">
-        <div class="chat-title-row"><span class="chat-title-text">Hiring Plan â€” Eng</span><span style="width:8px;height:8px;border-radius:50%;background:#0F6CBD;display:inline-block;"></span></div>
+        <div class="chat-title-row"><span class="chat-title-text">Hiring Plan — Eng</span><span style="width:8px;height:8px;border-radius:50%;background:#0F6CBD;display:inline-block;"></span></div>
       </div>
       <div class="chat-list-item"><span class="chat-title-text">Legal Compliance</span></div>
-      <div class="chat-list-item"><span class="chat-title-text">Meeting Prep â€” Lead...</span></div>
+      <div class="chat-list-item"><span class="chat-title-text">Meeting Prep — Lead...</span></div>
       <div class="chat-list-item"><span class="chat-title-text">Summary Request for...</span></div>
     </div>
     <div class="sidebar-bottom">
@@ -266,7 +266,7 @@
     </div>
   </div>
 
-  <!-- â•â•â• MAIN â•â•â• -->
+  <!-- ═══ MAIN ═══ -->
   <div class="main">
     <!-- Topbar (matching original) -->
     <div class="topbar">
@@ -284,10 +284,10 @@
     <div class="convo-area" id="convoArea">
       <div class="convo-inner" id="convoInner">
 
-        <!-- â•â•â• STORY BUBBLES â•â•â• -->
+        <!-- ═══ STORY BUBBLES ═══ -->
         <div class="stories hidden" id="storiesRow">
           <div class="story" id="stAll">
-            <div class="story-ring urgent"><div class="story-inner" style="font-size:18px;">âœ¦</div></div>
+            <div class="story-ring urgent"><div class="story-inner" style="font-size:18px;">✦</div></div>
             <div class="story-name">For you</div>
             <div class="story-sub">3 actions</div>
           </div>
@@ -313,10 +313,10 @@
           </div>
         </div>
 
-        <!-- â•â•â• MORNING HEADER â•â•â• -->
+        <!-- ═══ MORNING HEADER ═══ -->
         <div class="morning hidden" id="morningH">
           <h2>Good morning, Cindy</h2>
-          <div class="m-sub">Monday, March 20 Â· Tasks ran at 7:00 AM</div>
+          <div class="m-sub">Monday, March 20 · Tasks ran at 7:00 AM</div>
           <div class="m-stats">
             <span><span class="m-dot" style="background:var(--copilot-purple);"></span>3 need you</span>
             <span><span class="m-dot" style="background:var(--green);"></span>5 handled</span>
@@ -324,15 +324,15 @@
           </div>
         </div>
 
-        <!-- â•â•â• NEEDS YOU â•â•â• -->
+        <!-- ═══ NEEDS YOU ═══ -->
         <div class="hidden" id="priSection">
           <div class="sec-label">Needs you now</div>
 
           <div class="tc act" id="t1">
-            <div class="tc-icon">ðŸ“‹</div>
+            <div class="tc-icon">📋</div>
             <div class="tc-main">
               <div class="tc-proj" style="color:#0F6CBD;">Budget</div>
-              <div class="tc-title">VP status update â€” drafted and sourced</div>
+              <div class="tc-title">VP status update — drafted and sourced</div>
               <div class="tc-detail">Revenue $4.1M (+12%), April launch confirmed, Legal pending.</div>
               <div class="tc-src">
                 <span class="sp"><span class="ai xl">X</span> Q1_Tracker</span>
@@ -342,7 +342,7 @@
               <div class="draft-ex" id="draft1">
                 <strong>1.</strong> Revenue $4.1M, +12% WoW. 23 deals, 8 at negotiation.<br/>
                 <strong>2.</strong> April launch confirmed (#product-launches, Mar 17). Legal review pending.<br/>
-                <strong>3.</strong> 47/50 headcount. ML Engineer open â€” 4 candidates, ~6 wks.
+                <strong>3.</strong> 47/50 headcount. ML Engineer open — 4 candidates, ~6 wks.
                 <div class="cite-row">
                   <span class="cite"><span class="ai xl">X</span> B4:D14</span>
                   <span class="cite"><span class="ai tm">T</span> Mar 17</span>
@@ -353,12 +353,12 @@
             <div class="tc-right">
               <button class="tb pri" onclick="sendVP()">Send</button>
               <button class="tb sec" onclick="toggleDraft('draft1')">Preview</button>
-              <span class="tc-time">âš ï¸ 1 VP</span>
+              <span class="tc-time">⚠️ 1 VP</span>
             </div>
           </div>
 
           <div class="tc act" id="t2">
-            <div class="tc-icon">ðŸ‘¥</div>
+            <div class="tc-icon">👥</div>
             <div class="tc-main">
               <div class="tc-proj" style="color:#107C10;">Hiring</div>
               <div class="tc-title">2 new ML Engineer candidates match criteria</div>
@@ -368,10 +368,10 @@
           </div>
 
           <div class="tc act" id="t3">
-            <div class="tc-icon">âš ï¸</div>
+            <div class="tc-icon">⚠️</div>
             <div class="tc-main">
               <div class="tc-proj" style="color:#6264A7;">Legal</div>
-              <div class="tc-title">Compliance email unanswered â€” 6 days</div>
+              <div class="tc-title">Compliance email unanswered — 6 days</div>
               <div class="tc-detail">Sync Thursday. Suggest replying before then.</div>
             </div>
             <div class="tc-right">
@@ -381,21 +381,21 @@
           </div>
         </div>
 
-        <!-- â•â•â• HANDLED â•â•â• -->
+        <!-- ═══ HANDLED ═══ -->
         <div class="hidden" id="handledSection">
           <div class="sec-label">Already handled</div>
 
           <div class="tc handled" id="t4">
-            <div class="tc-icon" style="font-size:13px;">âœ…</div>
+            <div class="tc-icon" style="font-size:13px;">✅</div>
             <div class="tc-main">
               <div class="tc-title" style="font-weight:500;">Teams resolved an unanswered email thread</div>
-              <div class="tc-detail">PM timeline â†’ April launch in #product-launches. Used in status update.</div>
+              <div class="tc-detail">PM timeline → April launch in #product-launches. Used in status update.</div>
             </div>
             <div class="tc-right"><span class="tc-time">7:01</span></div>
           </div>
 
           <div class="tc handled" id="t5">
-            <div class="tc-icon" style="font-size:13px;">âœ…</div>
+            <div class="tc-icon" style="font-size:13px;">✅</div>
             <div class="tc-main">
               <div class="tc-title" style="font-weight:500;">Pulled Q1 metrics + matched VP's question</div>
               <div class="tc-detail">12% jump directly answers VP's trajectory question.</div>
@@ -404,32 +404,32 @@
           </div>
 
           <div class="tc handled" id="t6">
-            <div class="tc-icon" style="font-size:13px;">âœ…</div>
+            <div class="tc-icon" style="font-size:13px;">✅</div>
             <div class="tc-main">
-              <div class="tc-title" style="font-weight:500;">QBR Wednesday â€” data shifted +28% since last meeting</div>
+              <div class="tc-title" style="font-weight:500;">QBR Wednesday — data shifted +28% since last meeting</div>
               <div class="tc-detail">Revenue was $3.2M then. Now $4.1M. Prep note ready.</div>
             </div>
             <div class="tc-right"><span class="tc-time">7:03</span></div>
           </div>
 
           <div class="tc handled" id="t7">
-            <div class="tc-icon" style="font-size:13px;">âœ…</div>
+            <div class="tc-icon" style="font-size:13px;">✅</div>
             <div class="tc-main">
-              <div class="tc-title" style="font-weight:500; color:var(--text-muted);">Eng standup, legal sync, strategy deck â€” on track</div>
+              <div class="tc-title" style="font-weight:500; color:var(--text-muted);">Eng standup, legal sync, strategy deck — on track</div>
             </div>
-            <div class="tc-right"><span class="tc-time" style="color:var(--green);">âœ“</span></div>
+            <div class="tc-right"><span class="tc-time" style="color:var(--green);">✓</span></div>
           </div>
         </div>
 
-        <!-- â•â•â• LOOP-BACK â•â•â• -->
+        <!-- ═══ LOOP-BACK ═══ -->
         <div class="hidden" id="loopSection">
-          <div class="sec-label">Loop-back Â· new development</div>
+          <div class="sec-label">Loop-back · new development</div>
 
           <div class="tc loop" id="t8">
-            <div class="tc-icon">ðŸ”„</div>
+            <div class="tc-icon">🔄</div>
             <div class="tc-main">
               <div class="tc-proj" style="color:#0F6CBD;">Budget</div>
-              <div class="tc-title">Sarah (CFO) replied â€” wants a risk section</div>
+              <div class="tc-title">Sarah (CFO) replied — wants a risk section</div>
               <div class="tc-detail">"Can we add a risk section for the ML hiring gap?" Draft addition ready using pipeline data.</div>
               <div class="tc-src">
                 <span class="sp"><span class="ai wd">W</span> Q3_Budget v2.4</span>
@@ -446,7 +446,7 @@
       </div>
     </div>
 
-    <!-- â•â•â• Input Bar (matching original) â•â•â• -->
+    <!-- ═══ Input Bar (matching original) ═══ -->
     <div class="input-bar-container">
       <div class="input-bar">
         <input type="text" placeholder="Message Copilot" readonly />
@@ -460,31 +460,31 @@
   </div>
 </div>
 
-<!-- â•â•â• STEP CONTROLS â•â•â• -->
+<!-- ═══ STEP CONTROLS ═══ -->
 <div class="step-controls" id="stepControls" style="display:none;">
-  <button class="step-btn" id="stepPrev" onclick="prevStep()" disabled>â—€</button>
+  <button class="step-btn" id="stepPrev" onclick="prevStep()" disabled>◀</button>
   <span class="step-label" id="stepLabel">0 / 5</span>
-  <button class="step-btn" id="stepNext" onclick="nextStep()">â–¶</button>
-  <button class="step-btn step-reset" onclick="resetDemo()">â†º</button>
+  <button class="step-btn" id="stepNext" onclick="nextStep()">▶</button>
+  <button class="step-btn step-reset" onclick="resetDemo()">↺</button>
 </div>
 
-<!-- â•â•â• END OVERLAY â•â•â• -->
+<!-- ═══ END OVERLAY ═══ -->
 <div class="end-overlay" id="endOverlay">
   <div class="end-card">
     <h2>Copilot Tasks, for Work</h2>
     <p class="end-sub">Your workstreams, managed. Not a wizard. Not a pipeline. A living view of everything Copilot is handling across your projects.</p>
     <div class="end-list">
-      <div class="el"><strong>Story bubbles</strong> â€” your projects at a glance, status rings tell the story</div>
-      <div class="el"><strong>Priority surfacing</strong> â€” Copilot triages what needs you vs. what's handled</div>
-      <div class="el"><strong>Loop-backs</strong> â€” stakeholders reply, the system keeps up</div>
-      <div class="el"><strong>Cross-app reasoning</strong> â€” Teams answered an email you didn't know about</div>
-      <div class="el"><strong>One real decision</strong> â€” send the VP update. Everything else was handled.</div>
+      <div class="el"><strong>Story bubbles</strong> — your projects at a glance, status rings tell the story</div>
+      <div class="el"><strong>Priority surfacing</strong> — Copilot triages what needs you vs. what's handled</div>
+      <div class="el"><strong>Loop-backs</strong> — stakeholders reply, the system keeps up</div>
+      <div class="el"><strong>Cross-app reasoning</strong> — Teams answered an email you didn't know about</div>
+      <div class="el"><strong>One real decision</strong> — send the VP update. Everything else was handled.</div>
     </div>
-    <button class="start-btn" onclick="resetDemo()" style="font-size:13px; padding:10px 28px;">Restart â†º</button>
+    <button class="start-btn" onclick="resetDemo()" style="font-size:13px; padding:10px 28px;">Restart ↺</button>
   </div>
 </div>
 
-<!-- â•â•â• ANNOTATIONS â•â•â• -->
+<!-- ═══ ANNOTATIONS ═══ -->
 <div class="ann" id="ann1" style="top:100px; right:24px;">
   <div class="ann-tag"><span class="ann-num">1</span> Story Bubbles</div>
   <div class="ann-body">Each project is a ring. <strong>Color = status.</strong> Purple pulse = urgent. Red = action needed. Yellow = stale. Green = on track. Tap to drill in.</div>
@@ -495,11 +495,11 @@
 </div>
 <div class="ann" id="ann3" style="top:140px; right:24px;">
   <div class="ann-tag"><span class="ann-num">3</span> Already Done</div>
-  <div class="ann-body">Cross-app reasoning, metric pulls, meeting prep â€” <strong>done at 7am</strong>. Visible for trust, not demanding action.</div>
+  <div class="ann-body">Cross-app reasoning, metric pulls, meeting prep — <strong>done at 7am</strong>. Visible for trust, not demanding action.</div>
 </div>
 <div class="ann" id="ann4" style="top:130px; right:24px;">
   <div class="ann-tag"><span class="ann-num">4</span> Loop-Back</div>
-  <div class="ann-body">Sarah replied. Copilot <strong>already drafted a response</strong>. Work isn't linear â€” the system keeps up with the back-and-forth.</div>
+  <div class="ann-body">Sarah replied. Copilot <strong>already drafted a response</strong>. Work isn't linear — the system keeps up with the back-and-forth.</div>
 </div>
 <div class="ann" id="ann5" style="top:100px; right:24px;">
   <div class="ann-tag"><span class="ann-num">5</span> Sent</div>
@@ -527,9 +527,9 @@ function resetDemo() {
   // Reset send state
   var t1 = document.getElementById('t1');
   t1.classList.add('act'); t1.classList.remove('handled');
-  t1.querySelector('.tc-icon').textContent = 'ðŸ“‹';
-  t1.querySelector('.tc-title').textContent = 'VP status update â€” drafted and sourced';
-  t1.querySelector('.tc-right').innerHTML = '<button class="tb pri" onclick="sendVP()">Send</button><button class="tb sec" onclick="toggleDraft(\'draft1\')">Preview</button><span class="tc-time">âš ï¸ 1 VP</span>';
+  t1.querySelector('.tc-icon').textContent = '📋';
+  t1.querySelector('.tc-title').textContent = 'VP status update — drafted and sourced';
+  t1.querySelector('.tc-right').innerHTML = '<button class="tb pri" onclick="sendVP()">Send</button><button class="tb sec" onclick="toggleDraft(\'draft1\')">Preview</button><span class="tc-time">⚠️ 1 VP</span>';
   // Reset story ring
   var br = document.querySelector('#stBudget .story-ring');
   br.classList.remove('ok'); br.classList.add('action');
@@ -584,14 +584,14 @@ function show(id) { document.getElementById(id).classList.remove('hidden'); }
 function sendVP() {
   var t1 = document.getElementById('t1');
   t1.classList.remove('act'); t1.classList.add('handled');
-  t1.querySelector('.tc-icon').textContent = 'âœ…';
-  t1.querySelector('.tc-title').textContent = 'VP status update sent âœ“';
+  t1.querySelector('.tc-icon').textContent = '✅';
+  t1.querySelector('.tc-title').textContent = 'VP status update sent ✓';
   t1.querySelector('.tc-right').innerHTML = '<span class="tc-time" style="color:var(--green);">Sent</span>';
   var d = document.getElementById('draft1'); if(d) d.classList.remove('open');
   // Update story
   var br = document.querySelector('#stBudget .story-ring');
   br.classList.remove('action'); br.classList.add('ok');
-  document.querySelector('#stBudget .story-sub').textContent = 'âœ“ sent';
+  document.querySelector('#stBudget .story-sub').textContent = '✓ sent';
   step = 5; showStep(5);
 }
 

@@ -43,6 +43,17 @@
   .start-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 28px rgba(123,87,255,0.5); }
   .landing .meta { margin-top: 32px; font-size: 11px; color: rgba(255,255,255,0.2); }
 
+  
+  /* ═══ Enhanced sidebar status ═══ */
+  .sdot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; flex-shrink: 0; }
+  .sdot.red { background: #D13438; box-shadow: 0 0 4px rgba(209,52,56,0.4); }
+  .sdot.yellow { background: #FFB900; }
+  .sdot.green { background: #107C10; }
+  .sdot.blue { background: #0F6CBD; }
+  .chat-sub { font-size: 10px; color: var(--text-muted); font-weight: 400; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .chat-list-item { transition: border-left-color 0.3s, background 0.3s; }
+  .chat-list-item.active { border-left-width: 3px; }
+
   /* ═══ Shell ═══ */
   .shell { display: flex; height: 100vh; width: 100vw; }
 
@@ -88,26 +99,7 @@
   .convo-area { flex: 1; overflow-y: auto; padding: 20px 0; display: flex; flex-direction: column; align-items: center; }
   .convo-inner { width: 100%; max-width: 660px; padding: 0 20px; }
 
-  /* ═══ Story Bubbles ═══ */
-  .stories { display: flex; align-items: flex-start; gap: 18px; justify-content: center; margin-bottom: 20px; padding: 8px 0; }
-  .story { display: flex; flex-direction: column; align-items: center; gap: 5px; cursor: pointer; transition: transform 0.2s; }
-  .story:hover { transform: scale(1.06); }
-  .story-ring {
-    width: 50px; height: 50px; border-radius: 50%; padding: 3px;
-    background: var(--border);
-    display: flex; align-items: center; justify-content: center;
-  }
-  .story-ring.urgent { background: linear-gradient(135deg, var(--copilot-purple), #0F6CBD); animation: ringPulse 2s infinite; }
-  .story-ring.action { background: var(--red); }
-  .story-ring.stale { background: var(--yellow); }
-  .story-ring.ok { background: var(--green); }
-  .story-inner {
-    width: 42px; height: 42px; border-radius: 50%; background: white;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 15px; font-weight: 700;
-  }
-  .story-name { font-size: 10px; color: var(--text-secondary); max-width: 60px; text-align: center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-  .story-sub { font-size: 9px; color: var(--text-muted); }
+
 
   /* ═══ Morning header ═══ */
   .morning { margin-bottom: 16px; text-align: center; }
@@ -239,19 +231,27 @@
     </div>
     <div class="sidebar-divider"></div>
     <div class="sidebar-section">
-      <div class="section-header">Chats <span style="cursor:pointer;"><svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="#616161" stroke-width="1.5" stroke-linecap="round"><circle cx="7" cy="7" r="5.5"/><line x1="11" y1="11" x2="14.5" y2="14.5"/></svg></span></div>
-      <div class="chat-list-item active" id="chatBudget">
-        <div class="chat-title-row"><span class="chat-title-text">Q3 Budget Review</span><span style="width:8px;height:8px;border-radius:50%;background:#0F6CBD;display:inline-block;"></span></div>
+      <div class="section-header">Tasks <span style="cursor:pointer;"><svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="#616161" stroke-width="1.5" stroke-linecap="round"><circle cx="7" cy="7" r="5.5"/><line x1="11" y1="11" x2="14.5" y2="14.5"/></svg></span></div>
+      <!-- Auto-sorted: action required → stale → updated → on track -->
+      <div class="chat-list-item active" id="chatBudget" style="border-left-color: #D13438;">
+        <div class="chat-title-row"><span class="chat-title-text">Q3 Budget Review</span><span class="sdot red"></span></div>
+        <span class="chat-sub">Send VP update</span>
       </div>
-      <div class="chat-list-item" id="chatStrategy">
-        <div class="chat-title-row"><span class="chat-title-text">Product Strategy H2</span><span style="width:8px;height:8px;border-radius:50%;background:#0F6CBD;display:inline-block;"></span></div>
+      <div class="chat-list-item" id="chatHiring" style="border-left-color: #D13438;">
+        <div class="chat-title-row"><span class="chat-title-text">Hiring Plan — Eng</span><span class="sdot red"></span></div>
+        <span class="chat-sub">2 new candidates</span>
       </div>
-      <div class="chat-list-item" id="chatHiring">
-        <div class="chat-title-row"><span class="chat-title-text">Hiring Plan — Eng</span><span style="width:8px;height:8px;border-radius:50%;background:#0F6CBD;display:inline-block;"></span></div>
+      <div class="chat-list-item" id="chatLegal" style="border-left-color: #FFB900;">
+        <div class="chat-title-row"><span class="chat-title-text">Legal Compliance</span><span class="sdot yellow"></span></div>
+        <span class="chat-sub">6 days unanswered</span>
       </div>
-      <div class="chat-list-item"><span class="chat-title-text">Legal Compliance</span></div>
-      <div class="chat-list-item"><span class="chat-title-text">Meeting Prep — Lead...</span></div>
-      <div class="chat-list-item"><span class="chat-title-text">Summary Request for...</span></div>
+      <div class="chat-list-item" id="chatStrategy" style="border-left-color: #107C10;">
+        <div class="chat-title-row"><span class="chat-title-text">Product Strategy H2</span><span class="sdot green"></span></div>
+        <span class="chat-sub">On track</span>
+      </div>
+      <div class="chat-list-item" style="opacity:0.5; border-left-color: transparent;">
+        <div class="chat-title-row"><span class="chat-title-text">Meeting Prep — Lead...</span></div>
+      </div>
     </div>
     <div class="sidebar-bottom">
       <div class="apps-link">&#x2B1B; Apps</div>
@@ -284,34 +284,7 @@
     <div class="convo-area" id="convoArea">
       <div class="convo-inner" id="convoInner">
 
-        <!-- ═══ STORY BUBBLES ═══ -->
-        <div class="stories hidden" id="storiesRow">
-          <div class="story" id="stAll">
-            <div class="story-ring urgent"><div class="story-inner" style="font-size:18px;">✦</div></div>
-            <div class="story-name">For you</div>
-            <div class="story-sub">3 actions</div>
-          </div>
-          <div class="story" id="stBudget">
-            <div class="story-ring action"><div class="story-inner" style="color:#0F6CBD;">B</div></div>
-            <div class="story-name">Budget</div>
-            <div class="story-sub">send update</div>
-          </div>
-          <div class="story" id="stHiring">
-            <div class="story-ring action"><div class="story-inner" style="color:#107C10;">H</div></div>
-            <div class="story-name">Hiring</div>
-            <div class="story-sub">2 matches</div>
-          </div>
-          <div class="story" id="stLegal">
-            <div class="story-ring stale"><div class="story-inner" style="color:#6264A7;">L</div></div>
-            <div class="story-name">Legal</div>
-            <div class="story-sub">6d stale</div>
-          </div>
-          <div class="story" id="stStrategy">
-            <div class="story-ring ok"><div class="story-inner" style="color:#D24726;">S</div></div>
-            <div class="story-name">Strategy</div>
-            <div class="story-sub">on track</div>
-          </div>
-        </div>
+
 
         <!-- ═══ MORNING HEADER ═══ -->
         <div class="morning hidden" id="morningH">
@@ -474,7 +447,7 @@
     <h2>Copilot Tasks, for Work</h2>
     <p class="end-sub">Your workstreams, managed. Not a wizard. Not a pipeline. A living view of everything Copilot is handling across your projects.</p>
     <div class="end-list">
-      <div class="el"><strong>Story bubbles</strong> — your projects at a glance, status rings tell the story</div>
+      <div class="el"><strong>Smart task rail</strong> — auto-sorted by urgency, status at a glance</div>
       <div class="el"><strong>Priority surfacing</strong> — Copilot triages what needs you vs. what's handled</div>
       <div class="el"><strong>Loop-backs</strong> — stakeholders reply, the system keeps up</div>
       <div class="el"><strong>Cross-app reasoning</strong> — Teams answered an email you didn't know about</div>
@@ -486,8 +459,8 @@
 
 <!-- ═══ ANNOTATIONS ═══ -->
 <div class="ann" id="ann1" style="top:100px; right:24px;">
-  <div class="ann-tag"><span class="ann-num">1</span> Story Bubbles</div>
-  <div class="ann-body">Each project is a ring. <strong>Color = status.</strong> Purple pulse = urgent. Red = action needed. Yellow = stale. Green = on track. Tap to drill in.</div>
+  <div class="ann-tag"><span class="ann-num">1</span> Smart Task Rail</div>
+  <div class="ann-body">Sidebar auto-sorts by urgency. <strong>Red = action needed. Yellow = stale. Green = on track.</strong> Status subtitles tell you what\'s next at a glance.</div>
 </div>
 <div class="ann" id="ann2" style="top:130px; right:24px;">
   <div class="ann-tag"><span class="ann-num">2</span> Priority Triage</div>
@@ -530,10 +503,11 @@ function resetDemo() {
   t1.querySelector('.tc-icon').textContent = '📋';
   t1.querySelector('.tc-title').textContent = 'VP status update — drafted and sourced';
   t1.querySelector('.tc-right').innerHTML = '<button class="tb pri" onclick="sendVP()">Send</button><button class="tb sec" onclick="toggleDraft(\'draft1\')">Preview</button><span class="tc-time">⚠️ 1 VP</span>';
-  // Reset story ring
-  var br = document.querySelector('#stBudget .story-ring');
-  br.classList.remove('ok'); br.classList.add('action');
-  document.querySelector('#stBudget .story-sub').textContent = 'send update';
+  // Reset sidebar
+  var cb = document.getElementById('chatBudget');
+  cb.style.borderLeftColor = '#D13438';
+  cb.querySelector('.sdot').classList.remove('green'); cb.querySelector('.sdot').classList.add('red');
+  cb.querySelector('.chat-sub').textContent = 'Send VP update';
   hideAnns(); step = 0;
 }
 
@@ -546,7 +520,7 @@ function showStep(n) {
   hideAnns();
 
   if (n >= 1) {
-    show('storiesRow'); show('morningH');
+    show('morningH');
     document.getElementById('morningH').style.animation = 'fadeInUp 0.4s ease';
   }
   if (n >= 2) {

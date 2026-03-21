@@ -314,19 +314,17 @@
 
   <!-- ═══ MAIN ═══ -->
   <div class="main">
-    <div class="topbar">
+    <div class="topbar" style="position:relative;">
       <span class="topbar-title" id="topTitle"></span>
-      <div class="topbar-center">
-        <div class="topbar-toggle">
-          <button class="active">Work</button>
-          <button>Web</button>
-        </div>
+      <div style="position:absolute; left:50%; transform:translateX(-50%); display:flex; border:1px solid var(--border); border-radius:20px; overflow:hidden;">
+        <button style="padding:4px 16px; border:none; background:var(--blue-light); font-size:12px; font-family:var(--font); cursor:pointer; color:var(--brand-blue); font-weight:600;">Work</button>
+        <button style="padding:4px 16px; border:none; background:transparent; font-size:12px; font-family:var(--font); cursor:pointer; color:var(--text-secondary);">Web</button>
       </div>
-      <div class="topbar-right-actions">
-        <span class="tb-auto">Auto ▾</span>
-        <span class="tb-edit-btn">✎ ▾</span>
-        <span class="tb-shield">✓</span>
-        <span class="tb-more">⋯</span>
+      <div style="margin-left:auto; display:flex; align-items:center; gap:8px;">
+        <span style="font-size:12px; color:var(--text-secondary); border:1px solid var(--border); padding:3px 10px; border-radius:6px; cursor:pointer;">Auto ▾</span>
+        <span style="font-size:12px; color:white; background:#7B57FF; padding:4px 12px; border-radius:6px; cursor:pointer; display:inline-flex; align-items:center; gap:4px;">✎ ▾</span>
+        <span style="font-size:14px; color:#107C10; cursor:pointer;">✓</span>
+        <span style="font-size:16px; color:var(--text-muted); cursor:pointer; letter-spacing:2px;">⋯</span>
       </div>
     </div>
 

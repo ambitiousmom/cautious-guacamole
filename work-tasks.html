@@ -23,7 +23,7 @@
     --blue-light: #EBF3FC;
     --purple-light: #F3EEFF;
     --font: 'Segoe UI Variable', 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
-    --sidebar-w: 64px;
+    --sidebar-w: 220px;
   }
   * { margin: 0; padding: 0; box-sizing: border-box; }
   body { font-family: var(--font); background: var(--bg); color: var(--text); height: 100vh; overflow: hidden; }
@@ -36,9 +36,8 @@
     color: white; transition: opacity 0.5s ease, visibility 0.5s;
   }
   .landing.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
-  .landing-badge { font-size: 11px; letter-spacing: 2.5px; text-transform: uppercase; color: rgba(255,255,255,0.4); margin-bottom: 24px; }
   .landing h1 { font-size: 48px; font-weight: 600; margin-bottom: 8px; background: linear-gradient(90deg, #fff, #C8B8FF); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-  .landing h2 { font-size: 20px; font-weight: 400; color: rgba(255,255,255,0.5); margin-bottom: 32px; letter-spacing: 1px; }
+  .landing h2 { font-size: 20px; font-weight: 400; color: rgba(255,255,255,0.5); margin-bottom: 32px; }
   .landing .sub { font-size: 16px; color: rgba(255,255,255,0.55); max-width: 560px; text-align: center; line-height: 1.7; margin-bottom: 40px; }
   .start-btn { padding: 14px 44px; border-radius: 28px; border: none; background: linear-gradient(135deg, #7B57FF, #0F6CBD); color: white; font-size: 15px; font-weight: 600; cursor: pointer; box-shadow: 0 4px 20px rgba(123,87,255,0.4); transition: transform 0.2s, box-shadow 0.2s; }
   .start-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 28px rgba(123,87,255,0.5); }
@@ -47,128 +46,127 @@
   /* ═══ Shell ═══ */
   .shell { display: flex; height: 100vh; width: 100vw; }
 
-  /* ═══ Mini Sidebar ═══ */
+  /* ═══ Sidebar (original) ═══ */
   .sidebar {
     width: var(--sidebar-w); min-width: var(--sidebar-w); height: 100%;
     background: var(--surface); border-right: 1px solid var(--border-light);
-    display: flex; flex-direction: column; align-items: center; padding-top: 12px;
+    display: flex; flex-direction: column; overflow: hidden;
   }
-  .sidebar-logo { width: 32px; height: 32px; border-radius: 8px; background: #242424; display: flex; align-items: center; justify-content: center; margin-bottom: 16px; }
-  .sidebar-logo svg { width: 20px; height: 20px; }
-  .sidebar-icon { width: 36px; height: 36px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 16px; cursor: pointer; margin-bottom: 4px; color: var(--text-muted); }
-  .sidebar-icon:hover { background: var(--surface-hover); }
-  .sidebar-icon.active { background: var(--blue-light); color: var(--brand-blue); }
-  .sidebar-bottom { margin-top: auto; padding-bottom: 12px; }
-  .sidebar-avatar { width: 28px; height: 28px; border-radius: 50%; background: linear-gradient(135deg, #E89B35, #D4782F); display: flex; align-items: center; justify-content: center; font-size: 10px; color: white; font-weight: 600; }
+  .sidebar-top { padding: 12px 14px; display: flex; align-items: center; justify-content: space-between; }
+  .sidebar-toggle { width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; background: none; border: none; cursor: pointer; color: var(--text-secondary); font-size: 16px; border-radius: 4px; }
+  .sidebar-toggle:hover { background: var(--surface-hover); }
+  .sidebar-divider { height: 1px; background: var(--border-light); margin: 8px 14px; }
+  .sidebar-section { padding: 4px 8px; }
+  .section-header { font-size: 11px; font-weight: 600; color: var(--text-secondary); padding: 6px 10px; display: flex; align-items: center; justify-content: space-between; }
+  .chat-list-item { display: flex; align-items: flex-start; padding: 6px 10px; border-radius: 6px; font-size: 13px; color: var(--text); cursor: pointer; border-left: 3px solid transparent; flex-direction: column; gap: 2px; }
+  .chat-list-item:hover { background: var(--surface-hover); }
+  .chat-list-item.active { border-left-color: var(--brand-blue); font-weight: 600; background: var(--blue-light); }
+  .chat-title-row { display: flex; align-items: center; gap: 6px; width: 100%; }
+  .chat-title-text { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; flex: 1; }
+  .sidebar-bottom { margin-top: auto; padding: 10px 14px; border-top: 1px solid var(--border-light); background: var(--surface); }
+  .apps-link { font-size: 12px; color: var(--text-secondary); display: flex; align-items: center; gap: 8px; padding: 4px 0; }
+  .user-row { display: flex; align-items: center; gap: 8px; padding: 6px 0; }
+  .user-avatar { width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 10px; color: white; font-weight: 600; }
+  .user-name { font-size: 12px; color: var(--text); }
+  .premium-badge { font-size: 10px; color: var(--text-muted); }
 
   /* ═══ Main ═══ */
-  .main { flex: 1; display: flex; flex-direction: column; min-width: 0; }
+  .main { flex: 1; display: flex; flex-direction: column; min-width: 0; height: 100%; }
 
-  /* ═══ Story Bubbles Bar ═══ */
-  .stories-bar {
-    padding: 16px 24px 12px; border-bottom: 1px solid var(--border-light);
-    background: var(--surface); display: flex; align-items: flex-start; gap: 20px; flex-shrink: 0;
-    overflow-x: auto;
+  /* Topbar (original) */
+  .topbar {
+    height: 48px; display: flex; align-items: center; padding: 0 16px;
+    border-bottom: 1px solid var(--border-light); background: var(--surface); flex-shrink: 0;
+    position: relative;
   }
-  .story {
-    display: flex; flex-direction: column; align-items: center; gap: 6px; cursor: pointer;
-    min-width: 56px; transition: transform 0.2s;
-  }
-  .story:hover { transform: scale(1.05); }
+  .topbar-title { font-size: 14px; font-weight: 600; flex: 1; }
+  .topbar-toggle { position: absolute; left: 50%; transform: translateX(-50%); display: flex; border: 1px solid var(--border); border-radius: 6px; overflow: hidden; }
+  .topbar-toggle button { padding: 4px 16px; border: none; background: transparent; font-size: 12px; font-family: var(--font); cursor: pointer; color: var(--text-secondary); }
+  .topbar-toggle button.active { color: var(--brand-blue); font-weight: 600; background: var(--blue-light); }
+
+  /* Conversation / content area */
+  .convo-area { flex: 1; overflow-y: auto; padding: 20px 0; display: flex; flex-direction: column; align-items: center; }
+  .convo-inner { width: 100%; max-width: 660px; padding: 0 20px; }
+
+  /* ═══ Story Bubbles ═══ */
+  .stories { display: flex; align-items: flex-start; gap: 18px; justify-content: center; margin-bottom: 20px; padding: 8px 0; }
+  .story { display: flex; flex-direction: column; align-items: center; gap: 5px; cursor: pointer; transition: transform 0.2s; }
+  .story:hover { transform: scale(1.06); }
   .story-ring {
-    width: 52px; height: 52px; border-radius: 50%; padding: 3px;
-    background: conic-gradient(var(--border) 0deg, var(--border) 360deg);
+    width: 50px; height: 50px; border-radius: 50%; padding: 3px;
+    background: var(--border);
     display: flex; align-items: center; justify-content: center;
-    transition: all 0.3s;
   }
-  .story-ring.urgent { background: conic-gradient(var(--copilot-purple) 0deg, var(--copilot-purple) 360deg); animation: ringPulse 2s infinite; }
-  .story-ring.action { background: conic-gradient(var(--red) 0deg, var(--red) 360deg); }
-  .story-ring.ok { background: conic-gradient(var(--green) 0deg, var(--green) 360deg); }
-  .story-ring.stale { background: conic-gradient(var(--yellow) 0deg, var(--yellow) 360deg); }
-  .story-ring.active-story { box-shadow: 0 0 0 2px var(--copilot-purple), 0 0 12px rgba(123,87,255,0.3); }
+  .story-ring.urgent { background: linear-gradient(135deg, var(--copilot-purple), #0F6CBD); animation: ringPulse 2s infinite; }
+  .story-ring.action { background: var(--red); }
+  .story-ring.stale { background: var(--yellow); }
+  .story-ring.ok { background: var(--green); }
   .story-inner {
-    width: 44px; height: 44px; border-radius: 50%; background: white;
+    width: 42px; height: 42px; border-radius: 50%; background: white;
     display: flex; align-items: center; justify-content: center;
-    font-size: 16px; font-weight: 700; color: var(--text);
+    font-size: 15px; font-weight: 700;
   }
-  .story-label { font-size: 10px; color: var(--text-secondary); text-align: center; max-width: 64px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight: 500; }
-  .story-label .story-status { font-size: 9px; color: var(--text-muted); font-weight: 400; display: block; }
-  .story.active .story-label { color: var(--copilot-purple); font-weight: 600; }
+  .story-name { font-size: 10px; color: var(--text-secondary); max-width: 60px; text-align: center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .story-sub { font-size: 9px; color: var(--text-muted); }
 
-  /* ═══ Content Area ═══ */
-  .content-area { flex: 1; overflow-y: auto; padding: 20px 0; display: flex; flex-direction: column; align-items: center; }
-  .content-inner { width: 100%; max-width: 680px; padding: 0 24px; }
+  /* ═══ Morning header ═══ */
+  .morning { margin-bottom: 16px; text-align: center; }
+  .morning h2 { font-size: 18px; font-weight: 600; margin-bottom: 2px; }
+  .morning .m-sub { font-size: 12px; color: var(--text-muted); }
+  .morning .m-stats { display: flex; gap: 14px; justify-content: center; margin-top: 8px; font-size: 11px; color: var(--text-secondary); }
+  .m-dot { width: 7px; height: 7px; border-radius: 50%; display: inline-block; margin-right: 3px; vertical-align: 1px; }
 
-  /* ═══ Morning Header ═══ */
-  .morning-header { margin-bottom: 20px; }
-  .morning-header h2 { font-size: 20px; font-weight: 600; margin-bottom: 4px; }
-  .morning-header .mh-sub { font-size: 13px; color: var(--text-muted); }
-  .morning-header .mh-stats { display: flex; gap: 16px; margin-top: 10px; font-size: 12px; }
-  .mh-stat { display: flex; align-items: center; gap: 4px; color: var(--text-secondary); }
-  .mh-dot { width: 8px; height: 8px; border-radius: 50%; }
+  /* ═══ Section labels ═══ */
+  .sec-label { font-size: 11px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.7px; margin: 16px 0 8px; display: flex; align-items: center; gap: 8px; }
+  .sec-label::after { content: ''; flex: 1; height: 1px; background: var(--border-light); }
 
-  /* ═══ Priority Actions ═══ */
-  .priority-section { margin-bottom: 24px; }
-  .section-label { font-size: 11px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 10px; display: flex; align-items: center; gap: 8px; }
-  .section-label::after { content: ''; flex: 1; height: 1px; background: var(--border-light); }
-
-  /* Task card */
-  .tcard {
-    display: flex; gap: 12px; padding: 14px 16px; margin-bottom: 8px;
-    background: white; border: 1px solid var(--border-light); border-radius: 12px;
+  /* ═══ Task cards ═══ */
+  .tc {
+    display: flex; gap: 12px; padding: 12px 14px; margin-bottom: 6px;
+    background: white; border: 1px solid var(--border-light); border-radius: 10px;
     transition: all 0.3s; opacity: 0; transform: translateY(8px);
   }
-  .tcard.visible { opacity: 1; transform: translateY(0); }
-  .tcard:hover { box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
-  .tcard.action-needed { border-left: 3px solid var(--copilot-purple); }
-  .tcard.handled { opacity: 0.6; }
-  .tcard.handled.visible { opacity: 0.6; }
-  .tcard.loop-back { border-left: 3px solid var(--yellow); }
+  .tc.vis { opacity: 1; transform: translateY(0); }
+  .tc:hover { box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
+  .tc.act { border-left: 3px solid var(--copilot-purple); }
+  .tc.handled { opacity: 0.6; }
+  .tc.handled.vis { opacity: 0.6; }
+  .tc.loop { border-left: 3px solid var(--yellow); }
 
-  .tcard-icon { flex-shrink: 0; font-size: 16px; margin-top: 1px; }
-  .tcard-main { flex: 1; min-width: 0; }
-  .tcard-project { font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 2px; }
-  .tcard-title { font-size: 13px; font-weight: 600; line-height: 1.4; margin-bottom: 2px; }
-  .tcard-detail { font-size: 12px; color: var(--text-secondary); line-height: 1.5; }
-  .tcard-sources { margin-top: 4px; display: flex; gap: 4px; flex-wrap: wrap; }
-  .src { display: inline-flex; align-items: center; gap: 3px; font-size: 9px; color: var(--text-muted); background: #F5F5F5; padding: 1px 6px; border-radius: 3px; }
-  .tcard-actions { flex-shrink: 0; display: flex; flex-direction: column; gap: 4px; align-items: flex-end; justify-content: center; }
-  .tbtn { padding: 5px 14px; border-radius: 6px; font-size: 11px; font-weight: 600; cursor: pointer; font-family: var(--font); border: none; }
-  .tbtn.primary { background: var(--copilot-purple); color: white; }
-  .tbtn.primary:hover { background: #6A49E0; }
-  .tbtn.secondary { background: transparent; color: var(--text-secondary); border: 1px solid var(--border); }
-  .tcard-time { font-size: 10px; color: var(--text-muted); }
+  .tc-icon { flex-shrink: 0; font-size: 15px; margin-top: 1px; }
+  .tc-main { flex: 1; min-width: 0; }
+  .tc-proj { font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 1px; }
+  .tc-title { font-size: 13px; font-weight: 600; line-height: 1.4; margin-bottom: 2px; }
+  .tc-detail { font-size: 12px; color: var(--text-secondary); line-height: 1.5; }
+  .tc-src { margin-top: 3px; display: flex; gap: 4px; flex-wrap: wrap; }
+  .sp { display: inline-flex; align-items: center; gap: 2px; font-size: 9px; color: var(--text-muted); background: #F5F5F5; padding: 1px 5px; border-radius: 3px; }
+  .tc-right { flex-shrink: 0; display: flex; flex-direction: column; gap: 4px; align-items: flex-end; justify-content: center; }
+  .tb { padding: 5px 14px; border-radius: 6px; font-size: 11px; font-weight: 600; cursor: pointer; font-family: var(--font); border: none; }
+  .tb.pri { background: var(--copilot-purple); color: white; }
+  .tb.pri:hover { background: #6A49E0; }
+  .tb.sec { background: transparent; color: var(--text-secondary); border: 1px solid var(--border); }
+  .tc-time { font-size: 10px; color: var(--text-muted); }
 
-  /* App icon */
+  /* App icons */
   .ai { width: 14px; height: 14px; border-radius: 2px; display: inline-flex; align-items: center; justify-content: center; font-size: 7px; color: white; font-weight: 700; vertical-align: -1px; }
   .ai.ol { background: #0078D4; }
   .ai.tm { background: #6264A7; }
   .ai.xl { background: #107C10; }
   .ai.wd { background: #185ABD; }
 
-  /* Draft expandable */
-  .draft-expand { display: none; margin-top: 8px; padding: 10px 14px; background: #FAFAFA; border-radius: 6px; border-left: 3px solid var(--copilot-purple); font-size: 12px; line-height: 1.7; color: var(--text-secondary); }
-  .draft-expand.open { display: block; animation: fadeIn 0.3s ease; }
+  /* Draft expand */
+  .draft-ex { display: none; margin-top: 8px; padding: 10px 14px; background: #FAFAFA; border-radius: 6px; border-left: 3px solid var(--copilot-purple); font-size: 12px; line-height: 1.7; color: var(--text-secondary); }
+  .draft-ex.open { display: block; animation: fadeIn 0.3s ease; }
   .cite-row { margin-top: 6px; display: flex; gap: 4px; flex-wrap: wrap; }
-  .cite { display: inline-flex; align-items: center; gap: 3px; background: #EFEFEF; border: 1px solid var(--border); border-radius: 3px; padding: 1px 6px; font-size: 9px; color: var(--text-muted); }
+  .cite { display: inline-flex; align-items: center; gap: 2px; background: #EFEFEF; border: 1px solid var(--border); border-radius: 3px; padding: 1px 5px; font-size: 9px; color: var(--text-muted); }
 
-  /* Workstream detail view */
-  .ws-detail { display: none; }
-  .ws-detail.active { display: block; }
-  .ws-header { display: flex; align-items: center; gap: 10px; margin-bottom: 16px; }
-  .ws-back { font-size: 14px; cursor: pointer; color: var(--text-muted); padding: 4px 8px; border-radius: 4px; }
-  .ws-back:hover { background: var(--surface-hover); }
-  .ws-title { font-size: 16px; font-weight: 600; }
-  .ws-status { font-size: 11px; padding: 2px 8px; border-radius: 10px; font-weight: 500; }
-
-  /* Confirm */
-  .confirm-chip { display: inline-flex; align-items: center; gap: 6px; background: var(--green-light); border-radius: 8px; padding: 8px 14px; font-size: 13px; color: var(--green); font-weight: 500; }
-
-  /* ═══ Summary bar ═══ */
-  .summary-bar {
-    padding: 8px 24px; border-top: 1px solid var(--border-light); background: var(--surface);
-    display: flex; align-items: center; gap: 16px; font-size: 11px; color: var(--text-muted); flex-shrink: 0;
-  }
+  /* ═══ Input Bar (original) ═══ */
+  .input-bar-container { padding: 12px 20%; border-top: 1px solid var(--border-light); background: var(--surface); flex-shrink: 0; }
+  .input-bar { border-radius: 12px; border: 1px solid var(--border); overflow: hidden; background: var(--surface); }
+  .input-bar input { width: 100%; border: none; outline: none; font-size: 14px; font-family: var(--font); background: transparent; color: var(--text); padding: 14px 16px 8px; display: block; }
+  .input-bar input::placeholder { color: var(--text-muted); }
+  .input-bar-bottom { display: flex; align-items: center; justify-content: space-between; padding: 4px 12px 10px; }
+  .input-disclaimer { text-align: center; font-size: 11px; color: var(--text-muted); margin-top: 6px; }
 
   /* ═══ Step Controls ═══ */
   .step-controls {
@@ -206,23 +204,22 @@
     pointer-events: none;
   }
   .ann.visible { opacity: 1; visibility: visible; }
-  .ann-tag { font-weight: 700; color: var(--copilot-purple); font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px; }
+  .ann-tag { font-weight: 700; color: var(--copilot-purple); font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px; display: flex; align-items: center; gap: 6px; }
+  .ann-num { background: var(--copilot-purple); color: white; font-size: 9px; padding: 1px 5px; border-radius: 3px; }
   .ann-body { color: var(--text-secondary); }
 
   .hidden { display: none !important; }
   @keyframes fadeIn { from { opacity:0; } to { opacity:1; } }
   @keyframes fadeInUp { from { opacity:0; transform: translateY(8px); } to { opacity:1; transform: translateY(0); } }
-  @keyframes ringPulse { 0%,100% { box-shadow: 0 0 0 0 rgba(123,87,255,0.3); } 50% { box-shadow: 0 0 0 4px rgba(123,87,255,0.15); } }
-  @keyframes pulse { 0%,100% { opacity:1; } 50% { opacity:0.35; } }
+  @keyframes ringPulse { 0%,100% { box-shadow: 0 0 0 0 rgba(123,87,255,0.3); } 50% { box-shadow: 0 0 0 4px rgba(123,87,255,0.12); } }
 </style>
 </head>
 <body>
 
 <!-- ═══ LANDING ═══ -->
 <div class="landing" id="landing">
-  <div class="landing-badge">Interactive Prototype</div>
-  <h1>Copilot Tasks</h1>
-  <h2>for Work</h2>
+  <h1>Copilot Tasks, for Work</h1>
+  <h2>The enterprise experience layer</h2>
   <p class="sub">Your workstreams run in the background. When you're ready, glance at what matters. Tap a project to drill in. Act on what only you can decide.</p>
   <button class="start-btn" onclick="startDemo()">Open your Monday morning →</button>
   <div class="meta">Prototype by Hema Sridharan</div>
@@ -230,200 +227,218 @@
 
 <!-- ═══ SHELL ═══ -->
 <div class="shell">
-  <!-- Mini sidebar -->
+
+  <!-- ═══ SIDEBAR (matching original) ═══ -->
   <div class="sidebar">
-    <div class="sidebar-logo"><svg viewBox="0 0 24 24" fill="none"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" fill="white" opacity="0.9"/></svg></div>
-    <div class="sidebar-icon">💬</div>
-    <div class="sidebar-icon active">⚡</div>
-    <div class="sidebar-bottom"><div class="sidebar-avatar">HS</div></div>
+    <div class="sidebar-top">
+      <img src="copi-header.png" style="height:28px;" alt="Copilot" />
+      <button class="sidebar-toggle">☰</button>
+    </div>
+    <div style="padding:0;">
+      <img src="leftrail-top.png" style="width:100%; display:block;" alt="Nav" />
+    </div>
+    <div class="sidebar-divider"></div>
+    <div class="sidebar-section">
+      <div class="section-header">Chats <span style="cursor:pointer;"><svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="#616161" stroke-width="1.5" stroke-linecap="round"><circle cx="7" cy="7" r="5.5"/><line x1="11" y1="11" x2="14.5" y2="14.5"/></svg></span></div>
+      <div class="chat-list-item active" id="chatBudget">
+        <div class="chat-title-row"><span class="chat-title-text">Q3 Budget Review</span><span style="width:8px;height:8px;border-radius:50%;background:#0F6CBD;display:inline-block;"></span></div>
+      </div>
+      <div class="chat-list-item" id="chatStrategy">
+        <div class="chat-title-row"><span class="chat-title-text">Product Strategy H2</span><span style="width:8px;height:8px;border-radius:50%;background:#0F6CBD;display:inline-block;"></span></div>
+      </div>
+      <div class="chat-list-item" id="chatHiring">
+        <div class="chat-title-row"><span class="chat-title-text">Hiring Plan — Eng</span><span style="width:8px;height:8px;border-radius:50%;background:#0F6CBD;display:inline-block;"></span></div>
+      </div>
+      <div class="chat-list-item"><span class="chat-title-text">Legal Compliance</span></div>
+      <div class="chat-list-item"><span class="chat-title-text">Meeting Prep — Lead...</span></div>
+      <div class="chat-list-item"><span class="chat-title-text">Summary Request for...</span></div>
+    </div>
+    <div class="sidebar-bottom">
+      <div class="apps-link">&#x2B1B; Apps</div>
+      <div class="user-row">
+        <div class="user-avatar" style="background:#7B57FF;">CL</div>
+        <div style="flex:1;">
+          <div class="user-name">Cindy Luo</div>
+          <div class="premium-badge">M365 Copilot (Premium)</div>
+        </div>
+        <span style="font-size:14px; color:var(--text-muted); cursor:pointer;">&middot;&middot;&middot;</span>
+      </div>
+    </div>
   </div>
 
-  <!-- Main -->
+  <!-- ═══ MAIN ═══ -->
   <div class="main">
-
-    <!-- ═══ STORY BUBBLES ═══ -->
-    <div class="stories-bar" id="storiesBar">
-      <div class="story active" id="storyAll" onclick="showView('all')">
-        <div class="story-ring urgent">
-          <div class="story-inner">✦</div>
-        </div>
-        <div class="story-label">
-          For you
-          <span class="story-status">3 actions</span>
-        </div>
+    <!-- Topbar (matching original) -->
+    <div class="topbar">
+      <div class="topbar-title">Tasks</div>
+      <div class="topbar-toggle">
+        <button class="active">Work</button>
+        <button>Web</button>
       </div>
-      <div class="story" id="storyBudget" onclick="showView('budget')">
-        <div class="story-ring action">
-          <div class="story-inner" style="font-size:14px; color:#0F6CBD;">B</div>
-        </div>
-        <div class="story-label">
-          Budget
-          <span class="story-status">send update</span>
-        </div>
-      </div>
-      <div class="story" id="storyHiring" onclick="showView('hiring')">
-        <div class="story-ring action">
-          <div class="story-inner" style="font-size:14px; color:#107C10;">H</div>
-        </div>
-        <div class="story-label">
-          Hiring
-          <span class="story-status">2 new matches</span>
-        </div>
-      </div>
-      <div class="story" id="storyLegal" onclick="showView('legal')">
-        <div class="story-ring stale">
-          <div class="story-inner" style="font-size:14px; color:#6264A7;">L</div>
-        </div>
-        <div class="story-label">
-          Legal
-          <span class="story-status">6d unanswered</span>
-        </div>
-      </div>
-      <div class="story" id="storyStrategy" onclick="showView('strategy')">
-        <div class="story-ring ok">
-          <div class="story-inner" style="font-size:14px; color:#D24726;">S</div>
-        </div>
-        <div class="story-label">
-          Strategy
-          <span class="story-status">on track</span>
-        </div>
+      <div style="margin-left:auto;">
+        <img src="right-header.png" style="height:36px;" alt="Actions" />
       </div>
     </div>
 
-    <!-- ═══ CONTENT ═══ -->
-    <div class="content-area" id="contentArea">
-      <div class="content-inner" id="contentInner">
+    <!-- Content -->
+    <div class="convo-area" id="convoArea">
+      <div class="convo-inner" id="convoInner">
 
-        <!-- ═══ ALL VIEW (default) ═══ -->
-        <div class="ws-detail active" id="viewAll">
-          <div class="morning-header hidden" id="morningHeader">
-            <h2>Good morning, Hema</h2>
-            <div class="mh-sub">Monday, March 20 · Copilot ran your tasks at 7:00 AM</div>
-            <div class="mh-stats">
-              <div class="mh-stat"><span class="mh-dot" style="background:var(--copilot-purple);"></span> 3 need you</div>
-              <div class="mh-stat"><span class="mh-dot" style="background:var(--green);"></span> 5 handled</div>
-              <div class="mh-stat"><span class="mh-dot" style="background:var(--text-muted);"></span> 2 later</div>
+        <!-- ═══ STORY BUBBLES ═══ -->
+        <div class="stories hidden" id="storiesRow">
+          <div class="story" id="stAll">
+            <div class="story-ring urgent"><div class="story-inner" style="font-size:18px;">✦</div></div>
+            <div class="story-name">For you</div>
+            <div class="story-sub">3 actions</div>
+          </div>
+          <div class="story" id="stBudget">
+            <div class="story-ring action"><div class="story-inner" style="color:#0F6CBD;">B</div></div>
+            <div class="story-name">Budget</div>
+            <div class="story-sub">send update</div>
+          </div>
+          <div class="story" id="stHiring">
+            <div class="story-ring action"><div class="story-inner" style="color:#107C10;">H</div></div>
+            <div class="story-name">Hiring</div>
+            <div class="story-sub">2 matches</div>
+          </div>
+          <div class="story" id="stLegal">
+            <div class="story-ring stale"><div class="story-inner" style="color:#6264A7;">L</div></div>
+            <div class="story-name">Legal</div>
+            <div class="story-sub">6d stale</div>
+          </div>
+          <div class="story" id="stStrategy">
+            <div class="story-ring ok"><div class="story-inner" style="color:#D24726;">S</div></div>
+            <div class="story-name">Strategy</div>
+            <div class="story-sub">on track</div>
+          </div>
+        </div>
+
+        <!-- ═══ MORNING HEADER ═══ -->
+        <div class="morning hidden" id="morningH">
+          <h2>Good morning, Cindy</h2>
+          <div class="m-sub">Monday, March 20 · Tasks ran at 7:00 AM</div>
+          <div class="m-stats">
+            <span><span class="m-dot" style="background:var(--copilot-purple);"></span>3 need you</span>
+            <span><span class="m-dot" style="background:var(--green);"></span>5 handled</span>
+            <span><span class="m-dot" style="background:var(--text-muted);"></span>2 later</span>
+          </div>
+        </div>
+
+        <!-- ═══ NEEDS YOU ═══ -->
+        <div class="hidden" id="priSection">
+          <div class="sec-label">Needs you now</div>
+
+          <div class="tc act" id="t1">
+            <div class="tc-icon">📋</div>
+            <div class="tc-main">
+              <div class="tc-proj" style="color:#0F6CBD;">Budget</div>
+              <div class="tc-title">VP status update — drafted and sourced</div>
+              <div class="tc-detail">Revenue $4.1M (+12%), April launch confirmed, Legal pending.</div>
+              <div class="tc-src">
+                <span class="sp"><span class="ai xl">X</span> Q1_Tracker</span>
+                <span class="sp"><span class="ai tm">T</span> #launches</span>
+                <span class="sp"><span class="ai ol">O</span> Legal</span>
+              </div>
+              <div class="draft-ex" id="draft1">
+                <strong>1.</strong> Revenue $4.1M, +12% WoW. 23 deals, 8 at negotiation.<br/>
+                <strong>2.</strong> April launch confirmed (#product-launches, Mar 17). Legal review pending.<br/>
+                <strong>3.</strong> 47/50 headcount. ML Engineer open — 4 candidates, ~6 wks.
+                <div class="cite-row">
+                  <span class="cite"><span class="ai xl">X</span> B4:D14</span>
+                  <span class="cite"><span class="ai tm">T</span> Mar 17</span>
+                  <span class="cite"><span class="ai ol">O</span> Mar 14</span>
+                </div>
+              </div>
+            </div>
+            <div class="tc-right">
+              <button class="tb pri" onclick="sendVP()">Send</button>
+              <button class="tb sec" onclick="toggleDraft('draft1')">Preview</button>
+              <span class="tc-time">⚠️ 1 VP</span>
             </div>
           </div>
 
-          <!-- Priority actions -->
-          <div class="priority-section hidden" id="prioritySection">
-            <div class="section-label">Needs you now</div>
-
-            <div class="tcard action-needed" id="t1">
-              <div class="tcard-icon">📋</div>
-              <div class="tcard-main">
-                <div class="tcard-project" style="color:#0F6CBD;">Budget</div>
-                <div class="tcard-title">VP status update — drafted and sourced</div>
-                <div class="tcard-detail">Revenue $4.1M (+12%), April launch confirmed, Legal pending. Every claim cited.</div>
-                <div class="tcard-sources">
-                  <span class="src"><span class="ai xl">X</span> Q1_Tracker</span>
-                  <span class="src"><span class="ai tm">T</span> #launches</span>
-                  <span class="src"><span class="ai ol">O</span> Legal</span>
-                </div>
-                <div class="draft-expand" id="draft1">
-                  <strong>1.</strong> Revenue hit $4.1M, up 12% WoW. 23 deals, 8 at negotiation.<br/>
-                  <strong>2.</strong> April launch confirmed (#product-launches, Mar 17). Legal review pending.<br/>
-                  <strong>3.</strong> 47/50 headcount filled. ML Engineer open — 4 candidates, ~6 wks.
-                  <div class="cite-row">
-                    <span class="cite"><span class="ai xl">X</span> B4:D14</span>
-                    <span class="cite"><span class="ai tm">T</span> Mar 17</span>
-                    <span class="cite"><span class="ai ol">O</span> Mar 14</span>
-                  </div>
-                </div>
-              </div>
-              <div class="tcard-actions">
-                <button class="tbtn primary" onclick="sendVP()">Send</button>
-                <button class="tbtn secondary" onclick="toggleDraft('draft1')">Preview</button>
-                <span class="tcard-time">⚠️ 1 VP</span>
-              </div>
+          <div class="tc act" id="t2">
+            <div class="tc-icon">👥</div>
+            <div class="tc-main">
+              <div class="tc-proj" style="color:#107C10;">Hiring</div>
+              <div class="tc-title">2 new ML Engineer candidates match criteria</div>
+              <div class="tc-detail">Both L6+, ML background. Recruiter flagged overnight.</div>
             </div>
-
-            <div class="tcard action-needed" id="t2">
-              <div class="tcard-icon">👥</div>
-              <div class="tcard-main">
-                <div class="tcard-project" style="color:#107C10;">Hiring</div>
-                <div class="tcard-title">2 new ML Engineer candidates match your criteria</div>
-                <div class="tcard-detail">Both L6+, ML background, Bay Area. Recruiter flagged overnight. Review profiles?</div>
-              </div>
-              <div class="tcard-actions">
-                <button class="tbtn primary">Review</button>
-              </div>
-            </div>
-
-            <div class="tcard action-needed" id="t3">
-              <div class="tcard-icon">⚠️</div>
-              <div class="tcard-main">
-                <div class="tcard-project" style="color:#6264A7;">Legal</div>
-                <div class="tcard-title">Compliance email unanswered — 6 days</div>
-                <div class="tcard-detail">Legal sync is Thursday. Suggest replying before then. Draft available.</div>
-              </div>
-              <div class="tcard-actions">
-                <button class="tbtn primary">Draft reply</button>
-                <span class="tcard-time" style="color:var(--yellow);">6 days</span>
-              </div>
-            </div>
+            <div class="tc-right"><button class="tb pri">Review</button></div>
           </div>
 
-          <!-- What's been handled -->
-          <div class="priority-section hidden" id="handledSection">
-            <div class="section-label">Already handled</div>
-
-            <div class="tcard handled" id="t4">
-              <div class="tcard-icon" style="font-size:14px;">✅</div>
-              <div class="tcard-main">
-                <div class="tcard-title" style="font-weight:500;">Found that Teams resolved an unanswered email thread</div>
-                <div class="tcard-detail">PM timeline → April launch confirmed in #product-launches. Used in your status update.</div>
-              </div>
-              <div class="tcard-actions"><span class="tcard-time">7:01</span></div>
+          <div class="tc act" id="t3">
+            <div class="tc-icon">⚠️</div>
+            <div class="tc-main">
+              <div class="tc-proj" style="color:#6264A7;">Legal</div>
+              <div class="tc-title">Compliance email unanswered — 6 days</div>
+              <div class="tc-detail">Sync Thursday. Suggest replying before then.</div>
             </div>
-
-            <div class="tcard handled" id="t5">
-              <div class="tcard-icon" style="font-size:14px;">✅</div>
-              <div class="tcard-main">
-                <div class="tcard-title" style="font-weight:500;">Pulled Q1 metrics + cross-referenced VP's question</div>
-                <div class="tcard-detail">VP asked about trajectory → 12% jump answers it directly. Used in bullet 1.</div>
-              </div>
-              <div class="tcard-actions"><span class="tcard-time">7:02</span></div>
-            </div>
-
-            <div class="tcard handled" id="t6">
-              <div class="tcard-icon" style="font-size:14px;">✅</div>
-              <div class="tcard-main">
-                <div class="tcard-title" style="font-weight:500;">QBR Wednesday — prep note ready (data shifted +28%)</div>
-                <div class="tcard-detail">Revenue was $3.2M at last QBR. Now $4.1M. Lead with momentum.</div>
-              </div>
-              <div class="tcard-actions"><span class="tcard-time">7:03</span></div>
-            </div>
-
-            <div class="tcard handled" id="t7">
-              <div class="tcard-icon" style="font-size:14px;">✅</div>
-              <div class="tcard-main">
-                <div class="tcard-title" style="font-weight:500; color:var(--text-muted);">Eng standup, legal sync prep, strategy deck — all on track</div>
-              </div>
-              <div class="tcard-actions"><span class="tcard-time" style="color:var(--green);">✓</span></div>
+            <div class="tc-right">
+              <button class="tb pri">Draft reply</button>
+              <span class="tc-time" style="color:var(--yellow);">6 days</span>
             </div>
           </div>
+        </div>
 
-          <!-- Loop-back -->
-          <div class="priority-section hidden" id="loopSection">
-            <div class="section-label">Loop-back · new development</div>
+        <!-- ═══ HANDLED ═══ -->
+        <div class="hidden" id="handledSection">
+          <div class="sec-label">Already handled</div>
 
-            <div class="tcard loop-back" id="t8">
-              <div class="tcard-icon">🔄</div>
-              <div class="tcard-main">
-                <div class="tcard-project" style="color:#0F6CBD;">Budget</div>
-                <div class="tcard-title">Sarah (CFO) replied to your budget revision</div>
-                <div class="tcard-detail">"Looks good, but can we add a risk section for the ML hiring gap?" I've drafted a 2-paragraph addition based on pipeline data. Review?</div>
-                <div class="tcard-sources">
-                  <span class="src"><span class="ai wd">W</span> Q3_Budget v2.4</span>
-                  <span class="src"><span class="ai xl">X</span> Hiring pipeline</span>
-                </div>
+          <div class="tc handled" id="t4">
+            <div class="tc-icon" style="font-size:13px;">✅</div>
+            <div class="tc-main">
+              <div class="tc-title" style="font-weight:500;">Teams resolved an unanswered email thread</div>
+              <div class="tc-detail">PM timeline → April launch in #product-launches. Used in status update.</div>
+            </div>
+            <div class="tc-right"><span class="tc-time">7:01</span></div>
+          </div>
+
+          <div class="tc handled" id="t5">
+            <div class="tc-icon" style="font-size:13px;">✅</div>
+            <div class="tc-main">
+              <div class="tc-title" style="font-weight:500;">Pulled Q1 metrics + matched VP's question</div>
+              <div class="tc-detail">12% jump directly answers VP's trajectory question.</div>
+            </div>
+            <div class="tc-right"><span class="tc-time">7:02</span></div>
+          </div>
+
+          <div class="tc handled" id="t6">
+            <div class="tc-icon" style="font-size:13px;">✅</div>
+            <div class="tc-main">
+              <div class="tc-title" style="font-weight:500;">QBR Wednesday — data shifted +28% since last meeting</div>
+              <div class="tc-detail">Revenue was $3.2M then. Now $4.1M. Prep note ready.</div>
+            </div>
+            <div class="tc-right"><span class="tc-time">7:03</span></div>
+          </div>
+
+          <div class="tc handled" id="t7">
+            <div class="tc-icon" style="font-size:13px;">✅</div>
+            <div class="tc-main">
+              <div class="tc-title" style="font-weight:500; color:var(--text-muted);">Eng standup, legal sync, strategy deck — on track</div>
+            </div>
+            <div class="tc-right"><span class="tc-time" style="color:var(--green);">✓</span></div>
+          </div>
+        </div>
+
+        <!-- ═══ LOOP-BACK ═══ -->
+        <div class="hidden" id="loopSection">
+          <div class="sec-label">Loop-back · new development</div>
+
+          <div class="tc loop" id="t8">
+            <div class="tc-icon">🔄</div>
+            <div class="tc-main">
+              <div class="tc-proj" style="color:#0F6CBD;">Budget</div>
+              <div class="tc-title">Sarah (CFO) replied — wants a risk section</div>
+              <div class="tc-detail">"Can we add a risk section for the ML hiring gap?" Draft addition ready using pipeline data.</div>
+              <div class="tc-src">
+                <span class="sp"><span class="ai wd">W</span> Q3_Budget v2.4</span>
+                <span class="sp"><span class="ai xl">X</span> Hiring pipeline</span>
               </div>
-              <div class="tcard-actions">
-                <button class="tbtn primary">Review draft</button>
-                <span class="tcard-time">Just now</span>
-              </div>
+            </div>
+            <div class="tc-right">
+              <button class="tb pri">Review draft</button>
+              <span class="tc-time">Just now</span>
             </div>
           </div>
         </div>
@@ -431,12 +446,16 @@
       </div>
     </div>
 
-    <!-- Summary -->
-    <div class="summary-bar">
-      <span>All access DLP-audited</span>
-      <span>·</span>
-      <span>Next scheduled run: 2:00 PM</span>
-      <span style="margin-left:auto;">Tap a project bubble to drill in →</span>
+    <!-- ═══ Input Bar (matching original) ═══ -->
+    <div class="input-bar-container">
+      <div class="input-bar">
+        <input type="text" placeholder="Message Copilot" readonly />
+        <div class="input-bar-bottom">
+          <img src="input-bar-bottomleft.png" style="height:24px;" alt="Tools" />
+          <img src="input-bar-bottomright.png" style="height:24px;" alt="Actions" />
+        </div>
+      </div>
+      <div class="input-disclaimer">AI-generated content may be incorrect</div>
     </div>
   </div>
 </div>
@@ -453,14 +472,13 @@
 <div class="end-overlay" id="endOverlay">
   <div class="end-card">
     <h2>Copilot Tasks, for Work</h2>
-    <p class="end-sub">Your workstreams, managed. Not a wizard. Not a single pipeline. A living dashboard of everything Copilot is handling across your projects.</p>
+    <p class="end-sub">Your workstreams, managed. Not a wizard. Not a pipeline. A living view of everything Copilot is handling across your projects.</p>
     <div class="end-list">
-      <div class="el"><strong>Story bubbles</strong> — your projects at a glance, with status rings</div>
+      <div class="el"><strong>Story bubbles</strong> — your projects at a glance, status rings tell the story</div>
       <div class="el"><strong>Priority surfacing</strong> — Copilot triages what needs you vs. what's handled</div>
-      <div class="el"><strong>Loop-backs</strong> — stakeholder replies create new items, not new tasks</div>
-      <div class="el"><strong>Cross-app reasoning</strong> — Teams resolved an email you didn't know about</div>
-      <div class="el"><strong>One action, not four approvals</strong> — send the VP update. Done.</div>
-      <div class="el"><strong>Ambient</strong> — runs all day, surfaces only what matters</div>
+      <div class="el"><strong>Loop-backs</strong> — stakeholders reply, the system keeps up</div>
+      <div class="el"><strong>Cross-app reasoning</strong> — Teams answered an email you didn't know about</div>
+      <div class="el"><strong>One real decision</strong> — send the VP update. Everything else was handled.</div>
     </div>
     <button class="start-btn" onclick="resetDemo()" style="font-size:13px; padding:10px 28px;">Restart ↺</button>
   </div>
@@ -468,24 +486,24 @@
 
 <!-- ═══ ANNOTATIONS ═══ -->
 <div class="ann" id="ann1" style="top:100px; right:24px;">
-  <div class="ann-tag">Story Bubbles</div>
-  <div class="ann-body">Each project is a ring — <strong>color = status</strong>. Purple pulse = urgent. Red = action needed. Yellow = stale. Green = on track. Tap any to drill in. Like Instagram stories for your workstreams.</div>
+  <div class="ann-tag"><span class="ann-num">1</span> Story Bubbles</div>
+  <div class="ann-body">Each project is a ring. <strong>Color = status.</strong> Purple pulse = urgent. Red = action needed. Yellow = stale. Green = on track. Tap to drill in.</div>
 </div>
-<div class="ann" id="ann2" style="top:140px; right:24px;">
-  <div class="ann-tag">Priority Triage</div>
-  <div class="ann-body">Only 3 items need you. Everything else is <strong>already handled</strong>. Copilot decides what's urgent based on stakeholder weight, deadline, and staleness.</div>
+<div class="ann" id="ann2" style="top:130px; right:24px;">
+  <div class="ann-tag"><span class="ann-num">2</span> Priority Triage</div>
+  <div class="ann-body">Only 3 items need you. The rest are <strong>handled</strong>. One click to send, preview, or draft. 90 seconds of your morning.</div>
 </div>
-<div class="ann" id="ann3" style="top:160px; right:24px;">
-  <div class="ann-tag">Already Handled</div>
-  <div class="ann-body">Cross-app reasoning, metric pulls, meeting prep — all <strong>done before you arrived</strong>. Visible for transparency but not demanding action.</div>
+<div class="ann" id="ann3" style="top:140px; right:24px;">
+  <div class="ann-tag"><span class="ann-num">3</span> Already Done</div>
+  <div class="ann-body">Cross-app reasoning, metric pulls, meeting prep — <strong>done at 7am</strong>. Visible for trust, not demanding action.</div>
 </div>
-<div class="ann" id="ann4" style="top:150px; right:24px;">
-  <div class="ann-tag">Loop-Back</div>
-  <div class="ann-body">Sarah replied to the budget doc. Copilot <strong>already drafted a response</strong> using pipeline data. Work tasks aren't linear — they loop. The system handles it.</div>
+<div class="ann" id="ann4" style="top:130px; right:24px;">
+  <div class="ann-tag"><span class="ann-num">4</span> Loop-Back</div>
+  <div class="ann-body">Sarah replied. Copilot <strong>already drafted a response</strong>. Work isn't linear — the system keeps up with the back-and-forth.</div>
 </div>
-<div class="ann" id="ann5" style="top:130px; right:24px;">
-  <div class="ann-tag">Sent + Updated</div>
-  <div class="ann-body">One click. VP update sent. Budget bubble turns green. <strong>90 seconds of your morning</strong> — the rest was handled.</div>
+<div class="ann" id="ann5" style="top:100px; right:24px;">
+  <div class="ann-tag"><span class="ann-num">5</span> Sent</div>
+  <div class="ann-body">VP update sent. Budget bubble turns green. <strong>Your whole morning took 90 seconds.</strong></div>
 </div>
 
 <script>
@@ -501,23 +519,21 @@ function resetDemo() {
   document.getElementById('endOverlay').classList.remove('visible');
   document.getElementById('landing').classList.remove('hidden');
   document.getElementById('stepControls').style.display = 'none';
-  // Hide sections
-  ['morningHeader','prioritySection','handledSection','loopSection'].forEach(function(id) {
+  ['storiesRow','morningH','priSection','handledSection','loopSection'].forEach(function(id) {
     document.getElementById(id).classList.add('hidden');
   });
-  // Reset cards visibility
-  document.querySelectorAll('.tcard').forEach(function(c) { c.classList.remove('visible'); });
-  document.querySelectorAll('.draft-expand').forEach(function(e) { e.classList.remove('open'); });
-  // Reset VP send
+  document.querySelectorAll('.tc').forEach(function(c) { c.classList.remove('vis'); });
+  document.querySelectorAll('.draft-ex').forEach(function(e) { e.classList.remove('open'); });
+  // Reset send state
   var t1 = document.getElementById('t1');
-  t1.classList.add('action-needed'); t1.classList.remove('handled');
-  t1.querySelector('.tcard-icon').textContent = '📋';
-  t1.querySelector('.tcard-title').textContent = 'VP status update — drafted and sourced';
-  t1.querySelector('.tcard-actions').innerHTML = '<button class="tbtn primary" onclick="sendVP()">Send</button><button class="tbtn secondary" onclick="toggleDraft(\'draft1\')">Preview</button><span class="tcard-time">⚠️ 1 VP</span>';
+  t1.classList.add('act'); t1.classList.remove('handled');
+  t1.querySelector('.tc-icon').textContent = '📋';
+  t1.querySelector('.tc-title').textContent = 'VP status update — drafted and sourced';
+  t1.querySelector('.tc-right').innerHTML = '<button class="tb pri" onclick="sendVP()">Send</button><button class="tb sec" onclick="toggleDraft(\'draft1\')">Preview</button><span class="tc-time">⚠️ 1 VP</span>';
   // Reset story ring
-  var br = document.querySelector('#storyBudget .story-ring');
+  var br = document.querySelector('#stBudget .story-ring');
   br.classList.remove('ok'); br.classList.add('action');
-  document.querySelector('#storyBudget .story-status').textContent = 'send update';
+  document.querySelector('#stBudget .story-sub').textContent = 'send update';
   hideAnns(); step = 0;
 }
 
@@ -530,35 +546,32 @@ function showStep(n) {
   hideAnns();
 
   if (n >= 1) {
-    document.getElementById('morningHeader').classList.remove('hidden');
-    document.getElementById('morningHeader').style.animation = 'fadeInUp 0.4s ease';
+    show('storiesRow'); show('morningH');
+    document.getElementById('morningH').style.animation = 'fadeInUp 0.4s ease';
   }
   if (n >= 2) {
-    var ps = document.getElementById('prioritySection');
-    ps.classList.remove('hidden');
-    ps.querySelectorAll('.tcard').forEach(function(c, i) {
-      setTimeout(function() { c.classList.add('visible'); }, i * 150);
+    show('priSection');
+    document.querySelectorAll('#priSection .tc').forEach(function(c, i) {
+      setTimeout(function() { c.classList.add('vis'); }, i * 150);
     });
   }
   if (n >= 3) {
-    var hs = document.getElementById('handledSection');
-    hs.classList.remove('hidden');
-    hs.querySelectorAll('.tcard').forEach(function(c, i) {
-      setTimeout(function() { c.classList.add('visible'); }, i * 100);
+    show('handledSection');
+    document.querySelectorAll('#handledSection .tc').forEach(function(c, i) {
+      setTimeout(function() { c.classList.add('vis'); }, i * 100);
     });
   }
   if (n >= 4) {
-    var ls = document.getElementById('loopSection');
-    ls.classList.remove('hidden');
-    ls.querySelectorAll('.tcard').forEach(function(c, i) {
-      setTimeout(function() { c.classList.add('visible'); }, 200);
+    show('loopSection');
+    document.querySelectorAll('#loopSection .tc').forEach(function(c) {
+      setTimeout(function() { c.classList.add('vis'); }, 200);
     });
   }
 
   var ann = document.getElementById('ann' + n);
   if (ann) setTimeout(function() { ann.classList.add('visible'); }, 500);
 
-  var area = document.getElementById('contentArea');
+  var area = document.getElementById('convoArea');
   setTimeout(function() { area.scrollTop = area.scrollHeight; }, 300);
 
   if (n === total) {
@@ -566,23 +579,23 @@ function showStep(n) {
   }
 }
 
+function show(id) { document.getElementById(id).classList.remove('hidden'); }
+
 function sendVP() {
   var t1 = document.getElementById('t1');
-  t1.classList.remove('action-needed'); t1.classList.add('handled');
-  t1.querySelector('.tcard-icon').textContent = '✅';
-  t1.querySelector('.tcard-title').textContent = 'VP status update sent ✓';
-  t1.querySelector('.tcard-actions').innerHTML = '<span class="tcard-time" style="color:var(--green);">Sent</span>';
+  t1.classList.remove('act'); t1.classList.add('handled');
+  t1.querySelector('.tc-icon').textContent = '✅';
+  t1.querySelector('.tc-title').textContent = 'VP status update sent ✓';
+  t1.querySelector('.tc-right').innerHTML = '<span class="tc-time" style="color:var(--green);">Sent</span>';
   var d = document.getElementById('draft1'); if(d) d.classList.remove('open');
-  // Update story bubble
-  var br = document.querySelector('#storyBudget .story-ring');
+  // Update story
+  var br = document.querySelector('#stBudget .story-ring');
   br.classList.remove('action'); br.classList.add('ok');
-  document.querySelector('#storyBudget .story-status').textContent = '✓ sent';
-  // Jump to end
+  document.querySelector('#stBudget .story-sub').textContent = '✓ sent';
   step = 5; showStep(5);
 }
 
 function toggleDraft(id) { document.getElementById(id).classList.toggle('open'); }
-function showView(v) { /* stub for drill-in — would filter cards by project */ }
 function hideAnns() { document.querySelectorAll('.ann').forEach(function(el) { el.classList.remove('visible'); }); }
 </script>
 </body>

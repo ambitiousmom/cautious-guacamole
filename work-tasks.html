@@ -670,7 +670,8 @@ var animating = false;
 function startDemo() {
   document.getElementById('landing').classList.add('hidden');
   // Auto-click first task after a pause
-  setTimeout(function() { enterTask(); }, 1200);
+  // SCREENSHOT MODE: disabled auto-play
+  // setTimeout(function() { enterTask(); }, 1200);
 }
 
 /* ═══ Home → Task (auto-plays user bubble → thinking → beat 1) ═══ */
@@ -692,7 +693,8 @@ function enterTask() {
   beat = 0;
   setTimeout(function() {
     var showBtn = document.querySelector('#b1 .btn.pri');
-    if (showBtn && !showBtn.classList.contains('used')) pillClick(showBtn, "Show Sarah's comments");
+    // SCREENSHOT MODE: disabled auto-play
+    // if (showBtn && !showBtn.classList.contains('used')) pillClick(showBtn, "Show Sarah's comments");
   }, 2500);
 }
 
@@ -781,11 +783,11 @@ function pillClick(btn, text) {
         setTimeout(function() {
           show('b2'); scrollConvo();
           pillProcessing = false;
-          // Auto-click "Respond" after reading time
-          setTimeout(function() {
-            var respondBtn = document.querySelector('#b2 .btn.pri');
-            if (respondBtn && !respondBtn.classList.contains('used')) pillClick(respondBtn, "Respond to Sarah's comment");
-          }, 3500);
+          // SCREENSHOT MODE: disabled auto-play
+          // setTimeout(function() {
+          //   var respondBtn = document.querySelector('#b2 .btn.pri');
+          //   if (respondBtn && !respondBtn.classList.contains('used')) pillClick(respondBtn, "Respond to Sarah's comment");
+          // }, 3500);
         }, 300);
       }, 800);
     }, 400);
@@ -796,11 +798,11 @@ function pillClick(btn, text) {
       show('b3'); scrollConvo();
       document.getElementById('xrefHiring').style.display = '';
       pillProcessing = false;
-      // Auto-click "Draft email" after reading time
-      setTimeout(function() {
-        var draftBtn = document.querySelector('#b3 .btn.pri');
-        if (draftBtn && !draftBtn.classList.contains('used')) pillClick(draftBtn, 'Draft email to Sarah');
-      }, 5000);
+      // SCREENSHOT MODE: disabled auto-play
+      // setTimeout(function() {
+      //   var draftBtn = document.querySelector('#b3 .btn.pri');
+      //   if (draftBtn && !draftBtn.classList.contains('used')) pillClick(draftBtn, 'Draft email to Sarah');
+      // }, 5000);
     }, 1200);
   } else if (text.indexOf('Draft') >= 0) {
     beat = 3;
@@ -811,11 +813,11 @@ function pillClick(btn, text) {
         setTimeout(function() {
           show('b4'); scrollConvo();
           pillProcessing = false;
-          // Auto-click "Send" after reading time
-          setTimeout(function() {
-            var sendBtn = document.querySelector('#b4 .btn.pri');
-            if (sendBtn && !sendBtn.classList.contains('used')) pillClick(sendBtn, 'Send email to Sarah');
-          }, 4000);
+          // SCREENSHOT MODE: disabled auto-play
+          // setTimeout(function() {
+          //   var sendBtn = document.querySelector('#b4 .btn.pri');
+          //   if (sendBtn && !sendBtn.classList.contains('used')) pillClick(sendBtn, 'Send email to Sarah');
+          // }, 4000);
         }, 300);
       }, 800);
     }, 600);

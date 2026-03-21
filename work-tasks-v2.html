@@ -209,9 +209,9 @@
   /* ── Action row ── */
   .action-row { display: flex; align-items: center; gap: 10px; margin-top: 12px; }
   .btn { padding: 8px 20px; border-radius: 20px; font-size: 13px; font-weight: 600; cursor: pointer; font-family: var(--font); border: none; transition: background 0.15s; }
-  .btn.pri { background: #F0F0F0; color: var(--text); border: 1px solid var(--border); }
-  .btn.pri:hover { background: #E5E5E5; }
-  .btn.sec { background: transparent; color: var(--text-muted); border: 1px solid var(--border-light); }
+  .btn.pri { background: #EDE8E3; color: var(--text); border: 1px solid var(--border); font-weight: 600; }
+  .btn.pri:hover { background: #E5DFD9; }
+  .btn.sec { background: white; color: var(--text-secondary); border: 1px solid var(--border-light); }
   .btn.sec:hover { background: #F9F9F9; }
   .action-note { font-size: 11px; color: var(--text-muted); }
 
@@ -559,6 +559,7 @@
               </div>
             </div>
             <div class="ptag"><span class="ptag-title">What's special?</span>One Copilot · Word editing in-place</div>
+            <div class="ptag" style="margin-left:4px;"><span class="ptag-title">What's special?</span>Cross-project sync · Hiring data pulled into Budget workstream</div>
             <div class="cp-body" style="margin-top:12px;">
               <p>Want me to notify Sarah?</p>
             </div>
@@ -628,29 +629,14 @@
       <div class="el"><strong>Comment threading</strong> — stakeholder replies shown with draft responses inline</div>
       <div class="el"><strong>Change detection</strong> — flags when data shifted since last meeting</div>
       <div class="el"><strong>Smart priority</strong> — sidebar reorders by actionability, not due date</div>
+      <div class="el"><strong>Cross-project sync</strong> — Hiring pipeline data pulled into Budget workstream</div>
       <div class="el"><strong>Ambient</strong> — "I'll watch and bring it to you when it matters"</div>
     </div>
     <button class="start-btn" onclick="resetDemo()" style="font-size:13px; padding:10px 28px;">Restart ↺</button>
   </div>
 </div>
 
-<!-- ═══ ANNOTATIONS ═══ -->
-<div class="ann" id="ann1" style="top:100px;">
-  <div class="ann-tag">Proactive + Continuous</div>
-  <div class="ann-body">No prompt needed. Copilot <strong>surfaces what changed</strong> across Outlook, Teams, and Excel — in one continuous update.</div>
-</div>
-<div class="ann" id="ann2" style="top:120px;">
-  <div class="ann-tag">Inline Editing + One Checkpoint</div>
-  <div class="ann-body">The draft lives <strong>inside the conversation</strong> as a Word canvas with tracked changes. One approval gate: Send to VP.</div>
-</div>
-<div class="ann" id="ann3" style="top:110px;">
-  <div class="ann-tag">Change Detection + Smart Priority</div>
-  <div class="ann-body">Flags meetings where <strong>data shifted</strong>. Sidebar reorders — next priority surfaces automatically.</div>
-</div>
-<div class="ann" id="ann4" style="top:130px;">
-  <div class="ann-tag">Loop-Back + Inline Editing</div>
-  <div class="ann-body">Sarah replied → Copilot <strong>drafted and inserted a risk section</strong> directly into the doc. Comment resolved. Work graph keeps running.</div>
-</div>
+<!-- No annotations needed — principle tags are inline -->
 
 <script>
 /* ═══ State ═══ */
@@ -664,6 +650,8 @@ var animating = false;
 /* ═══ Landing → Home ═══ */
 function startDemo() {
   document.getElementById('landing').classList.add('hidden');
+  // Auto-click first task after a pause
+  setTimeout(function() { enterTask(); }, 1200);
 }
 
 /* ═══ Home → Task (auto-plays user bubble → thinking → beat 1) ═══ */
@@ -683,7 +671,7 @@ function enterTask() {
   show('b1');
   scrollConvo();
   beat = 0;
-  // Auto-show beat 2 after a pause (no click needed for read-only content)
+  // Auto-show beat 2 after reading time
   setTimeout(function() {
     show('thinkDots');
     scrollConvo();
@@ -693,11 +681,15 @@ function enterTask() {
         beat = 1;
         show('b2');
         scrollConvo();
-        waitingForSend = true;
+        // Auto-click "Respond to comment" after reading time
+        setTimeout(function() {
+          var respondBtn = document.querySelector('#b2 .btn.pri');
+          if (respondBtn && !respondBtn.classList.contains('used')) pillClick(respondBtn, "Respond to Sarah's comment");
+        }, 3000);
         animating = false;
       }, 300);
     }, 800);
-  }, 1500);
+  }, 2500);
 }
 
 /* ═══ Advance beats (click / space / →) ═══ */
@@ -765,31 +757,46 @@ function advance() {
 /* ═══ Pill click — shows user bubble then advances ═══ */
 function pillClick(btn, text) {
   grayParent(btn);
-  // Create and insert user bubble
+  // Create user bubble and insert AFTER the beat that contains this button
   var bubble = document.createElement('div');
   bubble.className = 'user-msg anim-in';
   bubble.innerHTML = '<div class="user-bubble">' + text + '</div>';
-  var inner = document.querySelector('.task-convo-inner');
-  // Find the beat that contains this button and insert after it
   var beatEl = btn.closest('.cp-msg');
-  if (beatEl && beatEl.nextElementSibling) {
-    inner.insertBefore(bubble, beatEl.nextElementSibling);
+  // Insert right after this beat element
+  if (beatEl.nextSibling) {
+    beatEl.parentNode.insertBefore(bubble, beatEl.nextSibling);
   } else {
-    inner.appendChild(bubble);
+    beatEl.parentNode.appendChild(bubble);
   }
   scrollConvo();
   // Determine which action
   if (text.indexOf('Respond') >= 0) {
     waitingForSend = false;
     beat = 2;
-    setTimeout(function() { show('b3'); scrollConvo(); document.getElementById('xrefHiring').style.display = ''; document.getElementById('xrefHiring').textContent = '↳ data pulled for Q3 Budget'; }, 800);
+    setTimeout(function() {
+      show('b3'); scrollConvo();
+      document.getElementById('xrefHiring').style.display = '';
+      document.getElementById('xrefHiring').textContent = '↳ data pulled for Q3 Budget';
+      // Auto-click "Draft email" after reading time
+      setTimeout(function() {
+        var draftBtn = document.querySelector('#b3 .btn.pri');
+        if (draftBtn && !draftBtn.classList.contains('used')) pillClick(draftBtn, 'Draft email to Sarah');
+      }, 4000);
+    }, 800);
   } else if (text.indexOf('Draft') >= 0) {
     beat = 3;
     setTimeout(function() {
       show('thinkDots'); scrollConvo();
       setTimeout(function() {
         fadeOut('thinkDots');
-        setTimeout(function() { show('b4'); scrollConvo(); waitingForEmail = true; }, 300);
+        setTimeout(function() {
+          show('b4'); scrollConvo();
+          // Auto-click "Send" after reading time
+          setTimeout(function() {
+            var sendBtn = document.querySelector('#b4 .btn.pri');
+            if (sendBtn && !sendBtn.classList.contains('used')) pillClick(sendBtn, 'Send email to Sarah');
+          }, 3000);
+        }, 300);
       }, 800);
     }, 400);
   } else if (text.indexOf('Send') >= 0) {
@@ -800,7 +807,13 @@ function pillClick(btn, text) {
     document.getElementById('task1Dot').style.background = 'transparent';
     setTimeout(function() { document.getElementById('sbTask2').style.order = '-1'; document.getElementById('sbTask2').classList.add('active'); }, 600);
     beat = 4;
-    setTimeout(function() { show('b5'); scrollConvo(); }, 600);
+    setTimeout(function() {
+      show('b5'); scrollConvo();
+      // Auto-show end overlay
+      setTimeout(function() {
+        document.getElementById('endOverlay').classList.add('visible');
+      }, 3000);
+    }, 600);
   }
 }
 

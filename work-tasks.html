@@ -836,10 +836,10 @@ function pillClick(btn, text) {
       // Ensure cross-project badge visible
       document.getElementById('xrefHiring').style.display = '';
       pillProcessing = false;
-      // End overlay disabled
-      // setTimeout(function() {
-      //   document.getElementById('endOverlay').classList.add('visible');
-      // }, 3000);
+      // Show Fin after 3 seconds
+      setTimeout(function() {
+        document.getElementById('endOverlay').classList.add('visible');
+      }, 3000);
     }, 1500);
   }
 }

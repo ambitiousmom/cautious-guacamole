@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Copilot Tasks, for Work — Static</title>
+<style>
+  :root {
+    --bg: #FFFFFF;
+    --surface: #F5F1EC;
+    --border: #D9D3CC;
+    --border-light: #E5DFD9;
+    --text: #242424;
+    --text-secondary: #616161;
+    --text-muted: #999;
+    --brand-blue: #0F6CBD;
+    --green: #107C10;
+    --green-light: #DFF6DD;
+    --red: #D13438;
+    --font: 'Segoe UI Variable Display', 'Segoe UI Variable', 'Segoe UI', -apple-system, sans-serif;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: var(--font); background: var(--bg); color: var(--text); }
+  .shell { display: flex; min-height: 100vh; }
+
+  /* Sidebar */
+  .sidebar { width: 220px; min-width: 220px; background: var(--surface); border-right: 1px solid var(--border-light); padding: 14px 0; font-size: 13px; }
+  .sb-brand { font-size: 18px; font-weight: 700; padding: 0 16px 12px; }
+  .sb-section { font-size: 11px; font-weight: 700; color: var(--text); padding: 12px 16px 6px; }
+  .sb-task { padding: 5px 16px; display: flex; flex-direction: column; gap: 2px; }
+  .sb-task.active { background: rgba(0,0,0,0.03); }
+  .sb-task-row { display: flex; align-items: center; gap: 6px; }
+  .sb-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+  .sb-name { font-size: 13px; font-weight: 500; }
+  .sb-sub { font-size: 11px; color: var(--text-muted); padding-left: 14px; }
+  .sb-dim { opacity: 0.3; }
+  .ptag { display: inline-block; font-size: 10px; color: #B4A0FF; background: rgba(30,30,30,0.92); border-radius: 8px; padding: 5px 12px; margin-top: 8px; line-height: 1.4; }
+  .ptag-title { font-weight: 700; font-size: 9px; text-transform: uppercase; letter-spacing: 0.5px; display: block; color: rgba(255,255,255,0.5); margin-bottom: 2px; }
+  .app-icon { width: 14px; height: 14px; border-radius: 3px; display: inline-flex; align-items: center; justify-content: center; font-size: 7px; color: white; font-weight: 700; vertical-align: -2px; }
+  .app-icon.w { background: #185ABD; }
+  .app-icon.x { background: #107C10; }
+  .sb-divider { height: 1px; background: var(--border-light); margin: 8px 16px; }
+
+  /* Main */
+  .main { flex: 1; display: flex; flex-direction: column; }
+  .topbar { height: 44px; display: flex; align-items: center; padding: 0 20px; border-bottom: 1px solid var(--border-light); font-size: 14px; font-weight: 500; position: relative; }
+  .chat { padding: 24px 40px; max-width: 700px; }
+
+  /* Chat elements */
+  .cp-label { font-size: 13px; font-weight: 600; margin-bottom: 8px; }
+  .cp-body { font-size: 14px; line-height: 1.75; margin-bottom: 12px; }
+  .user-bubble { background: var(--surface); padding: 8px 16px; border-radius: 16px 16px 4px 16px; font-size: 13px; display: inline-block; float: right; clear: both; margin: 8px 0; }
+  .clear { clear: both; }
+  .card { background: #F9F9F9; border-radius: 12px; padding: 12px 16px; margin: 8px 0; font-size: 12px; }
+  .card-header { font-size: 11px; font-weight: 600; color: var(--text-muted); margin-bottom: 8px; }
+  .confirm { font-size: 13px; margin: 8px 0; }
+  .confirm .check { color: var(--green); }
+  .pill { display: inline-block; background: #EDE8E3; border: 1px solid var(--border); border-radius: 20px; padding: 6px 14px; font-size: 12px; font-weight: 600; margin: 4px 4px 4px 0; opacity: 0.4; }
+  .pill.active { opacity: 1; }
+  .word-frame { background: white; border: 1px solid var(--border); border-radius: 10px; margin: 10px 0; overflow: hidden; }
+  .word-bar { display: flex; align-items: center; gap: 6px; padding: 6px 12px; background: #F3F3F3; border-bottom: 1px solid #E0E0E0; font-size: 11px; }
+  .word-ribbon { display: flex; gap: 4px; padding: 3px 12px; background: #F9F9F9; border-bottom: 1px solid #E8E8E8; font-size: 9px; color: var(--text-muted); }
+  .word-body { padding: 14px 20px; font-size: 12px; line-height: 1.7; color: var(--text-secondary); }
+  .tracked { background: #E8F5E9; border-left: 3px solid var(--green); padding: 6px 10px; border-radius: 0 6px 6px 0; margin: 6px 0; font-size: 11px; position: relative; }
+  .tracked-badge { position: absolute; right: 6px; top: -7px; background: var(--green); color: white; font-size: 7px; padding: 1px 4px; border-radius: 6px; }
+  .email-card { background: #F9F9F9; border-radius: 12px; overflow: hidden; margin: 10px 0; }
+  .email-header { padding: 8px 14px; font-size: 11px; font-weight: 600; color: var(--text-muted); border-bottom: 1px solid rgba(0,0,0,0.04); }
+  .email-body { padding: 10px 14px; font-size: 12px; line-height: 1.6; }
+  .email-footer { display: flex; align-items: center; gap: 8px; padding: 8px 14px; border-top: 1px solid rgba(0,0,0,0.04); font-size: 11px; }
+  .warning { color: var(--red); }
+  .section-gap { height: 16px; }
+  table { width: 100%; border-collapse: collapse; font-size: 11px; }
+  th { text-align: left; padding: 4px 8px; font-weight: 600; border-bottom: 1px solid rgba(0,0,0,0.06); }
+  td { padding: 4px 8px; }
+</style>
+</head>
+<body>
+<div class="shell">
+
+  <!-- SIDEBAR -->
+  <div class="sidebar">
+    <div class="sb-brand">Copilot</div>
+
+    <div style="padding:4px 12px; font-size:13px; color:var(--text);">
+      <div style="display:flex; align-items:center; gap:10px; padding:6px 8px;"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="#444" stroke-width="1.3"><path d="M12 2.5L3.5 11l-1 2.5 2.5-1L13.5 4"/><path d="M10 4.5l1.5 1.5"/></svg> New chat</div>
+      <div style="display:flex; align-items:center; gap:10px; padding:6px 8px;"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="#444" stroke-width="1.3"><rect x="2" y="2" width="12" height="12" rx="2"/><path d="M5 5h6M5 8h4"/></svg> Library</div>
+      <div style="display:flex; align-items:center; gap:10px; padding:6px 8px;"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="#444" stroke-width="1.3"><rect x="2" y="2" width="12" height="12" rx="2"/><path d="M5 8l2 2 4-4"/></svg> Tasks <span style="font-size:8px; color:var(--text-muted); border:1px solid var(--border); padding:0 4px; border-radius:3px; font-weight:600;">PREVIEW</span></div>
+    </div>
+
+    <div class="sb-divider"></div>
+    <div class="sb-section">Tasks</div>
+
+    <div class="sb-task active">
+      <div class="sb-task-row"><span class="sb-dot" style="background:#E87400;"></span><span class="sb-name">Legal Compliance Review</span></div>
+      <div class="sb-sub">Pending reply · 6d overdue</div>
+    </div>
+    <div class="sb-task">
+      <div class="sb-task-row"><span class="sb-dot" style="background:var(--brand-blue);"></span><span class="sb-name">Engineering Hiring Pipeline</span></div>
+      <div class="sb-sub">Data refreshed overnight</div>
+      <div class="ptag" style="margin-left:0;"><span class="ptag-title">What's special?</span>Cross-project sync · Hiring data pulled into Budget</div>
+    </div>
+    <div class="sb-task sb-dim">
+      <div class="sb-task-row"><span class="sb-dot" style="background:transparent;"></span><span class="sb-name">H2 Product Strategy</span></div>
+      <div class="sb-sub">On track · deck due Fri</div>
+    </div>
+    <div class="sb-task sb-dim">
+      <div class="sb-task-row"><span class="sb-dot" style="background:transparent;"></span><span class="sb-name">Weekly Exec Metrics</span></div>
+      <div class="sb-sub">Auto-generating · Mon 8 AM</div>
+    </div>
+    <div class="sb-task" style="opacity:0.4;">
+      <div class="sb-task-row"><span class="sb-dot" style="background:transparent;"></span><span class="sb-name">Q3 Budget Finalization</span></div>
+      <div class="sb-sub">✓ Updated · email sent</div>
+    </div>
+
+    <div class="sb-divider"></div>
+    <div class="sb-section">Conversations</div>
+    <div class="sb-task"><span class="sb-name" style="font-size:12px; color:var(--text-secondary);">Q3 Budget Review</span></div>
+    <div class="sb-task"><span class="sb-name" style="font-size:12px; color:var(--text-secondary);">Product Strategy H2</span></div>
+    <div class="sb-task"><span class="sb-name" style="font-size:12px; color:var(--text-secondary);">Hiring Plan — Eng</span></div>
+  </div>
+
+  <!-- MAIN -->
+  <div class="main">
+    <div class="topbar">
+      <span>Q3 Budget Finalization</span>
+      <div style="position:absolute; left:50%; transform:translateX(-50%); display:flex; border:1px solid var(--border); border-radius:20px; overflow:hidden;">
+        <span style="padding:4px 16px; background:#EBF3FC; font-size:12px; color:var(--brand-blue); font-weight:600;">Work</span>
+        <span style="padding:4px 16px; font-size:12px; color:var(--text-secondary);">Web</span>
+      </div>
+      <div style="margin-left:auto; display:flex; align-items:center; gap:10px;">
+        <span style="font-size:12px; color:var(--text-secondary); border:1px solid var(--border); padding:3px 10px; border-radius:6px;">Auto ▾</span>
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M10 2L4 5v4c0 4.5 2.6 8.1 6 9 3.4-.9 6-4.5 6-9V5L10 2z" fill="#107C10" stroke="#107C10" stroke-width="0.5"/><path d="M7.5 10l2 2 3.5-4" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+    </div>
+    <div class="chat">
+
+      <!-- Beat 1 -->
+      <div class="cp-label">✦ Copilot</div>
+      <div class="cp-body">
+        <strong>Since you were last here:</strong><br/>
+        • <span class="app-icon w">W</span> <strong>Sarah Chen (CFO) left 2 comments</strong> on Q3_Budget_Proposal.docx<br/>
+        • <span class="app-icon x">X</span> <strong>Q3_Actuals.xlsx</strong> updated · <span class="app-icon x">X</span> <strong>Hiring_Plan_H2.xlsx</strong> refreshed
+      </div>
+      <div class="ptag"><span class="ptag-title">What's special?</span>Proactive · Cross-app awareness</div>
+
+      <div class="section-gap"></div>
+      <div class="user-bubble">Show Sarah's comments</div>
+      <div class="clear"></div>
+
+      <!-- Beat 2 -->
+      <div class="card">
+        <div class="card-header">Suggested response to CFO's comment</div>
+        <div style="font-style:italic; border-left:3px solid var(--text-muted); padding-left:12px; line-height:1.6; color:var(--text-secondary);">
+          "The 28% target is grounded in Q3 actual ROI data — campaign efficiency held at reduced spend."
+        </div>
+        <div style="margin-top:6px; font-size:10px; color:var(--text-muted);"><span class="app-icon x">X</span> Q3_Actuals.xlsx · <span class="app-icon w">W</span> Q3_Budget_Proposal §2</div>
+      </div>
+      <span class="pill">✓ Respond to comment</span><span class="pill">Edit first</span>
+      <div class="ptag"><span class="ptag-title">What's special?</span>Human in the loop · Cited sources</div>
+
+      <div class="section-gap"></div>
+      <div class="user-bubble">Respond to Sarah's comment</div>
+      <div class="clear"></div>
+
+      <!-- Beat 3 -->
+      <div class="confirm"><span class="check">✓</span> Response posted · <span class="check">✓</span> Table inserted · <span class="check">✓</span> Both comments resolved</div>
+
+      <!-- Word canvas -->
+      <div class="word-frame">
+        <div class="word-bar">
+          <span class="app-icon w" style="width:18px; height:18px; font-size:9px;">W</span>
+          <strong>Q3_Budget_Proposal.docx</strong>
+          <span style="margin-left:auto; color:var(--text-muted);">Editing</span>
+        </div>
+        <div class="word-ribbon">
+          <span style="color:var(--brand-blue); font-weight:600;">Home</span>
+          <span>Insert</span><span>Review</span>
+          <span style="margin-left:auto; color:#7B57FF; font-weight:600;">Copilot</span>
+        </div>
+        <div class="word-body">
+          <div class="tracked"><span class="tracked-badge">Copilot</span>Marketing revised to 28%. Hiring pipeline: 5 roles, 13 candidates, completable by Q3.</div>
+        </div>
+      </div>
+      <div class="ptag"><span class="ptag-title">What's special?</span>One Copilot · Word editing in-place</div>
+
+      <div class="section-gap"></div>
+      <div class="user-bubble">Draft email to Sarah</div>
+      <div class="clear"></div>
+
+      <!-- Email -->
+      <div class="email-card">
+        <div class="email-header">Draft email to CFO</div>
+        <div class="email-body">
+          <div><strong>To:</strong> Sarah Chen (CFO) · <strong>Re:</strong> Q3 Budget — Updated</div>
+          <div style="margin-top:4px; font-style:italic; color:var(--text-secondary);">"Marketing revised to 28% with ROI data. Hiring backed by pipeline. Both comments resolved."</div>
+        </div>
+        <div class="email-footer">
+          <span class="warning">⚠ 1 executive</span>
+          <span class="pill" style="margin-left:auto;">Send</span>
+        </div>
+      </div>
+
+      <div class="section-gap"></div>
+      <div class="user-bubble">Send email to Sarah</div>
+      <div class="clear"></div>
+
+      <div class="confirm"><span class="check">✓</span> Email sent to Sarah Chen (CFO)</div>
+      <div class="cp-body" style="font-size:13px; color:var(--text-muted);">Watching for reply. I'll surface it when she responds.</div>
+      <div class="ptag"><span class="ptag-title">What's special?</span>Ambient monitoring · Loop-back ready</div>
+
+    </div>
+  </div>
+</div>
+</body>
+</html>

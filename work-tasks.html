@@ -43,6 +43,8 @@
   .start-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 28px rgba(123,87,255,0.5); }
   .landing .meta { margin-top: 32px; font-size: 11px; color: rgba(255,255,255,0.2); }
 
+  
+  .sb-brand { font-size: 18px; font-weight: 700; color: var(--text); letter-spacing: -0.3px; }
   /* ═══ Shell ═══ */
   .shell { display: flex; height: 100vh; width: 100vw; }
 
@@ -92,7 +94,15 @@
     height: 44px; display: flex; align-items: center; padding: 0 20px;
     border-bottom: 1px solid var(--border-light); background: var(--surface); flex-shrink: 0;
   }
-  .topbar-title { font-size: 14px; font-weight: 500; color: var(--text); flex: 1; }
+  .topbar-title { font-size: 14px; font-weight: 500; color: var(--text); }
+  .topbar-center { position: absolute; left: 50%; transform: translateX(-50%); }
+  .topbar-right-actions { margin-left: auto; display: flex; align-items: center; gap: 8px; }
+  .tb-auto { font-size: 12px; color: var(--text-secondary); border: 1px solid var(--border); padding: 3px 10px; border-radius: 6px; cursor: pointer; }
+  .tb-edit-btn { font-size: 12px; color: white; background: var(--copilot-purple); padding: 3px 10px; border-radius: 6px; cursor: pointer; }
+  .tb-shield { font-size: 14px; color: var(--green); cursor: pointer; }
+  .tb-more { font-size: 16px; color: var(--text-muted); cursor: pointer; letter-spacing: 2px; }
+  .topbar { position: relative; }
+
   .topbar-toggle { display: flex; border: 1px solid var(--border); border-radius: 20px; overflow: hidden; margin-left: auto; }
   .topbar-toggle button { padding: 4px 16px; border: none; background: transparent; font-size: 12px; font-family: var(--font); cursor: pointer; color: var(--text-secondary); }
   .topbar-toggle button.active { background: var(--blue-light); color: var(--brand-blue); font-weight: 600; }
@@ -256,35 +266,29 @@
     </div>
 
     <div class="sb-nav">
-      <div class="sb-nav-item"><span class="sb-nav-icon">📚</span> Library</div>
-      <div class="sb-nav-item"><span class="sb-nav-icon">📓</span> Notebooks</div>
-    </div>
-
-    <div class="sb-divider"></div>
-    <div class="sb-section-label">Agents</div>
-    <div class="sb-nav" style="opacity:0.5;">
-      <div class="sb-nav-item"><span class="sb-nav-icon">🔬</span> Researcher</div>
-      <div class="sb-nav-item"><span class="sb-nav-icon">📊</span> Analyst</div>
+      <div class="sb-nav-item"><span class="sb-nav-icon">✎</span> New chat</div>
+      <div class="sb-nav-item"><span class="sb-nav-icon">☐</span> Library</div>
+      <div class="sb-nav-item"><span class="sb-nav-icon">☑</span> Tasks <span style="font-size:8px; color:var(--text-muted); border:1px solid var(--border); padding:0px 4px; border-radius:3px; margin-left:2px;">PREVIEW</span></div>
     </div>
 
     <div class="sb-divider"></div>
 
     <!-- ═══ TASKS ═══ -->
-    <div class="sb-section-label">☑ Tasks <span style="font-size:8px; color:var(--text-muted); border:1px solid var(--border); padding:0px 4px; border-radius:3px; margin-left:4px; vertical-align:1px;">PREVIEW</span></div>
+    <div class="sb-section-label">Tasks</div>
     <div class="sb-item active" id="sbTask1" onclick="showTask('budget')">
-      <div class="sb-item-row"><span class="sb-item-icon">📋</span><span class="sb-item-name">Send VP status update</span></div>
+      <div class="sb-item-row"><span class="sb-item-icon">▢</span><span class="sb-item-name">Send VP status update</span></div>
       <span class="sb-item-sub">↳ Q3 Budget</span>
     </div>
     <div class="sb-item" id="sbTask2" onclick="showTask('hiring')">
-      <div class="sb-item-row"><span class="sb-item-icon">👥</span><span class="sb-item-name">Review ML candidates</span></div>
+      <div class="sb-item-row"><span class="sb-item-icon">▢</span><span class="sb-item-name">Review ML candidates</span></div>
       <span class="sb-item-sub">↳ Hiring</span>
     </div>
     <div class="sb-item" id="sbTask3">
-      <div class="sb-item-row"><span class="sb-item-icon">⚠</span><span class="sb-item-name">Reply to Legal</span></div>
+      <div class="sb-item-row"><span class="sb-item-icon">▢</span><span class="sb-item-name">Reply to Legal</span></div>
       <span class="sb-item-sub">↳ Compliance · 6d</span>
     </div>
     <div class="sb-item" id="sbTask4">
-      <div class="sb-item-row"><span class="sb-item-icon">📊</span><span class="sb-item-name">Weekly metrics digest</span></div>
+      <div class="sb-item-row"><span class="sb-item-icon">▢</span><span class="sb-item-name">Weekly metrics digest</span></div>
       <span class="sb-item-sub">↳ Strategy · on track</span>
     </div>
 
@@ -315,23 +319,25 @@
     </div>
 
     <div class="sb-bottom">
-      <div class="sb-user">
-        <div class="sb-avatar">CL</div>
-        <div>
-          <div class="sb-user-name">Cindy Luo</div>
-          <div class="sb-user-sub">M365 Copilot</div>
-        </div>
-      </div>
+      <div style="font-size:11px; color:var(--text-muted);">Cindy Luo · M365 Copilot</div>
     </div>
   </div>
 
   <!-- ═══ MAIN ═══ -->
   <div class="main">
     <div class="topbar">
-      <span class="topbar-title" id="topTitle">Home</span>
-      <div class="topbar-toggle">
-        <button>Personal</button>
-        <button class="active">Work</button>
+      <span class="topbar-title" id="topTitle"></span>
+      <div class="topbar-center">
+        <div class="topbar-toggle">
+          <button class="active">Work</button>
+          <button>Web</button>
+        </div>
+      </div>
+      <div class="topbar-right-actions">
+        <span class="tb-auto">Auto ▾</span>
+        <span class="tb-edit-btn">✎ ▾</span>
+        <span class="tb-shield">✓</span>
+        <span class="tb-more">⋯</span>
       </div>
     </div>
 
@@ -561,7 +567,7 @@ function resetDemo() {
   // Hide task view, show home
   document.getElementById('homeView').style.display = '';
   document.getElementById('taskBudget').classList.remove('active');
-  document.getElementById('topTitle').textContent = 'Home';
+  document.getElementById('topTitle').textContent = '';
   // Reset beats
   for (var i = 1; i <= total; i++) {
     var el = document.getElementById('b' + i);
@@ -588,7 +594,7 @@ function showStep(n) {
     // Show home view with sidebar
     document.getElementById('homeView').style.display = '';
     document.getElementById('taskBudget').classList.remove('active');
-    document.getElementById('topTitle').textContent = 'Home';
+    document.getElementById('topTitle').textContent = '';
   }
   if (n >= 2) {
     // Switch to task conversation
@@ -618,7 +624,7 @@ function showStep(n) {
 function showTask(id) {
   document.getElementById('homeView').style.display = 'none';
   document.getElementById('taskBudget').classList.add('active');
-  document.getElementById('topTitle').textContent = '📋 Send VP status update';
+  document.getElementById('topTitle').textContent = 'Send VP status update';
   // Update sidebar active
   document.querySelectorAll('.sb-item').forEach(function(el) { el.classList.remove('active'); });
   document.getElementById('sbTask1').classList.add('active');
@@ -627,7 +633,7 @@ function showTask(id) {
 function sendVP() {
   // Update sidebar task name
   var n = document.getElementById('sbTask1').querySelector('.sb-item-name');
-  n.textContent = '✅ VP status sent';
+  n.textContent = '▢ VP status sent';
   step = 5; showStep(5);
 }
 

@@ -777,17 +777,12 @@ function pillClick(btn, text) {
   if (pillProcessing) return;
   pillProcessing = true;
   grayParent(btn);
-  // Create user bubble and insert AFTER the beat that contains this button
+  // Insert user bubble at the END of current conversation (bottom)
+  var inner = document.querySelector('.task-convo-inner');
   var bubble = document.createElement('div');
   bubble.className = 'user-msg anim-in';
   bubble.innerHTML = '<div class="user-bubble">' + text + '</div>';
-  var beatEl = btn.closest('.cp-msg');
-  // Insert right after this beat element
-  if (beatEl.nextSibling) {
-    beatEl.parentNode.insertBefore(bubble, beatEl.nextSibling);
-  } else {
-    beatEl.parentNode.appendChild(bubble);
-  }
+  inner.appendChild(bubble);
   scrollConvo();
   // Determine which action
   if (text.indexOf('Respond') >= 0) {
@@ -848,6 +843,8 @@ function sendEmail(btn) { pillClick(btn, 'Send email to Sarah'); }
 function show(id) {
   var el = document.getElementById(id);
   if (!el) return;
+  // Move element to end of its parent so it appears after dynamically inserted user bubbles
+  el.parentNode.appendChild(el);
   el.classList.remove('hidden');
   el.classList.add('anim-in');
 }

@@ -330,11 +330,7 @@
         <div class="morning hidden" id="morningH">
           <h2>Good morning, Cindy</h2>
           <div class="m-sub">Monday, March 20 · Tasks ran at 7:00 AM</div>
-          <div class="m-stats">
-            <span><span class="m-dot" style="background:var(--copilot-purple);"></span>3 need you</span>
-            <span><span class="m-dot" style="background:var(--green);"></span>5 handled</span>
-            <span><span class="m-dot" style="background:var(--text-muted);"></span>2 later</span>
-          </div>
+          
         </div>
 
         <!-- ═══ NEEDS YOU ═══ -->
@@ -460,15 +456,18 @@
     </div>
 
     <!-- ═══ Input Bar (matching original) ═══ -->
-    <div class="input-bar-container">
-      <div class="input-bar">
-        <input type="text" placeholder="Message Copilot" readonly />
-        <div class="input-bar-bottom">
-          <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAI4AAAAsCAYAAACzKYDtAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAAFiUAABYlAUlSJPAAAARqSURBVHhe7ZrZK31RFMf9bcbIlKEoGTKlREryohSRQvEgShEelCFFRKIkDzwgSUqKlMzzlFi/vqv26dzt3OO07+/6/dyzPrXD2etM93zu2mvvI4oEwYAofYMgeEHEEYwQcQQjRBzBCBFHMELEEYwQcQQjRBzBiJDF+fz8pPn5eXp7e9O7hAgmZHFOT08pOjqadnZ29K6I4ObmhhYWFmhsbIx2d3f1bt8i4riATJqQkMD3p1ptbS09Pz/rob5DxAkCMk1cXByVlJTQ1tYWXV9fU19fH9/r4OCgHu47fCXO+Pg41dTUeGrFxcV8X9PT09b+7+/vlJycTKmpqQGxw8PDAef5H2lubub7WVlZ0buM8JU4eMD2YcdLcxJHj6mvrw84TzDUw3NriAkHIs4PcXR0xPdVVlZG29vbdHl5aQ1VnZ2dergnuru7KScnh1t2djbFxsZyw+9qO2LCgYjzg7S3t3/JCJmZmXzPoXJxcUG5ubnc8Hu4EXF+EKxRjY6OWrVMY2PjX3vIIk4EixNO3MTBdH9gYICysrL4s8VwhtndxsYGy2zn5OSEGhoaKCkpiWPxE4KfnZ0FxOnifHx80OLiIuXn51NMTAy30tJSPp4XXMXBopeeqkNpvb29+il8SzBxHh4eOLvh88KwiAdeVVVl1UNTU1NWLBYk09PT+aFDrNbWVsrLy+N9UTcdHh5asbo4k5OTvF9aWhr3oUGivb09ax83XMV5eXnhNQy3trS0xBeEG9L79HZ/f6+fwrcEE6e/v58/T8gDiRTLy8u8GFlQUMCFOvoqKir44Y+MjFiZCDO/trY2PgaKeLVdF0f9jeMqXl9fPS9uuorjBRmqzHASB19UCBMfH0/r6+sB8U9PT1RZWWn17e/vc7YoLCzkxUo7yERYNrD36eIoQXH+mZkZz8IoRJx/hJM4kAPDUkpKiuOQYX/46Ecc4rGfHadj6+JAlK6uLuuVCn729PRw1vGCiENEBwcHNDExQbOzs3R+fq53hwWnh6vEccs4iYmJPOwrcdwyTnl5uVUe6OIoIBBe4mINCf1eV8F9LQ7qgaamJr5+1VCAYlIQbpzEAd/VOEVFRXR1deWpxkFGcapxkFWOj48DZmiYYaEfcV7wtTgo6HHtHR0dPH3FtxjfeGzzOi01JZg4yHjqPZk+q8JU217MQgJsc5pVQTD7QqVdHGSv6upq3geSoQ/1Eo4zNzdn7eOGr8TRX3JmZGTwh3V3d2fFrK6u8v1gaqq/+AzWvKZ3O8HEAY+Pj1xvYKqNa0GmqaurC5heK7ANfapWwT7YF8ewYxcHWUlfJ4JokFJfJwqGr8QZGhria7U3XZy1tbUvMd81ry85IwlfiaOD/6vBtWO9A0MEhiqkcGzb3NzUwwUbIYuDtNfS0vIrF/fwz1mqJrA3LOEL7oQszm/n9vaWZ1aqXsHYj/c4gju+F0cwQ8QRjBBxBCNEHMEIEUcwQsQRjBBxBCNEHMEIEUcwQsQRjBBxBCNEHMEIEUcw4g/GyjwYm09AbwAAAABJRU5ErkJggg==" style="height:24px;" alt="Tools" />
-          <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAF4AAAAvCAYAAABqrH0KAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAAFiUAABYlAUlSJPAAAANmSURBVHhe7ZjdK2xRFMD9bUYzZjIoRUbyMN6MNzHNixApCSXNFC9EvHgYHzVlknkRXqSEpHwUQpSvxue6rdU907nr3OnOOXOy93TXr1ZZsz/O9ps9e5+9y0BQQhn/QPgZRLwiRLwiRLwiRLwiRLwiRLwiRLwiRLwiRLwiRLwiRLwiRLwiRLwiRLwiXBO/vb0Nw8PD0NXVBUNDQ7C+vs6rCCZcEZ9IJKC8vNwS/f39vGrJ8v7+DslkEp6fn3mRI4oWv7W1ZRFujqWlJd6kJNnZ2aH/Z2VlhRc5omjxHR0dFtnmCIfDvElJsrm56epEKlp8XV2dRbY5Kioq4PPzkzfTnq+vL7i8vMzlxi97eXk599nV1RV8fHzkcjsULb6ystIim8fj4yNvpj3z8/M09ru7O8q5eFzzvV4vTExMsJaFIeLzMDk5SWM/PT2lnC81uMliPjg4yFoWhojPg4j/IY6Pj2FgYICWEGRqaorGfnZ2Rjlfal5eXv4Q//39TeeXvb09U6/5EfG/mZmZobEeHh5Sblc87gWYj42NmXrNj23x19fX0N3dDQ8PD5QHAgGLaB5PT080I/Bn6tYBxG0M8QcHB5TbXWpub28pHxkZMfWaH9vi8SoAH7CxsUF5dXW1RTSPbDYL+/v79Pfi4iLvUgu0F7+7u0sPmJ2dpTwSiVhEmyMUClG9tbU1yjOZDOtRD7QXj7PX4/FAX18f5QsLCxbZ5ojH41QP1z7MzYcSndBePNLa2gp+v582FDzhtbe3W4RjtLS00BeF9aqqqih0BX+JtbW1cH9/T7ndzfXt7Q3q6+sLvlJwJN5Y53t6eijHYzPOkObmZvD5fNDU1ASjo6Pw+vpK5Z2dnVR/enqa9aQvdme8XRyJR/CdFR+MV7/41vI3cKZHo1Gq19bWRm82pYK24vHia3x8nB6OF2U4w1OpFG2+eG+NAwoGg1Qei8Xyfjm6YuxdNzc3lPOlBg9auNyiAyc4Fm+QTqehoaGBBsWjpqYG5ubmeJOSAPeu8/PzXM7FI/iigGu7E4oWb3ByckKzHgfX29sLR0dHJbW0/Au+1BSLa+IRtwenE8aMX11d5UWOEPEFgq+ZeFVycXHBixzhqngcXGNjY8E3dP8zrooXCkfEK0LEK0LEK0LEK0LEK0LEK0LEK+IX1vpxDmvtWvAAAAAASUVORK5CYII=" style="height:24px;" alt="Actions" />
+    <div style="padding: 12px 16%; border-top: 1px solid var(--border-light); background: var(--surface); flex-shrink: 0;">
+      <div style="border: 1px solid var(--border); border-radius: 16px; background: white; overflow: hidden;">
+        <input type="text" placeholder="Message Copilot" readonly style="width:100%; border:none; outline:none; font-size:14px; font-family:var(--font); background:transparent; color:var(--text); padding:14px 18px 8px; display:block;" />
+        <div style="display:flex; align-items:center; justify-content:space-between; padding:4px 14px 10px;">
+          <span style="font-size:16px; color:var(--text-muted); cursor:pointer;">+</span>
+          <div style="display:flex; gap:12px; align-items:center;">
+            <span style="font-size:14px; color:var(--text-muted); cursor:pointer;">🎙️</span>
+            <span style="font-size:16px; color:var(--text-muted); cursor:pointer;">▙</span>
+          </div>
         </div>
       </div>
-      <div class="input-disclaimer">AI-generated content may be incorrect</div>
+      <div style="text-align:center; font-size:11px; color:var(--text-muted); margin-top:6px;">AI-generated content may be incorrect</div>
     </div>
   </div>
 </div>

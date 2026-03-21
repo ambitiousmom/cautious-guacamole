@@ -652,6 +652,7 @@
 <div class="end-overlay" id="endOverlay">
   <div style="text-align:center;">
     <div style="font-size:48px; font-weight:300; color:white; font-style:italic; font-family:Georgia, serif;">Fin.</div>
+    <div style="margin-top:16px; font-size:12px; color:rgba(255,255,255,0.4);">(press any key)</div>
   </div>
 </div>
 
@@ -880,6 +881,12 @@ function toggleDetail(id) { document.getElementById(id).classList.toggle('open')
 
 /* ═══ Input handlers ═══ */
 document.addEventListener('keydown', function(e) {
+  // Dismiss Fin overlay on any key
+  var endOv = document.getElementById('endOverlay');
+  if (endOv && endOv.classList.contains('visible')) {
+    endOv.classList.remove('visible');
+    return;
+  }
   if (e.code === 'Space' || e.code === 'ArrowRight') {
     e.preventDefault();
     advance();

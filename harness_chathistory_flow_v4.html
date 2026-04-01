@@ -516,6 +516,7 @@ function s1(){
   // P0: User opens file directly → landing page
   document.getElementById('sidebar').classList.add('hidden-sb');
   document.getElementById('chatPane').classList.remove('hidden-cp');
+  document.getElementById('ct-copilot').classList.add('hidden');
   showTab('excel');switchCv('excel');setColor('excel');
   showP('land');
   showA('a9');
@@ -552,10 +553,10 @@ function s4(){
 // ── P2: Cross-app chat continuity ──
 
 function s5(){
-  // P2: Start in Copilot App — hide WXP tabs, reset to clean state
+  // P2: Start in Copilot App — hide WXP tabs and Copilot tab, reset to clean state
   document.getElementById('chatPane').classList.add('hidden-cp');
   document.getElementById('sidebar').classList.remove('hidden-sb');
-  ['ct-excel','ct-word','ct-ppt'].forEach(function(id){document.getElementById(id).classList.add('hidden')});
+  ['ct-excel','ct-word','ct-ppt','ct-copilot'].forEach(function(id){document.getElementById(id).classList.add('hidden')});
   switchCv('copilot');
   showA('a1');
   document.getElementById('chatTitle').textContent='Hiring Plan Pipeline Review';
@@ -569,10 +570,11 @@ function s6(){
   setTimeout(function(){ var b=document.querySelector('.fl'); if(b)showClickHint(b,'User clicks here'); },600);
 }
 function s7(){
-  // P2: Handoff to Excel — chat carries over
+  // P2: Handoff to Excel — chat carries over, hide Copilot tab
   hideA();anim=true;
   document.getElementById('sidebar').classList.add('hidden-sb');
   document.getElementById('chatPane').classList.remove('hidden-cp');
+  document.getElementById('ct-copilot').classList.add('hidden');
   showTab('excel');switchCv('excel');setColor('excel');
   var chatC=document.getElementById('chatC');
   chatC.innerHTML='<div class="cdate">Today</div>';

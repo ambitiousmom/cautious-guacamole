@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Chat History Flow — Hiring Plan (v4)</title>
+<style>
+  :root {
+    --bg: #FBFBFB;
+    --surface: #FAFAFA;
+    --surface-hover: #F5F5F5;
+    --s2: #EBEBEB;
+    --border: #E0E0E0;
+    --bl: #EBEBEB;
+    --text: #242424;
+    --ts: #616161;
+    --tm: #999;
+    --bb: #0F6CBD;
+    --cp: #7B57FF;
+    --green: #107C10;
+    --red: #D13438;
+    --orange: #E87400;
+    --wb: #185ABD;
+    --xg: #107C10;
+    --po: #D24726;
+    --font: 'Segoe UI Variable Display','Segoe UI Variable','Segoe UI',-apple-system,BlinkMacSystemFont,sans-serif;
+    --sbw: 220px;
+    --transition: 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family:var(--font); background:var(--bg); color:var(--text); height:100vh; overflow:hidden; }
+
+  /* ═══ LANDING ═══ */
+  .landing {
+    position:fixed; inset:0; z-index:200;
+    background:var(--surface);
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    transition:opacity .5s ease, visibility .5s;
+  }
+  .landing.hidden { opacity:0; visibility:hidden; pointer-events:none; }
+  .landing-badge { display:none; }
+  .landing h1 { font-size:28px; font-weight:700; margin-bottom:4px; color:var(--text); }
+  .landing .sub { font-size:13px; color:var(--ts); max-width:520px; text-align:center; line-height:1.65; margin-bottom:18px; }
+  .lcard { background:white; border:1px solid var(--bl); border-radius:16px; padding:22px 26px; max-width:520px; width:92%; margin-bottom:18px; box-shadow:0 2px 12px rgba(0,0,0,.04); }
+  .lcard h3 { font-size:13px; font-weight:700; margin-bottom:10px; color:var(--text); }
+  .litem { font-size:12px; color:var(--ts); line-height:1.55; padding:3px 0; display:flex; gap:8px; align-items:flex-start; }
+  .litem strong { color:var(--text); }
+  .lnum { font-weight:800; color:var(--cp); flex-shrink:0; min-width:16px; }
+  .ldiv { height:1px; background:var(--bl); margin:8px 0; }
+  .lnote { font-size:11px; color:var(--tm); line-height:1.5; margin-top:8px; }
+  .start-btn { padding:14px 40px; border-radius:28px; border:none; background:var(--text); color:white; font-size:15px; font-weight:600; cursor:pointer; transition:transform .2s; }
+  .start-btn:hover { transform:translateY(-2px); }
+  .landing .meta { margin-top:14px; font-size:11px; color:var(--tm); }
+
+  .shell { display:flex; height:100vh; }
+
+  /* ═══ SIDEBAR ═══ */
+  .sidebar {
+    width:var(--sbw); min-width:var(--sbw); height:100%;
+    background:#FAF8F5; border-right:1px solid #EDE8E0;
+    display:flex; flex-direction:column; overflow-y:auto; overflow-x:hidden; font-size:13px;
+  }
+  .sidebar.hidden-sb { display:none; }
+  .sb-top { padding:12px 14px; display:flex; align-items:center; justify-content:space-between; }
+  .sb-toggle { width:28px; height:28px; border:none; background:none; cursor:pointer; color:var(--tm); display:flex; align-items:center; justify-content:center; border-radius:6px; }
+  .sb-toggle:hover { background:var(--s2); }
+  .sb-nav { padding:4px 8px; }
+  .sb-nav-item { display:flex; align-items:center; gap:10px; padding:7px 10px; border-radius:6px; cursor:pointer; color:var(--ts); font-size:13px; transition:background .15s; }
+  .sb-nav-item:hover { background:#F0EBE3; }
+  .sb-divider { height:1px; background:#EDE8E0; margin:6px 14px; }
+  .sb-section { font-size:11px; font-weight:600; color:var(--tm); padding:10px 18px 4px; text-transform:uppercase; letter-spacing:.3px; }
+  .sb-agent { display:flex; align-items:center; gap:8px; padding:5px 18px; cursor:pointer; font-size:13px; transition:background .15s; }
+  .sb-agent:hover { background:var(--s2); border-radius:6px; margin:0 6px; padding:5px 12px; }
+  .sb-agent-icon { width:20px; height:20px; border-radius:6px; display:flex; align-items:center; justify-content:center; font-size:9px; color:white; font-weight:700; flex-shrink:0; }
+  .sb-link { font-size:12px; color:var(--bb); padding:4px 18px; cursor:pointer; font-weight:500; }
+  .sb-link:hover { text-decoration:underline; }
+  .sb-chats-header { display:flex; align-items:center; padding:10px 18px 4px; }
+  .sb-chats-label { font-size:11px; font-weight:600; color:var(--tm); text-transform:uppercase; letter-spacing:.3px; flex:1; }
+  .sb-chat { padding:6px 18px; cursor:pointer; font-size:13px; color:var(--text); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; transition:background .15s; }
+  .sb-chat:hover { background:#F0EBE3; border-radius:6px; margin:0 6px; padding:6px 12px; }
+  .sb-chat.active { background:#EDE8E0; font-weight:600; border-left:3px solid var(--bb); padding-left:15px; }
+  .sb-bottom { margin-top:auto; padding:8px 14px; border-top:1px solid #EDE8E0; }
+  .sb-avatar { width:24px; height:24px; border-radius:50%; background:linear-gradient(135deg,#E89B35,#D4782F); display:flex; align-items:center; justify-content:center; font-size:9px; color:white; font-weight:700; flex-shrink:0; }
+  .sb-footer { font-size:10px; color:var(--tm); text-align:center; padding:6px 14px; }
+
+  /* ═══ MAIN AREA ═══ */
+  .main-area { flex:1; display:flex; flex-direction:column; min-width:0; }
+  .canvas-tabs { display:flex; border-bottom:1px solid var(--bl); background:#FAFAF8; flex-shrink:0; }
+  .cvt { padding:7px 14px; font-size:11px; cursor:pointer; display:flex; align-items:center; gap:5px; border-bottom:2px solid transparent; color:var(--tm); transition:all .2s; }
+  .cvt:hover { background:var(--surface); color:var(--ts); }
+  .cvt.active { color:var(--text); font-weight:600; }
+  .cvt.active.copilot { border-bottom-color:var(--cp); }
+  .cvt.active.word { border-bottom-color:var(--wb); }
+  .cvt.active.excel { border-bottom-color:var(--xg); }
+  .cvt.active.ppt { border-bottom-color:var(--po); }
+  .ti { width:13px; height:13px; border-radius:3px; display:inline-flex; align-items:center; justify-content:center; font-size:7px; color:white; font-weight:700; }
+  .cv-area { flex:1; display:flex; min-height:0; }
+  .cvp { display:none; flex:1; flex-direction:column; }
+  .cvp.active { display:flex; }
+  .cvr { height:30px; display:flex; align-items:center; padding:0 12px; gap:8px; border-bottom:1px solid var(--bl); font-size:10px; color:var(--tm); background:#FAFAF8; flex-shrink:0; }
+  .ri { width:15px; height:15px; border-radius:3px; display:flex; align-items:center; justify-content:center; font-size:7px; color:white; font-weight:700; }
+  .cvb { flex:1; overflow-y:auto; padding:28px 40px; background:white; display:flex; justify-content:center; }
+  .dc { max-width:520px; width:100%; font-size:13px; line-height:1.8; }
+  .dc h1 { font-size:17px; font-weight:700; margin-bottom:3px; }
+  .dc h2 { font-size:13px; font-weight:700; margin-top:14px; margin-bottom:3px; }
+  .dc p { margin-bottom:6px; }
+  .dc .dm { font-size:10px; color:var(--tm); margin-bottom:12px; }
+
+  /* Copilot App main chat area */
+  .cp-main { flex:1; display:flex; flex-direction:column; align-items:center; padding:32px; }
+  .cp-greeting { font-size:20px; font-weight:500; margin-bottom:20px; margin-top:auto; }
+  .cp-composer { width:100%; max-width:520px; border:1px solid var(--border); border-radius:14px; background:white; overflow:hidden; margin-bottom:16px; }
+  .cp-composer input { width:100%; border:none; outline:none; font-size:13px; font-family:var(--font); padding:12px 16px 4px; background:transparent; }
+  .cp-composer input::placeholder { color:var(--tm); }
+  .cp-comp-bot { display:flex; align-items:center; justify-content:space-between; padding:3px 12px 8px; }
+  .cp-chat-area { width:100%; max-width:620px; flex:1; overflow-y:auto; padding:0 10px; display:flex; flex-direction:column; gap:3px; scroll-behavior:smooth; }
+
+  /* ═══ CHAT PANE (right side in WXP) ═══ */
+  .cpane { width:350px; min-width:350px; display:flex; flex-direction:column; background:var(--bg); border-left:1px solid var(--bl); }
+  .cpane.hidden-cp { display:none; }
+  .topbar { height:38px; display:flex; align-items:center; padding:0 6px; gap:3px; border-bottom:1px solid var(--bl); flex-shrink:0; background:white; }
+  .tb-btn { width:30px; height:30px; border-radius:6px; border:none; background:transparent; display:flex; align-items:center; justify-content:center; cursor:pointer; color:#666; transition:all .12s; flex-shrink:0; }
+  .tb-btn:hover { background:#F0F0F0; }
+  .tb-spacer { flex:1; }
+  .src-toggle { display:flex; border:1px solid #D0D0D0; border-radius:8px; overflow:hidden; height:28px; }
+  .src-btn { width:30px; height:26px; border:none; background:white; display:flex; align-items:center; justify-content:center; cursor:pointer; transition:all .12s; padding:0; }
+  .src-btn:hover { background:#F5F5F5; }
+  .src-btn.active { color:white; }
+  .src-btn+.src-btn { border-left:1px solid #D0D0D0; }
+  .edit-btn { width:30px; height:28px; border-radius:8px; border:none; display:flex; align-items:center; justify-content:center; cursor:pointer; color:white; margin-left:2px; }
+  .ps { display:none; flex:1; flex-direction:column; min-height:0; }
+  .ps.active { display:flex; }
+
+  /* Chat messages */
+  .cc { flex:1; overflow-y:auto; padding:0 14px 10px; display:flex; flex-direction:column; gap:3px; scroll-behavior:smooth; }
+  .cdate { font-size:11px; color:var(--tm); text-align:center; padding:10px 0 4px; }
+  .um { display:flex; justify-content:flex-end; margin:5px 0; }
+  .ub { background:#F0F0F0; color:var(--text); padding:9px 15px; border-radius:16px 16px 4px 16px; font-size:13px; max-width:260px; line-height:1.5; }
+  .cm { margin:8px 0; }
+  .cl { display:flex; align-items:center; gap:5px; margin-bottom:4px; font-size:12px; font-weight:600; color:var(--text); }
+  .cpi { width:18px; height:18px; border-radius:50%; background:linear-gradient(135deg,#7B57FF,#0F6CBD); display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+  .cbo { font-size:13px; line-height:1.65; color:var(--ts); }
+  .cbo strong { color:var(--text); }
+  .cbo p { margin-bottom:6px; }
+  .cbo p:last-child { margin-bottom:0; }
+  .fl { display:inline-flex; align-items:center; gap:6px; background:#F5F5F5; border:1px solid var(--bl); border-radius:8px; padding:6px 12px; margin:5px 0; cursor:pointer; font-size:12px; color:var(--text); font-weight:500; transition:all .15s; }
+  .fl:hover { background:var(--s2); border-color:var(--border); }
+  .fli { width:14px; height:14px; border-radius:3px; display:flex; align-items:center; justify-content:center; font-size:7px; color:white; font-weight:700; }
+  .fla { font-size:10px; color:var(--tm); font-weight:400; }
+  .ciarea { padding:5px 10px; border-top:1px solid var(--bl); flex-shrink:0; }
+  .cinput { border:1px solid var(--border); border-radius:12px; background:white; overflow:hidden; }
+  .cinput input { width:100%; border:none; outline:none; font-size:13px; font-family:var(--font); padding:10px 14px 3px; background:transparent; }
+  .cinput input::placeholder { color:var(--tm); }
+  .cinb { display:flex; align-items:center; justify-content:space-between; padding:2px 10px 7px; }
+  .cic { color:var(--tm); cursor:pointer; display:flex; align-items:center; justify-content:center; width:24px; height:24px; border-radius:4px; }
+  .cic:hover { background:#F0F0F0; }
+  .cdiscl { text-align:center; font-size:10px; color:var(--tm); padding:2px 0; }
+
+  /* Landing pane */
+  .lpane { flex:1; display:flex; flex-direction:column; }
+  .lph { padding:36px 20px 16px; }
+  .lph h2 { font-size:17px; font-weight:700; margin-bottom:14px; }
+  .lpdrop { font-size:12px; color:var(--ts); margin-bottom:14px; display:flex; align-items:center; gap:4px; cursor:pointer; }
+  .lpi { margin:0 16px; border:1px solid var(--border); border-radius:12px; overflow:hidden; }
+  .lpi input { width:100%; border:none; outline:none; font-size:13px; font-family:var(--font); padding:10px 14px 3px; background:transparent; }
+  .lpi input::placeholder { color:var(--tm); }
+  .lpib { display:flex; align-items:center; justify-content:space-between; padding:2px 10px 7px; }
+  .lpp { padding:12px 16px; display:flex; flex-direction:column; gap:6px; }
+  .lppr { padding:10px 14px; border:1px solid var(--bl); border-radius:10px; font-size:12px; color:var(--ts); cursor:pointer; transition:background .12s; }
+  .lppr:hover { background:var(--surface); }
+  .lpfoot { margin-top:auto; padding:10px 16px; text-align:center; font-size:11px; color:var(--tm); }
+
+  /* History pane */
+  .hpane { flex:1; display:flex; flex-direction:column; min-height:0; }
+  .hph { padding:12px 14px; font-size:15px; font-weight:700; border-bottom:1px solid var(--bl); }
+  .hpn { display:flex; align-items:center; gap:8px; padding:9px 14px; cursor:pointer; font-size:13px; font-weight:500; border-bottom:1px solid var(--bl); border-left:3px solid var(--bb); transition:background .12s; }
+  .hpn:hover { background:var(--surface); }
+  .hpni { width:20px; height:20px; border-radius:50%; background:linear-gradient(135deg,#F472B6,#C084FC); display:flex; align-items:center; justify-content:center; }
+  .hps { font-size:11px; font-weight:600; color:var(--tm); padding:12px 14px 4px; display:flex; align-items:center; }
+  .hpsr { margin-left:auto; cursor:pointer; display:flex; align-items:center; }
+  .hpa { padding:3px 0; }
+  .hpag { display:flex; align-items:center; gap:8px; padding:6px 14px; cursor:pointer; font-size:13px; transition:background .12s; }
+  .hpag:hover { background:var(--surface); }
+  .hpai { width:20px; height:20px; border-radius:6px; display:flex; align-items:center; justify-content:center; font-size:9px; color:white; font-weight:700; }
+  .hpl { font-size:12px; color:var(--bb); padding:4px 14px; cursor:pointer; font-weight:500; }
+  .hpl:hover { text-decoration:underline; }
+  .hpc { flex:1; overflow-y:auto; padding:0 0 8px; }
+  .hpci { padding:7px 14px; cursor:pointer; font-size:13px; color:var(--text); transition:background .12s; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  .hpci:hover { background:var(--surface); }
+  .hpci.active { background:#E8F0FE; font-weight:500; border-left:3px solid var(--bb); }
+
+  /* ═══ ANNOTATIONS ═══ */
+  .ann {
+    position:fixed; z-index:91;
+    background:rgba(30,30,30,.94); color:white; padding:14px 18px;
+    border-radius:10px; font-size:12px; line-height:1.65;
+    backdrop-filter:blur(12px); box-shadow:0 6px 24px rgba(0,0,0,.25);
+    border-left:3px solid #B4A0FF; max-width:280px;
+    opacity:0; transform:translateY(6px);
+    transition:all .4s ease; pointer-events:auto; display:none;
+  }
+  .ann.visible { opacity:1; transform:translateY(0); display:block; }
+  .ann .ann-num { display:inline-block; background:#7B57FF; color:white; width:20px; height:20px; border-radius:50%; text-align:center; line-height:20px; font-size:10px; font-weight:700; margin-right:6px; vertical-align:middle; }
+  .ann .ann-tag { font-size:13px; text-transform:uppercase; letter-spacing:1px; color:#B4A0FF; margin-bottom:8px; font-weight:700; }
+  .ann .ann-body { color:rgba(255,255,255,.85); }
+  .ann .ann-body strong { color:white; }
+  .ann-pulse { animation:annPulse 2s ease infinite; border-radius:8px; }
+  @keyframes annPulse { 0%,100%{box-shadow:0 0 0 0 rgba(123,87,255,.5);}50%{box-shadow:0 0 0 6px rgba(123,87,255,0);} }
+
+  /* Click hints */
+  .click-hint {
+    position:fixed; z-index:200;
+    background:#7B57FF; color:white;
+    font-size:11px; font-weight:600; font-family:var(--font);
+    padding:4px 10px; border-radius:12px;
+    white-space:nowrap; pointer-events:auto; cursor:pointer;
+    animation:pulse 1.5s ease infinite;
+    box-shadow:0 2px 8px rgba(123,87,255,.4);
+  }
+  .click-hint::after { content:''; position:absolute; top:50%; right:-10px; transform:translateY(-50%); border:5px solid transparent; border-left-color:#7B57FF; }
+  .click-hint.arrow-left::after { right:auto; left:-10px; border-left-color:transparent; border-right-color:#7B57FF; }
+  .click-target { animation:pulse 2s ease infinite; border-radius:6px; }
+  @keyframes pulse { 0%,100%{box-shadow:0 0 0 0 rgba(123,87,255,.4);}50%{box-shadow:0 0 0 8px rgba(123,87,255,0);} }
+
+  /* Step bar */
+  .step-bar {
+    position:fixed; bottom:20px; left:50%; transform:translateX(-50%); z-index:100;
+    display:flex; align-items:center; gap:8px;
+    background:rgba(30,30,30,.9); padding:6px 14px; border-radius:20px;
+    backdrop-filter:blur(8px); box-shadow:0 4px 16px rgba(0,0,0,.3);
+  }
+  .step-bar.hidden { display:none; }
+  .step-label { color:rgba(255,255,255,.6); font-size:11px; min-width:50px; text-align:center; font-family:var(--font); }
+  .step-prev,.step-next { padding:4px 12px; border-radius:12px; border:1px solid rgba(255,255,255,.2); background:transparent; color:white; font-size:12px; cursor:pointer; font-family:var(--font); transition:all .2s; }
+  .step-prev:hover,.step-next:hover { background:rgba(255,255,255,.1); }
+  .step-prev:disabled,.step-next:disabled { opacity:.3; cursor:default; }
+
+  /* End overlay */
+  .end-overlay {
+    position:fixed; inset:0; z-index:300;
+    background:rgba(0,0,0,.7); display:flex; flex-direction:column;
+    align-items:center; justify-content:center;
+    opacity:0; pointer-events:none; transition:opacity .6s ease;
+  }
+  .end-overlay.visible { opacity:1; pointer-events:auto; }
+  .end-overlay .fin { font-size:48px; font-weight:300; color:white; font-style:italic; font-family:Georgia,serif; }
+  .end-overlay .sub { font-size:14px; color:rgba(255,255,255,.5); margin-top:8px; }
+
+  .hidden { display:none!important; }
+  @keyframes fadeIn { from{opacity:0;transform:translateY(4px)} to{opacity:1;transform:translateY(0)} }
+  @keyframes fadeInUp { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:translateY(0)} }
+  .anim-in { animation:fadeIn .3s ease both; }
+  .anim-fadeinup { animation:fadeInUp .4s ease both; }
+  ::-webkit-scrollbar { width:4px; }
+  ::-webkit-scrollbar-track { background:transparent; }
+  ::-webkit-scrollbar-thumb { background:#D0D0D0; border-radius:2px; }
+</style>
+</head>
+<body>
+
+<!-- ═══ LANDING ═══ -->
+<div class="landing" id="landing">
+  <div class="landing-badge"></div>
+  <h1>Chat History Flow</h1>
+  <p class="sub">A hiring plan that starts in Copilot and flows through Word, Excel, and PowerPoint</p>
+  <div class="lcard">
+    <h3>Product Decisions Demonstrated</h3>
+    <div class="litem"><span class="lnum">1</span><span><strong>From chat → file:</strong> Clicking a file link in any Copilot chat opens that file's agent mode pane with this exact chat. No exceptions.</span></div>
+    <div class="litem"><span class="lnum">2</span><span><strong>File opened directly:</strong> Shows the app landing page. Hamburger shows all chats. New message = new chat.</span></div>
+    <div class="litem"><span class="lnum">3</span><span><strong>All chats in history:</strong> Same list as Copilot App. Not filtered by app.</span></div>
+    <div class="litem"><span class="lnum">4</span><span><strong>Close and reopen:</strong> Shows exactly what was showing before.</span></div>
+    <div class="litem"><span class="lnum">5</span><span><strong>One chat, everywhere:</strong> Stored once, visible in every surface.</span></div>
+    <div class="ldiv"></div>
+    <div class="lnote">Click or press → to advance through the flow. Annotations explain each decision in context.</div>
+  </div>
+  <button class="start-btn" onclick="startDemo()">Start the flow →</button>
+  <div class="meta">Prototype by Hema Sridharan · March 2026</div>
+</div>
+
+<!-- ═══ END OVERLAY ═══ -->
+<div class="end-overlay" id="endOverlay">
+  <div class="fin">Fin.</div>
+  <div class="sub">One chat. Four surfaces. Zero re-orientation.</div>
+  <div class="sub" style="margin-top:16px;font-size:12px;">press any key to restart</div>
+</div>
+
+<!-- ═══ STEP BAR ═══ -->
+<div class="step-bar hidden" id="stepBar">
+  <button class="step-prev" id="stepPrev" onclick="prevStep()" disabled>←</button>
+  <span class="step-label" id="stepLabel">0 / 10</span>
+  <button class="step-next" id="stepNext" onclick="nextStep()">→</button>
+</div>
+
+<!-- ═══ ANNOTATIONS ═══ -->
+<div class="ann" id="a1"><div class="ann-tag"><span class="ann-num">1</span> Starting Point</div><div class="ann-body">You're in the <strong>Copilot App</strong> with sidebar. Ask about the hiring plan.</div></div>
+<div class="ann" id="a2"><div class="ann-tag"><span class="ann-num">2</span> Decision 1 — Chat → File</div><div class="ann-body">Copilot found a file. The <strong>file link</strong> will open Excel with <strong>this exact chat</strong> in the agent mode pane.</div></div>
+<div class="ann" id="a3"><div class="ann-tag"><span class="ann-num">3</span> Handoff → Excel</div><div class="ann-body">Excel opened. Sidebar gone — now it's a document + chat pane. <strong>The chat came with it.</strong> Same conversation.</div></div>
+<div class="ann" id="a4"><div class="ann-tag"><span class="ann-num">4</span> Decision 1 — Cross-App</div><div class="ann-body">From Excel, Copilot generated a Word doc. Clicking the link → Word with <strong>this same chat</strong>.</div></div>
+<div class="ann" id="a5"><div class="ann-tag"><span class="ann-num">5</span> Handoff → Word</div><div class="ann-body">Third surface. Same chat. Copilot App → Excel → Word.</div></div>
+<div class="ann" id="a6"><div class="ann-tag"><span class="ann-num">6</span> Decision 1 — Again</div><div class="ann-body">Updated a PPT deck. Clicking → PowerPoint with <strong>same chat</strong>.</div></div>
+<div class="ann" id="a7"><div class="ann-tag"><span class="ann-num">7</span> Handoff → PowerPoint</div><div class="ann-body">Fourth surface, one conversation. Copilot App → Excel → Word → PPT.</div></div>
+<div class="ann" id="a8"><div class="ann-tag"><span class="ann-num">8</span> Decision 2 — Direct Open</div><div class="ann-body">Opened a file <strong>directly</strong> — not from a chat. Landing page: "Let's edit your spreadsheet." Fresh start.</div></div>
+<div class="ann" id="a9"><div class="ann-tag"><span class="ann-num">9</span> Decision 3 — All Chats</div><div class="ann-body">Hamburger shows <strong>all your Copilot chats</strong>. Same list as Copilot App sidebar. Not "Chats in Excel."</div></div>
+<div class="ann" id="a10"><div class="ann-tag"><span class="ann-num">10</span> Decision 5 — One Chat</div><div class="ann-body"><strong>"Hiring Plan Pipeline Review"</strong> — one chat, stored once, visible everywhere. Click to continue it.</div></div>
+
+<!-- ═══ SHELL ═══ -->
+<div class="shell">
+  <!-- Copilot App Sidebar -->
+  <div class="sidebar" id="sidebar">
+    <div class="sb-top">
+      <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACYAAAApCAYAAABZa1t7AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAAFiUAABYlAUlSJPAAAASTSURBVFhH7dRbUFQFHMdx35ppJi/j5A0trWacplJrcqyRi5FKWQqtLKAEGBF5S8UgMVEQNbVQQ0REVAQEFSS1WINlWbmsGIsVCARIboiIixC7C7vscrFvo82QeVY7S9OMD/vweTnzP7/5vpwzpNPUw6NoyP0PHhX2MFvZw2xlD7OVPcxW9jBb2RxW22YhUGXCSWHBUWFhprwbR7mZmbndzMgxMjW2BZdlVUQmNAretYVNYdd1ZqZlGhifpsch1YBDio5xKXrGHtUxJlnH6P23eOw1FcNcLjJqrpqjOTcFG2LZFOab087wfa0M23eT4fu0DIu7edfQu1p43L+akW+WMWH+JZ7xquDdjVcEG2KJDitvNvJE7LV7NDI0VsPwvQ2MiKtndHwdI+b+wIQFl3h6cSUOQbWMW9mAptUs2BJDdNimkiYcDpQzIbGMpw6WMjFJxaSkIp49dJ7nDiuYEV/C2HnlTPSpxCG4jtFrf2PkhmZ8j/+Orssi2Ps3osPmnMrjxZRspqRmMTX1BC+nZfDKsTReTU9henoybjuVnC1uQ/GzjoJKAyUxzRRGackKb+dkuJ78LUbKkk10dAi3rREVVq3V4pwZh0tmLG9k7cb1VAyzs79kTvZ23L7ZxlunoymqaR64rztQT4FPOTLvGrK9NBz3bOaYp5ZjC1sp2tMu2LdGVNiJ2kLcv/0Mj+8+RZITgjRnFT6yT/CVLcdftpSIwuiBW73BTKXfOUolCpQeFzjn/hNnFlSTPb+eU/OvkL9SI9i3RlRYQvluQnL9CM1dzLq8RXye58VGuZQouYQt+R4o6zIGbjsuXeOKNIPLnmdQS3Ipea8QpUcp+R5q5B5qSkOrBPvWiApLVgUQXzCbAwWuJBXM4nCBM0eVTqQqZ5KufJ0bbX//FnRHlDR7JXJVmkqNZyYVC89SLjlHmSSPixI5tV9XCvatERWWVzoXWdE0vi+cgrzoJQqKXqCw+HmKiyejvuj4z/vQ/egX7aLVJ57r3ofQeKVSLz1OrTSTGs8stPKrgn1rRIX9WvUx1SXj+aVkHPWqMTSoRqFRPUmjaiStDZEDd9rc8xiXRdEVuJXO93eg89nFLZ+9tHgn0Ox9kCavJPQ39IJ9a0SF6Tvb6NREYapyo6d0Mn0XJtH/43R6Lodhqi7DVKGmPe0Ijb5+dIeux7RqI6alm+n6cCtdAdvp9N1J56Kv0IccEmw/iKiw+5krsuCgO+x4G8JmQ6AzLe840bZ6CZbIEMzrw/4KXB2BacUmjEujMAZH05mlEGw9yKDC7rid9AFEusEaV277OdE0z4XePR/RG7Ocni9WYdm8FnNEKObwdXSHhdMdugHDda1g50EGHdZzJg7WukKQMzqJI00BbvQf9qcvIZDe2GB6YpbRs2MFlm13ItdglJ0WbDzMoMO66qshaBZdUic0c5wwJbrzx0lvbqf50n/En/7EQPrig+jbG4wlYycGg1Gw8TCDDrujQ57LtdXLubE1AFP6EnrzQ+krjKBXsYnevCgssmi61dkY9OK+xHv9p7D/kz3MVvYwW9nDbGUPs5U9zFZ/AovebfKEAWUDAAAAAElFTkSuQmCC" style="height:28px;" alt="Copilot" />
+      <span style="font-size:18px;color:#666;cursor:pointer">☰</span>
+    </div>
+    <div style="padding:0;">
+      <img src="data:image/png;base64,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" style="width:100%; display:block;" alt="Nav" />
+    </div>
+    <div class="sb-divider"></div>
+    <div class="sb-chats-header">
+      <span class="sb-chats-label">Chats</span>
+      <span style="cursor:pointer;color:var(--tm)"><svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="#999" stroke-width="1.5"><circle cx="7" cy="7" r="4"/><line x1="10" y1="10" x2="14" y2="14"/></svg></span>
+    </div>
+    <div class="sb-chat" style="display:flex;align-items:center;justify-content:space-between">Q3 Budget Review <span style="width:8px;height:8px;border-radius:50%;background:var(--bb);flex-shrink:0"></span></div>
+    <div class="sb-chat" style="display:flex;align-items:center;justify-content:space-between">Product Strategy H2 <span style="width:8px;height:8px;border-radius:50%;background:var(--bb);flex-shrink:0"></span></div>
+    <div class="sb-chat active" id="sbHiring" style="display:flex;align-items:center;justify-content:space-between">Hiring Plan — Eng <span style="width:8px;height:8px;border-radius:50%;background:var(--bb);flex-shrink:0"></span></div>
+    <div class="sb-chat">Comparing Decks for...</div>
+    <div class="sb-chat">Meeting Prep — Lead...</div>
+    <div class="sb-chat">Summary Request for...</div>
+    <div class="sb-bottom">
+      <div style="font-size:12px;color:var(--ts);display:flex;align-items:center;gap:8px;padding:4px 0">◼ Apps</div>
+      <div style="display:flex;align-items:center;gap:8px;padding:6px 0">
+        <span class="sb-avatar" style="background:var(--cp)">CL</span>
+        <div style="flex:1"><div style="font-size:12px;font-weight:600">Cindy Luo</div><div style="font-size:10px;color:var(--tm)">M365 Copilot (Premium)</div></div>
+        <span style="font-size:14px;color:var(--tm);cursor:pointer">⋯</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main area -->
+  <div class="main-area">
+    <div class="canvas-tabs" id="cvtabs">
+      <div class="cvt active copilot" id="ct-copilot" style="display:none"><span class="ti" style="background:var(--cp)">✦</span> Copilot</div>
+      <div class="cvt hidden" id="ct-excel"><span class="ti" style="background:var(--xg)">X</span> Hiring_Plan_H2.xlsx</div>
+      <div class="cvt hidden" id="ct-word"><span class="ti" style="background:var(--wb)">W</span> Hiring_Proposal_Q3.docx</div>
+      <div class="cvt hidden" id="ct-ppt"><span class="ti" style="background:var(--po)">P</span> Hiring_Strategy_H2.pptx</div>
+    </div>
+
+    <div class="cv-area">
+      <!-- Copilot App -->
+      <div class="cvp active" id="cv-copilot">
+        <div class="cp-main">
+          <div class="cp-greeting">Good morning, Cindy</div>
+          <div class="cp-composer"><input type="text" placeholder="Ask Copilot anything" readonly/><div class="cp-comp-bot"><span style="font-size:12px;color:var(--tm);cursor:pointer">+ Attach</span><span style="font-size:14px;color:var(--tm);cursor:pointer">🎙</span></div></div>
+          <div class="cp-chat-area" id="cpChat"></div>
+        </div>
+      </div>
+      <!-- Excel -->
+      <div class="cvp" id="cv-excel"><div class="cvr"><span class="ri" style="background:var(--xg)">X</span><span style="font-size:11px;font-weight:600;color:var(--text)">Hiring_Plan_H2.xlsx</span><span style="margin-left:auto;font-size:10px">Editing</span></div><div class="cvb" style="padding:18px"><table style="width:100%;max-width:560px;font-size:11px;border-collapse:collapse"><tr style="background:#F0F0F0;font-weight:600"><td style="padding:5px 8px;border:1px solid #E0E0E0">Role</td><td style="padding:5px 8px;border:1px solid #E0E0E0">Pipeline</td><td style="padding:5px 8px;border:1px solid #E0E0E0">Time-to-Fill</td><td style="padding:5px 8px;border:1px solid #E0E0E0">Start</td><td style="padding:5px 8px;border:1px solid #E0E0E0">Status</td></tr><tr><td style="padding:5px 8px;border:1px solid #E0E0E0">ML Engineer (×2)</td><td style="padding:5px 8px;border:1px solid #E0E0E0">4</td><td style="padding:5px 8px;border:1px solid #E0E0E0">6 wks</td><td style="padding:5px 8px;border:1px solid #E0E0E0">Apr 15</td><td style="padding:5px 8px;border:1px solid #E0E0E0;color:var(--green)">On track</td></tr><tr><td style="padding:5px 8px;border:1px solid #E0E0E0">Full-stack (×2)</td><td style="padding:5px 8px;border:1px solid #E0E0E0">7</td><td style="padding:5px 8px;border:1px solid #E0E0E0">4 wks</td><td style="padding:5px 8px;border:1px solid #E0E0E0">Mar 28</td><td style="padding:5px 8px;border:1px solid #E0E0E0;color:var(--green)">On track</td></tr><tr><td style="padding:5px 8px;border:1px solid #E0E0E0">Platform (×1)</td><td style="padding:5px 8px;border:1px solid #E0E0E0">2</td><td style="padding:5px 8px;border:1px solid #E0E0E0">8 wks</td><td style="padding:5px 8px;border:1px solid #E0E0E0">May 1</td><td style="padding:5px 8px;border:1px solid #E0E0E0;color:var(--orange)">Low pipeline</td></tr></table></div></div>
+      <!-- Word -->
+      <div class="cvp" id="cv-word"><div class="cvr"><span class="ri" style="background:var(--wb)">W</span><span style="font-size:11px;font-weight:600;color:var(--text)">Hiring_Proposal_Q3.docx</span><span style="margin-left:auto;font-size:10px">Editing</span></div><div class="cvb"><div class="dc"><h1>Engineering Hiring Proposal — Q3</h1><div class="dm">Engineering Team · Draft v1.0 · Generated by Copilot</div><h2>1. Summary</h2><p>Plan to hire 5 engineers in Q3, addressing growing gap between product ambition and platform capacity.</p><h2>2. Roles & Pipeline</h2><p>ML Engineer (×2), Full-stack (×2), Platform (×1). Platform role flagged as low pipeline risk.</p><h2>3. Budget Impact</h2><p>$350K reallocated from marketing. Net headcount: +2 over Q2 attrition.</p></div></div></div>
+      <!-- PPT -->
+      <div class="cvp" id="cv-ppt"><div class="cvr"><span class="ri" style="background:var(--po)">P</span><span style="font-size:11px;font-weight:600;color:var(--text)">Hiring_Strategy_H2.pptx</span><span style="margin-left:auto;font-size:10px">Editing</span></div><div class="cvb" style="background:#E8E8E8;display:flex;align-items:center;justify-content:center"><div style="width:420px;background:white;border-radius:3px;padding:32px;box-shadow:0 2px 8px rgba(0,0,0,.1);aspect-ratio:16/9;display:flex;flex-direction:column;justify-content:center;text-align:center"><div style="font-size:7px;color:var(--tm);text-transform:uppercase;letter-spacing:1px;margin-bottom:4px">SLIDE 2</div><div style="font-size:17px;font-weight:700;margin-bottom:6px">Hiring Pipeline Status</div><div style="font-size:11px;color:var(--ts)">5 roles · 13 candidates · 1 risk flag</div></div></div></div>
+
+      <!-- Chat pane (hidden initially — appears on WXP) -->
+      <div class="cpane hidden-cp" id="chatPane">
+        <div class="topbar">
+          <button class="tb-btn" id="hamBtn" onclick="toggleHist()"><svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="#666" stroke-width="1.8" stroke-linecap="round"><line x1="4" y1="5" x2="16" y2="5"/><line x1="4" y1="10" x2="16" y2="10"/><line x1="4" y1="15" x2="16" y2="15"/></svg></button>
+          <button class="tb-btn"><svg width="18" height="18" viewBox="0 0 20 20" fill="none"><path d="M10 2L4 5v4c0 4.5 2.6 8.1 6 9 3.4-.9 6-4.5 6-9V5L10 2z" stroke="#107C10" stroke-width="1.5" fill="none"/><path d="M7 10l2 2 4-4" stroke="#107C10" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+          <span class="tb-spacer"></span>
+          <div class="src-toggle"><button class="src-btn active" id="srcWork" style="background:var(--po)"><svg width="14" height="14" viewBox="0 0 16 16" fill="white"><path d="M6 1a1 1 0 00-1 1v1H3a1 1 0 00-1 1v9a1 1 0 001 1h10a1 1 0 001-1V4a1 1 0 00-1-1h-2V2a1 1 0 00-1-1H6zm0 1h4v1H6V2zM3 4h10v9H3V4z"/></svg></button><button class="src-btn"><svg width="14" height="14" viewBox="0 0 16 16" fill="#666"><path d="M8 1a7 7 0 100 14A7 7 0 008 1zM2.07 7.5h3.46c.1-1.1.33-2.15.67-3.13A6.01 6.01 0 002.07 7.5zm0 1h3.46c.1 1.1.33 2.15.67 3.13A6.01 6.01 0 012.07 8.5zM8 14c-.85 0-1.95-1.4-2.4-4h4.8c-.45 2.6-1.55 4-2.4 4z"/></svg></button></div>
+          <button class="edit-btn" id="editBtn" style="background:var(--po)"><svg width="14" height="14" viewBox="0 0 16 16" fill="white"><path d="M12.15 1.85a1.5 1.5 0 012.12 0l.88.88a1.5 1.5 0 010 2.12L5.5 14.5 1 15.5l1-4.5 10.15-9.15z"/></svg></button>
+          <button class="tb-btn"><svg width="16" height="16" viewBox="0 0 16 16" fill="#666"><circle cx="3" cy="8" r="1.3"/><circle cx="8" cy="8" r="1.3"/><circle cx="13" cy="8" r="1.3"/></svg></button>
+          <button class="tb-btn"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="#666" stroke-width="1.8" stroke-linecap="round"><line x1="2" y1="2" x2="12" y2="12"/><line x1="12" y1="2" x2="2" y2="12"/></svg></button>
+        </div>
+
+        <!-- Chat state -->
+        <div class="ps active" id="ps-chat">
+          <div class="cc" id="chatC"><div class="cdate">Today</div></div>
+          <div class="ciarea"><div class="cinput"><input type="text" placeholder="Message Copilot" readonly/><div class="cinb"><span class="cic"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="#999" stroke-width="1.5"><line x1="8" y1="3" x2="8" y2="13"/><line x1="3" y1="8" x2="13" y2="8"/></svg></span><div style="display:flex;gap:4px"><span class="cic"><svg width="14" height="14" viewBox="0 0 16 16" fill="#999"><path d="M8 1a3 3 0 013 3v4a3 3 0 11-6 0V4a3 3 0 013-3zM4 7a4 4 0 008 0M8 13v2"/></svg></span><span class="cic"><svg width="14" height="14" viewBox="0 0 16 16" fill="#999"><rect x="1" y="4" width="3" height="8" rx="1"/><rect x="5" y="2" width="3" height="12" rx="1"/><rect x="9" y="5" width="3" height="6" rx="1"/><rect x="13" y="3" width="2" height="10" rx="1"/></svg></span></div></div></div><div class="cdiscl">AI-generated content may be incorrect</div></div>
+        </div>
+
+        <!-- Landing state -->
+        <div class="ps" id="ps-land">
+          <div class="lpane"><div class="lph"><h2 id="lpT2">Let's edit your spreadsheet</h2><div class="lpdrop">Allow editing <svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="#666" stroke-width="1.5"><path d="M2 4l3 3 3-3"/></svg></div></div><div class="lpi"><input type="text" placeholder="Describe what you'd like to edit" readonly/><div class="lpib"><span class="cic"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="#999" stroke-width="1.5"><line x1="8" y1="3" x2="8" y2="13"/><line x1="3" y1="8" x2="13" y2="8"/></svg></span><span class="cic"><svg width="14" height="14" viewBox="0 0 16 16" fill="#999"><path d="M8 1a3 3 0 013 3v4a3 3 0 11-6 0V4a3 3 0 013-3zM4 7a4 4 0 008 0M8 13v2"/></svg></span></div></div><div class="lpp"><div class="lppr">Analyze trends in this data</div><div class="lppr">Create a chart from the selected range</div><div class="lppr">Highlight outliers and anomalies</div></div><div class="lpfoot">M365 Copilot (Premium) ⓘ</div></div>
+        </div>
+
+        <!-- History state -->
+        <div class="ps" id="ps-hist">
+          <div class="hpane"><div class="hph">M365 Copilot</div><div class="hpn"><span class="hpni"><svg width="10" height="10" viewBox="0 0 10 10" fill="white"><polygon points="5,0 6.2,3.5 10,3.8 7,6.2 8,10 5,7.8 2,10 3,6.2 0,3.8 3.8,3.5"/></svg></span> New chat</div><div class="hps">Agents</div><div class="hpa"><div class="hpag"><span class="hpai" style="background:#6366F1">🔬</span> Researcher</div><div class="hpag"><span class="hpai" style="background:#8B5CF6">📊</span> Analyst</div><div class="hpag"><span class="hpai" style="background:#06B6D4">🤝</span> Cowork</div><div class="hpag"><span class="hpai" style="background:var(--wb)">W</span> Word</div></div><div class="hpl">⊕ New agent</div><div class="hpl">⋯ All agents</div><div class="hps">Chats <span class="hpsr"><svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="#999" stroke-width="1.5"><circle cx="7" cy="7" r="4"/><line x1="10" y1="10" x2="14" y2="14"/></svg></span></div><div class="hpc"><div class="hpci" id="hcH">Hiring Plan Pipeline Review</div><div class="hpci">Q3 Budget Revision</div><div class="hpci">Marketing Reallocation Model</div><div class="hpci">CFO Sync Meeting Prep</div><div class="hpci">Engineering Attrition Report</div><div class="hpci">Infrastructure Cost Projections</div><div class="hpci">Vendor Contract Renewal</div><div class="hpci">Team OKR Review</div><div class="hpci">Weekly Exec Metrics</div></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+var step=0, totalSteps=10, anim=false;
+
+function startDemo(){
+  document.getElementById('landing').classList.add('hidden');
+  document.getElementById('stepBar').classList.remove('hidden');
+  step=0;
+  updateLabel();
+  setTimeout(advance,400);
+}
+
+function advance(){
+  if(anim)return;
+  if(step>=totalSteps)return;
+  step++;
+  updateLabel();
+  switch(step){
+    case 1:s1();break;case 2:s2();break;case 3:s3();break;case 4:s4();break;
+    case 5:s5();break;case 6:s6();break;case 7:s7();break;case 8:s8();break;
+    case 9:s9();break;case 10:s10();break;
+  }
+}
+
+function nextStep(){ advance(); }
+function prevStep(){
+  // Simplified: reload to reset
+  if(step>0) location.reload();
+}
+
+function updateLabel(){
+  document.getElementById('stepLabel').textContent=step+' / '+totalSteps;
+  document.getElementById('stepPrev').disabled=(step<=0);
+  document.getElementById('stepNext').disabled=(step>=totalSteps);
+}
+
+/* ═══ STEP FUNCTIONS ═══ */
+function s1(){
+  showA('a1');
+  addToCp('<div class="um"><div class="ub">I need to review our Q3 engineering hiring plan — what does the pipeline look like?</div></div>');
+}
+function s2(){
+  hideA();
+  addToCp('<div class="cm"><div class="cl"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAJUAAAAwCAYAAAAYczgSAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAAFiUAABYlAUlSJPAAAAiGSURBVHhe7Zv5T1VHFMf9pbVJ/4H+0vSXtml/aVp/NLWLWC0KLgiGKIviFmsRRNG64las0aBY1wiKOy5VpIjaWKVqEdFKFKxFtOBWKYvghmjTnuZ7mrm5b+bNfffdh9LSOckn5s6cmXlv5vvOnJmL3Z4+fUoGgxd01k12NBjcojMjKoNndGZEZfCMzoyoDJ7RmRGVwTM6M6IyeEZnRlQGz+jMiMrgGZ0ZURk8ozMjKoNndGZEZfCMzoyoDJ7RmRGVwTM6M6IyeEZnRlQGz+jMiMrgGZ0ZURk8ozNXorpy5QqtXLmSJk+eTKmpqY7Mnj2brl27pvRh6HroLKCoduzYQb179w6KQYMG0Y0bN5S+DF0LnTmK6uTJkyySmJgYunz5slIPpk2bxj4FBQX04MEDKiws5OeMjAzF19C10JlWVI8fP6bhw4ezoOrr65V6gHIIaNasWT7lycnJ1LdvX2publbaGLoOOtOKCpFHRCC5TrBv3z72OXr0qE95UVERlx86dEhpY3j+tD28R/eb/QeGUNCZX1E9efKERowYwVGqra1NqRekpKSweLBNnjt3zuLYsWNcPmzYMDp8+DCX6aLdfwHMB7b/O3fuWGXHjx/n77hgwQLF/9/Ej/uyaXx0Lxo39H0q2bFYqQ8FnfkV1ZkzZ3jCNmzYoNQJmpqalATdibCwMFq9ejXnXXJfbrl69SotXLiQBg4caPUJ4ebm5jqKP1RKS0t5O0c6IIT1bxXV3fpaqvhuMxWsmkLTEnpT1si3qHFRd2rJfJG+TnqTkmM/oG+yU+inQ7nU/Ftop3Sd+RVVZmYmT1hdXZ1SJyguLmafIUOGUE5ODgsRC4yyefPmUUlJiRW5ULdixQqu27Rpk9JXINrb2/kU2q9fP0tMQ4cO5bHxjByutbVVaddRXLp0iaKiomjq1KnWOKGK6ubNm7RkyRKaOXNmh332qpJ8+iTsY0qLeY/yP3uNfl/0EtGybj40fdmd9kx8ldKHvUt9+3xMpftXKv24RWeKqJCgIxIkJSUpndjBfRQmVZwKq6qq+BkTJfsCRCj0O2rUKKUuEFu3bmUh9e/fn0V57949q+727du0ZcsWun//vtLuWRKqqET7jvxBYKtbmvi2IiQd68e8Todz5yj9uEVniqjOnz/PX9Zp63v48CGFh4fT2LFjrbKNGzdyu7Nnzyr+AlyeRkZGKuVOXL9+nSMgopR8IOhMjKiCEBXyE3xZbFtynUDcX61du9YqmzBhAkcSp9xm3LhxnPzL5U7s3buXx5o7d65j33YuXrzIiyW2S0TI5cuXU0tLi+VTWVnJAocf3gDgWqRPnz7cZs6cOT4HC7tvoO0v0Nhoj3rU2YmNjfU5CHgBW9nShLcU8dj5a0sP+qPmW/qjej/tXxBBRzbNVfpxi84UUc2YMYO/pFNCvWzZMvZBroTnxsZG3p6wGLKvHUQ3RCu53AksGsY6ePCgUucPRDMsKASCxUN75F/oY8yYMZZYhFDi4+OZ0aNH8+ePiIhgX7xyunv3ro9vIFG5GRvziu0a84By5Go4fKxatSrke73yovX0Vbw+Uv2V9w411FXShowRtDR1INVWfE+/XdHvLIHQmSIqTC62G7ncDqLNgAEDrMghknanha+pqWEfp23VH0JUWES5Tka3VUIcEAn6yc/P5zIhFPwYDhw4wNcGKEcCHRcXx+W4GrH7OokqmLHt7Tty+7tRdZJSo3soYhL8eWIm5WTE0d4Vk6jyeD5NTwxT+ggGnSmiSkxM5F+uXC6ora3lyZg/f75VhqQdi4CIJfsLdu3a5RPd3CJE5SafOnHiBH+O9PR0JdKiPfoRdUIo+L4NDQ0+vmvWrGHfvLw8fnYjqmDGtrfvSFE9aW+jmP69FDGxoL5PoVtVP9DnsR9R4Zp0vlIY9OmHVF1WqPTjFp0popoyZQpvU0jG5Tqwbt06ngxcGeAZpy/c4UyaNEnxtYMJhZ884YEQC4wtV0QTHfJC25GFIT/bfSGmYEUlPzuNbff3N34ofJUcQd9NfkURVXtDDX36yUc8pkxNebHSjxt0pohKvJ7JysryuSVHci7ur5B34EJw8+bNvBWibOfOncqgAmwBEBTueeS6QFRUVPBWO3jwYLpw4YJSb0cslFO0wL0Qtm2x0BMnTvRZVAgXOQ58t23bxmVOopBF5WZsu39Hi6q+7hLFRfakhkXdfUTVeuef9MMf5d+uU/pxg84UUeGiEeJBKJcHd8Lpb6jEO0LkLnJdILAIYpGR1ELc+IyiHrmMuKcKlNfgO+3Zs4fLhFBkXwgXAoaQIWi7r5Ooghnb3l4WdUdwrjiH4iN70q8ZL/sVVVbaECpa/4X1/MxFJcBJ5MiRI3wcFicibEG4jxLgl4y/nQqU2OM+C5FKnKaCBa+E0tLSrEnAwmFMfzfq27dv59OXvxMYtnb5RAehop/p06f7nP5wiSuiihtRBTO2vU+IDcLCW4hQrxTs/FJaQMMj36fVSW9Qa+YLPqLCNhgV/sHzF5UdcbpDRLCXV1dXW2KT2whOnTrFPosXh/YyEwuMl9MjR47kRUOfuBfDgiB6iXwL/5aXl/O9mfCDAHHysm9LdqGcPn2aEhIS2BdRCt9T5+skKrdjC9/du3dbIsapu6Nfuj9oaaC8RaMoKrwXNd2q7rycyh+PHj3iiCS/ukEUw4cqKytT2gAIAZOFXyOO6nJ9Z+JPKF2Vhus/U2vjLbp1uYxPfXaey+lPR3Z2NgtI5BnYHnFKxPaB94WyP0I9Qjra4O/b5frO5v8kqmeFzlyLCoko8iKIZPz48VbYjo6OVv7zA64XhC8WTXc90ZkYUYWOzlyLCuBkhEtPWUQ68NcFbt/XPW+MqEJHZ0GJymCwozMjKoNndGZEZfCMzoyoDJ7RmRGVwTM6M6IyeEZnRlQGz+jsb70v2A+wxvyFAAAAAElFTkSuQmCC" style="height:20px;" alt="Copilot"></div><div class="cbo"><p>I found <strong>Hiring_Plan_H2.xlsx</strong> in your OneDrive. You have <strong>5 open roles</strong> with 13 candidates. Most are on track, but the <strong>Platform role</strong> has only 2 candidates.</p><div class="fl" onclick="advance()"><span class="fli" style="background:var(--xg)">X</span> Hiring_Plan_H2.xlsx <span class="fla">→ Open in Excel</span></div></div></div>');
+  showA('a2');
+  setTimeout(function(){ var b=document.querySelector('.fl'); if(b)showClickHint(b,'Click here'); },600);
+}
+function s3(){
+  hideA();anim=true;
+  document.getElementById('sidebar').classList.add('hidden-sb');
+  document.getElementById('chatPane').classList.remove('hidden-cp');
+  showTab('excel');switchCv('excel');setColor('excel');
+  setTimeout(function(){
+    addToChat('<p>Working inside <strong>Hiring_Plan_H2.xlsx</strong>. The Q3_Pipeline range shows:</p><p>⚠️ <strong>Platform role:</strong> Only 2 candidates, 8-week fill. At risk.</p><p>Want me to draft a hiring proposal for the CFO?</p>');
+    showA('a3');anim=false;
+  },400);
+}
+function s4(){
+  hideA();addUToChat('Yes, draft the proposal');anim=true;
+  setTimeout(function(){
+    addToChat('<p>Generated <strong>Hiring_Proposal_Q3.docx</strong> with summary, pipeline status, and budget impact.</p><div class="fl" onclick="advance()"><span class="fli" style="background:var(--wb)">W</span> Hiring_Proposal_Q3.docx <span class="fla">→ Open in Word</span></div>');
+    showA('a4');anim=false;
+    setTimeout(function(){ var b=document.querySelector('#chatC .fl:last-of-type'); if(b)showClickHint(b,'Click here'); },600);
+  },600);
+}
+function s5(){
+  hideA();anim=true;showTab('word');switchCv('word');setColor('word');
+  setTimeout(function(){
+    addToChat('<p>Opened <strong>Hiring_Proposal_Q3.docx</strong>. Draft ready for review. Should I update the strategy deck too?</p>');
+    showA('a5');anim=false;
+  },400);
+}
+function s6(){
+  hideA();addUToChat('Yes, update Hiring_Strategy_H2.pptx');anim=true;
+  setTimeout(function(){
+    addToChat('<p>Updated slide 2 with pipeline data and risk flag. Slide 4 reflects the $350K reallocation.</p><div class="fl" onclick="advance()"><span class="fli" style="background:var(--po)">P</span> Hiring_Strategy_H2.pptx <span class="fla">→ Open in PowerPoint</span></div>');
+    showA('a6');anim=false;
+    setTimeout(function(){ var b=document.querySelector('#chatC .fl:last-of-type'); if(b)showClickHint(b,'Click here'); },600);
+  },600);
+}
+function s7(){
+  hideA();anim=true;showTab('ppt');switchCv('ppt');setColor('ppt');
+  setTimeout(function(){
+    addToChat('<p>You\'re in <strong>Hiring_Strategy_H2.pptx</strong>. All changes sourced from the same pipeline data.</p><p style="font-size:11px;color:var(--tm)">One chat: Copilot App → Excel → Word → PowerPoint.</p>');
+    showA('a7');anim=false;
+  },400);
+}
+function s8(){ hideA();showP('land');showA('a8'); }
+function s9(){ hideA();showP('hist');showA('a9'); }
+function s10(){
+  hideA();
+  document.getElementById('hcH').classList.add('active');
+  showA('a10');
+  document.getElementById('stepNext').disabled=true;
+  setTimeout(function(){ document.getElementById('endOverlay').classList.add('visible'); },4000);
+}
+
+/* ═══ HELPERS ═══ */
+function addToCp(h){var e=document.createElement('div');e.className='anim-in';e.innerHTML=h;document.getElementById('cpChat').appendChild(e);var c=document.getElementById('cpChat');setTimeout(function(){c.scrollTo({top:c.scrollHeight,behavior:'smooth'})},80)}
+function addToChat(h){var e=document.createElement('div');e.className='cm anim-in';e.innerHTML='<div class="cl"><img src="data:image/png;base64,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" style="height:20px;" alt="Copilot"></div><div class="cbo">'+h+'</div>';document.getElementById('chatC').appendChild(e);scrChat()}
+function addUToChat(t){var e=document.createElement('div');e.className='um anim-in';e.innerHTML='<div class="ub">'+t+'</div>';document.getElementById('chatC').appendChild(e);scrChat()}
+function scrChat(){var c=document.getElementById('chatC');setTimeout(function(){c.scrollTo({top:c.scrollHeight,behavior:'smooth'})},80)}
+function showP(s){['chat','land','hist'].forEach(function(x){document.getElementById('ps-'+x).classList.remove('active')});document.getElementById('ps-'+s).classList.add('active')}
+function setColor(app){var c={copilot:'var(--cp)',word:'var(--wb)',excel:'var(--xg)',ppt:'var(--po)'};document.getElementById('editBtn').style.background=c[app];document.getElementById('srcWork').style.background=c[app]}
+function switchCv(app){['copilot','word','excel','ppt'].forEach(function(a){document.getElementById('cv-'+a).classList.remove('active');var t=document.getElementById('ct-'+a);t.classList.remove('active','copilot','word','excel','ppt')});document.getElementById('cv-'+app).classList.add('active');document.getElementById('ct-'+app).classList.add('active',app)}
+function showTab(app){document.getElementById('ct-'+app).classList.remove('hidden')}
+function toggleHist(){var cur=document.getElementById('ps-hist').classList.contains('active');showP(cur?'chat':'hist')}
+
+/* ═══ ANNOTATIONS ═══ */
+function showA(id){
+  hideA();
+  var annEl=document.getElementById(id);
+  if(!annEl)return;
+  annEl.classList.add('visible');
+  // Position: right side, vertically centered
+  annEl.style.right='20px';
+  annEl.style.top='50%';
+  annEl.style.transform='translateY(-50%)';
+  annEl.style.left='auto';
+  annEl.style.bottom='auto';
+}
+function hideA(){
+  document.querySelectorAll('.ann').forEach(function(el){el.classList.remove('visible')});
+  clearClickHints();
+}
+
+/* ═══ CLICK HINTS ═══ */
+var _hintTarget=null, _hintRAF=null;
+function showClickHint(target,text){
+  clearClickHints();
+  if(!target)return;
+  _hintTarget=target;
+  target.classList.add('click-target');
+  var hint=document.createElement('div');
+  hint.className='click-hint';
+  hint.id='activeHint';
+  hint.textContent=text||'Click here';
+  hint.style.pointerEvents='auto';
+  hint.style.cursor='pointer';
+  hint.addEventListener('click',function(){target.click()});
+  document.body.appendChild(hint);
+  positionHint();
+  startHintTracking();
+}
+function positionHint(){
+  var hint=document.getElementById('activeHint');
+  if(!hint||!_hintTarget)return;
+  var rect=_hintTarget.getBoundingClientRect();
+  if(rect.width===0&&rect.height===0){hint.style.display='none';return}
+  hint.style.display='';
+  hint.style.left=(rect.left-8)+'px';
+  hint.style.top=(rect.top+rect.height/2)+'px';
+  hint.style.transform='translate(-100%,-50%)';
+}
+function startHintTracking(){
+  if(_hintRAF)cancelAnimationFrame(_hintRAF);
+  function tick(){
+    if(!document.getElementById('activeHint')){_hintRAF=null;return}
+    positionHint();
+    _hintRAF=requestAnimationFrame(tick);
+  }
+  _hintRAF=requestAnimationFrame(tick);
+}
+function clearClickHints(){
+  if(_hintRAF){cancelAnimationFrame(_hintRAF);_hintRAF=null}
+  _hintTarget=null;
+  document.querySelectorAll('.click-hint').forEach(function(el){el.remove()});
+  document.querySelectorAll('.click-target').forEach(function(el){el.classList.remove('click-target')});
+}
+
+/* ═══ KEYBOARD NAV ═══ */
+document.addEventListener('keydown',function(e){
+  if(document.getElementById('endOverlay').classList.contains('visible')){
+    document.getElementById('endOverlay').classList.remove('visible');
+    location.reload();
+    return;
+  }
+  if(e.code==='Space'||e.code==='ArrowRight'){e.preventDefault();advance()}
+  if(e.code==='ArrowLeft'){e.preventDefault();prevStep()}
+  if(e.code==='Escape')location.reload();
+});
+document.addEventListener('click',function(e){
+  if(e.target.closest('.start-btn,.fl,.hpci,.hpn,.hpag,.hpl,.tb-btn,.src-btn,.edit-btn,.sb-nav-item,.sb-agent,.sb-link,.sb-chat,.sb-toggle,.lppr,.click-hint,input,button'))return;
+  advance();
+});
+</script>
+</body>
+</html>

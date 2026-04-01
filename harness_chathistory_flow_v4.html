@@ -585,9 +585,9 @@ function s8(){
   addUToChat('Create a hiring proposal doc for the CFO');
   anim=true;
   setTimeout(function(){
-    addToChat('<p>Created <strong>Hiring_Proposal_Q3.docx</strong>.</p><div class="fl" onclick="advance()"><span class="fli" style="background:var(--wb)">W</span> Hiring_Proposal_Q3.docx <span class="fla">&rarr; Open in Word</span></div>');
+    addToChat('<p>Created <strong>Hiring_Proposal_Q3.docx</strong>.</p><div class="fl" id="wordDocLink" onclick="advance()"><span class="fli" style="background:var(--wb)">W</span> Hiring_Proposal_Q3.docx <span class="fla">&rarr; Open in Word</span></div>');
     showA('a4');anim=false;
-    setTimeout(function(){ var b=document.querySelector('#chatC .fl:last-of-type'); if(b)showClickHint(b,'Click here'); },600);
+    setTimeout(function(){ var b=document.getElementById('wordDocLink'); if(b)showClickHint(b,'Click here'); },600);
   },500);
 }
 function s9(){
@@ -596,9 +596,9 @@ function s9(){
   setTimeout(function(){
     addUToChat('Review section 2 and tighten the language');
     setTimeout(function(){
-      addToChat('<p>Revised section 2. Tightened phrasing and removed redundancies.</p><p>The hiring numbers here also appear in <strong>Hiring_Strategy_H2.pptx</strong> &mdash; you may want to update that too.</p><div class="fl" onclick="advance()"><span class="fli" style="background:var(--po)">P</span> Hiring_Strategy_H2.pptx <span class="fla">&rarr; Open in PowerPoint</span></div>');
+      addToChat('<p>Revised section 2. Tightened phrasing and removed redundancies.</p><p>The hiring numbers here also appear in <strong>Hiring_Strategy_H2.pptx</strong> &mdash; you may want to update that too.</p><div class="fl" id="pptDeckLink" onclick="advance()"><span class="fli" style="background:var(--po)">P</span> Hiring_Strategy_H2.pptx <span class="fla">&rarr; Open in PowerPoint</span></div>');
       showA('a5');anim=false;
-      setTimeout(function(){ var b=document.querySelector('#chatC .fl:last-of-type'); if(b)showClickHint(b,'Click here'); },600);
+      setTimeout(function(){ var b=document.getElementById('pptDeckLink'); if(b)showClickHint(b,'Click here'); },600);
     },400);
   },300);
 }
@@ -608,9 +608,9 @@ function s10(){
   setTimeout(function(){
     addUToChat('Add speaker notes to slide 2');
     setTimeout(function(){
-      addToChat('<p>Added speaker notes summarizing the pipeline status.</p><p>This slide references data from <strong>Hiring_Plan_H2.xlsx</strong>.</p><div class="fl" onclick="advance()"><span class="fli" style="background:var(--xg)">X</span> Hiring_Plan_H2.xlsx <span class="fla">&rarr; Open in Excel</span></div>');
+      addToChat('<p>Added speaker notes summarizing the pipeline status.</p><p>This slide references data from <strong>Hiring_Plan_H2.xlsx</strong>.</p><div class="fl" id="xlReturnLink" onclick="advance()"><span class="fli" style="background:var(--xg)">X</span> Hiring_Plan_H2.xlsx <span class="fla">&rarr; Open in Excel</span></div>');
       showA('a6');anim=false;
-      setTimeout(function(){ var b=document.querySelector('#chatC .fl:last-of-type'); if(b)showClickHint(b,'Click here'); },600);
+      setTimeout(function(){ var b=document.getElementById('xlReturnLink'); if(b)showClickHint(b,'Click here'); },600);
     },400);
   },300);
 }

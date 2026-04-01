@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Chat History Flow — Hiring Plan (v3)</title>
+<style>
+:root{
+  --bg:#FFF;--surface:#F5F5F5;--s2:#EBEBEB;
+  --border:#E0E0E0;--bl:#EDEDED;
+  --text:#242424;--ts:#616161;--tm:#999;
+  --bb:#0F6CBD;--cp:#7B57FF;
+  --green:#107C10;--red:#D13438;--orange:#E87400;
+  --wb:#185ABD;--xg:#107C10;--po:#D24726;
+  --font:'Segoe UI Variable Display','Segoe UI Variable','Segoe UI',-apple-system,BlinkMacSystemFont,sans-serif;
+  --sbw:220px;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:var(--font);background:var(--bg);color:var(--text);height:100vh;overflow:hidden}
+
+/* LANDING */
+.landing{position:fixed;inset:0;z-index:200;background:var(--surface);display:flex;flex-direction:column;align-items:center;justify-content:center;transition:opacity .5s,visibility .5s}
+.landing.hidden{opacity:0;visibility:hidden;pointer-events:none}
+.landing h1{font-size:28px;font-weight:700;margin-bottom:4px}
+.landing h2{font-size:13px;font-weight:400;color:var(--ts);margin-bottom:18px}
+.lcard{background:white;border:1px solid var(--bl);border-radius:16px;padding:22px 26px;max-width:520px;width:92%;margin-bottom:18px;box-shadow:0 2px 12px rgba(0,0,0,.04)}
+.lcard h3{font-size:13px;font-weight:700;margin-bottom:10px}
+.litem{font-size:12px;color:var(--ts);line-height:1.55;padding:3px 0;display:flex;gap:8px}
+.litem strong{color:var(--text)}
+.lnum{font-weight:800;color:var(--cp);flex-shrink:0;min-width:16px}
+.ldiv{height:1px;background:var(--bl);margin:8px 0}
+.lnote{font-size:11px;color:var(--tm);line-height:1.5;margin-top:8px}
+.start-btn{padding:14px 40px;border-radius:28px;border:none;background:var(--text);color:white;font-size:15px;font-weight:600;cursor:pointer;transition:transform .2s}
+.start-btn:hover{transform:translateY(-2px)}
+.landing .meta{margin-top:14px;font-size:11px;color:var(--tm)}
+
+.shell{display:flex;height:100vh}
+
+/* COPILOT APP SIDEBAR */
+.sidebar{width:var(--sbw);min-width:var(--sbw);height:100%;background:var(--surface);border-right:1px solid var(--bl);display:flex;flex-direction:column;overflow-y:auto;font-size:13px}
+.sidebar.hidden-sb{display:none}
+.sb-top{padding:14px 16px 8px;display:flex;align-items:center}
+.sb-brand{font-size:18px;font-weight:700;color:var(--text);flex:1}
+.sb-toggle{width:28px;height:28px;border:none;background:none;cursor:pointer;color:var(--tm);display:flex;align-items:center;justify-content:center;border-radius:6px}
+.sb-toggle:hover{background:var(--s2)}
+.sb-nav{padding:4px 8px}
+.sb-nav-item{display:flex;align-items:center;gap:10px;padding:7px 10px;border-radius:6px;cursor:pointer;color:var(--text);font-size:13px}
+.sb-nav-item:hover{background:var(--s2)}
+.sb-nav-item svg{flex-shrink:0;color:#666}
+.sb-divider{height:1px;background:var(--bl);margin:6px 14px}
+.sb-section{font-size:11px;font-weight:600;color:var(--tm);padding:10px 18px 4px;text-transform:uppercase;letter-spacing:.3px}
+.sb-agent{display:flex;align-items:center;gap:8px;padding:5px 18px;cursor:pointer;font-size:13px}
+.sb-agent:hover{background:var(--s2);border-radius:6px;margin:0 6px;padding:5px 12px}
+.sb-agent-icon{width:20px;height:20px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:9px;color:white;font-weight:700;flex-shrink:0}
+.sb-link{font-size:12px;color:var(--bb);padding:4px 18px;cursor:pointer;font-weight:500;display:flex;align-items:center;gap:6px}
+.sb-link:hover{text-decoration:underline}
+.sb-chats-header{display:flex;align-items:center;padding:10px 18px 4px}
+.sb-chats-label{font-size:11px;font-weight:600;color:var(--tm);text-transform:uppercase;letter-spacing:.3px;flex:1}
+.sb-search{cursor:pointer;color:var(--tm)}
+.sb-chat{padding:6px 18px;cursor:pointer;font-size:13px;color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.sb-chat:hover{background:var(--s2);border-radius:6px;margin:0 6px;padding:6px 12px}
+.sb-chat.active{background:#E8F0FE;font-weight:600;border-left:3px solid var(--bb);padding-left:15px}
+.sb-bottom{margin-top:auto;padding:8px 14px;border-top:1px solid var(--bl);display:flex;align-items:center;gap:8px}
+.sb-avatar{width:24px;height:24px;border-radius:50%;background:linear-gradient(135deg,#E89B35,#D4782F);display:flex;align-items:center;justify-content:center;font-size:9px;color:white;font-weight:700;flex-shrink:0}
+.sb-footer{font-size:10px;color:var(--tm);text-align:center;padding:6px 14px}
+
+/* MAIN AREA */
+.main-area{flex:1;display:flex;flex-direction:column;min-width:0}
+.canvas-tabs{display:flex;border-bottom:1px solid var(--bl);background:#FAFAF8;flex-shrink:0}
+.cvt{padding:7px 14px;font-size:11px;cursor:pointer;display:flex;align-items:center;gap:5px;border-bottom:2px solid transparent;color:var(--tm);transition:all .2s}
+.cvt:hover{background:var(--surface);color:var(--ts)}
+.cvt.active{color:var(--text);font-weight:600}
+.cvt.active.copilot{border-bottom-color:var(--cp)}
+.cvt.active.word{border-bottom-color:var(--wb)}
+.cvt.active.excel{border-bottom-color:var(--xg)}
+.cvt.active.ppt{border-bottom-color:var(--po)}
+.ti{width:13px;height:13px;border-radius:3px;display:inline-flex;align-items:center;justify-content:center;font-size:7px;color:white;font-weight:700}
+
+/* Canvas content */
+.cv-area{flex:1;display:flex;min-height:0}
+.cvp{display:none;flex:1;flex-direction:column}
+.cvp.active{display:flex}
+.cvr{height:30px;display:flex;align-items:center;padding:0 12px;gap:8px;border-bottom:1px solid var(--bl);font-size:10px;color:var(--tm);background:#FAFAF8;flex-shrink:0}
+.ri{width:15px;height:15px;border-radius:3px;display:flex;align-items:center;justify-content:center;font-size:7px;color:white;font-weight:700}
+.cvb{flex:1;overflow-y:auto;padding:28px 40px;background:white;display:flex;justify-content:center}
+.dc{max-width:520px;width:100%;font-size:13px;line-height:1.8}
+.dc h1{font-size:17px;font-weight:700;margin-bottom:3px}
+.dc h2{font-size:13px;font-weight:700;margin-top:14px;margin-bottom:3px}
+.dc p{margin-bottom:6px}
+.dc .dm{font-size:10px;color:var(--tm);margin-bottom:12px}
+
+/* Copilot App main chat area */
+.cp-main{flex:1;display:flex;flex-direction:column;align-items:center;padding:32px}
+.cp-greeting{font-size:20px;font-weight:500;margin-bottom:20px;margin-top:auto}
+.cp-composer{width:100%;max-width:520px;border:1px solid var(--border);border-radius:14px;background:white;overflow:hidden;margin-bottom:16px}
+.cp-composer input{width:100%;border:none;outline:none;font-size:13px;font-family:var(--font);padding:12px 16px 4px;background:transparent}
+.cp-composer input::placeholder{color:var(--tm)}
+.cp-comp-bot{display:flex;align-items:center;justify-content:space-between;padding:3px 12px 8px}
+.cp-chat-area{width:100%;max-width:620px;flex:1;overflow-y:auto;padding:0 10px;display:flex;flex-direction:column;gap:3px;scroll-behavior:smooth}
+
+/* ═══ CHAT PANE (right side in WXP) ═══ */
+.cpane{width:350px;min-width:350px;display:flex;flex-direction:column;background:var(--bg);border-left:1px solid var(--bl)}
+.cpane.hidden-cp{display:none}
+
+/* Top bar */
+.topbar{height:38px;display:flex;align-items:center;padding:0 6px;gap:3px;border-bottom:1px solid var(--bl);flex-shrink:0;background:white}
+.tb-btn{width:30px;height:30px;border-radius:6px;border:none;background:transparent;display:flex;align-items:center;justify-content:center;cursor:pointer;color:#666;transition:all .12s;flex-shrink:0}
+.tb-btn:hover{background:#F0F0F0}
+.tb-spacer{flex:1}
+.src-toggle{display:flex;border:1px solid #D0D0D0;border-radius:8px;overflow:hidden;height:28px}
+.src-btn{width:30px;height:26px;border:none;background:white;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .12s;padding:0}
+.src-btn:hover{background:#F5F5F5}
+.src-btn.active{color:white}
+.src-btn+.src-btn{border-left:1px solid #D0D0D0}
+.edit-btn{width:30px;height:28px;border-radius:8px;border:none;display:flex;align-items:center;justify-content:center;cursor:pointer;color:white;margin-left:2px}
+
+/* Pane states */
+.ps{display:none;flex:1;flex-direction:column;min-height:0}
+.ps.active{display:flex}
+
+/* Chat */
+.cc{flex:1;overflow-y:auto;padding:0 14px 10px;display:flex;flex-direction:column;gap:3px;scroll-behavior:smooth}
+.cdate{font-size:11px;color:var(--tm);text-align:center;padding:10px 0 4px}
+.um{display:flex;justify-content:flex-end;margin:5px 0}
+.ub{background:#F0F0F0;color:var(--text);padding:9px 15px;border-radius:16px 16px 4px 16px;font-size:13px;max-width:260px;line-height:1.5}
+.cm{margin:8px 0}
+.cl{display:flex;align-items:center;gap:5px;margin-bottom:4px;font-size:12px;font-weight:600;color:var(--text)}
+.cpi{width:18px;height:18px;border-radius:50%;background:linear-gradient(135deg,#7B57FF,#0F6CBD);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.cbo{font-size:13px;line-height:1.65;color:var(--ts)}
+.cbo strong{color:var(--text)}
+.cbo p{margin-bottom:6px}
+.cbo p:last-child{margin-bottom:0}
+.fl{display:inline-flex;align-items:center;gap:6px;background:#F5F5F5;border:1px solid var(--bl);border-radius:8px;padding:6px 12px;margin:5px 0;cursor:pointer;font-size:12px;color:var(--text);font-weight:500;transition:all .15s}
+.fl:hover{background:#EBEBEB;border-color:var(--border)}
+.fli{width:14px;height:14px;border-radius:3px;display:flex;align-items:center;justify-content:center;font-size:7px;color:white;font-weight:700}
+.fla{font-size:10px;color:var(--tm);font-weight:400}
+.cmbar{padding:6px 14px;font-size:12px;color:var(--ts);border-top:1px solid var(--bl);flex-shrink:0;display:flex;align-items:center;gap:4px;cursor:pointer}
+.ciarea{padding:5px 10px;border-top:1px solid var(--bl);flex-shrink:0}
+.cinput{border:1px solid var(--border);border-radius:12px;background:white;overflow:hidden}
+.cinput input{width:100%;border:none;outline:none;font-size:13px;font-family:var(--font);padding:10px 14px 3px;background:transparent}
+.cinput input::placeholder{color:var(--tm)}
+.cinb{display:flex;align-items:center;justify-content:space-between;padding:2px 10px 7px}
+.cic{color:var(--tm);cursor:pointer;display:flex;align-items:center;justify-content:center;width:24px;height:24px;border-radius:4px}
+.cic:hover{background:#F0F0F0}
+.cdiscl{text-align:center;font-size:10px;color:var(--tm);padding:2px 0}
+
+/* Landing pane */
+.lpane{flex:1;display:flex;flex-direction:column}
+.lph{padding:36px 20px 16px}
+.lph h2{font-size:17px;font-weight:700;margin-bottom:14px}
+.lpdrop{font-size:12px;color:var(--ts);margin-bottom:14px;display:flex;align-items:center;gap:4px;cursor:pointer}
+.lpi{margin:0 16px;border:1px solid var(--border);border-radius:12px;overflow:hidden}
+.lpi input{width:100%;border:none;outline:none;font-size:13px;font-family:var(--font);padding:10px 14px 3px;background:transparent}
+.lpi input::placeholder{color:var(--tm)}
+.lpib{display:flex;align-items:center;justify-content:space-between;padding:2px 10px 7px}
+.lpp{padding:12px 16px;display:flex;flex-direction:column;gap:6px}
+.lppr{padding:10px 14px;border:1px solid var(--bl);border-radius:10px;font-size:12px;color:var(--ts);cursor:pointer;transition:background .12s}
+.lppr:hover{background:var(--surface)}
+.lpmore{font-size:12px;color:var(--ts);padding:4px 16px;cursor:pointer;display:flex;align-items:center;gap:4px}
+.lpfoot{margin-top:auto;padding:10px 16px;text-align:center;font-size:11px;color:var(--tm)}
+
+/* History pane */
+.hpane{flex:1;display:flex;flex-direction:column;min-height:0}
+.hph{padding:12px 14px;font-size:15px;font-weight:700;border-bottom:1px solid var(--bl)}
+.hpn{display:flex;align-items:center;gap:8px;padding:9px 14px;cursor:pointer;font-size:13px;font-weight:500;border-bottom:1px solid var(--bl);border-left:3px solid var(--bb);transition:background .12s}
+.hpn:hover{background:var(--surface)}
+.hpni{width:20px;height:20px;border-radius:50%;background:linear-gradient(135deg,#F472B6,#C084FC);display:flex;align-items:center;justify-content:center}
+.hps{font-size:11px;font-weight:600;color:var(--tm);padding:12px 14px 4px;display:flex;align-items:center}
+.hpsr{margin-left:auto;cursor:pointer;display:flex;align-items:center}
+.hpa{padding:3px 0}
+.hpag{display:flex;align-items:center;gap:8px;padding:6px 14px;cursor:pointer;font-size:13px;transition:background .12s}
+.hpag:hover{background:var(--surface)}
+.hpai{width:20px;height:20px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:9px;color:white;font-weight:700}
+.hpl{font-size:12px;color:var(--bb);padding:4px 14px;cursor:pointer;font-weight:500}
+.hpl:hover{text-decoration:underline}
+.hpc{flex:1;overflow-y:auto;padding:0 0 8px}
+.hpci{padding:7px 14px;cursor:pointer;font-size:13px;color:var(--text);transition:background .12s;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.hpci:hover{background:var(--surface)}
+.hpci.active{background:#E8F0FE;font-weight:500;border-left:3px solid var(--bb)}
+
+/* ANNOTATIONS */
+.ann{position:fixed;z-index:90;background:rgba(26,26,26,.96);color:white;padding:12px 16px;border-radius:10px;max-width:260px;font-size:11px;line-height:1.55;box-shadow:0 4px 24px rgba(0,0,0,.3);border-left:3px solid #B4A0FF;opacity:0;visibility:hidden;transition:opacity .35s,visibility .35s;pointer-events:none;backdrop-filter:blur(8px)}
+.ann.visible{opacity:1;visibility:visible}
+.ann .at{font-size:9px;text-transform:uppercase;letter-spacing:.8px;font-weight:700;margin-bottom:3px;display:block}
+.ann .at.c1{color:#7DCEA0}.ann .at.c2{color:#F0B27A}.ann .at.c3{color:#85C1E9}.ann .at.c4{color:#F5B7B1}
+.ann .ab{color:rgba(255,255,255,.88)}.ann .ab strong{color:white}
+
+.pbar{position:fixed;top:0;left:0;height:3px;background:linear-gradient(90deg,var(--cp),var(--bb));z-index:100;transition:width .4s ease}
+.hidden{display:none!important}
+@keyframes fadeIn{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}
+.anim-in{animation:fadeIn .3s ease both}
+::-webkit-scrollbar{width:4px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:#D0D0D0;border-radius:2px}
+</style>
+</head>
+<body>
+
+<div class="landing" id="landing">
+  <h1>Chat History Flow</h1>
+  <h2>A hiring plan that starts in Copilot and flows through Word, Excel, and PowerPoint</h2>
+  <div class="lcard">
+    <h3>Product Decisions Demonstrated</h3>
+    <div class="litem"><span class="lnum">1</span><span><strong>From chat → file:</strong> Clicking a file link in any Copilot chat opens that chat in the file's agent mode pane. No exceptions.</span></div>
+    <div class="litem"><span class="lnum">2</span><span><strong>File opened directly:</strong> Shows the app landing page. Hamburger shows all chats. New message = new chat.</span></div>
+    <div class="litem"><span class="lnum">3</span><span><strong>All chats in history:</strong> Same list as Copilot App. Not filtered by app.</span></div>
+    <div class="litem"><span class="lnum">4</span><span><strong>Close and reopen:</strong> Shows exactly what was showing before.</span></div>
+    <div class="litem"><span class="lnum">5</span><span><strong>One chat, everywhere:</strong> Stored once, visible in every surface.</span></div>
+    <div class="ldiv"></div>
+    <div class="lnote">Press Space, → or click to advance each step. Each step waits for you.</div>
+  </div>
+  <button class="start-btn" onclick="startDemo()">Start the flow →</button>
+  <div class="meta">Prototype by Hema Sridharan · March 2026</div>
+</div>
+
+<div class="pbar" id="pbar" style="width:0%"></div>
+
+<!-- Annotations -->
+<div class="ann" id="a1" style="bottom:120px;right:380px"><span class="at c3">STARTING POINT</span><span class="ab">You're in the <strong>Copilot App</strong> with sidebar. Ask about the hiring plan.</span></div>
+<div class="ann" id="a2" style="top:180px;right:16px"><span class="at c1">DECISION 1</span><span class="ab">Copilot found a file. The <strong>file link</strong> will open Excel with <strong>this exact chat</strong> in the agent mode pane.</span></div>
+<div class="ann" id="a3" style="top:60px;right:16px"><span class="at c4">HANDOFF → EXCEL</span><span class="ab">Excel opened. Sidebar gone — now it's a document + chat pane. <strong>The chat came with it.</strong> Same conversation.</span></div>
+<div class="ann" id="a4" style="top:240px;right:16px"><span class="at c1">DECISION 1 — CROSS-APP</span><span class="ab">From Excel, Copilot generated a Word doc. Clicking the link → Word with <strong>this same chat</strong>.</span></div>
+<div class="ann" id="a5" style="top:60px;right:16px"><span class="at c4">HANDOFF → WORD</span><span class="ab">Third surface. Same chat. Copilot App → Excel → Word.</span></div>
+<div class="ann" id="a6" style="top:220px;right:16px"><span class="at c1">DECISION 1 — AGAIN</span><span class="ab">Updated a PPT deck. Clicking → PowerPoint with <strong>same chat</strong>.</span></div>
+<div class="ann" id="a7" style="top:60px;right:16px"><span class="at c4">HANDOFF → POWERPOINT</span><span class="ab">Fourth surface, one conversation. Copilot App → Excel → Word → PPT.</span></div>
+<div class="ann" id="a8" style="top:80px;right:16px"><span class="at c2">DECISION 2</span><span class="ab">Opened a file <strong>directly</strong> — not from a chat. Landing page: "Let's edit your spreadsheet." Fresh start.</span></div>
+<div class="ann" id="a9" style="top:60px;right:16px"><span class="at c2">DECISION 3</span><span class="ab">Hamburger shows <strong>all your Copilot chats</strong>. Same list as the Copilot App sidebar. Not "Chats in Excel."</span></div>
+<div class="ann" id="a10" style="top:220px;right:16px"><span class="at c1">DECISION 5</span><span class="ab"><strong>"Hiring Plan Pipeline Review"</strong> — one chat, stored once, visible everywhere. Click to continue it.</span></div>
+
+<!-- SHELL -->
+<div class="shell">
+  <!-- Copilot App Sidebar -->
+  <div class="sidebar" id="sidebar">
+    <div class="sb-top">
+      <span class="sb-brand">Copilot</span>
+      <button class="sb-toggle"><svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="#666" stroke-width="1.5"><rect x="2" y="3" width="16" height="14" rx="2"/><line x1="12" y1="3" x2="12" y2="17"/></svg></button>
+    </div>
+    <div class="sb-nav">
+      <div class="sb-nav-item"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="#666" stroke-width="1.3"><path d="M12 2.5L3.5 11l-1 2.5 2.5-1L13.5 4"/><path d="M10 4.5l1.5 1.5"/></svg> New chat</div>
+      <div class="sb-nav-item"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="#666" stroke-width="1.3"><circle cx="7" cy="7" r="4"/><line x1="10" y1="10" x2="14" y2="14"/></svg> Search</div>
+      <div class="sb-nav-item"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="#666" stroke-width="1.3"><rect x="2" y="2" width="12" height="12" rx="2"/><path d="M5 5h6M5 8h4"/></svg> Library</div>
+    </div>
+    <div class="sb-divider"></div>
+    <div class="sb-section">Agents</div>
+    <div class="sb-agent"><span class="sb-agent-icon" style="background:#6366F1">🔬</span> Researcher</div>
+    <div class="sb-agent"><span class="sb-agent-icon" style="background:#8B5CF6">📊</span> Analyst</div>
+    <div class="sb-agent"><span class="sb-agent-icon" style="background:#06B6D4">🤝</span> Cowork</div>
+    <div class="sb-agent"><span class="sb-agent-icon" style="background:var(--wb)">W</span> Word</div>
+    <div class="sb-link">⊕ New agent</div>
+    <div class="sb-link">⋯ All agents</div>
+    <div class="sb-divider"></div>
+    <div class="sb-section">Notebooks</div>
+    <div class="sb-agent"><span class="sb-agent-icon" style="background:#9CA3AF;font-size:10px">📓</span> Q3 Planning</div>
+    <div class="sb-link">⋯ All notebooks</div>
+    <div class="sb-divider"></div>
+    <div class="sb-chats-header">
+      <span class="sb-chats-label">Chats</span>
+      <span class="sb-search"><svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="#999" stroke-width="1.5"><circle cx="7" cy="7" r="4"/><line x1="10" y1="10" x2="14" y2="14"/></svg></span>
+    </div>
+    <div class="sb-chat active" id="sbHiring">Hiring Plan Pipeline Review</div>
+    <div class="sb-chat">Q3 Budget Revision</div>
+    <div class="sb-chat">Marketing Reallocation Model</div>
+    <div class="sb-chat">CFO Sync Meeting Prep</div>
+    <div class="sb-chat">Engineering Attrition Report</div>
+    <div class="sb-chat">Infrastructure Cost Projections</div>
+    <div class="sb-chat">Vendor Contract Renewal</div>
+    <div class="sb-chat">Team OKR Review</div>
+    <div class="sb-chat">Weekly Exec Metrics Dashboard</div>
+    <div class="sb-bottom">
+      <span class="sb-avatar">CL</span>
+      <div><div style="font-size:12px;font-weight:600">Cindy Luo</div><div style="font-size:10px;color:var(--tm)">⋯</div></div>
+    </div>
+    <div class="sb-footer">M365 Copilot (Premium) ⓘ</div>
+  </div>
+
+  <!-- Main area -->
+  <div class="main-area">
+    <div class="canvas-tabs" id="cvtabs">
+      <div class="cvt active copilot" id="ct-copilot"><span class="ti" style="background:var(--cp)">✦</span> Copilot</div>
+      <div class="cvt hidden" id="ct-excel"><span class="ti" style="background:var(--xg)">X</span> Hiring_Plan_H2.xlsx</div>
+      <div class="cvt hidden" id="ct-word"><span class="ti" style="background:var(--wb)">W</span> Hiring_Proposal_Q3.docx</div>
+      <div class="cvt hidden" id="ct-ppt"><span class="ti" style="background:var(--po)">P</span> Hiring_Strategy_H2.pptx</div>
+    </div>
+
+    <div class="cv-area">
+      <!-- Copilot App -->
+      <div class="cvp active" id="cv-copilot">
+        <div class="cp-main">
+          <div class="cp-greeting">Good morning, Cindy</div>
+          <div class="cp-composer"><input type="text" placeholder="Ask Copilot anything" readonly/><div class="cp-comp-bot"><span style="font-size:12px;color:var(--tm);cursor:pointer">+ Attach</span><span style="font-size:14px;color:var(--tm);cursor:pointer">🎙</span></div></div>
+          <div class="cp-chat-area" id="cpChat"></div>
+        </div>
+      </div>
+      <!-- Excel -->
+      <div class="cvp" id="cv-excel"><div class="cvr"><span class="ri" style="background:var(--xg)">X</span><span style="font-size:11px;font-weight:600;color:var(--text)">Hiring_Plan_H2.xlsx</span><span style="margin-left:auto;font-size:10px">Editing</span></div><div class="cvb" style="padding:18px"><table style="width:100%;max-width:560px;font-size:11px;border-collapse:collapse"><tr style="background:#F0F0F0;font-weight:600"><td style="padding:5px 8px;border:1px solid #E0E0E0">Role</td><td style="padding:5px 8px;border:1px solid #E0E0E0">Pipeline</td><td style="padding:5px 8px;border:1px solid #E0E0E0">Time-to-Fill</td><td style="padding:5px 8px;border:1px solid #E0E0E0">Start</td><td style="padding:5px 8px;border:1px solid #E0E0E0">Status</td></tr><tr><td style="padding:5px 8px;border:1px solid #E0E0E0">ML Engineer (×2)</td><td style="padding:5px 8px;border:1px solid #E0E0E0">4</td><td style="padding:5px 8px;border:1px solid #E0E0E0">6 wks</td><td style="padding:5px 8px;border:1px solid #E0E0E0">Apr 15</td><td style="padding:5px 8px;border:1px solid #E0E0E0;color:var(--green)">On track</td></tr><tr><td style="padding:5px 8px;border:1px solid #E0E0E0">Full-stack (×2)</td><td style="padding:5px 8px;border:1px solid #E0E0E0">7</td><td style="padding:5px 8px;border:1px solid #E0E0E0">4 wks</td><td style="padding:5px 8px;border:1px solid #E0E0E0">Mar 28</td><td style="padding:5px 8px;border:1px solid #E0E0E0;color:var(--green)">On track</td></tr><tr><td style="padding:5px 8px;border:1px solid #E0E0E0">Platform (×1)</td><td style="padding:5px 8px;border:1px solid #E0E0E0">2</td><td style="padding:5px 8px;border:1px solid #E0E0E0">8 wks</td><td style="padding:5px 8px;border:1px solid #E0E0E0">May 1</td><td style="padding:5px 8px;border:1px solid #E0E0E0;color:var(--orange)">Low pipeline</td></tr></table></div></div>
+      <!-- Word -->
+      <div class="cvp" id="cv-word"><div class="cvr"><span class="ri" style="background:var(--wb)">W</span><span style="font-size:11px;font-weight:600;color:var(--text)">Hiring_Proposal_Q3.docx</span><span style="margin-left:auto;font-size:10px">Editing</span></div><div class="cvb"><div class="dc"><h1>Engineering Hiring Proposal — Q3</h1><div class="dm">Engineering Team · Draft v1.0 · Generated by Copilot</div><h2>1. Summary</h2><p>Plan to hire 5 engineers in Q3, addressing growing gap between product ambition and platform capacity.</p><h2>2. Roles & Pipeline</h2><p>ML Engineer (×2), Full-stack (×2), Platform (×1). Platform role flagged as low pipeline risk.</p><h2>3. Budget Impact</h2><p>$350K reallocated from marketing. Net headcount: +2 over Q2 attrition.</p></div></div></div>
+      <!-- PPT -->
+      <div class="cvp" id="cv-ppt"><div class="cvr"><span class="ri" style="background:var(--po)">P</span><span style="font-size:11px;font-weight:600;color:var(--text)">Hiring_Strategy_H2.pptx</span><span style="margin-left:auto;font-size:10px">Editing</span></div><div class="cvb" style="background:#E8E8E8;display:flex;align-items:center;justify-content:center"><div style="width:420px;background:white;border-radius:3px;padding:32px;box-shadow:0 2px 8px rgba(0,0,0,.1);aspect-ratio:16/9;display:flex;flex-direction:column;justify-content:center;text-align:center"><div style="font-size:7px;color:var(--tm);text-transform:uppercase;letter-spacing:1px;margin-bottom:4px">SLIDE 2</div><div style="font-size:17px;font-weight:700;margin-bottom:6px">Hiring Pipeline Status</div><div style="font-size:11px;color:var(--ts)">5 roles · 13 candidates · 1 risk flag</div></div></div></div>
+
+      <!-- Chat pane (hidden initially — appears on WXP) -->
+      <div class="cpane hidden-cp" id="chatPane">
+        <div class="topbar">
+          <button class="tb-btn" id="hamBtn" onclick="toggleHist()"><svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="#666" stroke-width="1.8" stroke-linecap="round"><line x1="4" y1="5" x2="16" y2="5"/><line x1="4" y1="10" x2="16" y2="10"/><line x1="4" y1="15" x2="16" y2="15"/></svg></button>
+          <button class="tb-btn"><svg width="18" height="18" viewBox="0 0 20 20" fill="none"><path d="M10 2L4 5v4c0 4.5 2.6 8.1 6 9 3.4-.9 6-4.5 6-9V5L10 2z" stroke="#107C10" stroke-width="1.5" fill="none"/><path d="M7 10l2 2 4-4" stroke="#107C10" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+          <span class="tb-spacer"></span>
+          <div class="src-toggle"><button class="src-btn active" id="srcWork" style="background:var(--po)"><svg width="14" height="14" viewBox="0 0 16 16" fill="white"><path d="M6 1a1 1 0 00-1 1v1H3a1 1 0 00-1 1v9a1 1 0 001 1h10a1 1 0 001-1V4a1 1 0 00-1-1h-2V2a1 1 0 00-1-1H6zm0 1h4v1H6V2zM3 4h10v9H3V4z"/></svg></button><button class="src-btn"><svg width="14" height="14" viewBox="0 0 16 16" fill="#666"><path d="M8 1a7 7 0 100 14A7 7 0 008 1zM2.07 7.5h3.46c.1-1.1.33-2.15.67-3.13A6.01 6.01 0 002.07 7.5zm0 1h3.46c.1 1.1.33 2.15.67 3.13A6.01 6.01 0 012.07 8.5zM8 14c-.85 0-1.95-1.4-2.4-4h4.8c-.45 2.6-1.55 4-2.4 4z"/></svg></button></div>
+          <button class="edit-btn" id="editBtn" style="background:var(--po)"><svg width="14" height="14" viewBox="0 0 16 16" fill="white"><path d="M12.15 1.85a1.5 1.5 0 012.12 0l.88.88a1.5 1.5 0 010 2.12L5.5 14.5 1 15.5l1-4.5 10.15-9.15z"/></svg></button>
+          <button class="tb-btn"><svg width="16" height="16" viewBox="0 0 16 16" fill="#666"><circle cx="3" cy="8" r="1.3"/><circle cx="8" cy="8" r="1.3"/><circle cx="13" cy="8" r="1.3"/></svg></button>
+          <button class="tb-btn"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="#666" stroke-width="1.8" stroke-linecap="round"><line x1="2" y1="2" x2="12" y2="12"/><line x1="12" y1="2" x2="2" y2="12"/></svg></button>
+        </div>
+
+        <!-- Chat state -->
+        <div class="ps active" id="ps-chat">
+          <div class="cc" id="chatC"><div class="cdate">Today</div></div>
+          <div class="cmbar">Chat <svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="#666" stroke-width="1.5"><path d="M2 4l3 3 3-3"/></svg></div>
+          <div class="ciarea"><div class="cinput"><input type="text" placeholder="Message Copilot" readonly/><div class="cinb"><span class="cic"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="#999" stroke-width="1.5"><line x1="8" y1="3" x2="8" y2="13"/><line x1="3" y1="8" x2="13" y2="8"/></svg></span><div style="display:flex;gap:4px"><span class="cic"><svg width="14" height="14" viewBox="0 0 16 16" fill="#999"><path d="M8 1a3 3 0 013 3v4a3 3 0 11-6 0V4a3 3 0 013-3zM4 7a4 4 0 008 0M8 13v2"/></svg></span><span class="cic"><svg width="14" height="14" viewBox="0 0 16 16" fill="#999"><rect x="1" y="4" width="3" height="8" rx="1"/><rect x="5" y="2" width="3" height="12" rx="1"/><rect x="9" y="5" width="3" height="6" rx="1"/><rect x="13" y="3" width="2" height="10" rx="1"/></svg></span></div></div></div><div class="cdiscl">AI-generated content may be incorrect</div></div>
+        </div>
+
+        <!-- Landing state -->
+        <div class="ps" id="ps-land">
+          <div class="lpane"><div class="lph"><h2 id="lpT2">Let's edit your spreadsheet</h2><div class="lpdrop">Allow editing <svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="#666" stroke-width="1.5"><path d="M2 4l3 3 3-3"/></svg></div></div><div class="lpi"><input type="text" placeholder="Describe what you'd like to edit" readonly/><div class="lpib"><span class="cic"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="#999" stroke-width="1.5"><line x1="8" y1="3" x2="8" y2="13"/><line x1="3" y1="8" x2="13" y2="8"/></svg></span><span class="cic"><svg width="14" height="14" viewBox="0 0 16 16" fill="#999"><path d="M8 1a3 3 0 013 3v4a3 3 0 11-6 0V4a3 3 0 013-3zM4 7a4 4 0 008 0M8 13v2"/></svg></span></div></div><div class="lpp"><div class="lppr">Analyze trends in this data</div><div class="lppr">Create a chart from the selected range</div><div class="lppr">Highlight outliers and anomalies</div></div><div class="lpmore">See more <svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="#666" stroke-width="1.5"><path d="M2 4l3 3 3-3"/></svg></div><div class="lpfoot">M365 Copilot (Premium) ⓘ</div></div>
+        </div>
+
+        <!-- History state -->
+        <div class="ps" id="ps-hist">
+          <div class="hpane"><div class="hph">M365 Copilot</div><div class="hpn"><span class="hpni"><svg width="10" height="10" viewBox="0 0 10 10" fill="white"><polygon points="5,0 6.2,3.5 10,3.8 7,6.2 8,10 5,7.8 2,10 3,6.2 0,3.8 3.8,3.5"/></svg></span> New chat</div><div class="hps">Agents</div><div class="hpa"><div class="hpag"><span class="hpai" style="background:#6366F1">🔬</span> Researcher</div><div class="hpag"><span class="hpai" style="background:#8B5CF6">📊</span> Analyst</div><div class="hpag"><span class="hpai" style="background:#06B6D4">🤝</span> Cowork</div><div class="hpag"><span class="hpai" style="background:var(--wb)">W</span> Word</div></div><div class="hpl">⊕ New agent</div><div class="hpl">⋯ All agents</div><div class="hps">Chats <span class="hpsr"><svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="#999" stroke-width="1.5"><circle cx="7" cy="7" r="4"/><line x1="10" y1="10" x2="14" y2="14"/></svg></span></div><div class="hpc"><div class="hpci" id="hcH">Hiring Plan Pipeline Review</div><div class="hpci">Q3 Budget Revision</div><div class="hpci">Marketing Reallocation Model</div><div class="hpci">CFO Sync Meeting Prep</div><div class="hpci">Engineering Attrition Report</div><div class="hpci">Infrastructure Cost Projections</div><div class="hpci">Vendor Contract Renewal</div><div class="hpci">Team OKR Review</div><div class="hpci">Weekly Exec Metrics</div></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+var step=0,anim=false;
+function startDemo(){document.getElementById('landing').classList.add('hidden');setTimeout(advance,400)}
+
+function advance(){
+  if(anim)return;step++;
+  document.getElementById('pbar').style.width=Math.min(100,step/10*100)+'%';
+  switch(step){
+    case 1:s1();break;case 2:s2();break;case 3:s3();break;case 4:s4();break;
+    case 5:s5();break;case 6:s6();break;case 7:s7();break;case 8:s8();break;
+    case 9:s9();break;case 10:s10();break;
+  }
+}
+
+function s1(){showA('a1');addToCp('<div class="um"><div class="ub">I need to review our Q3 engineering hiring plan — what does the pipeline look like?</div></div>')}
+function s2(){hideA();addToCp('<div class="cm"><div class="cl"><span class="cpi"><svg width="10" height="10" viewBox="0 0 12 12" fill="white"><polygon points="6,0 7.4,4.2 12,4.6 8.4,7.4 9.6,12 6,9.4 2.4,12 3.6,7.4 0,4.6 4.6,4.2"/></svg></span> Copilot</div><div class="cbo"><p>I found <strong>Hiring_Plan_H2.xlsx</strong> in your OneDrive. You have <strong>5 open roles</strong> with 13 candidates. Most are on track, but the <strong>Platform role</strong> has only 2 candidates.</p><div class="fl" onclick="advance()"><span class="fli" style="background:var(--xg)">X</span> Hiring_Plan_H2.xlsx <span class="fla">→ Open in Excel</span></div></div></div>');showA('a2')}
+function s3(){hideA();anim=true;document.getElementById('sidebar').classList.add('hidden-sb');document.getElementById('chatPane').classList.remove('hidden-cp');showTab('excel');switchCv('excel');setColor('excel');setTimeout(function(){addToChat('<p>Working inside <strong>Hiring_Plan_H2.xlsx</strong>. The Q3_Pipeline range shows:</p><p>⚠️ <strong>Platform role:</strong> Only 2 candidates, 8-week fill. At risk.</p><p>Want me to draft a hiring proposal for the CFO?</p>');showA('a3');anim=false},400)}
+function s4(){hideA();addUToChat('Yes, draft the proposal');anim=true;setTimeout(function(){addToChat('<p>Generated <strong>Hiring_Proposal_Q3.docx</strong> with summary, pipeline status, and budget impact.</p><div class="fl" onclick="advance()"><span class="fli" style="background:var(--wb)">W</span> Hiring_Proposal_Q3.docx <span class="fla">→ Open in Word</span></div>');showA('a4');anim=false},600)}
+function s5(){hideA();anim=true;showTab('word');switchCv('word');setColor('word');setTimeout(function(){addToChat('<p>Opened <strong>Hiring_Proposal_Q3.docx</strong>. Draft ready for review. Should I update the strategy deck too?</p>');showA('a5');anim=false},400)}
+function s6(){hideA();addUToChat('Yes, update Hiring_Strategy_H2.pptx');anim=true;setTimeout(function(){addToChat('<p>Updated slide 2 with pipeline data and risk flag. Slide 4 reflects the $350K reallocation.</p><div class="fl" onclick="advance()"><span class="fli" style="background:var(--po)">P</span> Hiring_Strategy_H2.pptx <span class="fla">→ Open in PowerPoint</span></div>');showA('a6');anim=false},600)}
+function s7(){hideA();anim=true;showTab('ppt');switchCv('ppt');setColor('ppt');setTimeout(function(){addToChat('<p>You\'re in <strong>Hiring_Strategy_H2.pptx</strong>. All changes sourced from the same pipeline data.</p><p style="font-size:11px;color:var(--tm)">One chat: Copilot App → Excel → Word → PowerPoint.</p>');showA('a7');anim=false},400)}
+function s8(){hideA();showP('land');showA('a8')}
+function s9(){hideA();showP('hist');showA('a9')}
+function s10(){hideA();document.getElementById('hcH').classList.add('active');showA('a10')}
+
+/* Helpers */
+function addToCp(h){var e=document.createElement('div');e.className='anim-in';e.innerHTML=h;document.getElementById('cpChat').appendChild(e);var c=document.getElementById('cpChat');setTimeout(function(){c.scrollTo({top:c.scrollHeight,behavior:'smooth'})},80)}
+function addToChat(h){var e=document.createElement('div');e.className='cm anim-in';e.innerHTML='<div class="cl"><span class="cpi"><svg width="10" height="10" viewBox="0 0 12 12" fill="white"><polygon points="6,0 7.4,4.2 12,4.6 8.4,7.4 9.6,12 6,9.4 2.4,12 3.6,7.4 0,4.6 4.6,4.2"/></svg></span> Copilot</div><div class="cbo">'+h+'</div>';document.getElementById('chatC').appendChild(e);scrChat()}
+function addUToChat(t){var e=document.createElement('div');e.className='um anim-in';e.innerHTML='<div class="ub">'+t+'</div>';document.getElementById('chatC').appendChild(e);scrChat()}
+function scrChat(){var c=document.getElementById('chatC');setTimeout(function(){c.scrollTo({top:c.scrollHeight,behavior:'smooth'})},80)}
+function showP(s){['chat','land','hist'].forEach(function(x){document.getElementById('ps-'+x).classList.remove('active')});document.getElementById('ps-'+s).classList.add('active')}
+function setColor(app){var c={copilot:'var(--cp)',word:'var(--wb)',excel:'var(--xg)',ppt:'var(--po)'};document.getElementById('editBtn').style.background=c[app];document.getElementById('srcWork').style.background=c[app]}
+function switchCv(app){['copilot','word','excel','ppt'].forEach(function(a){document.getElementById('cv-'+a).classList.remove('active');var t=document.getElementById('ct-'+a);t.classList.remove('active','copilot','word','excel','ppt')});document.getElementById('cv-'+app).classList.add('active');document.getElementById('ct-'+app).classList.add('active',app)}
+function showTab(app){document.getElementById('ct-'+app).classList.remove('hidden')}
+function toggleHist(){var cur=document.getElementById('ps-hist').classList.contains('active');showP(cur?'chat':'hist')}
+function showA(id){hideA();document.getElementById(id).classList.add('visible')}
+function hideA(){for(var i=1;i<=10;i++){var e=document.getElementById('a'+i);if(e)e.classList.remove('visible')}}
+
+document.addEventListener('keydown',function(e){
+  if(e.code==='Space'||e.code==='ArrowRight'){e.preventDefault();advance()}
+  if(e.code==='Escape')location.reload();
+});
+document.addEventListener('click',function(e){
+  if(e.target.closest('.start-btn,.fl,.hpci,.hpn,.hpag,.hpl,.tb-btn,.src-btn,.edit-btn,.sb-nav-item,.sb-agent,.sb-link,.sb-chat,.sb-toggle,.lppr,input,button'))return;
+  advance();
+});
+</script>
+</body>
+</html>

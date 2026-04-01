@@ -453,11 +453,13 @@ function startDemo(){
 }
 
 // Auto-resume if navigating backward
+var isReplaying = false;
 (function(){
   var resume = sessionStorage.getItem('resumeStep');
   if(resume){
     sessionStorage.removeItem('resumeStep');
     var target = parseInt(resume);
+    isReplaying = true;
     document.getElementById('landing').classList.add('hidden');
     document.getElementById('stepBar').classList.remove('hidden');
     step=0;
@@ -466,6 +468,8 @@ function startDemo(){
       if(step<target){
         advance();
         setTimeout(advanceToTarget, 80);
+      } else {
+        isReplaying = false;
       }
     }
     setTimeout(advanceToTarget, 200);
@@ -536,8 +540,10 @@ function s4(){
   var ov=document.createElement('div');
   ov.id='branchOverlay';
   ov.style.cssText='position:fixed;inset:0;z-index:150;background:rgba(245,245,242,.97);display:flex;flex-direction:column;align-items:center;justify-content:center;animation:fadeIn .4s ease both';
-  ov.innerHTML='<div style="max-width:480px;width:90%;text-align:center"><h2 style="font-size:22px;font-weight:700;margin-bottom:6px;color:var(--text)">Now the north star</h2><p style="font-size:13px;color:var(--ts);margin-bottom:20px;line-height:1.6">That was P0 — chat history in agent mode.<br/><br/>What if the chat <strong>started in the Copilot App</strong> and the user navigated to files from there? The chat should follow across every surface.</p><button onclick="document.getElementById(\'branchOverlay\').remove();advance()" style="padding:12px 32px;border-radius:24px;border:none;background:var(--text);color:white;font-size:14px;font-weight:600;cursor:pointer;font-family:var(--font)">See the P2 vision →</button></div>';
+  ov.innerHTML='<div style="max-width:480px;width:90%;text-align:center"><h2 style="font-size:22px;font-weight:700;margin-bottom:6px;color:var(--text)">Now the north star</h2><p style="font-size:13px;color:var(--ts);margin-bottom:20px;line-height:1.6">That was P0 — chat history in agent mode.<br/><br/>What if the chat <strong>started in the Copilot App</strong> and the user navigated to files from there? The chat should follow across every surface.</p><button onclick="document.getElementById(\'branchOverlay\').remove();advance()" style="padding:12px 32px;border-radius:24px;border:none;background:var(--text);color:white;font-size:14px;font-weight:600;cursor:pointer;font-family:var(--font)">Check it out \u2192</button></div>';
   document.body.appendChild(ov);
+  // If replaying (backward nav), auto-dismiss the overlay
+  if(isReplaying){ setTimeout(function(){ var o=document.getElementById('branchOverlay'); if(o)o.remove(); },50); }
 }
 
 // ── P2: Cross-app chat continuity ──

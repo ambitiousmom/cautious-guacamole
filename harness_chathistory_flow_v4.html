@@ -524,7 +524,7 @@ function s2(){
   // P0: User clicks hamburger → sees all chats
   hideA();showP('hist');showA('a10');
   document.getElementById('chatPane').style.background='#F3F3F3';
-  setTimeout(function(){ var h=document.getElementById('hcH'); if(h) showClickHint(h,'Click here'); },600);
+  setTimeout(function(){ var h=document.getElementById('hcH'); if(h) showClickHint(h,'User clicks here'); },600);
 }
 function s3(){
   // P0: User selects a chat → it loads in-place
@@ -565,7 +565,7 @@ function s6(){
   hideA();
   addToCp('<div class="cm"><div class="cl"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAJUAAAAwCAYAAAAYczgSAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAAFiUAABYlAUlSJPAAAAiGSURBVHhe7Zv5T1VHFMf9pbVJ/4H+0vSXtml/aVp/NLWLWC0KLgiGKIviFmsRRNG64las0aBY1wiKOy5VpIjaWKVqEdFKFKxFtOBWKYvghmjTnuZ7mrm5b+bNfffdh9LSOckn5s6cmXlv5vvOnJmL3Z4+fUoGgxd01k12NBjcojMjKoNndGZEZfCMzoyoDJ7RmRGVwTM6M6IyeEZnRlQGz+jMiMrgGZ0ZURk8ozMjKoNndGZEZfCMzoyoDJ7RmRGVwTM6M6IyeEZnRlQGz+jMiMrgGZ0ZURk8o7P/A0jBEVpB0YtyAAAAAElFTkSuQmCC" style="height:20px;" alt="Copilot"></div><div class="cbo"><p>Found <strong>Hiring_Plan_H2.xlsx</strong>. 5 open roles, 13 candidates. Platform role has only 2 candidates.</p><div class="fl" onclick="advance()"><span class="fli" style="background:var(--xg)">X</span> Hiring_Plan_H2.xlsx <span class="fla">&rarr; Open in Excel</span></div></div></div>');
   showA('a2');
-  setTimeout(function(){ var b=document.querySelector('.fl'); if(b)showClickHint(b,'Click here'); },600);
+  setTimeout(function(){ var b=document.querySelector('.fl'); if(b)showClickHint(b,'User clicks here'); },600);
 }
 function s7(){
   // P2: Handoff to Excel — chat carries over
@@ -587,7 +587,7 @@ function s8(){
   setTimeout(function(){
     addToChat('<p>Created <strong>Hiring_Proposal_Q3.docx</strong>.</p><div class="fl" id="wordDocLink" onclick="advance()"><span class="fli" style="background:var(--wb)">W</span> Hiring_Proposal_Q3.docx <span class="fla">&rarr; Open in Word</span></div>');
     showA('a4');anim=false;
-    setTimeout(function(){ var b=document.getElementById('wordDocLink'); if(b)showClickHint(b,'Click here'); },600);
+    setTimeout(function(){ var b=document.getElementById('wordDocLink'); if(b)showClickHint(b,'User clicks here'); },600);
   },500);
 }
 function s9(){
@@ -598,7 +598,7 @@ function s9(){
     setTimeout(function(){
       addToChat('<p>Revised section 2. Tightened phrasing and removed redundancies.</p><p>The hiring numbers here also appear in <strong>Hiring_Strategy_H2.pptx</strong> &mdash; you may want to update that too.</p><div class="fl" id="pptDeckLink" onclick="advance()"><span class="fli" style="background:var(--po)">P</span> Hiring_Strategy_H2.pptx <span class="fla">&rarr; Open in PowerPoint</span></div>');
       showA('a5');anim=false;
-      setTimeout(function(){ var b=document.getElementById('pptDeckLink'); if(b)showClickHint(b,'Click here'); },600);
+      setTimeout(function(){ var b=document.getElementById('pptDeckLink'); if(b)showClickHint(b,'User clicks here'); },600);
     },400);
   },300);
 }
@@ -610,7 +610,7 @@ function s10(){
     setTimeout(function(){
       addToChat('<p>Added speaker notes summarizing the pipeline status.</p><p>This slide references data from <strong>Hiring_Plan_H2.xlsx</strong>.</p><div class="fl" id="xlReturnLink" onclick="advance()"><span class="fli" style="background:var(--xg)">X</span> Hiring_Plan_H2.xlsx <span class="fla">&rarr; Open in Excel</span></div>');
       showA('a6');anim=false;
-      setTimeout(function(){ var b=document.getElementById('xlReturnLink'); if(b)showClickHint(b,'Click here'); },600);
+      setTimeout(function(){ var b=document.getElementById('xlReturnLink'); if(b)showClickHint(b,'User clicks here'); },600);
     },400);
   },300);
 }
@@ -637,7 +637,7 @@ function s12(){
   for(var i=0;i<chats.length;i++){
     if(chats[i].textContent.indexOf('Meeting Prep')>=0){
       chats[i].classList.add('active');
-      showClickHint(chats[i],'Click here');
+      showClickHint(chats[i],'User clicks here');
       break;
     }
   }
@@ -697,7 +697,7 @@ function showClickHint(target,text){
   var hint=document.createElement('div');
   hint.className='click-hint';
   hint.id='activeHint';
-  hint.textContent=text||'Click here';
+  hint.textContent=text||'User clicks here';
   hint.style.pointerEvents='auto';
   hint.style.cursor='pointer';
   hint.addEventListener('click',function(){target.click()});

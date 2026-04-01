@@ -552,9 +552,10 @@ function s4(){
 // ── P2: Cross-app chat continuity ──
 
 function s5(){
-  // P2: Start in Copilot App
+  // P2: Start in Copilot App — hide WXP tabs, reset to clean state
   document.getElementById('chatPane').classList.add('hidden-cp');
   document.getElementById('sidebar').classList.remove('hidden-sb');
+  ['ct-excel','ct-word','ct-ppt'].forEach(function(id){document.getElementById(id).classList.add('hidden')});
   switchCv('copilot');
   showA('a1');
   document.getElementById('chatTitle').textContent='Hiring Plan Pipeline Review';

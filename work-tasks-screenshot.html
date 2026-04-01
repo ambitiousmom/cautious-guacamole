@@ -1,0 +1,924 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Copilot Tasks — For Work</title>
+<style>
+  :root {
+    --bg: #FFFFFF;
+    --surface: #F5F1EC;
+    --surface-hover: #EDE8E3;
+    --border: #D9D3CC;
+    --border-light: #E5DFD9;
+    --text: #242424;
+    --text-secondary: #616161;
+    --text-muted: #999;
+    --brand-blue: #0F6CBD;
+    --copilot-purple: #7B57FF;
+    --green: #107C10;
+    --green-light: #DFF6DD;
+    --red: #D13438;
+    --yellow: #FFB900;
+    --blue-light: #EBF3FC;
+    --purple-light: #F3EEFF;
+    --font: 'Segoe UI Variable Display', 'Segoe UI Variable', 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
+    --sidebar-w: 240px;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: var(--font); background: var(--bg); color: var(--text); height: 100vh; overflow: hidden; }
+
+  /* ═══ Landing ═══ */
+  .landing {
+    position: fixed; inset: 0; z-index: 200;
+    background: linear-gradient(145deg, #0F0F2D 0%, #1B1050 40%, #2D1A5E 100%);
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    color: white; transition: opacity 0.5s ease, visibility 0.5s;
+  }
+  .landing.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
+  .landing h1 { font-size: 48px; font-weight: 600; margin-bottom: 8px; background: linear-gradient(90deg, #fff, #C8B8FF); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+  .landing h2 { font-size: 20px; font-weight: 400; color: rgba(255,255,255,0.5); margin-bottom: 32px; }
+  .landing .sub { font-size: 16px; color: rgba(255,255,255,0.55); max-width: 560px; text-align: center; line-height: 1.7; margin-bottom: 40px; }
+  .start-btn { padding: 14px 44px; border-radius: 28px; border: none; background: linear-gradient(135deg, #7B57FF, #0F6CBD); color: white; font-size: 15px; font-weight: 600; cursor: pointer; box-shadow: 0 4px 20px rgba(123,87,255,0.4); transition: transform 0.2s, box-shadow 0.2s; }
+  .start-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 28px rgba(123,87,255,0.5); }
+  .landing .meta { margin-top: 32px; font-size: 11px; color: rgba(255,255,255,0.2); }
+
+  
+  .sb-brand { font-size: 20px; font-weight: 700; color: var(--text); letter-spacing: -0.5px; font-family: 'Segoe UI Variable Display', 'Segoe UI', var(--font); }
+  /* ═══ Shell ═══ */
+  .shell { display: flex; height: 100vh; width: 100vw; }
+
+  /* ═══ Sidebar — monochrome, minimalist ═══ */
+  .sidebar {
+    width: var(--sidebar-w); min-width: var(--sidebar-w); height: 100%;
+    background: var(--surface); border-right: 1px solid var(--border-light);
+    display: flex; flex-direction: column; overflow-y: auto; overflow-x: hidden;
+    font-size: 14px;
+  }
+  .sb-top { padding: 10px 14px; display: flex; align-items: center; gap: 8px; }
+  .sb-label { font-size: 13px; font-weight: 500; color: var(--text-secondary); }
+  .sb-icons { margin-left: auto; display: flex; gap: 4px; }
+  .sb-icon-btn { width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; border: none; background: none; cursor: pointer; color: var(--text-muted); font-size: 14px; border-radius: 4px; }
+  .sb-icon-btn:hover { background: var(--surface-hover); }
+
+  .sb-nav { padding: 2px 8px; }
+  .sb-nav-item { display: flex; align-items: center; gap: 10px; padding: 7px 10px; border-radius: 6px; font-size: 14px; color: var(--text); cursor: pointer; font-weight: 400; }
+  .sb-nav-item:hover { background: var(--surface-hover); }
+  .sb-nav-icon { width: 20px; display: inline-flex; align-items: center; justify-content: center; }
+
+  .sb-divider { height: 1px; background: var(--border-light); margin: 8px 14px; }
+
+  .sb-section-label { font-size: 13px; font-weight: 700; color: var(--text); padding: 10px 18px 6px; letter-spacing: -0.2px; }
+
+  .sb-item { display: flex; flex-direction: column; padding: 5px 10px; margin: 0 8px; border-radius: 6px; cursor: pointer; transition: opacity 0.5s, order 0.5s; }
+  .sb-item:hover { background: var(--surface-hover); }
+  .sb-item.active { background: var(--surface-hover); font-weight: 500; }
+  .sb-item-row { display: flex; align-items: center; gap: 6px; }
+  .sb-item-icon { font-size: 12px; opacity: 0.5; width: 16px; text-align: center; }
+  .sb-item-name { font-size: 14px; color: var(--text); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; flex: 1; font-weight: 400; }
+  .sb-item-sub { font-size: 11px; color: var(--text-muted); padding-left: 22px; }
+  .sb-item-dim { opacity: 0.45; }
+
+  .sb-bottom { margin-top: auto; padding: 10px 14px; border-top: 1px solid var(--border-light); }
+  .sb-user { display: flex; align-items: center; gap: 8px; }
+  .sb-avatar { width: 24px; height: 24px; border-radius: 50%; background: #7B57FF; display: flex; align-items: center; justify-content: center; font-size: 10px; color: white; font-weight: 600; }
+  .sb-user-name { font-size: 12px; color: var(--text); }
+  .sb-user-sub { font-size: 10px; color: var(--text-muted); }
+
+  /* ═══ Main ═══ */
+  .main { flex: 1; display: flex; flex-direction: column; min-width: 0; overflow: hidden; }
+
+  /* Topbar */
+  .topbar {
+    height: 44px; display: flex; align-items: center; padding: 0 20px;
+    border-bottom: 1px solid var(--border-light); background: var(--bg); flex-shrink: 0;
+  }
+  .topbar-title { font-size: 14px; font-weight: 500; color: var(--text); }
+  .topbar-center { position: absolute; left: 50%; transform: translateX(-50%); }
+  .topbar-right-actions { margin-left: auto; display: flex; align-items: center; gap: 8px; }
+  .tb-auto { font-size: 12px; color: var(--text-secondary); border: 1px solid var(--border); padding: 3px 10px; border-radius: 6px; cursor: pointer; }
+  .tb-edit-btn { font-size: 12px; color: white; background: var(--copilot-purple); padding: 3px 10px; border-radius: 6px; cursor: pointer; }
+  .tb-shield { font-size: 14px; color: var(--green); cursor: pointer; }
+  .tb-more { font-size: 16px; color: var(--text-muted); cursor: pointer; letter-spacing: 2px; }
+  .topbar { position: relative; }
+
+  .topbar-toggle { display: flex; border: 1px solid var(--border); border-radius: 20px; overflow: hidden; margin-left: auto; }
+  .topbar-toggle button { padding: 4px 16px; border: none; background: transparent; font-size: 12px; font-family: var(--font); cursor: pointer; color: var(--text-secondary); }
+  .topbar-toggle button.active { background: var(--blue-light); color: var(--brand-blue); font-weight: 600; }
+
+  /* Content */
+  .content-area { flex: 1; overflow-y: auto; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+  .content-inner { width: 100%; max-width: 680px; padding: 0 24px; }
+
+  /* ═══ Home view ═══ */
+  .home-view { display: flex; flex-direction: column; align-items: center; text-align: center; }
+  .home-greeting { font-size: 22px; font-weight: 500; color: var(--text); margin-bottom: 32px; }
+
+  /* Composer */
+  .composer { width: 100%; max-width: 600px; border: 1px solid var(--border); border-radius: 16px; background: white; overflow: hidden; margin-bottom: 24px; }
+  .composer input { width: 100%; border: none; outline: none; font-size: 14px; font-family: var(--font); background: transparent; color: var(--text); padding: 14px 18px 6px; }
+  .composer input::placeholder { color: var(--text-muted); }
+  .composer-bottom { display: flex; align-items: center; justify-content: space-between; padding: 4px 14px 10px; }
+  .composer-left { display: flex; align-items: center; gap: 10px; }
+  .composer-plus { font-size: 18px; color: var(--text-muted); cursor: pointer; }
+  .composer-model { font-size: 11px; color: var(--text-muted); background: var(--surface); border: 1px solid var(--border-light); border-radius: 10px; padding: 2px 8px; cursor: pointer; }
+  .composer-right { display: flex; align-items: center; gap: 8px; }
+  .composer-mic { font-size: 16px; color: var(--text-muted); cursor: pointer; }
+
+  /* Prompt pills */
+  .prompt-pills { display: flex; gap: 12px; width: 100%; max-width: 600px; }
+  .ppill { flex: 1; border: 1px solid var(--border-light); border-radius: 12px; padding: 14px 14px; cursor: pointer; text-align: left; background: white; transition: box-shadow 0.2s; }
+  .ppill:hover { box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
+  .ppill-icon { font-size: 18px; margin-bottom: 8px; display: block; }
+  .ppill-text { font-size: 12px; color: var(--text-secondary); line-height: 1.4; }
+
+  /* ═══ Task conversation view ═══ */
+  .task-view { display: none; flex-direction: column; height: 100%; }
+  .task-view.active { display: flex; }
+
+  .task-convo { flex: 1; overflow-y: auto; padding: 24px 0; display: flex; flex-direction: column; align-items: center; scroll-behavior: smooth; }
+  .task-convo-inner { width: 100%; max-width: 660px; padding: 0 20px; display: flex; flex-direction: column; gap: 6px; }
+
+  /* ═══ Thinking Rail ═══ */
+  .thinking-rail {
+    width: 220px; min-width: 220px; height: 100%;
+    border-left: 1px solid var(--border-light); background: var(--bg);
+    padding: 20px 16px; overflow-y: auto; font-size: 12px;
+  }
+  .rail-title { font-size: 11px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 16px; }
+  .rail-step { display: flex; gap: 10px; align-items: flex-start; position: relative; padding-bottom: 20px; }
+  .rail-step:last-child { padding-bottom: 0; }
+  .rail-step::before {
+    content: ''; position: absolute; left: 9px; top: 22px;
+    width: 1px; height: calc(100% - 22px); background: var(--border-light);
+  }
+  .rail-step:last-child::before { display: none; }
+  .rail-dot {
+    width: 20px; height: 20px; border-radius: 50%; flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 10px; font-weight: 700; transition: all 0.3s;
+  }
+  .rail-dot.done { background: var(--green-light); color: var(--green); }
+  .rail-dot.active { background: var(--blue-light); color: var(--brand-blue); border: 1.5px solid var(--brand-blue); }
+  .rail-dot.pending { background: #F0F0F0; color: var(--text-muted); }
+  .rail-info { flex: 1; }
+  .rail-label { font-size: 12px; font-weight: 600; color: var(--text); line-height: 1.4; }
+  .rail-label.muted { color: var(--text-muted); font-weight: 400; }
+  .rail-sub { font-size: 11px; color: var(--text-muted); margin-top: 2px; display: flex; align-items: center; gap: 4px; }
+  .rail-sub-pill { background: #F0F0F0; border-radius: 8px; padding: 2px 8px; font-size: 10px; color: var(--text-muted); }
+
+  /* ── Chat-style user bubble ── */
+  .user-msg { display: flex; justify-content: flex-end; margin: 8px 0 16px; }
+  .user-bubble { background: var(--surface); color: var(--text); padding: 10px 18px; border-radius: 18px 18px 4px 18px; font-size: 14px; max-width: 420px; line-height: 1.5; }
+
+  /* ── Thinking dots ── */
+  .thinking { display: flex; align-items: center; gap: 4px; padding: 8px 0; margin: 4px 0; }
+  .thinking-label { font-size: 13px; font-weight: 600; color: var(--text-muted); margin-right: 6px; }
+  .thinking-dot { width: 5px; height: 5px; background: var(--text-muted); border-radius: 50%; animation: pulse 1.4s ease infinite; }
+  .thinking-dot:nth-child(3) { animation-delay: 0.2s; }
+  .thinking-dot:nth-child(4) { animation-delay: 0.4s; }
+  @keyframes pulse { 0%,80%,100%{opacity:0.25;transform:scale(0.8)} 40%{opacity:1;transform:scale(1.1)} }
+
+  /* Copilot message */
+  .cp-msg { margin: 12px 0; }
+  .cp-label { display: flex; align-items: center; gap: 6px; margin-bottom: 8px; font-size: 13px; font-weight: 600; color: var(--text); }
+  .cp-body { font-size: 14px; line-height: 1.75; color: var(--text); }
+  .cp-body p { margin-bottom: 10px; }
+  .cp-body p:last-child { margin-bottom: 0; }
+
+  /* ── Smooth card (Copilot-style) ── */
+  .smooth-card {
+    background: #F9F9F9; border-radius: 16px; padding: 16px 20px;
+    margin: 12px 0; font-size: 13px; line-height: 1.65; color: var(--text-secondary);
+  }
+  .smooth-card-title { font-size: 12px; font-weight: 600; color: var(--text-muted); margin-bottom: 10px; letter-spacing: 0.2px; }
+  .smooth-card-row { padding: 6px 0; display: flex; align-items: baseline; gap: 8px; }
+  .smooth-card-row + .smooth-card-row { border-top: 1px solid rgba(0,0,0,0.04); }
+  .smooth-card-row .bullet { color: var(--text-muted); flex-shrink: 0; font-size: 11px; margin-top: 1px; }
+  .smooth-card strong { color: var(--text); font-weight: 600; }
+
+  /* ── Draft block ── */
+  .draft-card {
+    background: #F9F9F9; border-radius: 16px; padding: 20px 24px;
+    margin: 12px 0; font-size: 13px; line-height: 1.85; color: var(--text-secondary);
+  }
+  .draft-card-header { font-size: 12px; font-weight: 600; color: var(--text-muted); margin-bottom: 12px; }
+  .draft-card strong { color: var(--text); }
+  .draft-sources { margin-top: 14px; padding-top: 12px; border-top: 1px solid rgba(0,0,0,0.05); font-size: 11px; color: var(--text-muted); }
+
+  /* ── Action row ── */
+  .action-row { display: flex; align-items: center; gap: 10px; margin-top: 12px; }
+  .btn { padding: 8px 20px; border-radius: 20px; font-size: 13px; font-weight: 600; cursor: pointer; font-family: var(--font); border: none; transition: background 0.15s; }
+  .btn.pri { background: #EDE8E3; color: var(--text); border: 1px solid var(--border); font-weight: 600; }
+  .btn.pri:hover { background: #E5DFD9; }
+  .btn.sec { background: white; color: var(--text-secondary); border: 1px solid var(--border-light); }
+  .btn.sec:hover { background: #F9F9F9; }
+  .action-note { font-size: 11px; color: var(--text-muted); }
+
+  /* ── Meeting item ── */
+  .mtg-item { padding: 10px 0; font-size: 13px; line-height: 1.55; }
+  .mtg-item + .mtg-item { border-top: 1px solid rgba(0,0,0,0.04); }
+  .mtg-name { font-weight: 600; color: var(--text); }
+  .mtg-name a { color: var(--brand-blue); text-decoration: none; font-weight: 600; }
+  .mtg-name a:hover { text-decoration: underline; }
+  .mtg-time { color: var(--text-muted); font-size: 12px; }
+  .mtg-note { color: var(--text-secondary); font-size: 12px; margin-top: 3px; line-height: 1.5; }
+  .mtg-flag { color: var(--red); font-size: 11px; margin-top: 2px; }
+
+  /* ── Confirm ── */
+  .confirm-line { font-size: 14px; color: var(--text); margin-bottom: 12px; }
+  .confirm-line .check { color: var(--green); }
+
+  /* ── Principle tag ── */
+  .ptag { display: inline-block; font-size: 10px; color: #B4A0FF; background: rgba(30,30,30,0.92); border-radius: 8px; padding: 5px 12px; margin-top: 10px; line-height: 1.4; backdrop-filter: blur(6px); }
+  .ptag-title { font-weight: 700; font-size: 9px; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 2px; display: block; color: rgba(255,255,255,0.5); }
+
+  /* ── App icons (matching one-copi) ── */
+  .app-icon { width: 16px; height: 16px; border-radius: 3px; display: inline-flex; align-items: center; justify-content: center; font-size: 8px; color: white; font-weight: 700; vertical-align: -2px; flex-shrink: 0; }
+  .app-icon.w { background: #185ABD; }
+  .app-icon.x { background: #107C10; }
+  .app-icon.p { background: #D24726; }
+
+  /* ── Button disabled state ── */
+  .btn.used { opacity: 0.4; pointer-events: none; }
+
+  /* ── Expandable ── */
+  .detail-toggle { font-size: 11px; color: var(--text-muted); cursor: pointer; margin-top: 8px; display: inline-flex; align-items: center; gap: 4px; }
+  .detail-toggle:hover { color: var(--text-secondary); }
+  .detail-content { display: none; margin-top: 6px; padding: 10px 14px; background: #F9F9F9; border-radius: 12px; font-size: 11px; line-height: 1.6; color: var(--text-muted); }
+  .detail-content.open { display: block; }
+
+  /* ═══ Bottom composer (in task view) ═══ */
+  .task-composer { padding: 8px 16%; border-top: 1px solid var(--border-light); background: var(--bg); flex-shrink: 0; }
+  .task-composer .composer { margin-bottom: 0; max-width: 100%; }
+  .task-disclaimer { text-align: center; font-size: 11px; color: var(--text-muted); margin-top: 4px; }
+
+  /* ═══ Animations ═══ */
+  .hidden { display: none !important; }
+  @keyframes fadeInUp { from { opacity:0; transform: translateY(8px); } to { opacity:1; transform: translateY(0); } }
+  .anim-in { animation: fadeInUp 0.4s ease both; }
+
+  /* ═══ End Overlay ═══ */
+  .end-overlay {
+    position: fixed; inset: 0; z-index: 300;
+    background: rgba(0,0,0,0.65); display: flex; align-items: center; justify-content: center;
+    opacity: 0; visibility: hidden; transition: opacity 0.5s, visibility 0.5s;
+  }
+  .end-overlay.visible { opacity: 1; visibility: visible; }
+  .end-card { background: white; border-radius: 16px; padding: 40px 48px; max-width: 480px; text-align: center; box-shadow: 0 8px 40px rgba(0,0,0,0.3); }
+  .end-card h2 { font-size: 22px; margin-bottom: 8px; }
+  .end-card .end-sub { font-size: 14px; color: var(--text-secondary); line-height: 1.6; margin-bottom: 16px; }
+  .end-list { text-align: left; margin: 0 0 20px; }
+  .end-list .el { display: flex; gap: 8px; padding: 4px 0; font-size: 13px; line-height: 1.5; color: var(--text-secondary); }
+
+  /* ═══ Annotations ═══ */
+  .ann {
+    position: fixed; z-index: 90; right: 20px;
+    background: rgba(30,30,30,0.94); color: white;
+    padding: 12px 16px; border-radius: 10px; max-width: 240px;
+    font-size: 12px; line-height: 1.55; backdrop-filter: blur(8px);
+    box-shadow: 0 4px 20px rgba(0,0,0,0.25); border-left: 3px solid #B4A0FF;
+    opacity: 0; visibility: hidden; transition: opacity 0.4s, visibility 0.4s;
+    pointer-events: none;
+  }
+  .ann.visible { opacity: 1; visibility: visible; }
+  .ann-tag { font-size: 10px; text-transform: uppercase; letter-spacing: 0.8px; color: #B4A0FF; margin-bottom: 4px; font-weight: 700; }
+  .ann-body { color: rgba(255,255,255,0.85); }
+
+  /* ═══ Doc artifact card ═══ */
+  .doc-pill {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: #F9F9F9; border-radius: 10px; padding: 8px 14px;
+    margin: 8px 0; font-size: 12px; color: var(--text-secondary); cursor: pointer;
+    transition: background 0.15s;
+  }
+  .doc-pill:hover { background: #F0F0F0; }
+  .doc-pill-icon { font-size: 16px; }
+  .doc-pill-name { font-weight: 600; color: var(--text); }
+  .doc-pill-meta { font-size: 11px; color: var(--text-muted); }
+  .doc-pill-open { font-size: 14px; color: var(--text-muted); margin-left: auto; }
+
+  /* ═══ Comment thread card ═══ */
+  .comment-thread { background: #F9F9F9; border-radius: 12px; padding: 14px 18px; margin: 8px 0; }
+  .comment-author { font-size: 12px; font-weight: 600; color: var(--text); }
+  .comment-text { font-size: 13px; color: var(--text-secondary); font-style: italic; margin-top: 4px; line-height: 1.5; }
+  .comment-reply { margin-top: 10px; padding-top: 10px; border-top: 1px solid rgba(0,0,0,0.05); font-size: 12px; color: var(--text-muted); display: flex; align-items: center; gap: 6px; }
+  .comment-reply .reply-badge { background: var(--green-light); color: var(--green); font-size: 11px; font-weight: 600; padding: 2px 8px; border-radius: 10px; }
+</style>
+</head>
+<body>
+
+<!-- ═══ LANDING ═══ -->
+<div class="landing" id="landing" style="background:var(--surface); color:var(--text);">
+  <h1 style="font-size:36px; font-weight:700; color:var(--text); -webkit-text-fill-color:var(--text); background:none; margin-bottom:20px;">Copilot Tasks, for Work</h1>
+
+  <div style="background:white; border:1px solid var(--border-light); border-radius:16px; padding:28px 32px; max-width:440px; width:90%; margin-bottom:28px; text-align:left; box-shadow:0 2px 12px rgba(0,0,0,0.04);">
+    <div style="font-size:13px; color:var(--text-secondary); line-height:1.6; margin-bottom:16px; text-align:center;">Off-load your messy mental todo list to Copilot Tasks.</div>
+    <div style="font-size:12px; line-height:1.8; color:var(--text-secondary);">
+      <div><strong style="color:var(--text);">Proactive</strong> — surfaces what changed before you ask</div>
+      <div><strong style="color:var(--text);">Cross-app</strong> — connects all of M365</div>
+      <div><strong style="color:var(--text);">Human in the loop</strong> — you approve before it acts</div>
+      <div><strong style="color:var(--text);">Inline editing</strong> — Word tracked changes in the chat</div>
+      <div><strong style="color:var(--text);">Cross-project sync</strong> — data flows between workstreams</div>
+      <div><strong style="color:var(--text);">Smart priority</strong> — sidebar reorders by actionability</div>
+      <div><strong style="color:var(--text);">Ambient</strong> — watches and loops back when things change</div>
+    </div>
+  </div>
+
+  <button class="start-btn" onclick="startDemo()" style="background:var(--text); color:white; box-shadow:0 4px 16px rgba(0,0,0,0.15);">Enter prototype →</button>
+  <div class="meta" style="color:var(--text-muted);">Prototype by Hema Sridharan</div>
+</div>
+
+<!-- ═══ SHELL ═══ -->
+<div class="shell">
+
+  <!-- ═══ SIDEBAR — monochrome, clean ═══ -->
+  <div class="sidebar">
+    <div class="sb-top">
+      <span class="sb-brand">Copilot</span>
+      <div class="sb-icons">
+        <button class="sb-icon-btn" title="Toggle sidebar"><svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="#444" stroke-width="1.5"><rect x="2" y="3" width="16" height="14" rx="2"/><line x1="12" y1="3" x2="12" y2="17"/></svg></button>
+      </div>
+    </div>
+
+    <div class="sb-nav">
+      <div class="sb-nav-item"><span class="sb-nav-icon"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="#444" stroke-width="1.3"><path d="M12 2.5L3.5 11l-1 2.5 2.5-1L13.5 4"/><path d="M10 4.5l1.5 1.5"/></svg></span> New chat</div>
+      <div class="sb-nav-item"><span class="sb-nav-icon"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="#444" stroke-width="1.3"><rect x="2" y="2" width="12" height="12" rx="2"/><path d="M5 5h6M5 8h4"/></svg></span> Library</div>
+      <div class="sb-nav-item"><span class="sb-nav-icon"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="#444" stroke-width="1.3"><rect x="2" y="2" width="12" height="12" rx="2"/><path d="M5 8l2 2 4-4"/></svg></span> Tasks <span style="font-size:8px; color:var(--text-muted); border:1px solid var(--border); padding:0px 4px; border-radius:3px; margin-left:2px; font-weight:600;">PREVIEW</span></div>
+    </div>
+
+    <div class="sb-divider"></div>
+
+    <!-- ═══ TASKS (project-level) ═══ -->
+    <div class="sb-section-label">Tasks</div>
+    <div id="taskList" style="display:flex; flex-direction:column;">
+    <div class="sb-item active" id="sbTask1" onclick="enterTask()">
+      <div class="sb-item-row">
+        <span style="width:8px; height:8px; border-radius:50%; background:var(--red); flex-shrink:0;" id="task1Dot"></span>
+        <span class="sb-item-name" id="task1Name">Q3 Budget Finalization</span>
+      </div>
+      <span class="sb-item-sub" id="task1Sub">Sarah replied · draft ready</span>
+    </div>
+    <div class="sb-item" id="sbTask2">
+      <div class="sb-item-row">
+        <span style="width:8px; height:8px; border-radius:50%; background:#E87400; flex-shrink:0;"></span>
+        <span class="sb-item-name">Legal Compliance Review</span>
+      </div>
+      <span class="sb-item-sub" id="task2Sub">Pending reply · 6d overdue</span>
+    </div>
+    <div class="sb-item" id="sbTask3">
+      <div class="sb-item-row">
+        <span style="width:8px; height:8px; border-radius:50%; background:var(--brand-blue); flex-shrink:0;"></span>
+        <span class="sb-item-name">Engineering Hiring Pipeline</span>
+      </div>
+      <span class="sb-item-sub">Data refreshed overnight</span>
+      <div class="sb-item-sub" id="xrefHiring" style="display:none; margin:4px 0 0 0; padding:0;">
+        <div class="ptag" style="margin:0; display:inline-block;"><span class="ptag-title">What's special?</span>Cross-project sync · Hiring data pulled into Budget</div>
+      </div>
+    </div>
+    <div class="sb-item" id="sbTask4">
+      <div class="sb-item-row">
+        <span style="width:8px; height:8px; border-radius:50%; background:transparent; flex-shrink:0;"></span>
+        <span class="sb-item-name">H2 Product Strategy</span>
+      </div>
+      <span class="sb-item-sub">On track · deck due Fri</span>
+      <span class="sb-item-sub" id="xrefStrategy" style="display:none; color:var(--brand-blue);">↳ referenced today</span>
+    </div>
+    <div class="sb-item" id="sbTask5">
+      <div class="sb-item-row">
+        <span style="width:8px; height:8px; border-radius:50%; background:transparent; flex-shrink:0;"></span>
+        <span class="sb-item-name">Weekly Exec Metrics</span>
+      </div>
+      <span class="sb-item-sub">Auto-generating · Mon 8 AM</span>
+    </div>
+    </div><!-- /taskList -->
+
+    <div class="sb-divider"></div>
+
+    <!-- ═══ CONVERSATIONS ═══ -->
+    <div class="sb-section-label">Conversations</div>
+    <div style="padding:0 8px;">
+      <div style="font-size:10px; color:var(--text-muted); padding:4px 10px;">Today</div>
+    </div>
+    <div class="sb-item">
+      <div class="sb-item-row"><span class="sb-item-name">Q3 Budget Review</span></div>
+    </div>
+    <div class="sb-item">
+      <div class="sb-item-row"><span class="sb-item-name">Product Strategy H2</span></div>
+    </div>
+    <div class="sb-item">
+      <div class="sb-item-row"><span class="sb-item-name">Hiring Plan — Eng</span></div>
+    </div>
+    
+
+    <div class="sb-bottom">
+      <div style="display:flex; align-items:center; gap:10px; padding:2px 0;">
+        <div style="width:28px; height:28px; border-radius:50%; background:linear-gradient(135deg, #E89B35, #D4782F); display:flex; align-items:center; justify-content:center; font-size:11px; color:white; font-weight:600; flex-shrink:0;">CL</div>
+        <div>
+          <div style="font-size:13px; font-weight:600; color:var(--text);">Cindy Luo</div>
+          <div style="font-size:10px; color:var(--text-muted);">M365 Copilot (Premium)</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ MAIN ═══ -->
+  <div class="main">
+    <div class="topbar" style="position:relative;">
+      <span class="topbar-title" id="topTitle"></span>
+      <div style="position:absolute; left:50%; transform:translateX(-50%); display:flex; border:1px solid var(--border); border-radius:20px; overflow:hidden;">
+        <button style="padding:4px 16px; border:none; background:var(--blue-light); font-size:12px; font-family:var(--font); cursor:pointer; color:var(--brand-blue); font-weight:600;">Work</button>
+        <button style="padding:4px 16px; border:none; background:transparent; font-size:12px; font-family:var(--font); cursor:pointer; color:var(--text-secondary);">Web</button>
+      </div>
+      <div style="margin-left:auto; display:flex; align-items:center; gap:10px;">
+        <span style="font-size:12px; color:var(--text-secondary); border:1px solid var(--border); padding:3px 10px; border-radius:6px; cursor:pointer;">Auto ▾</span>
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M10 2L4 5v4c0 4.5 2.6 8.1 6 9 3.4-.9 6-4.5 6-9V5L10 2z" fill="#107C10" stroke="#107C10" stroke-width="0.5"/><path d="M7.5 10l2 2 3.5-4" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+    </div>
+
+    <!-- ═══ HOME VIEW ═══ -->
+    <div class="content-area" id="homeView">
+      <div class="home-view">
+        <div class="home-greeting">Hi, Cindy. How can I help?</div>
+
+        <div class="composer">
+          <input type="text" placeholder="Message Copilot" readonly />
+          <div class="composer-bottom">
+            <div class="composer-left">
+              <span class="composer-plus">+</span>
+              <span class="composer-model">Smart (GPT-5) ▾</span>
+            </div>
+            <div class="composer-right">
+              <span class="composer-mic">🎙</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="prompt-pills">
+          <div class="ppill" onclick="enterTask()">
+            <span class="ppill-icon">📋</span>
+            <span class="ppill-text">Review my pending tasks and tell me what needs action</span>
+          </div>
+          <div class="ppill">
+            <span class="ppill-icon">📅</span>
+            <span class="ppill-text">Prep me for my next meeting with context from last time</span>
+          </div>
+          <div class="ppill">
+            <span class="ppill-icon">📧</span>
+            <span class="ppill-text">Show me emails that need a reply this week</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ TASK CONVERSATION: BUDGET ═══ -->
+    <div class="task-view" id="taskBudget">
+      <div class="task-convo" id="budgetConvo">
+        <div class="task-convo-inner">
+
+          <!-- Prior context (partially visible at top) -->
+          <div class="cp-msg" style="margin-top:-30px;">
+            <div class="cp-body" style="font-size:13px;">
+              <p>Reviewed Q3_Budget_Proposal.docx. Marketing at 33% ($1.4M) — above 22% benchmark. Suggested 28% with $350K reallocated to engineering. 3 tracked changes saved.</p>
+            </div>
+          </div>
+
+          <!-- Thinking dots (used between beats 2-4) -->
+          <div class="thinking hidden" id="thinkDots">
+            <span class="thinking-label">✦ Copilot</span>
+            <span class="thinking-dot"></span>
+            <span class="thinking-dot"></span>
+            <span class="thinking-dot"></span>
+          </div>
+
+          <!-- Beat 1: Since you were last here -->
+          <div class="cp-msg hidden" id="b1">
+            <div class="cp-label">✦ Copilot</div>
+            <div class="cp-body">
+              <p><strong>Since you were last here:</strong></p>
+              <p>• <strong><span class="app-icon w">W</span> Sarah Chen (CFO) left 2 comments</strong> on Q3_Budget_Proposal.docx</p>
+              <p>• <span class="app-icon x">X</span> <strong>Q3_Actuals.xlsx</strong> updated by Finance · 3 hours ago</p>
+              <p>• <span class="app-icon x">X</span> <strong>Hiring_Plan_H2.xlsx</strong> pipeline data refreshed overnight</p>
+            </div>
+            <div class="ptag"><span class="ptag-title">What's special?</span>Proactive · Cross-app awareness</div>
+            <div style="display:flex; gap:8px; margin-top:12px;">
+              <button class="btn pri" onclick="pillClick(this, 'Show Sarah\'s comments')">Show comments</button>
+            </div>
+          </div>
+
+          <!-- Beat 2: Comments + suggested reply -->
+          <div class="cp-msg hidden" id="b2">
+            <div class="cp-body">
+              <p>Sarah's comments:</p>
+              <p style="color:var(--text-secondary); padding-left:14px; font-style:italic; font-size:13px;">"Can we revisit the marketing allocation rationale?"</p>
+              <p style="color:var(--text-secondary); padding-left:14px; font-style:italic; font-size:13px;">"Timeline seems aggressive for the engineering ramp"</p>
+              <p style="margin-top:12px;">Regarding the first comment — cross-referenced Q3 actuals with the allocation:</p>
+            </div>
+            <div style="background:#F9F9F9; border-radius:12px; overflow:hidden; margin:8px 0;">
+              <div style="padding:10px 16px; font-size:11px; font-weight:600; color:var(--text-muted); border-bottom:1px solid rgba(0,0,0,0.04);">Suggested response to CFO's comment</div>
+              <div style="padding:12px 16px;">
+                <div style="font-size:13px; color:var(--text-secondary); line-height:1.7; font-style:italic; border-left:3px solid var(--text-muted); padding-left:14px;">"The revised marketing allocation is grounded in Q3 actual ROI data — campaign efficiency held at reduced spend levels. The 28% target balances growth investment with the engineering ramp funding. Happy to walk through the numbers in our Thursday sync."</div>
+                <div style="margin-top:8px; font-size:11px; color:var(--text-muted);"><span class="app-icon x">X</span> Q3_Actuals.xlsx · <span class="app-icon w">W</span> Q3_Budget_Proposal §2</div>
+              </div>
+              <div style="display:flex; align-items:center; gap:8px; padding:8px 16px; border-top:1px solid rgba(0,0,0,0.04);">
+                <button class="btn pri" onclick="pillClick(this, 'Respond to Sarah\'s comment')">✓ Respond to comment</button>
+                <button class="btn sec">Edit first</button>
+                <button class="btn sec" style="color:var(--text-muted); border:none;">Dismiss</button>
+              </div>
+            </div>
+            <div class="ptag"><span class="ptag-title">What's special?</span>Human in the loop · Cited sources</div>
+          </div>
+
+          <!-- Beat 3: Reply posted + comment 2 addressed + data pull -->
+          <div class="cp-msg hidden" id="b3">
+            <div class="confirm-line"><span class="check">✓</span> Response posted to Q3_Budget_Proposal.docx, Section 2</div>
+            <div class="cp-body" style="margin-top:12px;">
+              <p>Sarah's second comment: <em>"Timeline seems aggressive for the engineering ramp."</em></p>
+              <p>Pulled hiring pipeline from <strong>Hiring_Plan_H2.xlsx</strong>:</p>
+            </div>
+            <div style="background:#F9F9F9; border-radius:12px; padding:12px 16px; margin:8px 0; font-size:12px;">
+              <table style="width:100%; border-collapse:collapse; font-size:12px;">
+                <tr style="border-bottom:1px solid rgba(0,0,0,0.06);">
+                  <th style="text-align:left; padding:5px 8px; font-weight:600;">Role</th>
+                  <th style="text-align:left; padding:5px 8px; font-weight:600;">Pipeline</th>
+                  <th style="text-align:left; padding:5px 8px; font-weight:600;">Fill</th>
+                  <th style="text-align:left; padding:5px 8px; font-weight:600;">Start</th>
+                </tr>
+                <tr style="border-bottom:1px solid rgba(0,0,0,0.04);"><td style="padding:5px 8px;">ML Eng (×2)</td><td style="padding:5px 8px;">4</td><td style="padding:5px 8px;">6w</td><td style="padding:5px 8px;">Apr 15</td></tr>
+                <tr style="border-bottom:1px solid rgba(0,0,0,0.04);"><td style="padding:5px 8px;">Full-stack (×2)</td><td style="padding:5px 8px;">7</td><td style="padding:5px 8px;">4w</td><td style="padding:5px 8px;">Mar 28</td></tr>
+                <tr><td style="padding:5px 8px;">Platform (×1)</td><td style="padding:5px 8px;">2</td><td style="padding:5px 8px;">8w</td><td style="padding:5px 8px;">May 1</td></tr>
+              </table>
+            </div>
+            <div class="cp-body">
+              <p>Ramp completable by end of Q3 <strong>if offers go out by March 15</strong>.</p>
+            </div>
+            <div class="confirm-line" style="margin-top:8px;"><span class="check">✓</span> Table inserted into §3 · <span class="check">✓</span> Response posted · <span class="check">✓</span> Both comments resolved</div>
+            <div class="ptag"><span class="ptag-title">What's special?</span>Cross-app data pull · Inline editing</div>
+            <div class="cp-body" style="margin-top:12px;">
+              <p>The doc is ready for review:</p>
+            </div>
+            <div style="background:white; border:1px solid var(--border); border-radius:12px; margin:8px 0; overflow:hidden; box-shadow:0 2px 12px rgba(0,0,0,0.08);">
+              <!-- Word chrome -->
+              <div style="display:flex; align-items:center; gap:8px; padding:6px 12px; background:#F3F3F3; border-bottom:1px solid #E0E0E0;">
+                <span class="app-icon w" style="width:20px; height:20px; font-size:10px;">W</span>
+                <span style="font-size:12px; font-weight:500; color:var(--text);">Q3_Budget_Proposal.docx</span>
+                <span style="font-size:10px; color:var(--text-muted); margin-left:auto;">Editing</span>
+                <span style="font-size:10px; color:white; background:#185ABD; padding:2px 8px; border-radius:3px;">Share</span>
+              </div>
+              <!-- Word ribbon -->
+              <div style="display:flex; gap:2px; padding:3px 12px; background:#F9F9F9; border-bottom:1px solid #E8E8E8; font-size:10px; color:var(--text-secondary);">
+                <span style="padding:2px 6px; color:var(--brand-blue); font-weight:600;">Home</span>
+                <span style="padding:2px 6px;">Insert</span>
+                <span style="padding:2px 6px;">Layout</span>
+                <span style="padding:2px 6px;">Review</span>
+                <span style="padding:2px 6px; margin-left:auto; color:#7B57FF; font-weight:600;">Copilot</span>
+              </div>
+              <!-- Word activity bar -->
+              <div style="display:flex; align-items:center; gap:6px; padding:4px 12px; background:#FAFAFA; border-bottom:1px solid #F0F0F0; font-size:10px; color:var(--text-muted);">
+                <span class="app-icon w" style="width:12px; height:12px; font-size:6px;">W</span>
+                <span>Copilot made 2 changes · <span style="color:var(--green);">✓ Sarah's comments resolved</span></span>
+              </div>
+              <!-- Document content -->
+              <div style="padding:20px 28px; font-size:13px; line-height:1.8; color:var(--text-secondary); max-height:200px; overflow-y:auto; background:white;">
+                <div style="font-weight:600; color:var(--text); margin-bottom:8px;">§2 Marketing Allocation</div>
+                <div style="background:#E8F5E9; border-left:3px solid var(--green); padding:8px 12px; border-radius:0 6px 6px 0; margin:6px 0; font-size:12px; position:relative;">
+                  <span style="position:absolute; right:8px; top:-8px; background:var(--green); color:white; font-size:8px; padding:1px 6px; border-radius:8px;">Copilot</span>
+                  Marketing allocation revised to $1.18M (28%), grounded in Q3 actual ROI data showing campaign efficiency held at reduced spend.
+                </div>
+                <div style="font-weight:600; color:var(--text); margin:14px 0 8px;">§3 Engineering Headcount</div>
+                <div style="background:#E8F5E9; border-left:3px solid var(--green); padding:8px 12px; border-radius:0 6px 6px 0; margin:6px 0; font-size:12px; position:relative;">
+                  <span style="position:absolute; right:8px; top:-8px; background:var(--green); color:white; font-size:8px; padding:1px 6px; border-radius:8px;">Copilot</span>
+                  Hiring pipeline: 5 roles, 13 candidates across ML Eng, Full-stack, and Platform. Ramp completable by Q3 if offers out by March 15.
+                </div>
+              </div>
+            </div>
+            <div class="ptag"><span class="ptag-title">What's special?</span>One Copilot · Word editing in-place</div>
+            <div class="cp-body" style="margin-top:12px;">
+              <p>Want me to notify Sarah?</p>
+            </div>
+            <div style="display:flex; gap:8px; margin-top:8px;">
+              <button class="btn pri" onclick="pillClick(this, 'Draft email to Sarah')">Draft email to Sarah</button>
+              <button class="btn sec">Move on →</button>
+            </div>
+          </div>
+
+          <!-- Beat 4: Draft email to CFO -->
+          <div class="cp-msg hidden" id="b4">
+            <div class="cp-body"><p>Draft notification to Sarah Chen (CFO):</p></div>
+            <div style="background:#F9F9F9; border-radius:12px; overflow:hidden; margin:8px 0;">
+            <div style="padding:10px 16px; font-size:11px; font-weight:600; color:var(--text-muted); border-bottom:1px solid rgba(0,0,0,0.04);">Draft email to CFO</div>
+              <div style="padding:12px 16px;">
+                <div style="font-size:12px; color:var(--text-secondary); margin-bottom:6px;"><strong>To:</strong> Sarah Chen (CFO) · <strong>Subject:</strong> Q3 Budget Proposal — Updated per your comments</div>
+                <div style="font-size:13px; color:var(--text-secondary); line-height:1.7; font-style:italic; border-left:3px solid var(--text-muted); padding-left:14px;">"Hi Sarah — I've updated the Q3 Budget Proposal based on your comments. Marketing allocation revised to 28% with supporting ROI data, and the engineering hiring timeline is now backed by pipeline data (all 5 roles feasible by end of Q3). Both comments are resolved in the doc. Let me know if you'd like to discuss in our Thursday sync."</div>
+                <div style="margin-top:8px; font-size:11px; color:var(--text-muted);">Q3_Budget_Proposal.docx attached</div>
+              </div>
+              <div style="display:flex; align-items:center; gap:8px; padding:8px 16px; border-top:1px solid rgba(0,0,0,0.04);">
+                <span style="font-size:11px; color:var(--red);">⚠ 1 executive recipient</span>
+                <div style="margin-left:auto; display:flex; gap:8px;">
+                  <button class="btn sec">Edit draft</button>
+                  <button class="btn pri" onclick="pillClick(this, 'Send email to Sarah')">Send</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Beat 5: Email sent + ambient -->
+          <div class="cp-msg hidden" id="b5">
+            <div class="confirm-line"><span class="check">✓</span> Email sent to Sarah Chen (CFO)</div>
+            <div class="cp-body">
+              <p>Q3 Budget Finalization is up to date. I'll watch for Sarah's response and surface it when she replies.</p>
+            </div>
+            <div class="ptag"><span class="ptag-title">What's special?</span>Ambient monitoring · Loop-back ready</div>
+          </div>
+
+        </div>
+      </div>
+      <div class="task-composer">
+        <div class="composer">
+          <input type="text" placeholder="" readonly />
+          <div class="composer-bottom">
+            <div class="composer-left"><span class="composer-plus">+</span></div>
+            <div class="composer-right"><span class="composer-mic">🎙</span></div>
+          </div>
+        </div>
+        <div class="task-disclaimer">AI-generated content may be incorrect</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══ END OVERLAY ═══ -->
+<div class="end-overlay" id="endOverlay">
+  <div style="text-align:center;">
+    <div style="font-size:48px; font-weight:300; color:white; font-style:italic; font-family:Georgia, serif;">Fin.</div>
+  </div>
+</div>
+
+<!-- No annotations needed — principle tags are inline -->
+
+<script>
+/* ═══ State ═══ */
+var beat = 0;
+var beatSequence = ['b1','b2','b3','b4','b5'];
+var waitingForSend = false;
+var waitingForEmail = false;
+var inTask = false;
+var animating = false;
+
+/* ═══ Landing → Home ═══ */
+function startDemo() {
+  document.getElementById('landing').classList.add('hidden');
+  // Auto-click first task after a pause
+  // SCREENSHOT MODE: disabled auto-play
+  // setTimeout(function() { enterTask(); }, 1200);
+}
+
+/* ═══ Home → Task (auto-plays user bubble → thinking → beat 1) ═══ */
+function enterTask() {
+  if (inTask) return;
+  inTask = true;
+  animating = true;
+
+  // Switch views
+  document.getElementById('homeView').style.display = 'none';
+  document.getElementById('taskBudget').classList.add('active');
+  document.getElementById('topTitle').textContent = 'Q3 Budget Finalization';
+  document.querySelectorAll('.sb-item').forEach(function(el) { el.classList.remove('active'); });
+  document.getElementById('sbTask1').classList.add('active');
+
+  // Beat 1 shows INSTANTLY then auto-clicks "Show comments"
+  show('b1');
+  scrollConvo();
+  beat = 0;
+  setTimeout(function() {
+    var showBtn = document.querySelector('#b1 .btn.pri');
+    // SCREENSHOT MODE: disabled auto-play
+    // if (showBtn && !showBtn.classList.contains('used')) pillClick(showBtn, "Show Sarah's comments");
+  }, 2500);
+}
+
+/* ═══ Advance beats (click / space / →) ═══ */
+function advance() {
+  if (!inTask || waitingForSend || waitingForEmail || animating) return;
+  beat++;
+  if (beat >= beatSequence.length) {
+    // End overlay after last beat
+    setTimeout(function() {
+      document.getElementById('endOverlay').classList.add('visible');
+    }, 800);
+    return;
+  }
+
+  var currentBeatId = beatSequence[beat];
+
+  // Beat 2 (index 1) has the Send button — pause for interaction
+  if (currentBeatId === 'b2') {
+    animating = true;
+    show('thinkDots');
+    scrollConvo();
+    setTimeout(function() {
+      fadeOut('thinkDots');
+      setTimeout(function() {
+        show(currentBeatId);
+        scrollConvo();
+        waitingForSend = true;
+        animating = false;
+      }, 300);
+    }, 800);
+    return;
+  }
+
+  // Beat 4 (index 3) has Send email button
+  if (currentBeatId === 'b4') {
+    animating = true;
+    show('thinkDots');
+    scrollConvo();
+    setTimeout(function() {
+      fadeOut('thinkDots');
+      setTimeout(function() {
+        show(currentBeatId);
+        scrollConvo();
+        waitingForEmail = true;
+        animating = false;
+      }, 300);
+    }, 800);
+    return;
+  }
+
+  // Show thinking dots briefly, then reveal beat
+  animating = true;
+  show('thinkDots');
+  scrollConvo();
+  setTimeout(function() {
+    fadeOut('thinkDots');
+    setTimeout(function() {
+      show(currentBeatId);
+      scrollConvo();
+      animating = false;
+    }, 300);
+  }, 800);
+}
+
+/* ═══ Pill click — shows user bubble then advances ═══ */
+var pillProcessing = false;
+function pillClick(btn, text) {
+  if (pillProcessing) return;
+  pillProcessing = true;
+  grayParent(btn);
+  // Insert user bubble at the END of current conversation (bottom)
+  var inner = document.querySelector('.task-convo-inner');
+  var bubble = document.createElement('div');
+  bubble.className = 'user-msg anim-in';
+  bubble.innerHTML = '<div class="user-bubble">' + text + '</div>';
+  inner.appendChild(bubble);
+  scrollConvo();
+  // Determine which action
+  if (text.indexOf('Show') >= 0) {
+    beat = 1;
+    setTimeout(function() {
+      show('thinkDots'); scrollConvo();
+      setTimeout(function() {
+        fadeOut('thinkDots');
+        setTimeout(function() {
+          show('b2'); scrollConvo();
+          pillProcessing = false;
+          // SCREENSHOT MODE: disabled auto-play
+          // setTimeout(function() {
+          //   var respondBtn = document.querySelector('#b2 .btn.pri');
+          //   if (respondBtn && !respondBtn.classList.contains('used')) pillClick(respondBtn, "Respond to Sarah's comment");
+          // }, 3500);
+        }, 300);
+      }, 800);
+    }, 400);
+  } else if (text.indexOf('Respond') >= 0) {
+    waitingForSend = false;
+    beat = 2;
+    setTimeout(function() {
+      show('b3'); scrollConvo();
+      document.getElementById('xrefHiring').style.display = '';
+      pillProcessing = false;
+      // SCREENSHOT MODE: disabled auto-play
+      // setTimeout(function() {
+      //   var draftBtn = document.querySelector('#b3 .btn.pri');
+      //   if (draftBtn && !draftBtn.classList.contains('used')) pillClick(draftBtn, 'Draft email to Sarah');
+      // }, 5000);
+    }, 1200);
+  } else if (text.indexOf('Draft') >= 0) {
+    beat = 3;
+    setTimeout(function() {
+      show('thinkDots'); scrollConvo();
+      setTimeout(function() {
+        fadeOut('thinkDots');
+        setTimeout(function() {
+          show('b4'); scrollConvo();
+          pillProcessing = false;
+          // SCREENSHOT MODE: disabled auto-play
+          // setTimeout(function() {
+          //   var sendBtn = document.querySelector('#b4 .btn.pri');
+          //   if (sendBtn && !sendBtn.classList.contains('used')) pillClick(sendBtn, 'Send email to Sarah');
+          // }, 4000);
+        }, 300);
+      }, 800);
+    }, 600);
+  } else if (text.indexOf('Send') >= 0) {
+    waitingForEmail = false;
+    document.getElementById('task1Sub').textContent = '✓ Updated · email sent';
+    var t1 = document.getElementById('sbTask1');
+    t1.style.opacity = '0.4'; t1.style.order = '10'; t1.classList.remove('active');
+    document.getElementById('task1Dot').style.background = 'transparent';
+    setTimeout(function() { document.getElementById('sbTask2').style.order = '-1'; document.getElementById('sbTask2').classList.add('active'); }, 600);
+    // Clean up sidebar — dim non-relevant tasks
+    document.getElementById('sbTask4').style.opacity = '0.25';
+    document.getElementById('sbTask5').style.opacity = '0.25';
+    document.getElementById('xrefStrategy').style.display = 'none';
+    beat = 4;
+    setTimeout(function() {
+      show('b5'); scrollConvo();
+      // Ensure cross-project badge visible
+      document.getElementById('xrefHiring').style.display = '';
+      pillProcessing = false;
+      // Auto-show end overlay
+      setTimeout(function() {
+        document.getElementById('endOverlay').classList.add('visible');
+      }, 3000);
+    }, 1000);
+  }
+}
+
+/* ═══ Legacy functions (kept for compatibility) ═══ */
+function sendVP(btn) { pillClick(btn, "Respond to Sarah's comment"); }
+function sendEmail(btn) { pillClick(btn, 'Send email to Sarah'); }
+
+/* ═══ Helpers ═══ */
+function show(id) {
+  var el = document.getElementById(id);
+  if (!el) return;
+  // Move element to end of its parent so it appears after dynamically inserted user bubbles
+  el.parentNode.appendChild(el);
+  el.classList.remove('hidden');
+  el.classList.add('anim-in');
+}
+function fadeOut(id) {
+  var el = document.getElementById(id);
+  if (!el) return;
+  el.style.transition = 'opacity 0.3s';
+  el.style.opacity = '0';
+  setTimeout(function() {
+    el.classList.add('hidden');
+    el.style.opacity = '';
+    el.style.transition = '';
+  }, 300);
+}
+function scrollConvo() {
+  var c = document.getElementById('budgetConvo');
+  setTimeout(function() { c.scrollTo({ top: c.scrollHeight, behavior: 'smooth' }); }, 150);
+}
+function grayParent(btn) {
+  var row = btn.parentElement;
+  row.querySelectorAll('.btn').forEach(function(b) { b.classList.add('used'); });
+}
+function toggleDetail(id) { document.getElementById(id).classList.toggle('open'); }
+
+/* ═══ Input handlers ═══ */
+document.addEventListener('keydown', function(e) {
+  if (e.code === 'Space' || e.code === 'ArrowRight') {
+    e.preventDefault();
+    advance();
+  }
+  if (e.code === 'Escape') resetDemo();
+});
+document.addEventListener('click', function(e) {
+  if (e.target.closest('.btn, .ppill, .sb-item, .sb-nav-item, .start-btn, .detail-toggle, .composer, a')) return;
+  if (!inTask) return;
+  advance();
+});
+
+/* ═══ Reset ═══ */
+function resetDemo() {
+  document.getElementById('endOverlay').classList.remove('visible');
+  document.getElementById('landing').classList.remove('hidden');
+  document.getElementById('homeView').style.display = '';
+  document.getElementById('taskBudget').classList.remove('active');
+  document.getElementById('topTitle').textContent = '';
+  // Reset all elements
+  ['thinkDots','b1','b2','b3','b4','b5'].forEach(function(id) {
+    var el = document.getElementById(id);
+    if (el) { el.classList.add('hidden'); el.classList.remove('anim-in'); el.style = ''; }
+  });
+  // Reset sidebar
+  document.querySelectorAll('.sb-item').forEach(function(el) { el.classList.remove('active'); el.style.opacity = ''; el.style.order = ''; });
+  document.getElementById('sbTask1').classList.add('active');
+  document.getElementById('task1Name').textContent = 'Q3 Budget Finalization';
+  document.getElementById('task1Sub').textContent = 'Sarah replied · draft ready';
+  // Reset indicator color
+  document.getElementById('task1Dot').style.background = '';
+  document.getElementById('task2Sub').textContent = 'Pending reply · 6d overdue';
+  document.getElementById('xrefHiring').style.display = 'none';
+  document.getElementById('xrefStrategy').style.display = 'none';
+  document.querySelectorAll('.detail-content').forEach(function(el) { el.classList.remove('open'); });
+  beat = 0; waitingForSend = false; waitingForEmail = false; pillProcessing = false; inTask = false; animating = false;
+}
+</script>
+</body>
+</html>

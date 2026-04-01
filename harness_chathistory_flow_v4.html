@@ -401,7 +401,8 @@
         <!-- Chat state -->
         <div class="ps active" id="ps-chat">
           <div class="cc" id="chatC"><div class="cdate">Today</div></div>
-          <div class="ciarea"><div class="cinput"><input type="text" placeholder="Message Copilot" readonly/><div class="cinb"><span class="cic"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="#999" stroke-width="1.5"><line x1="8" y1="3" x2="8" y2="13"/><line x1="3" y1="8" x2="13" y2="8"/></svg></span><div style="display:flex;gap:4px"><span class="cic"><svg width="14" height="14" viewBox="0 0 16 16" fill="#999"><path d="M8 1a3 3 0 013 3v4a3 3 0 11-6 0V4a3 3 0 013-3zM4 7a4 4 0 008 0M8 13v2"/></svg></span><span class="cic"><svg width="14" height="14" viewBox="0 0 16 16" fill="#999"><rect x="1" y="4" width="3" height="8" rx="1"/><rect x="5" y="2" width="3" height="12" rx="1"/><rect x="9" y="5" width="3" height="6" rx="1"/><rect x="13" y="3" width="2" height="10" rx="1"/></svg></span></div></div></div><div class="cdiscl">AI-generated content may be incorrect</div></div>
+          <div style="padding:4px 14px;border-top:1px solid var(--bl);flex-shrink:0;display:flex;align-items:center;gap:4px;font-size:12px;color:var(--ts);cursor:pointer">Edit <svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="#666" stroke-width="1.5"><path d="M2 4l3 3 3-3"/></svg></div>
+          <div class="ciarea"><div class="cinput"><input type="text" placeholder="Describe what you'd like to edit" readonly/><div class="cinb"><span class="cic"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="#999" stroke-width="1.5"><line x1="8" y1="3" x2="8" y2="13"/><line x1="3" y1="8" x2="13" y2="8"/></svg></span><div style="display:flex;gap:4px"><span class="cic"><svg width="14" height="14" viewBox="0 0 16 16" fill="#999"><path d="M8 1a3 3 0 013 3v4a3 3 0 11-6 0V4a3 3 0 013-3zM4 7a4 4 0 008 0M8 13v2"/></svg></span><span class="cic"><svg width="14" height="14" viewBox="0 0 16 16" fill="#999"><rect x="1" y="4" width="3" height="8" rx="1"/><rect x="5" y="2" width="3" height="12" rx="1"/><rect x="9" y="5" width="3" height="6" rx="1"/><rect x="13" y="3" width="2" height="10" rx="1"/></svg></span></div></div></div><div class="cdiscl">AI-generated content may be incorrect</div></div>
         </div>
 
         <!-- Landing state -->
@@ -531,8 +532,11 @@ function s4(){
 function s5(){
   hideA();anim=true;showTab('word');switchCv('word');setColor('word');
   setTimeout(function(){
-    addToChat('<p>Opened <strong>Hiring_Proposal_Q3.docx</strong>. Ready for review.</p>');
-    showA('a5');anim=false;
+    addUToChat('Review section 2 and tighten the language');
+    setTimeout(function(){
+      addToChat('<p>Revised section 2. Tightened phrasing and removed redundancies.</p>');
+      showA('a5');anim=false;
+    },400);
   },300);
 }
 function s6(){
@@ -546,16 +550,22 @@ function s6(){
 function s7(){
   hideA();anim=true;showTab('ppt');switchCv('ppt');setColor('ppt');
   setTimeout(function(){
-    addToChat('<p>Opened <strong>Hiring_Strategy_H2.pptx</strong>. Slide 2 has the pipeline data.</p>');
-    showA('a7');anim=false;
+    addUToChat('Add speaker notes to slide 2');
+    setTimeout(function(){
+      addToChat('<p>Added speaker notes summarizing the pipeline status.</p>');
+      showA('a7');anim=false;
+    },400);
   },300);
 }
 function s8(){
-  hideA();addUToChat('Open the pipeline spreadsheet');anim=true;
+  hideA();anim=true;
   showTab('excel');switchCv('excel');setColor('excel');
   setTimeout(function(){
-    addToChat('<p>Opened <strong>Hiring_Plan_H2.xlsx</strong>.</p>');
-    showA('a8');anim=false;
+    addUToChat('Highlight the at-risk roles in the pipeline');
+    setTimeout(function(){
+      addToChat('<p>Highlighted Platform role — 2 candidates, 8-week fill time.</p>');
+      showA('a8');anim=false;
+    },400);
   },300);
 }
 function s9(){

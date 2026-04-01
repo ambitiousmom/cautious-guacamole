@@ -274,9 +274,9 @@
     <div class="ldiv"></div>
     <div style="font-size:11px;line-height:1.6;color:var(--ts);">
       <strong style="color:var(--text)">How this maps to the exec ask:</strong><br/>
-      <span style="background:#DFF6DD;color:#107C10;font-weight:700;font-size:10px;padding:1px 6px;border-radius:4px;">P0</span> Beats 9–11: Chat history in agent mode (see &amp; switch chats) — <strong>ship now</strong><br/>
+      <span style="background:#DFF6DD;color:#107C10;font-weight:700;font-size:10px;padding:1px 6px;border-radius:4px;">P0</span> Beats 1–3: Chat history in agent mode (see &amp; switch chats) — <strong>ship now</strong><br/>
       <span style="background:#EBF3FC;color:#0F6CBD;font-weight:700;font-size:10px;padding:1px 6px;border-radius:4px;">P1</span> Not yet in prototype: standalone WXP Agent ↔ agent mode chat visibility<br/>
-      <span style="background:#F3EEFF;color:#7B57FF;font-weight:700;font-size:10px;padding:1px 6px;border-radius:4px;">P2</span> Beats 1–8: Cross-app chat continuity from Copilot App — <strong>north star</strong>
+      <span style="background:#F3EEFF;color:#7B57FF;font-weight:700;font-size:10px;padding:1px 6px;border-radius:4px;">P2</span> Beats 5–11: Cross-app chat continuity from Copilot App — <strong>north star</strong>
     </div>
     <div class="ldiv"></div>
     <div class="lnote">Click or press → to advance. ← to go back. Annotations explain each decision in context.</div>
@@ -495,102 +495,124 @@ function updateLabel(){
   document.getElementById('stepNext').disabled=(step>=totalSteps);
 }
 
-/* ═══ STEP FUNCTIONS ═══ */
+/* ═══ STEP FUNCTIONS (P0 first, then P2) ═══ */
+
+// ── P0: Chat history in agent mode ──
+
 function s1(){
+  // P0: User opens file directly → landing page
+  document.getElementById('sidebar').classList.add('hidden-sb');
+  document.getElementById('chatPane').classList.remove('hidden-cp');
+  showTab('excel');switchCv('excel');setColor('excel');
+  showP('land');
+  showA('a9');
+}
+function s2(){
+  // P0: User clicks hamburger → sees all chats
+  hideA();showP('hist');showA('a10');
+  document.getElementById('chatPane').style.background='#F3F3F3';
+  setTimeout(function(){ var h=document.getElementById('hcH'); if(h) showClickHint(h,'Click to resume'); },600);
+}
+function s3(){
+  // P0: User selects a chat → it loads in-place
+  hideA();
+  document.getElementById('chatPane').style.background='#FAFAFA';
+  document.getElementById('hcH').classList.add('active');
+  showP('chat');
+  var chatC=document.getElementById('chatC');
+  chatC.innerHTML='<div class="cdate">Earlier today</div>';
+  chatC.innerHTML+='<div class="um"><div class="ub">I need to review our Q3 engineering hiring plan — what does the pipeline look like?</div></div>';
+  chatC.innerHTML+='<div class="cm"><div class="cl"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAJUAAAAwCAYAAAAYczgSAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAAFiUAABYlAUlSJPAAAAiGSURBVHhe7Zv5T1VHFMf9pbVJ/4H+0vSXtml/aVp/NLWLWC0KLgiGKIviFmsRRNG64las0aBY1wiKOy5VpIjaWKVqEdFKFKxFtOBWKYvghmjTnuZ7mrm5b+bNfffdh9LSOckn5s6cmXlv5vvOnJmL3Z4+fUoGgxd01k12NBjcojMjKoNndGZEZfCMzoyoDJ7RmRGVwTM6M6IyeEZnRlQGz+jMiMrgGZ0ZURk8ozMjKoNndGZEZfCMzoyoDJ7RmRGVwTM6M6IyeEZnRlQGz+jMiMrgGZ0ZURk8o7P/A0jBEVpB0YtyAAAAAElFTkSuQmCC" style="height:20px;" alt="Copilot"></div><div class="cbo"><p>Found <strong>Hiring_Plan_H2.xlsx</strong>. 5 open roles, 13 candidates. Platform role at risk (2 candidates).</p></div></div>';
+  showA('a11');
+}
+
+function s4(){
+  // Branch overlay: transition from P0 to P2
+  hideA();
+  var ov=document.createElement('div');
+  ov.id='branchOverlay';
+  ov.style.cssText='position:fixed;inset:0;z-index:150;background:rgba(245,245,242,.97);display:flex;flex-direction:column;align-items:center;justify-content:center;animation:fadeIn .4s ease both';
+  ov.innerHTML='<div style="max-width:480px;width:90%;text-align:center"><h2 style="font-size:22px;font-weight:700;margin-bottom:6px;color:var(--text)">Now the north star</h2><p style="font-size:13px;color:var(--ts);margin-bottom:20px;line-height:1.6">That was P0 — chat history in agent mode.<br/><br/>What if the chat <strong>started in the Copilot App</strong> and the user navigated to files from there? The chat should follow across every surface.</p><button onclick="document.getElementById(\'branchOverlay\').remove();advance()" style="padding:12px 32px;border-radius:24px;border:none;background:var(--text);color:white;font-size:14px;font-weight:600;cursor:pointer;font-family:var(--font)">See the P2 vision →</button></div>';
+  document.body.appendChild(ov);
+}
+
+// ── P2: Cross-app chat continuity ──
+
+function s5(){
+  // P2: Start in Copilot App
+  document.getElementById('chatPane').classList.add('hidden-cp');
+  document.getElementById('sidebar').classList.remove('hidden-sb');
+  switchCv('copilot');
   showA('a1');
   document.getElementById('chatTitle').textContent='Hiring Plan Pipeline Review';
   addToCp('<div class="um"><div class="ub">I need to review our Q3 engineering hiring plan — what does the pipeline look like?</div></div>');
 }
-function s2(){
+function s6(){
+  // P2: Copilot responds with Excel file link
   hideA();
-  addToCp('<div class="cm"><div class="cl"><img src="data:image/png;base64,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" style="height:20px;" alt="Copilot"></div><div class="cbo"><p>I found <strong>Hiring_Plan_H2.xlsx</strong> in your OneDrive. You have <strong>5 open roles</strong> with 13 candidates. Most are on track, but the <strong>Platform role</strong> has only 2 candidates.</p><div class="fl" onclick="advance()"><span class="fli" style="background:var(--xg)">X</span> Hiring_Plan_H2.xlsx <span class="fla">→ Open in Excel</span></div></div></div>');
+  addToCp('<div class="cm"><div class="cl"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAJUAAAAwCAYAAAAYczgSAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAAFiUAABYlAUlSJPAAAAiGSURBVHhe7Zv5T1VHFMf9pbVJ/4H+0vSXtml/aVp/NLWLWC0KLgiGKIviFmsRRNG64las0aBY1wiKOy5VpIjaWKVqEdFKFKxFtOBWKYvghmjTnuZ7mrm5b+bNfffdh9LSOckn5s6cmXlv5vvOnJmL3Z4+fUoGgxd01k12NBjcojMjKoNndGZEZfCMzoyoDJ7RmRGVwTM6M6IyeEZnRlQGz+jMiMrgGZ0ZURk8ozMjKoNndGZEZfCMzoyoDJ7RmRGVwTM6M6IyeEZnRlQGz+jMiMrgGZ0ZURk8o7P/A0jBEVpB0YtyAAAAAElFTkSuQmCC" style="height:20px;" alt="Copilot"></div><div class="cbo"><p>Found <strong>Hiring_Plan_H2.xlsx</strong>. 5 open roles, 13 candidates. Platform role has only 2 candidates.</p><div class="fl" onclick="advance()"><span class="fli" style="background:var(--xg)">X</span> Hiring_Plan_H2.xlsx <span class="fla">&rarr; Open in Excel</span></div></div></div>');
   showA('a2');
   setTimeout(function(){ var b=document.querySelector('.fl'); if(b)showClickHint(b,'Click here'); },600);
 }
-function s3(){
+function s7(){
+  // P2: Handoff to Excel — chat carries over
   hideA();anim=true;
   document.getElementById('sidebar').classList.add('hidden-sb');
   document.getElementById('chatPane').classList.remove('hidden-cp');
   showTab('excel');switchCv('excel');setColor('excel');
-  // Carry over the conversation from Copilot App into the WXP chat pane
   var chatC=document.getElementById('chatC');
   chatC.innerHTML='<div class="cdate">Today</div>';
   chatC.innerHTML+='<div class="um"><div class="ub">I need to review our Q3 engineering hiring plan — what does the pipeline look like?</div></div>';
   chatC.innerHTML+='<div class="cm"><div class="cl"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAJUAAAAwCAYAAAAYczgSAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAAFiUAABYlAUlSJPAAAAiGSURBVHhe7Zv5T1VHFMf9pbVJ/4H+0vSXtml/aVp/NLWLWC0KLgiGKIviFmsRRNG64las0aBY1wiKOy5VpIjaWKVqEdFKFKxFtOBWKYvghmjTnuZ7mrm5b+bNfffdh9LSOckn5s6cmXlv5vvOnJmL3Z4+fUoGgxd01k12NBjcojMjKoNndGZEZfCMzoyoDJ7RmRGVwTM6M6IyeEZnRlQGz+jMiMrgGZ0ZURk8ozMjKoNndGZEZfCMzoyoDJ7RmRGVwTM6M6IyeEZnRlQGz+jMiMrgGZ0ZURk8o7P/A0jBEVpB0YtyAAAAAElFTkSuQmCC" style="height:20px;" alt="Copilot"></div><div class="cbo"><p>Found <strong>Hiring_Plan_H2.xlsx</strong>. 5 open roles, 13 candidates. Platform role has only 2 candidates.</p></div></div>';
   setTimeout(function(){showA('a3');anim=false;},300);
 }
-function s4(){
+function s8(){
+  // P2: User works in Excel, creates Word doc
   hideA();
   addUToChat('Create a hiring proposal doc for the CFO');
   anim=true;
   setTimeout(function(){
-    addToChat('<p>Created <strong>Hiring_Proposal_Q3.docx</strong>.</p><div class="fl" onclick="advance()"><span class="fli" style="background:var(--wb)">W</span> Hiring_Proposal_Q3.docx <span class="fla">→ Open in Word</span></div>');
+    addToChat('<p>Created <strong>Hiring_Proposal_Q3.docx</strong>.</p><div class="fl" onclick="advance()"><span class="fli" style="background:var(--wb)">W</span> Hiring_Proposal_Q3.docx <span class="fla">&rarr; Open in Word</span></div>');
     showA('a4');anim=false;
     setTimeout(function(){ var b=document.querySelector('#chatC .fl:last-of-type'); if(b)showClickHint(b,'Click here'); },600);
   },500);
 }
-function s5(){
+function s9(){
+  // P2: Word — user edits, Copilot mentions PPT
   hideA();anim=true;showTab('word');switchCv('word');setColor('word');
   setTimeout(function(){
     addUToChat('Review section 2 and tighten the language');
     setTimeout(function(){
-      addToChat('<p>Revised section 2. Tightened phrasing and removed redundancies.</p><p>The hiring numbers here also appear in <strong>Hiring_Strategy_H2.pptx</strong> — you may want to update that too.</p><div class="fl" id="pptLink" onclick="advance()"><span class="fli" style="background:var(--po)">P</span> Hiring_Strategy_H2.pptx <span class="fla">→ Open in PowerPoint</span></div>');
+      addToChat('<p>Revised section 2. Tightened phrasing and removed redundancies.</p><p>The hiring numbers here also appear in <strong>Hiring_Strategy_H2.pptx</strong> &mdash; you may want to update that too.</p><div class="fl" onclick="advance()"><span class="fli" style="background:var(--po)">P</span> Hiring_Strategy_H2.pptx <span class="fla">&rarr; Open in PowerPoint</span></div>');
       showA('a5');anim=false;
-      setTimeout(function(){ var b=document.getElementById('pptLink'); if(b)showClickHint(b,'Click here'); },600);
+      setTimeout(function(){ var b=document.querySelector('#chatC .fl:last-of-type'); if(b)showClickHint(b,'Click here'); },600);
     },400);
   },300);
 }
-function s6(){
+function s10(){
+  // P2: PPT — user adds notes, Copilot mentions Excel
   hideA();anim=true;showTab('ppt');switchCv('ppt');setColor('ppt');
   setTimeout(function(){
     addUToChat('Add speaker notes to slide 2');
     setTimeout(function(){
-      addToChat('<p>Added speaker notes summarizing the pipeline status.</p><p>This slide references data from <strong>Hiring_Plan_H2.xlsx</strong>.</p><div class="fl" id="xlLink" onclick="advance()"><span class="fli" style="background:var(--xg)">X</span> Hiring_Plan_H2.xlsx <span class="fla">→ Open in Excel</span></div>');
+      addToChat('<p>Added speaker notes summarizing the pipeline status.</p><p>This slide references data from <strong>Hiring_Plan_H2.xlsx</strong>.</p><div class="fl" onclick="advance()"><span class="fli" style="background:var(--xg)">X</span> Hiring_Plan_H2.xlsx <span class="fla">&rarr; Open in Excel</span></div>');
       showA('a6');anim=false;
-      setTimeout(function(){ var b=document.getElementById('xlLink'); if(b)showClickHint(b,'Click here'); },600);
+      setTimeout(function(){ var b=document.querySelector('#chatC .fl:last-of-type'); if(b)showClickHint(b,'Click here'); },600);
     },400);
   },300);
 }
-function s7(){
+function s11(){
+  // P2: Back to Excel — round trip complete
   hideA();anim=true;showTab('excel');switchCv('excel');setColor('excel');
   setTimeout(function(){
     addUToChat('Highlight the at-risk roles in the pipeline');
     setTimeout(function(){
-      addToChat('<p>Highlighted Platform role — 2 candidates, 8-week fill time.</p>');
-      showA('a7');anim=false;
+      addToChat('<p>Highlighted Platform role &mdash; 2 candidates, 8-week fill time.</p>');
+      showA('a8');anim=false;
+      document.getElementById('stepNext').disabled=true;
+      setTimeout(function(){ document.getElementById('endOverlay').classList.add('visible'); },4000);
     },400);
   },300);
-}
-function s8(){
-  hideA();
-  showA('a8');
-}
-function s9(){
-  hideA();
-  // Show branch landing overlay
-  var ov=document.createElement('div');
-  ov.id='branchOverlay';
-  ov.style.cssText='position:fixed;inset:0;z-index:150;background:rgba(245,245,242,.97);display:flex;flex-direction:column;align-items:center;justify-content:center;animation:fadeIn .4s ease both';
-  ov.innerHTML='<div style="max-width:480px;width:90%;text-align:center"><h2 style="font-size:22px;font-weight:700;margin-bottom:6px;color:var(--text)">What if the user opens a file directly?</h2><p style="font-size:13px;color:var(--ts);margin-bottom:20px;line-height:1.6">Not every session starts from a Copilot chat. Sometimes the user opens a spreadsheet from their desktop, a Teams link, or recent files — <strong>no prior chat context</strong>.</p><div style="background:white;border:1px solid #EDE8E0;border-radius:14px;padding:18px 22px;text-align:left;margin-bottom:20px;box-shadow:0 2px 8px rgba(0,0,0,.04)"><div style="font-size:12px;font-weight:700;margin-bottom:8px;color:var(--text)">What Copilot does:</div><div style="font-size:12px;color:var(--ts);line-height:1.6;margin-bottom:4px"><span style="color:var(--cp);font-weight:700">1.</span> Shows a <strong>landing page</strong> — ready for a new task, no stale context</div><div style="font-size:12px;color:var(--ts);line-height:1.6;margin-bottom:4px"><span style="color:var(--cp);font-weight:700">2.</span> Hamburger reveals <strong>all your Copilot chats</strong> — same list as the Copilot App</div><div style="font-size:12px;color:var(--ts);line-height:1.6"><span style="color:var(--cp);font-weight:700">3.</span> Any prior chat can be <strong>resumed in-place</strong> — one chat, stored once, visible everywhere</div></div><button onclick="document.getElementById(\'branchOverlay\').remove();showP(\'land\');showA(\'a9\')" style="padding:12px 32px;border-radius:24px;border:none;background:var(--text);color:white;font-size:14px;font-weight:600;cursor:pointer;font-family:var(--font)">See it in action →</button></div>';
-  document.body.appendChild(ov);
-}
-function s10(){ hideA();showP('hist');showA('a10');
-  document.getElementById('chatPane').style.background='#F3F3F3';
-  setTimeout(function(){ var h=document.getElementById('hcH'); if(h) showClickHint(h,'Click to resume'); },600);
-}
-function s11(){
-  hideA();
-  document.getElementById('chatPane').style.background='#FAFAFA';
-  document.getElementById('hcH').classList.add('active');
-  showP('chat');
-  // Load the prior chat into the pane
-  var chatC=document.getElementById('chatC');
-  chatC.innerHTML='<div class="cdate">Earlier today</div>';
-  chatC.innerHTML+='<div class="um"><div class="ub">I need to review our Q3 engineering hiring plan — what does the pipeline look like?</div></div>';
-  chatC.innerHTML+='<div class="cm"><div class="cl"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAJUAAAAwCAYAAAAYczgSAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAAFiUAABYlAUlSJPAAAAiGSURBVHhe7Zv5T1VHFMf9pbVJ/4H+0vSXtml/aVp/NLWLWC0KLgiGKIviFmsRRNG64las0aBY1wiKOy5VpIjaWKVqEdFKFKxFtOBWKYvghmjTnuZ7mrm5b+bNfffdh9LSOckn5s6cmXlv5vvOnJmL3Z4+fUoGgxd01k12NBjcojMjKoNndGZEZfCMzoyoDJ7RmRGVwTM6M6IyeEZnRlQGz+jMiMrgGZ0ZURk8ozMjKoNndGZEZfCMzoyoDJ7RmRGVwTM6M6IyeEZnRlQGz+jMiMrgGZ0ZURk8o7P/A0jBEVpB0YtyAAAAAElFTkSuQmCC" style="height:20px;" alt="Copilot"></div><div class="cbo"><p>Found <strong>Hiring_Plan_H2.xlsx</strong>. 5 open roles, 13 candidates. Platform role at risk (2 candidates).</p></div></div>';
-  showA('a11');
-  document.getElementById('stepNext').disabled=true;
-  setTimeout(function(){ document.getElementById('endOverlay').classList.add('visible'); },4000);
 }
 
 /* ═══ HELPERS ═══ */

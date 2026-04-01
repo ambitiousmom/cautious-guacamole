@@ -312,7 +312,7 @@
 <div class="ann" id="a8"><div class="ann-tag"><span class="ann-num">11</span> Round-Trip Complete</div><div class="ann-body">Back in Excel. Five surface transitions and the user <strong>never steps back to "Copilot" app chat</strong> to re-establish context.</div></div>
 <div class="ann" id="a9"><div class="ann-tag"><span class="ann-num">1</span> <span style="background:#DFF6DD;color:#107C10;font-size:8px;padding:1px 5px;border-radius:3px;font-weight:700;margin-right:4px">P0</span> User opens file in agent mode</div><div class="ann-body">No active chat. Chat pane opens to the default landing page.</div></div>
 <div class="ann" id="a10"><div class="ann-tag"><span class="ann-num">2</span> <span style="background:#DFF6DD;color:#107C10;font-size:8px;padding:1px 5px;border-radius:3px;font-weight:700;margin-right:4px">P0</span> Universal Chat History</div><div class="ann-body">The hamburger reveals <strong>all Copilot chats</strong> — same list as the Copilot App. It will stay user-centric, not app-centric. We can add <strong>Filters</strong> in the future to scope "Show all chats related to this file" or "Show all chats related to Excel only" etc.</div></div>
-<div class="ann" id="a11"><div class="ann-tag"><span class="ann-num">3</span> <span style="background:#DFF6DD;color:#107C10;font-size:8px;padding:1px 5px;border-radius:3px;font-weight:700;margin-right:4px">P0</span> One Chat, Everywhere</div><div class="ann-body"><strong>"Hiring Plan Pipeline Review"</strong> — the chat from Copilot App that traveled through Excel, Word, and PPT. One chat, stored once, <strong>visible in every surface</strong>.</div></div>
+<div class="ann" id="a11"><div class="ann-tag"><span class="ann-num">3</span> <span style="background:#DFF6DD;color:#107C10;font-size:8px;padding:1px 5px;border-radius:3px;font-weight:700;margin-right:4px">P0</span> Resume a prior chat</div><div class="ann-body">User selected <strong>"Hiring Plan Pipeline Review"</strong> from the history. The chat loads in-place — ready to continue where they left off.</div></div>
 <div class="ann" id="a12"><div class="ann-tag"><span class="ann-num">12</span> Unrelated Chat Selected</div><div class="ann-body">User picked a chat <strong>unrelated to this file</strong>. A subtle hint confirms the context mismatch — but doesn't block. The user can proceed freely or switch back.</div></div>
 
 <!-- ═══ SHELL ═══ -->
@@ -442,7 +442,7 @@
 </div>
 
 <script>
-var step=0, totalSteps=12, anim=false;
+var step=0, totalSteps=13, anim=false;
 
 function startDemo(){
   document.getElementById('landing').classList.add('hidden');
@@ -490,7 +490,7 @@ function advance(){
   switch(step){
     case 1:s1();break;case 2:s2();break;case 3:s3();break;case 4:s4();break;
     case 5:s5();break;case 6:s6();break;case 7:s7();break;case 8:s8();break;
-    case 9:s9();break;case 10:s10();break;case 11:s11();break;case 12:s12();break;
+    case 9:s9();break;case 10:s10();break;case 11:s11();break;case 12:s12();break;case 13:s13();break;
   }
 }
 
@@ -627,8 +627,27 @@ function s11(){
 }
 
 function s12(){
-  // Edge case: User opens an unrelated chat — show hint
+  // Edge case: Show history, user picks an unrelated chat
   hideA();
+  showP('hist');
+  document.getElementById('chatPane').style.background='#F3F3F3';
+  // Highlight Meeting Prep
+  document.querySelectorAll('.hpci').forEach(function(el){el.classList.remove('active')});
+  var chats=document.querySelectorAll('.hpci');
+  for(var i=0;i<chats.length;i++){
+    if(chats[i].textContent.indexOf('Meeting Prep')>=0){
+      chats[i].classList.add('active');
+      showClickHint(chats[i],'Click here');
+      break;
+    }
+  }
+  showA('a12');
+}
+
+function s13(){
+  // Show the unrelated chat loaded with context hint
+  hideA();
+  document.getElementById('chatPane').style.background='#FAFAFA';
   showP('chat');
   var chatC=document.getElementById('chatC');
   chatC.innerHTML='<div class="cdate">Last week</div>';

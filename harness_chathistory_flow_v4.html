@@ -385,7 +385,7 @@
         <div style="height:28px;display:flex;align-items:center;padding:0 10px;gap:2px;border-bottom:1px solid #E0E0E0;background:#F3F3F3;flex-shrink:0;font-size:11px;color:var(--ts)"><span style="padding:3px 8px;font-weight:500">Home</span><span style="padding:3px 8px">Insert</span><span style="padding:3px 8px">Design</span><span style="padding:3px 8px">Transitions</span><span style="padding:3px 8px">Slide Show</span></div>
         <div style="display:flex;flex:1;min-height:0">
           <div style="width:80px;background:#F5F5F5;border-right:1px solid #E0E0E0;overflow-y:auto;padding:6px 4px;flex-shrink:0"><div style="background:white;border:2px solid var(--po);border-radius:2px;margin-bottom:4px;padding:4px;font-size:5px;text-align:center;aspect-ratio:16/9;display:flex;align-items:center;justify-content:center;color:var(--ts)">Slide 2</div><div style="background:white;border:1px solid #D0D0D0;border-radius:2px;margin-bottom:4px;padding:4px;font-size:5px;text-align:center;aspect-ratio:16/9;display:flex;align-items:center;justify-content:center;color:#ccc">Slide 3</div><div style="background:white;border:1px solid #D0D0D0;border-radius:2px;padding:4px;font-size:5px;text-align:center;aspect-ratio:16/9;display:flex;align-items:center;justify-content:center;color:#ccc">Slide 4</div></div>
-          <div style="flex:1;background:#E8E8E8;display:flex;align-items:center;justify-content:center;padding:20px"><div style="width:100%;max-width:520px;background:white;border-radius:3px;padding:40px 48px;box-shadow:0 2px 8px rgba(0,0,0,.1);aspect-ratio:16/9;display:flex;flex-direction:column;justify-content:center"><div style="font-size:8px;color:var(--po);text-transform:uppercase;letter-spacing:2px;margin-bottom:16px;font-weight:600">H2 HIRING STRATEGY</div><div style="font-size:22px;font-weight:700;margin-bottom:10px;color:var(--text)">Hiring Pipeline Status</div><div style="height:2px;width:60px;background:var(--po);margin-bottom:14px"></div><div style="display:flex;gap:24px;margin-bottom:16px"><div style="text-align:center"><div style="font-size:28px;font-weight:700;color:var(--po)">5</div><div style="font-size:10px;color:var(--ts)">Open Roles</div></div><div style="text-align:center"><div style="font-size:28px;font-weight:700;color:var(--xg)">13</div><div style="font-size:10px;color:var(--ts)">Candidates</div></div><div style="text-align:center"><div style="font-size:28px;font-weight:700;color:var(--orange)">1</div><div style="font-size:10px;color:var(--ts)">Risk Flag</div></div></div><div style="font-size:10px;color:var(--tm)">Source: Hiring_Plan_H2.xlsx · Updated today</div></div></div>
+          <div style="flex:1;background:#E8E8E8;display:flex;align-items:center;justify-content:center;padding:20px"><div style="width:100%;max-width:520px;background:white;border-radius:3px;padding:40px 48px;box-shadow:0 2px 8px rgba(0,0,0,.1);aspect-ratio:16/9;display:flex;flex-direction:column;justify-content:center"><div style="font-size:8px;color:var(--po);text-transform:uppercase;letter-spacing:2px;margin-bottom:16px;font-weight:600">H2 HIRING STRATEGY</div><div style="font-size:22px;font-weight:700;margin-bottom:10px;color:var(--text)">Hiring Pipeline Status</div><div style="height:2px;width:60px;background:var(--po);margin-bottom:14px"></div><div style="display:flex;gap:24px;margin-bottom:16px"><div style="text-align:center"><div style="font-size:28px;font-weight:700;color:var(--po)">5</div><div style="font-size:10px;color:var(--ts)">Open Roles</div></div><div style="text-align:center"><div style="font-size:28px;font-weight:700;color:var(--xg)">13</div><div style="font-size:10px;color:var(--ts)">Candidates</div></div><div style="text-align:center"><div style="font-size:28px;font-weight:700;color:var(--orange)">1</div><div style="font-size:10px;color:var(--ts)">Risk Flag</div></div></div><div id="slideSourceLink" style="font-size:10px;color:var(--bb);cursor:pointer;text-decoration:underline" onclick="advance()">Source: Hiring_Plan_H2.xlsx · Updated today</div></div></div>
         </div>
         <div style="height:22px;background:#F3F3F3;border-top:1px solid #E0E0E0;padding:0 10px;display:flex;align-items:center;font-size:10px;color:var(--tm);flex-shrink:0">Slide 2 of 4 · Notes</div>
       </div>
@@ -606,14 +606,15 @@ function s9(){
   },300);
 }
 function s10(){
-  // P2: PPT — user adds notes, Copilot mentions Excel
+  // P2: PPT — user adds notes, then clicks source link ON THE SLIDE
   hideA();anim=true;showTab('ppt');switchCv('ppt');setColor('ppt');
   setTimeout(function(){
     addUToChat('Add speaker notes to slide 2');
     setTimeout(function(){
-      addToChat('<p>Added speaker notes summarizing the pipeline status.</p><p>This slide references data from <strong>Hiring_Plan_H2.xlsx</strong>.</p><div class="fl" id="xlReturnLink" onclick="advance()"><span class="fli" style="background:var(--xg)">X</span> Hiring_Plan_H2.xlsx <span class="fla">&rarr; Open in Excel</span></div>');
+      addToChat('<p>Added speaker notes summarizing the pipeline status.</p>');
       showA('a6');anim=false;
-      setTimeout(function(){ var b=document.getElementById('xlReturnLink'); if(b)showClickHint(b,'User clicks here'); },600);
+      // Point hint at the source link on the slide canvas, not in chat
+      setTimeout(function(){ var b=document.getElementById('slideSourceLink'); if(b)showClickHint(b,'User clicks here'); },600);
     },400);
   },300);
 }

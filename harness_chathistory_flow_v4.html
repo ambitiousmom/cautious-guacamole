@@ -440,6 +440,26 @@ function startDemo(){
   setTimeout(advance,400);
 }
 
+// Auto-resume if navigating backward
+(function(){
+  var resume = sessionStorage.getItem('resumeStep');
+  if(resume){
+    sessionStorage.removeItem('resumeStep');
+    var target = parseInt(resume);
+    document.getElementById('landing').classList.add('hidden');
+    document.getElementById('stepBar').classList.remove('hidden');
+    step=0;
+    updateLabel();
+    function advanceToTarget(){
+      if(step<target){
+        advance();
+        setTimeout(advanceToTarget, 80);
+      }
+    }
+    setTimeout(advanceToTarget, 200);
+  }
+})();
+
 function advance(){
   if(anim)return;
   if(step>=totalSteps)return;
@@ -454,8 +474,11 @@ function advance(){
 
 function nextStep(){ advance(); }
 function prevStep(){
-  // Simplified: reload to reset
-  if(step>0) location.reload();
+  if(step<=1) return;
+  var targetStep = step - 1;
+  // Store target in sessionStorage, reload, and auto-advance to that step
+  sessionStorage.setItem('resumeStep', targetStep);
+  location.reload();
 }
 
 function updateLabel(){

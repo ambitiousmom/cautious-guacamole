@@ -310,6 +310,7 @@
 <div class="ann" id="a9"><div class="ann-tag"><span class="ann-num">9</span> <span style="background:#DFF6DD;color:#107C10;font-size:8px;padding:1px 5px;border-radius:3px;font-weight:700;margin-right:4px">P0</span> Fresh Start, no active chat</div><div class="ann-body">User opened a file from some other entry, <strong>not from a chat</strong>. Chat pane opens to the default landing page.</div></div>
 <div class="ann" id="a10"><div class="ann-tag"><span class="ann-num">10</span> <span style="background:#DFF6DD;color:#107C10;font-size:8px;padding:1px 5px;border-radius:3px;font-weight:700;margin-right:4px">P0</span> Universal Chat History</div><div class="ann-body">The hamburger reveals <strong>all Copilot chats</strong> — same list as the Copilot App. It will stay user-centric, not app-centric. We can add <strong>Filters</strong> in the future to scope "Show all chats related to this file" or "Show all chats related to Excel only" etc.</div></div>
 <div class="ann" id="a11"><div class="ann-tag"><span class="ann-num">11</span> <span style="background:#DFF6DD;color:#107C10;font-size:8px;padding:1px 5px;border-radius:3px;font-weight:700;margin-right:4px">P0</span> One Chat, Everywhere</div><div class="ann-body"><strong>"Hiring Plan Pipeline Review"</strong> — the chat from Copilot App that traveled through Excel, Word, and PPT. One chat, stored once, <strong>visible in every surface</strong>.</div></div>
+<div class="ann" id="a12"><div class="ann-tag"><span class="ann-num">12</span> <span style="background:#DFF6DD;color:#107C10;font-size:8px;padding:1px 5px;border-radius:3px;font-weight:700;margin-right:4px">P0</span> Unrelated Chat Selected</div><div class="ann-body">User picked a chat <strong>unrelated to this file</strong>. A subtle hint confirms the context mismatch — but doesn't block. The user can proceed freely or switch back.</div></div>
 
 <!-- ═══ SHELL ═══ -->
 <div class="shell">
@@ -356,7 +357,7 @@
       <!-- Copilot App -->
       <div class="cvp active" id="cv-copilot">
         <div class="cp-main">
-          <div class="cp-greeting">Good morning, Cindy</div>
+          <div class="cp-greeting">Welcome, how can I help?</div>
           <div class="cp-composer"><input type="text" placeholder="Ask Copilot anything" readonly/><div class="cp-comp-bot"><span style="font-size:12px;color:var(--tm);cursor:pointer">+ Attach</span><span style="font-size:14px;color:var(--tm);cursor:pointer">🎙</span></div></div>
           <div class="cp-chat-area" id="cpChat"></div>
         </div>
@@ -438,7 +439,7 @@
 </div>
 
 <script>
-var step=0, totalSteps=11, anim=false;
+var step=0, totalSteps=12, anim=false;
 
 function startDemo(){
   document.getElementById('landing').classList.add('hidden');
@@ -476,7 +477,7 @@ function advance(){
   switch(step){
     case 1:s1();break;case 2:s2();break;case 3:s3();break;case 4:s4();break;
     case 5:s5();break;case 6:s6();break;case 7:s7();break;case 8:s8();break;
-    case 9:s9();break;case 10:s10();break;case 11:s11();break;
+    case 9:s9();break;case 10:s10();break;case 11:s11();break;case 12:s12();break;
   }
 }
 
@@ -527,7 +528,7 @@ function s3(){
 }
 
 function s4(){
-  // Branch overlay: transition from P0 to P2
+  // Bridge overlay: transition from P0 to P2
   hideA();
   var ov=document.createElement('div');
   ov.id='branchOverlay';
@@ -609,10 +610,22 @@ function s11(){
     setTimeout(function(){
       addToChat('<p>Highlighted Platform role &mdash; 2 candidates, 8-week fill time.</p>');
       showA('a8');anim=false;
-      document.getElementById('stepNext').disabled=true;
-      setTimeout(function(){ document.getElementById('endOverlay').classList.add('visible'); },4000);
     },400);
   },300);
+}
+
+function s12(){
+  // Edge case: User opens an unrelated chat — show hint
+  hideA();
+  showP('chat');
+  var chatC=document.getElementById('chatC');
+  chatC.innerHTML='<div class="cdate">Last week</div>';
+  chatC.innerHTML+='<div class="um"><div class="ub">Prep me for the leadership meeting on Thursday</div></div>';
+  chatC.innerHTML+='<div class="cm"><div class="cl"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAJUAAAAwCAYAAAAYczgSAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAAFiUAABYlAUlSJPAAAAiGSURBVHhe7Zv5T1VHFMf9pbVJ/4H+0vSXtml/aVp/NLWLWC0KLgiGKIviFmsRRNG64las0aBY1wiKOy5VpIjaWKVqEdFKFKxFtOBWKYvghmjTnuZ7mrm5b+bNfffdh9LSOckn5s6cmXlv5vvOnJmL3Z4+fUoGgxd01k12NBjcojMjKoNndGZEZfCMzoyoDJ7RmRGVwTM6M6IyeEZnRlQGz+jMiMrgGZ0ZURk8ozMjKoNndGZEZfCMzoyoDJ7RmRGVwTM6M6IyeEZnRlQGz+jMiMrgGZ0ZURk8o7P/A0jBEVpB0YtyAAAAAElFTkSuQmCC" style="height:20px;" alt="Copilot"></div><div class="cbo"><p>Here are the key topics for Thursday\'s leadership sync...</p></div></div>';
+  chatC.innerHTML+='<div style="background:#FFF8E5;border-left:3px solid #FFB900;border-radius:0 8px 8px 0;padding:8px 12px;margin:8px 0;font-size:11px;color:#6B5900;display:flex;align-items:center;gap:6px">\u2139\uFE0F This chat is about <strong>Meeting Prep</strong> \u00B7 You\'re editing <strong>Hiring_Plan_H2.xlsx</strong></div>';
+  showA('a12');
+  document.getElementById('stepNext').disabled=true;
+  setTimeout(function(){ document.getElementById('endOverlay').classList.add('visible'); },4000);
 }
 
 /* ═══ HELPERS ═══ */

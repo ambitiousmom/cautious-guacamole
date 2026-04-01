@@ -448,6 +448,8 @@ var step=0, totalSteps=13, anim=false;
 function startDemo(){
   document.getElementById('landing').classList.add('hidden');
   document.getElementById('stepBar').classList.remove('hidden');
+  // Immediately hide sidebar to prevent Copilot App flash
+  document.getElementById('sidebar').classList.add('hidden-sb');
   step=0;
   updateLabel();
   setTimeout(advance,400);

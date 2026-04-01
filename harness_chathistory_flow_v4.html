@@ -534,39 +534,36 @@ function s5(){
   setTimeout(function(){
     addUToChat('Review section 2 and tighten the language');
     setTimeout(function(){
-      addToChat('<p>Revised section 2. Tightened phrasing and removed redundancies.</p>');
+      addToChat('<p>Revised section 2. Tightened phrasing and removed redundancies.</p><p>The hiring numbers here also appear in <strong>Hiring_Strategy_H2.pptx</strong> — you may want to update that too.</p><div class="fl" id="pptLink" onclick="advance()"><span class="fli" style="background:var(--po)">P</span> Hiring_Strategy_H2.pptx <span class="fla">→ Open in PowerPoint</span></div>');
       showA('a5');anim=false;
+      setTimeout(function(){ var b=document.getElementById('pptLink'); if(b)showClickHint(b,'Click here'); },600);
     },400);
   },300);
 }
 function s6(){
-  hideA();addUToChat('Update Hiring_Strategy_H2.pptx with these numbers');anim=true;
-  setTimeout(function(){
-    addToChat('<p>Updated slide 2 in <strong>Hiring_Strategy_H2.pptx</strong>.</p><div class="fl" id="pptLink" onclick="advance()"><span class="fli" style="background:var(--po)">P</span> Hiring_Strategy_H2.pptx <span class="fla">→ Open in PowerPoint</span></div>');
-    showA('a6');anim=false;
-    setTimeout(function(){ var b=document.getElementById('pptLink'); if(b)showClickHint(b,'Click here'); },600);
-  },500);
-}
-function s7(){
   hideA();anim=true;showTab('ppt');switchCv('ppt');setColor('ppt');
   setTimeout(function(){
     addUToChat('Add speaker notes to slide 2');
     setTimeout(function(){
-      addToChat('<p>Added speaker notes summarizing the pipeline status.</p>');
+      addToChat('<p>Added speaker notes summarizing the pipeline status.</p><p>This slide references data from <strong>Hiring_Plan_H2.xlsx</strong>.</p><div class="fl" id="xlLink" onclick="advance()"><span class="fli" style="background:var(--xg)">X</span> Hiring_Plan_H2.xlsx <span class="fla">→ Open in Excel</span></div>');
+      showA('a6');anim=false;
+      setTimeout(function(){ var b=document.getElementById('xlLink'); if(b)showClickHint(b,'Click here'); },600);
+    },400);
+  },300);
+}
+function s7(){
+  hideA();anim=true;showTab('excel');switchCv('excel');setColor('excel');
+  setTimeout(function(){
+    addUToChat('Highlight the at-risk roles in the pipeline');
+    setTimeout(function(){
+      addToChat('<p>Highlighted Platform role — 2 candidates, 8-week fill time.</p>');
       showA('a7');anim=false;
     },400);
   },300);
 }
 function s8(){
-  hideA();anim=true;
-  showTab('excel');switchCv('excel');setColor('excel');
-  setTimeout(function(){
-    addUToChat('Highlight the at-risk roles in the pipeline');
-    setTimeout(function(){
-      addToChat('<p>Highlighted Platform role — 2 candidates, 8-week fill time.</p>');
-      showA('a8');anim=false;
-    },400);
-  },300);
+  hideA();
+  showA('a8');
 }
 function s9(){
   hideA();

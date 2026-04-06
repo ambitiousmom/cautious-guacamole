@@ -3,363 +3,290 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Architecture — OpenClaw × M365</title>
+<title>OpenClaw × M365 — System Architecture</title>
 <style>
-  *,*::before,*::after { margin:0; padding:0; box-sizing:border-box; }
-  body {
-    font-family: 'Segoe UI Variable Display','Segoe UI',-apple-system,sans-serif;
-    background: #F5F1EC; color: #242424;
-  }
-  header { text-align:center; padding:48px 24px 12px; }
-  header h1 { font-size:30px; font-weight:700; letter-spacing:-0.02em; }
-  header .sub { font-size:14px; color:#616161; margin-top:8px; line-height:1.6; max-width:580px; margin-left:auto; margin-right:auto; }
-  header .meta { font-size:11px; color:#999; margin-top:8px; }
-
-  .wrap { max-width:960px; margin:0 auto; padding:0 24px 80px; }
-
-  /* ═══ Two-column layout ═══ */
-  .dual { display:flex; gap:0; margin-top:32px; position:relative; }
-  .col { flex:1; }
-  .col-m365 { padding-right:12px; }
-  .col-claw { padding-left:12px; }
-
-  /* Column headers */
-  .col-header {
-    font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:0.1em;
-    padding:10px 16px; border-radius:10px 10px 0 0; text-align:center; margin-bottom:0;
-  }
-  .col-m365 .col-header { background:#107C10; color:white; }
-  .col-claw .col-header { background:#5B5FC7; color:white; }
-
-  /* Column body */
-  .col-body {
-    border:1px solid #E5DFD9; border-top:none; border-radius:0 0 10px 10px;
-    padding:0; background:white;
-  }
-
-  /* ═══ Row inside column ═══ */
-  .item {
-    padding:14px 16px; border-bottom:1px solid #F0F0F0;
-    position:relative;
-  }
-  .item:last-child { border-bottom:none; }
-  .item-num {
-    position:absolute; top:12px; right:12px;
-    width:20px; height:20px; border-radius:50%;
-    display:flex; align-items:center; justify-content:center;
-    font-size:9px; font-weight:700; color:white;
-  }
-  .col-m365 .item-num { background:#107C10; }
-  .col-claw .item-num { background:#5B5FC7; }
-  .item-title { font-size:13px; font-weight:700; margin-bottom:3px; display:flex; align-items:center; gap:6px; }
-  .item-desc { font-size:11px; color:#616161; line-height:1.55; }
-  .item-desc strong { color:#242424; }
-  .item-example { font-size:10px; color:#5B5FC7; margin-top:4px; font-style:italic; }
-
-  /* ═══ Cross-flow arrows (between columns) ═══ */
-  .cross-flow {
-    position:absolute; left:50%; transform:translateX(-50%);
-    display:flex; flex-direction:column; align-items:center; z-index:2;
-  }
-  .cf-arrow {
-    width:60px; display:flex; align-items:center; justify-content:center;
-    position:relative;
-  }
-  .cf-line { width:100%; height:2px; }
-  .cf-line.right { background:linear-gradient(90deg, #107C10, #5B5FC7); }
-  .cf-line.right::after { content:''; position:absolute; right:-1px; top:-4px; border:5px solid transparent; border-left:6px solid #5B5FC7; }
-  .cf-line.left { background:linear-gradient(90deg, #5B5FC7, #107C10); }
-  .cf-line.left::after { content:''; position:absolute; left:-1px; top:-4px; border:5px solid transparent; border-right:6px solid #107C10; }
-  .cf-label {
-    font-size:8px; font-weight:700; color:#616161; text-align:center;
-    background:#F5F1EC; padding:1px 6px; border-radius:4px;
-    white-space:nowrap; margin:2px 0;
-  }
-
-  /* ═══ Full-width sections ═══ */
-  .full-section {
-    margin-top:24px; border-radius:14px; padding:20px 24px;
-    position:relative;
-  }
-  .fs-badge {
-    position:absolute; top:-10px; left:20px;
-    font-size:9px; font-weight:700; padding:2px 8px; border-radius:4px;
-    letter-spacing:0.04em;
-  }
-  .full-section.mesh { background:white; border:2px solid #E87400; }
-  .full-section.mesh .fs-badge { background:#FEF3C7; color:#E87400; }
-  .full-section.loop { background:white; border:2px solid #107C10; margin-top:32px; }
-  .full-section.loop .fs-badge { background:#DFF6DD; color:#107C10; }
-
-  .fs-title { font-size:14px; font-weight:700; margin-bottom:4px; }
-  .fs-desc { font-size:12px; color:#616161; line-height:1.6; margin-bottom:12px; }
-  .fs-desc strong { color:#242424; }
-
-  /* Mesh flow */
-  .mesh-flow { display:flex; align-items:center; gap:0; }
-  .mesh-node {
-    flex:1; text-align:center; padding:10px 8px;
-    border-radius:8px; font-size:11px; line-height:1.5;
-  }
-  .mesh-node.person { background:#F5F5F5; }
-  .mesh-node.platform { background:#FFF7ED; }
-  .mesh-node strong { font-size:12px; display:block; margin-bottom:2px; }
-  .mesh-node .owner { font-size:8px; font-weight:700; text-transform:uppercase; letter-spacing:0.04em; margin-bottom:4px; }
-  .mesh-node .owner.m365 { color:#107C10; }
-  .mesh-node .owner.claw { color:#5B5FC7; }
-  .mesh-node .owner.gap { color:#E87400; }
-  .mesh-arr { font-size:18px; color:#E87400; flex-shrink:0; padding:0 4px; }
-  .mesh-signals { font-size:10px; color:#616161; }
-  .mesh-signals strong { color:#E87400; }
-
-  /* Loop strip */
-  .loop-flow { display:flex; align-items:stretch; gap:0; }
-  .loop-step {
-    flex:1; padding:10px 12px; text-align:center;
-    border:1px solid #F0F0F0; font-size:10px; color:#616161; line-height:1.4;
-  }
-  .loop-step:first-child { border-radius:8px 0 0 8px; }
-  .loop-step:last-child { border-radius:0 8px 8px 0; }
-  .loop-step strong { display:block; font-size:11px; color:#242424; margin-bottom:2px; }
-  .loop-step .owner { font-size:8px; font-weight:700; text-transform:uppercase; letter-spacing:0.04em; margin-bottom:4px; }
-  .loop-arr { display:flex; align-items:center; font-size:16px; color:#107C10; flex-shrink:0; }
-
-  /* ═══ Bottom ═══ */
-  .bottom {
-    text-align:center; padding:40px 24px 0; font-size:14px; color:#616161; line-height:1.7;
-  }
-  .bottom strong { color:#242424; }
-
-  /* ═══ Tags ═══ */
-  .tag { display:inline-block; font-size:8px; font-weight:700; padding:1px 5px; border-radius:3px; margin-left:4px; }
-  .tag.exists { background:#DFF6DD; color:#107C10; }
-  .tag.new { background:#E8EBFA; color:#5B5FC7; }
-  .tag.gap { background:#FEF3C7; color:#E87400; }
-
-  @media (max-width:700px) {
-    .dual { flex-direction:column; gap:16px; }
-    .col-m365, .col-claw { padding:0; }
-    .cross-flow { display:none; }
-    .mesh-flow, .loop-flow { flex-direction:column; }
-    .mesh-arr, .loop-arr { transform:rotate(90deg); padding:4px 0; }
-  }
+  *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+  body{font-family:'Segoe UI Variable Display','Segoe UI',-apple-system,sans-serif;background:#F5F1EC;color:#242424}
+  header{text-align:center;padding:40px 24px 8px}
+  header h1{font-size:28px;font-weight:700;letter-spacing:-0.02em}
+  header .sub{font-size:13px;color:#616161;margin-top:6px}
+  header .meta{font-size:11px;color:#999;margin-top:6px}
+  .diagram-wrap{max-width:1200px;margin:24px auto;padding:0 16px;overflow-x:auto}
+  svg text{font-family:'Segoe UI Variable Display','Segoe UI',-apple-system,sans-serif}
 </style>
 </head>
 <body>
-
 <header>
   <h1>OpenClaw × M365</h1>
-  <div class="sub">One architecture, two systems interlocked. <strong style="color:#107C10;">Green = M365.</strong> <strong style="color:#5B5FC7;">Purple = OpenClaw.</strong> Read top to bottom.</div>
+  <div class="sub">System architecture. Read top → bottom. Green = M365 owns. Purple = OpenClaw owns. Orange = the gap.</div>
   <div class="meta">Hema Sridharan · April 2026</div>
 </header>
 
-<div class="wrap">
+<div class="diagram-wrap">
+<svg viewBox="0 0 1140 920" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;min-width:900px;">
 
-<!-- ═══ TWO COLUMNS ═══ -->
-<div class="dual">
+  <!-- ═══ BACKGROUND ZONES ═══ -->
+  <rect x="10" y="40" width="1120" height="110" rx="12" fill="#E8F5E9" opacity="0.35"/>
+  <rect x="10" y="170" width="1120" height="100" rx="12" fill="#E8EBFA" opacity="0.35"/>
+  <rect x="10" y="290" width="1120" height="160" rx="12" fill="#E8EBFA" opacity="0.35"/>
+  <rect x="10" y="470" width="1120" height="80" rx="12" fill="#FEF3C7" opacity="0.4"/>
+  <rect x="10" y="570" width="1120" height="90" rx="12" fill="#E8F5E9" opacity="0.35"/>
+  <rect x="10" y="680" width="1120" height="80" rx="12" fill="#FFF0E0" opacity="0.4"/>
+  <rect x="10" y="780" width="1120" height="110" rx="12" fill="#E8EBFA" opacity="0.2"/>
 
-  <!-- ═══ M365 COLUMN ═══ -->
-  <div class="col col-m365">
-    <div class="col-header">M365 — Signals + Surfaces</div>
-    <div class="col-body">
+  <!-- ═══ ZONE LABELS (left edge) ═══ -->
+  <text x="22" y="62" font-size="9" font-weight="700" fill="#107C10" letter-spacing="0.08em">M365 SIGNALS</text>
+  <text x="22" y="190" font-size="9" font-weight="700" fill="#5B5FC7" letter-spacing="0.08em">OPENCLAW INGESTION</text>
+  <text x="22" y="310" font-size="9" font-weight="700" fill="#5B5FC7" letter-spacing="0.08em">OPENCLAW RUNTIME</text>
+  <text x="22" y="490" font-size="9" font-weight="700" fill="#E87400" letter-spacing="0.08em">TRUST BOUNDARY</text>
+  <text x="22" y="590" font-size="9" font-weight="700" fill="#107C10" letter-spacing="0.08em">M365 SURFACES</text>
+  <text x="22" y="700" font-size="9" font-weight="700" fill="#E87400" letter-spacing="0.08em">AGENT MESH</text>
+  <text x="22" y="800" font-size="9" font-weight="700" fill="#5B5FC7" letter-spacing="0.08em">LEARNING LOOP</text>
 
-      <div class="item">
-        <div class="item-num">1</div>
-        <div class="item-title">📧 Mail + Calendar <span class="tag exists">EXISTS</span></div>
-        <div class="item-desc">Inbox, invites, scheduling conflicts, attendee context. The raw heartbeat.</div>
-      </div>
+  <!-- ═══ ROW 1: M365 SIGNALS ═══ -->
+  <rect x="30" y="72" width="155" height="58" rx="8" fill="white" stroke="#107C10" stroke-width="1"/>
+  <text x="50" y="93" font-size="13">📧</text>
+  <text x="68" y="94" font-size="11" font-weight="600">Mail + Calendar</text>
+  <text x="68" y="108" font-size="9" fill="#616161">Exchange · Outlook</text>
+  <text x="68" y="120" font-size="8" fill="#107C10" font-weight="700">EXISTS</text>
 
-      <div class="item">
-        <div class="item-num">2</div>
-        <div class="item-title">📄 Documents <span class="tag exists">EXISTS</span></div>
-        <div class="item-desc">Comments, tracked changes, co-authoring across Word/Excel/PPT. Per-user permission boundaries.</div>
-      </div>
+  <rect x="200" y="72" width="155" height="58" rx="8" fill="white" stroke="#107C10" stroke-width="1"/>
+  <text x="220" y="93" font-size="13">📄</text>
+  <text x="238" y="94" font-size="11" font-weight="600">Documents</text>
+  <text x="238" y="108" font-size="9" fill="#616161">SharePoint · OneDrive</text>
+  <text x="238" y="120" font-size="8" fill="#107C10" font-weight="700">EXISTS</text>
 
-      <div class="item">
-        <div class="item-num">3</div>
-        <div class="item-title">👥 Org Graph <span class="tag exists">EXISTS</span></div>
-        <div class="item-desc">People, skills, reporting chains, team capacity. Who knows what, who's finishing what.</div>
-      </div>
+  <rect x="370" y="72" width="155" height="58" rx="8" fill="white" stroke="#107C10" stroke-width="1"/>
+  <text x="390" y="93" font-size="13">👥</text>
+  <text x="408" y="94" font-size="11" font-weight="600">Org Graph</text>
+  <text x="408" y="108" font-size="9" fill="#616161">People · skills · teams</text>
+  <text x="408" y="120" font-size="8" fill="#107C10" font-weight="700">EXISTS</text>
 
-      <div class="item">
-        <div class="item-num">4</div>
-        <div class="item-title">🎤 Meeting Intelligence <span class="tag exists">EXISTS</span></div>
-        <div class="item-desc">Teams transcripts, commitments, action items. What was promised and by whom.</div>
-      </div>
+  <rect x="540" y="72" width="155" height="58" rx="8" fill="white" stroke="#107C10" stroke-width="1"/>
+  <text x="560" y="93" font-size="13">🎤</text>
+  <text x="578" y="94" font-size="11" font-weight="600">Meeting Intel</text>
+  <text x="578" y="108" font-size="9" fill="#616161">Teams transcripts</text>
+  <text x="578" y="120" font-size="8" fill="#107C10" font-weight="700">EXISTS</text>
 
-      <div class="item" style="border-bottom:1px solid #E5DFD9; padding-bottom:16px;">
-        <div class="item-num" style="background:#E87400;">★</div>
-        <div class="item-title">🔍 Cross-User Inference <span class="tag gap">NEW · NEEDS OPENCLAW</span></div>
-        <div class="item-desc"><strong>Contradictions between people's docs.</strong> Institutional memory from departed employees. This signal doesn't exist without a runtime to infer it.</div>
-      </div>
+  <rect x="710" y="72" width="155" height="58" rx="8" fill="white" stroke="#107C10" stroke-width="1"/>
+  <text x="730" y="93" font-size="13">📋</text>
+  <text x="748" y="94" font-size="11" font-weight="600">Tasks + Planner</text>
+  <text x="748" y="108" font-size="9" fill="#616161">Projects · capacity</text>
+  <text x="748" y="120" font-size="8" fill="#107C10" font-weight="700">EXISTS</text>
 
-      <div class="item" style="background:#F9F9F9;">
-        <div class="item-num">9</div>
-        <div class="item-title">💬 Teams Chat <span class="tag exists">EXISTS</span></div>
-        <div class="item-desc">Primary surface. Gen UI cards, approval gates, notifications. Mobile-first. <strong>This is where the user lives.</strong></div>
-      </div>
+  <rect x="880" y="72" width="155" height="58" rx="8" fill="white" stroke="#5B5FC7" stroke-width="1.5" stroke-dasharray="4,3"/>
+  <text x="900" y="93" font-size="13">🔍</text>
+  <text x="918" y="94" font-size="11" font-weight="600">Cross-User Inference</text>
+  <text x="918" y="108" font-size="9" fill="#616161">Contradictions · history</text>
+  <text x="918" y="120" font-size="8" fill="#5B5FC7" font-weight="700">NEEDS RUNTIME</text>
 
-      <div class="item" style="background:#F9F9F9;">
-        <div class="item-num">10</div>
-        <div class="item-title">📝 In-App Agent <span class="tag gap">GAP</span></div>
-        <div class="item-desc">Copilot pane in Word/Excel/PPT. Same agent, same memory. Document = artifact.</div>
-      </div>
+  <!-- ═══ ARROWS: Signals → Ingestion ═══ -->
+  <line x1="108" y1="130" x2="108" y2="190" stroke="#999" stroke-width="1.2" marker-end="url(#arrowGray)"/>
+  <line x1="278" y1="130" x2="278" y2="190" stroke="#999" stroke-width="1.2" marker-end="url(#arrowGray)"/>
+  <line x1="448" y1="130" x2="448" y2="190" stroke="#999" stroke-width="1.2" marker-end="url(#arrowGray)"/>
+  <line x1="618" y1="130" x2="618" y2="190" stroke="#999" stroke-width="1.2" marker-end="url(#arrowGray)"/>
+  <line x1="788" y1="130" x2="788" y2="190" stroke="#999" stroke-width="1.2" marker-end="url(#arrowGray)"/>
+  <text x="570" y="165" font-size="9" fill="#616161" text-anchor="middle" font-weight="600">raw signals flow down</text>
 
-    </div>
-  </div>
+  <!-- ═══ ROW 2: INGESTION ═══ -->
+  <rect x="200" y="192" width="740" height="56" rx="8" fill="white" stroke="#5B5FC7" stroke-width="1"/>
+  <text x="220" y="218" font-size="13">⬇️</text>
+  <text x="240" y="218" font-size="12" font-weight="700">Signal Ingestion</text>
+  <text x="240" y="234" font-size="9" fill="#616161">Normalize → enrich with Memory (learned patterns, corrections) → structure for orchestrator</text>
+  <text x="910" y="218" font-size="8" fill="#5B5FC7" font-weight="700" text-anchor="end">OPENCLAW</text>
 
-  <!-- ═══ CROSS-FLOW ARROWS ═══ -->
-  <div class="cross-flow" style="top:80px;">
-    <div class="cf-label">raw signals</div>
-    <div class="cf-arrow"><div class="cf-line right" style="width:50px;"></div></div>
-  </div>
-  <div class="cross-flow" style="top:260px;">
-    <div class="cf-label">enriched context</div>
-    <div class="cf-arrow"><div class="cf-line right" style="width:50px;"></div></div>
-  </div>
-  <div class="cross-flow" style="top:400px;">
-    <div class="cf-label">proposed actions</div>
-    <div class="cf-arrow"><div class="cf-line left" style="width:50px;"></div></div>
-  </div>
-  <div class="cross-flow" style="top:520px;">
-    <div class="cf-label">approved → surface</div>
-    <div class="cf-arrow"><div class="cf-line left" style="width:50px;"></div></div>
-  </div>
+  <!-- Arrow: Memory ↔ Ingestion -->
+  <path d="M950,220 L1020,220 L1020,380 L950,380" stroke="#107C10" stroke-width="1.2" fill="none" stroke-dasharray="3,3" marker-end="url(#arrowGreen)"/>
+  <text x="1035" y="300" font-size="8" fill="#107C10" font-weight="600" transform="rotate(90,1035,300)">memory enriches</text>
 
-  <!-- ═══ OPENCLAW COLUMN ═══ -->
-  <div class="col col-claw">
-    <div class="col-header">OpenClaw — Runtime + Intelligence</div>
-    <div class="col-body">
+  <!-- ═══ ARROW: Ingestion → Orchestrator ═══ -->
+  <line x1="570" y1="248" x2="570" y2="303" stroke="#5B5FC7" stroke-width="1.5" marker-end="url(#arrowPurple)"/>
+  <text x="580" y="280" font-size="9" fill="#5B5FC7" font-weight="600">structured context</text>
 
-      <div class="item">
-        <div class="item-num">5</div>
-        <div class="item-title">⬇️ Signal Ingestion <span class="tag new">NEW</span></div>
-        <div class="item-desc">Normalizes M365 signals into structured context. <strong>Enriches with memory</strong> — learned patterns, corrections, preferences. Runs overnight batch + real-time.</div>
-      </div>
+  <!-- ═══ ROW 3: RUNTIME — Orchestrator + Agents + Memory ═══ -->
+  <!-- Orchestrator -->
+  <rect x="420" y="305" width="300" height="50" rx="10" fill="#5B5FC7"/>
+  <text x="440" y="330" font-size="14" fill="white">🎯</text>
+  <text x="460" y="330" font-size="13" font-weight="700" fill="white">Cadbury — Orchestrator</text>
+  <text x="460" y="345" font-size="9" fill="rgba(255,255,255,0.7)">Routes · decides · briefs · consults memory</text>
 
-      <div class="item">
-        <div class="item-num">6</div>
-        <div class="item-title">🎯 Cadbury (Orchestrator) <span class="tag new">NEW</span></div>
-        <div class="item-desc">The brain. Decides what to act on, dispatches to specialists, compiles briefings. <strong>Consults memory before every decision.</strong> Owns the user relationship.</div>
-        <div class="item-example">"Good morning, Hema. Your agents handled 47 emails overnight."</div>
-      </div>
+  <!-- Specialist Agents -->
+  <rect x="120" y="380" width="130" height="50" rx="8" fill="white" stroke="#5B5FC7" stroke-width="1"/>
+  <text x="140" y="402" font-size="12">✉️</text>
+  <text x="155" y="402" font-size="10" font-weight="600">Mail Agent</text>
+  <text x="140" y="416" font-size="8" fill="#616161">Session-isolated</text>
+  <text x="140" y="425" font-size="7" fill="#D13438">No raw email bodies</text>
 
-      <div class="item">
-        <div class="item-num">7</div>
-        <div class="item-title">🧩 Specialist Agents <span class="tag new">NEW</span></div>
-        <div class="item-desc">
-          <strong>Mail</strong> — session-isolated, never returns raw bodies.<br>
-          <strong>Calendar</strong> — coordinates via mesh.<br>
-          <strong>Document</strong> — reads, drafts, proposes tracked changes.<br>
-          Each has <strong>scoped permissions</strong>. Mail can't read calendar. Doc can't send email.
-        </div>
-      </div>
+  <rect x="270" y="380" width="130" height="50" rx="8" fill="white" stroke="#5B5FC7" stroke-width="1"/>
+  <text x="290" y="402" font-size="12">📅</text>
+  <text x="305" y="402" font-size="10" font-weight="600">Calendar Agent</text>
+  <text x="290" y="416" font-size="8" fill="#616161">Coordinates via mesh</text>
 
-      <div class="item">
-        <div class="item-num">8</div>
-        <div class="item-title">⏸ Trust Gate <span class="tag new">NEW</span></div>
-        <div class="item-desc">
-          Every action passes through. Gate level per action category:<br>
-          <strong style="color:#107C10;">● Auto</strong> — newsletters, confirmations, data refresh<br>
-          <strong style="color:#E87400;">● Review</strong> — peer replies (graduated over time)<br>
-          <strong style="color:#D13438;">● Locked</strong> — exec email, financials, moving others' meetings
-        </div>
-        <div class="item-example">44 auto-handled. 2 paused for you. You made 2 decisions.</div>
-      </div>
+  <rect x="420" y="380" width="130" height="50" rx="8" fill="white" stroke="#5B5FC7" stroke-width="1"/>
+  <text x="440" y="402" font-size="12">📄</text>
+  <text x="455" y="402" font-size="10" font-weight="600">Doc Agent</text>
+  <text x="440" y="416" font-size="8" fill="#616161">Read · draft · propose</text>
 
-      <div class="item">
-        <div class="item-num" style="background:#E87400;">★</div>
-        <div class="item-title">🧠 Memory <span class="tag new">NEW</span></div>
-        <div class="item-desc">
-          <strong>Daily logs</strong> · <strong>LESSONS.md</strong> (corrections) · <strong>vector search</strong> (semantic recall) · <strong>SOUL.md</strong> (personality). Dream cycles at 4 AM consolidate short-term → long-term.
-        </div>
-        <div class="item-example">"Omar has told me MULTIPLE TIMES not to CC legal on draft-stage emails."</div>
-      </div>
+  <rect x="570" y="380" width="130" height="50" rx="8" fill="white" stroke="#5B5FC7" stroke-width="1"/>
+  <text x="590" y="402" font-size="12">📊</text>
+  <text x="605" y="402" font-size="10" font-weight="600">Data Agent</text>
+  <text x="590" y="416" font-size="8" fill="#616161">Cross-app data pull</text>
 
-    </div>
-  </div>
+  <!-- More agents -->
+  <rect x="720" y="380" width="90" height="50" rx="8" fill="white" stroke="#5B5FC7" stroke-width="1" stroke-dasharray="3,3"/>
+  <text x="740" y="405" font-size="9" font-weight="600" fill="#5B5FC7">+ more</text>
+  <text x="740" y="418" font-size="7" fill="#999">WhatsApp, Home</text>
+  <text x="740" y="427" font-size="7" fill="#999">Travel, Social...</text>
 
-</div><!-- /dual -->
+  <!-- Memory -->
+  <rect x="840" y="370" width="170" height="65" rx="10" fill="white" stroke="#5B5FC7" stroke-width="1.5"/>
+  <text x="860" y="394" font-size="13">🧠</text>
+  <text x="878" y="394" font-size="11" font-weight="700">Memory</text>
+  <text x="860" y="408" font-size="8" fill="#616161">LESSONS.md · SOUL.md</text>
+  <text x="860" y="418" font-size="8" fill="#616161">QMD + BM25 + vectors</text>
+  <text x="860" y="428" font-size="8" fill="#5B5FC7" font-weight="600">Dream cycles at 4 AM</text>
 
-<!-- ═══ AGENT MESH (spans both) ═══ -->
-<div class="full-section mesh">
-  <div class="fs-badge">THE MULTIPLIER · SPANS BOTH SYSTEMS</div>
-  <div class="fs-title">🔗 Agent Mesh</div>
-  <div class="fs-desc">Cross-person coordination. Each agent reads only its person's M365 data. The mesh passes <strong>signals only, never raw data</strong>. This layer needs both M365 (the data) and OpenClaw (the runtime). Neither can build it alone.</div>
+  <!-- Arrows: Orchestrator → Agents -->
+  <line x1="470" y1="355" x2="185" y2="380" stroke="#5B5FC7" stroke-width="1" marker-end="url(#arrowPurple)"/>
+  <line x1="500" y1="355" x2="335" y2="380" stroke="#5B5FC7" stroke-width="1" marker-end="url(#arrowPurple)"/>
+  <line x1="540" y1="355" x2="485" y2="380" stroke="#5B5FC7" stroke-width="1" marker-end="url(#arrowPurple)"/>
+  <line x1="570" y1="355" x2="635" y2="380" stroke="#5B5FC7" stroke-width="1" marker-end="url(#arrowPurple)"/>
+  <text x="350" y="370" font-size="8" fill="#5B5FC7" font-weight="600">dispatch</text>
 
-  <div class="mesh-flow">
-    <div class="mesh-node person">
-      <div class="owner m365">M365 data</div>
-      <strong>Hema's Agent</strong>
-      <div class="owner claw">OpenClaw runtime</div>
-      Budget: 28% mktg
-      <div class="mesh-signals" style="color:#D13438; margin-top:4px;">Never sees Sarah's data</div>
-    </div>
-    <div class="mesh-arr">⇄</div>
-    <div class="mesh-node platform">
-      <div class="owner gap">PLATFORM MESH · THE GAP</div>
-      <strong>Signals Only</strong>
-      <div class="mesh-signals"><strong>Conflict:</strong> assumption mismatch</div>
-      <div class="mesh-signals"><strong>Coord:</strong> post-meeting items</div>
-      <div class="mesh-signals"><strong>Availability:</strong> "Wed 10 AM free"</div>
-      <div class="mesh-signals"><strong>Deps:</strong> Omar → Sarah → Raj</div>
-    </div>
-    <div class="mesh-arr">⇄</div>
-    <div class="mesh-node person">
-      <div class="owner m365">M365 data</div>
-      <strong>Sarah's Agent</strong>
-      <div class="owner claw">OpenClaw runtime</div>
-      Revenue: +15% growth
-      <div class="mesh-signals" style="color:#D13438; margin-top:4px;">Never sees Hema's data</div>
-    </div>
-  </div>
-</div>
+  <!-- Arrow: Orchestrator ↔ Memory -->
+  <line x1="720" y1="330" x2="840" y2="390" stroke="#5B5FC7" stroke-width="1" marker-end="url(#arrowPurple)"/>
+  <text x="770" y="352" font-size="8" fill="#5B5FC7" font-weight="600">consult</text>
 
-<!-- ═══ LEARNING LOOP (spans both) ═══ -->
-<div class="full-section loop">
-  <div class="fs-badge">THE FLYWHEEL · CONNECTS EVERYTHING</div>
-  <div class="fs-title">🔄 Learning Loop</div>
-  <div class="fs-desc">The cycle that makes OpenClaw better over time — using M365 as the context and the user as the teacher. <strong>This is what Copilot can't do.</strong></div>
+  <!-- ═══ ROW 4: TRUST BOUNDARY ═══ -->
+  <rect x="200" y="480" width="740" height="48" rx="8" fill="white" stroke="#E87400" stroke-width="1.5"/>
+  <text x="220" y="508" font-size="14">⏸</text>
+  <text x="240" y="505" font-size="12" font-weight="700" fill="#E87400">Trust Gate</text>
+  <text x="360" y="505" font-size="10" fill="#616161">
+    <tspan font-weight="700" fill="#107C10">● Auto</tspan> newsletters, data refresh
+    <tspan dx="12" font-weight="700" fill="#E87400">● Review</tspan> peer replies
+    <tspan dx="12" font-weight="700" fill="#D13438">● Locked</tspan> exec, financials
+  </text>
+  <text x="240" y="518" font-size="8" fill="#E87400" font-weight="600">Per-action. Independent graduation. 27 binaries on exec allowlist.</text>
 
-  <div class="loop-flow">
-    <div class="loop-step">
-      <div class="owner m365">SURFACE (M365)</div>
-      <strong>User Corrects</strong>
-      "Frame as alignment"
-    </div>
-    <div class="loop-arr">→</div>
-    <div class="loop-step">
-      <div class="owner claw">OPENCLAW</div>
-      <strong>Lesson Saved</strong>
-      LESSONS.md updated
-    </div>
-    <div class="loop-arr">→</div>
-    <div class="loop-step">
-      <div class="owner claw">OPENCLAW</div>
-      <strong>Memory Enriched</strong>
-      Dream cycle at 4 AM
-    </div>
-    <div class="loop-arr">→</div>
-    <div class="loop-step">
-      <div class="owner claw">OPENCLAW</div>
-      <strong>Better Decision</strong>
-      Checks lessons first
-    </div>
-    <div class="loop-arr">→</div>
-    <div class="loop-step">
-      <div class="owner m365">SURFACE (M365)</div>
-      <strong>Trust Earned</strong>
-      Gate graduated
-    </div>
-  </div>
-</div>
+  <!-- Arrows: Agents → Trust Gate -->
+  <line x1="350" y1="430" x2="450" y2="480" stroke="#999" stroke-width="1" marker-end="url(#arrowGray)"/>
+  <line x1="570" y1="430" x2="570" y2="480" stroke="#999" stroke-width="1" marker-end="url(#arrowGray)"/>
+  <text x="420" y="460" font-size="8" fill="#616161" font-weight="600">proposed actions</text>
 
-</div><!-- /wrap -->
+  <!-- ═══ ROW 5: M365 SURFACES ═══ -->
+  <rect x="120" y="585" width="180" height="52" rx="8" fill="white" stroke="#107C10" stroke-width="1"/>
+  <text x="140" y="610" font-size="13">💬</text>
+  <text x="158" y="610" font-size="11" font-weight="600">Teams Chat</text>
+  <text x="158" y="624" font-size="8" fill="#616161">Gen UI cards · approvals · mobile</text>
+  <text x="280" y="600" font-size="7" fill="#107C10" font-weight="700" text-anchor="end">PRIMARY</text>
 
-<div class="bottom">
-  <strong style="color:#107C10;">M365</strong> has the signals and the surfaces.<br>
-  <strong style="color:#5B5FC7;">OpenClaw</strong> has the runtime and the intelligence.<br>
-  <strong style="color:#E87400;">The mesh</strong> needs both. Neither can build it alone.
+  <rect x="320" y="585" width="160" height="52" rx="8" fill="white" stroke="#107C10" stroke-width="1"/>
+  <text x="340" y="610" font-size="13">📱</text>
+  <text x="358" y="610" font-size="11" font-weight="600">Mobile</text>
+  <text x="358" y="624" font-size="8" fill="#616161">Notifications · lock screen</text>
+
+  <rect x="500" y="585" width="160" height="52" rx="8" fill="white" stroke="#E87400" stroke-width="1" stroke-dasharray="4,3"/>
+  <text x="520" y="610" font-size="13">📝</text>
+  <text x="538" y="610" font-size="11" font-weight="600">In-App Agent</text>
+  <text x="538" y="624" font-size="8" fill="#616161">Word · Excel · PPT pane</text>
+  <text x="640" y="600" font-size="7" fill="#E87400" font-weight="700" text-anchor="end">GAP</text>
+
+  <rect x="680" y="585" width="140" height="52" rx="8" fill="white" stroke="#E87400" stroke-width="1" stroke-dasharray="4,3"/>
+  <text x="700" y="610" font-size="13">🎙️</text>
+  <text x="720" y="610" font-size="11" font-weight="600">Voice</text>
+  <text x="720" y="624" font-size="8" fill="#616161">ElevenLabs · iOS app</text>
+  <text x="800" y="600" font-size="7" fill="#E87400" font-weight="700" text-anchor="end">GAP</text>
+
+  <rect x="840" y="585" width="170" height="52" rx="8" fill="white" stroke="#107C10" stroke-width="1"/>
+  <text x="860" y="610" font-size="13">🔗</text>
+  <text x="878" y="610" font-size="11" font-weight="600">Webhooks</text>
+  <text x="878" y="624" font-size="8" fill="#616161">HomeKit · Travel · plugins</text>
+
+  <!-- Arrows: Trust Gate → Surfaces -->
+  <line x1="570" y1="528" x2="570" y2="585" stroke="#107C10" stroke-width="1.5" marker-end="url(#arrowGreen)"/>
+  <text x="580" y="558" font-size="8" fill="#107C10" font-weight="600">approved actions reach user</text>
+
+  <!-- ═══ ROW 6: AGENT MESH ═══ -->
+  <rect x="120" y="695" width="900" height="55" rx="10" fill="white" stroke="#E87400" stroke-width="2" stroke-dasharray="5,4"/>
+
+  <!-- Person A -->
+  <circle cx="190" cy="722" r="18" fill="#E8EBFA" stroke="#5B5FC7" stroke-width="1"/>
+  <text x="190" y="726" font-size="10" text-anchor="middle" font-weight="700" fill="#5B5FC7">You</text>
+
+  <!-- Arrow A → mesh -->
+  <line x1="210" y1="722" x2="340" y2="722" stroke="#E87400" stroke-width="1.2" marker-end="url(#arrowOrange)"/>
+
+  <!-- Mesh signals -->
+  <rect x="345" y="698" width="440" height="46" rx="6" fill="#FFF7ED"/>
+  <text x="565" y="714" font-size="10" font-weight="700" fill="#E87400" text-anchor="middle">🔗 PLATFORM MESH — signals only, never raw data</text>
+  <text x="370" y="732" font-size="8" fill="#616161">Conflicts</text>
+  <text x="455" y="732" font-size="8" fill="#616161">Post-meeting items</text>
+  <text x="575" y="732" font-size="8" fill="#616161">Availability</text>
+  <text x="670" y="732" font-size="8" fill="#616161">Dep chains</text>
+  <text x="760" y="714" font-size="7" fill="#E87400" font-weight="700">THE GAP</text>
+
+  <!-- Arrow mesh → Person B -->
+  <line x1="790" y1="722" x2="920" y2="722" stroke="#E87400" stroke-width="1.2" marker-end="url(#arrowOrange)"/>
+
+  <!-- Person B -->
+  <circle cx="950" cy="722" r="18" fill="#E8EBFA" stroke="#5B5FC7" stroke-width="1"/>
+  <text x="950" y="726" font-size="9" text-anchor="middle" font-weight="700" fill="#5B5FC7">Sarah</text>
+
+  <!-- Mesh needs both labels -->
+  <text x="210" y="752" font-size="7" fill="#107C10" font-weight="600">M365 data</text>
+  <text x="210" y="760" font-size="7" fill="#5B5FC7" font-weight="600">OpenClaw runtime</text>
+  <text x="920" y="752" font-size="7" fill="#107C10" font-weight="600">M365 data</text>
+  <text x="920" y="760" font-size="7" fill="#5B5FC7" font-weight="600">OpenClaw runtime</text>
+
+  <!-- ═══ ROW 7: LEARNING LOOP ═══ -->
+  <!-- Loop arrow path going right then curving up back to memory -->
+  <rect x="120" y="795" width="140" height="42" rx="8" fill="white" stroke="#107C10" stroke-width="1"/>
+  <text x="140" y="816" font-size="9" font-weight="600">👤 User corrects</text>
+  <text x="140" y="828" font-size="7" fill="#616161">"frame as alignment"</text>
+
+  <line x1="260" y1="816" x2="300" y2="816" stroke="#107C10" stroke-width="1.2" marker-end="url(#arrowGreen)"/>
+
+  <rect x="305" y="795" width="140" height="42" rx="8" fill="white" stroke="#5B5FC7" stroke-width="1"/>
+  <text x="325" y="816" font-size="9" font-weight="600">📝 Lesson saved</text>
+  <text x="325" y="828" font-size="7" fill="#616161">LESSONS.md updated</text>
+
+  <line x1="445" y1="816" x2="485" y2="816" stroke="#107C10" stroke-width="1.2" marker-end="url(#arrowGreen)"/>
+
+  <rect x="490" y="795" width="140" height="42" rx="8" fill="white" stroke="#5B5FC7" stroke-width="1"/>
+  <text x="510" y="816" font-size="9" font-weight="600">🧠 Memory enriched</text>
+  <text x="510" y="828" font-size="7" fill="#616161">Dream cycle at 4 AM</text>
+
+  <line x1="630" y1="816" x2="670" y2="816" stroke="#107C10" stroke-width="1.2" marker-end="url(#arrowGreen)"/>
+
+  <rect x="675" y="795" width="140" height="42" rx="8" fill="white" stroke="#5B5FC7" stroke-width="1"/>
+  <text x="695" y="816" font-size="9" font-weight="600">🎯 Better decision</text>
+  <text x="695" y="828" font-size="7" fill="#616161">Checks lessons first</text>
+
+  <line x1="815" y1="816" x2="855" y2="816" stroke="#107C10" stroke-width="1.2" marker-end="url(#arrowGreen)"/>
+
+  <rect x="860" y="795" width="140" height="42" rx="8" fill="white" stroke="#107C10" stroke-width="1"/>
+  <text x="880" y="816" font-size="9" font-weight="600">📈 Trust earned</text>
+  <text x="880" y="828" font-size="7" fill="#616161">Gate graduated</text>
+
+  <!-- Flywheel return arrow -->
+  <path d="M1000,816 L1060,816 L1060,220 L940,220" stroke="#107C10" stroke-width="1.2" fill="none" stroke-dasharray="4,3" marker-end="url(#arrowGreen)"/>
+  <text x="1075" y="520" font-size="8" fill="#107C10" font-weight="600" transform="rotate(90,1075,520)">flywheel → back to ingestion</text>
+
+  <!-- ═══ BOTTOM LABEL ═══ -->
+  <text x="570" y="875" font-size="12" text-anchor="middle" font-weight="600" fill="#242424">
+    <tspan fill="#107C10">M365</tspan> signals + surfaces · <tspan fill="#5B5FC7">OpenClaw</tspan> runtime + intelligence · <tspan fill="#E87400">Mesh</tspan> needs both
+  </text>
+  <text x="570" y="895" font-size="10" text-anchor="middle" fill="#999">Security: SecretRef credentials · 27-binary exec allowlist · session isolation · prompt injection defense · weekly smoke tests</text>
+
+  <!-- ═══ ARROW MARKERS ═══ -->
+  <defs>
+    <marker id="arrowGray" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M 0 0 L 10 5 L 0 10 z" fill="#999"/></marker>
+    <marker id="arrowPurple" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M 0 0 L 10 5 L 0 10 z" fill="#5B5FC7"/></marker>
+    <marker id="arrowGreen" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M 0 0 L 10 5 L 0 10 z" fill="#107C10"/></marker>
+    <marker id="arrowOrange" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M 0 0 L 10 5 L 0 10 z" fill="#E87400"/></marker>
+  </defs>
+
+</svg>
 </div>
 
 </body>

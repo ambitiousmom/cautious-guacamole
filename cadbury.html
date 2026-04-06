@@ -168,11 +168,10 @@
   .data-table td { padding: 4px 6px; color: #616161; border-bottom: 1px solid #f5f5f5; }
 
   /* Conflict visual */
-  .conflict-row { display: flex; gap: 8px; margin: 8px 0; }
-  .conflict-col { flex: 1; background: #f9f9f9; border-radius: 8px; padding: 8px 10px; text-align: center; }
-  .conflict-label { font-size: 9px; font-weight: 700; color: #999; text-transform: uppercase; letter-spacing: 0.04em; }
-  .conflict-val { font-size: 20px; font-weight: 700; margin: 2px 0; }
-  .conflict-sub { font-size: 10px; color: #999; }
+  .conflict-row { display: flex; gap: 10px; margin: 10px 0 4px; }
+  .conflict-col { flex: 1; background: #f0f0f0; border-radius: 12px; padding: 14px 10px; text-align: center; }
+  .conflict-val { font-size: 28px; font-weight: 700; margin: 0; letter-spacing: -0.02em; }
+  .conflict-sub { font-size: 11px; color: #999; margin-top: 2px; }
 
   /* History card */
   .history-card {
@@ -380,19 +379,17 @@
             <p>✓ Responses posted. Comments resolved.</p>
             <p>While pulling data, I noticed something:</p>
           </div>
-          <div class="card" style="border-color: #E87400;">
-            <div class="card-header" style="color: #E87400;">⚠ Conflict</div>
-            <div class="card-body">
-              Sarah assumes <strong>+15%</strong> mktg growth. Your budget cuts mktg <strong>−5%</strong>.
-              <div class="conflict-row">
-                <div class="conflict-col">
-                  <div class="conflict-val" style="color: #107C10;">+15%</div>
-                  <div class="conflict-sub">Sarah's model</div>
-                </div>
-                <div class="conflict-col">
-                  <div class="conflict-val" style="color: #D13438;">−5%</div>
-                  <div class="conflict-sub">Your budget</div>
-                </div>
+          <div style="background: linear-gradient(135deg, #FFF7ED, #FEF3C7); border-radius: 16px; padding: 16px; margin: 6px 0; box-shadow: 0 2px 8px rgba(0,0,0,0.04);">
+            <div style="font-size: 12px; font-weight: 600; color: #E87400; margin-bottom: 8px;">⚠ Budget Discrepancy</div>
+            <div style="font-size: 13px; color: #616161; line-height: 1.6;">Sarah assumes <strong style="color:#242424;">+15%</strong> marketing growth. Your budget cuts marketing <strong style="color:#242424;">−5%</strong>.</div>
+            <div class="conflict-row">
+              <div class="conflict-col">
+                <div class="conflict-val" style="color: #107C10;">+15%</div>
+                <div class="conflict-sub">Sarah's model</div>
+              </div>
+              <div class="conflict-col">
+                <div class="conflict-val" style="color: #D13438;">−5%</div>
+                <div class="conflict-sub">Your budget</div>
               </div>
             </div>
           </div>

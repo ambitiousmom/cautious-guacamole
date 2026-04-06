@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Architecture Grammar — OpenClaw × M365</title>
+<title>Why OpenClaw — Architecture Grammar</title>
 <style>
   *,*::before,*::after { margin:0; padding:0; box-sizing:border-box; }
   body {
@@ -11,349 +11,341 @@
     background: #F5F1EC; color: #242424;
   }
 
-  header { text-align:center; padding:48px 24px 16px; }
+  header { text-align:center; padding:48px 24px 8px; }
   header h1 { font-size:32px; font-weight:700; letter-spacing:-0.02em; }
-  header .sub { font-size:14px; color:#616161; margin-top:8px; line-height:1.6; }
-  header .meta { font-size:11px; color:#999; margin-top:8px; }
-  header .reading { font-size:12px; color:#999; margin-top:12px; font-style:italic; }
+  header .sub { font-size:15px; color:#616161; margin-top:8px; line-height:1.7; max-width:640px; margin-left:auto; margin-right:auto; }
+  header .meta { font-size:11px; color:#999; margin-top:12px; }
 
-  /* ═══ Main pipeline ═══ */
-  .pipeline { max-width:1100px; margin:32px auto 0; padding:0 24px; }
-  .pipe-label { font-size:11px; font-weight:700; color:#999; text-transform:uppercase; letter-spacing:0.08em; margin-bottom:24px; text-align:center; }
+  .wrap { max-width:900px; margin:0 auto; padding:0 24px; }
 
-  /* A single row: stage + arrow + stage */
-  .row { display:flex; align-items:stretch; margin-bottom:0; position:relative; }
-
-  /* ═══ Stage ═══ */
-  .stage {
-    flex:1; background:white; border-radius:14px; border:1px solid #E5DFD9;
-    padding:20px 24px; position:relative;
-    transition: box-shadow 0.2s;
-  }
-  .stage:hover { box-shadow: 0 2px 12px rgba(0,0,0,0.06); }
-  .stage-num {
-    position:absolute; top:-12px; left:20px;
-    width:24px; height:24px; border-radius:50%;
-    display:flex; align-items:center; justify-content:center;
-    font-size:11px; font-weight:700; color:white;
-  }
-  .stage-icon { font-size:22px; margin-bottom:8px; }
-  .stage-title { font-size:15px; font-weight:700; margin-bottom:4px; }
-  .stage-owner { font-size:10px; font-weight:700; color:#999; text-transform:uppercase; letter-spacing:0.04em; margin-bottom:8px; }
-  .stage-body { font-size:12px; color:#616161; line-height:1.65; }
-  .stage-body strong { color:#242424; }
-  .stage-items { margin-top:8px; }
-  .stage-item { font-size:11px; color:#616161; padding:3px 0; display:flex; align-items:flex-start; gap:6px; line-height:1.5; }
-  .stage-item .si-dot { width:6px; height:6px; border-radius:50%; flex-shrink:0; margin-top:5px; }
-  .stage-tag { display:inline-block; font-size:8px; font-weight:700; padding:2px 6px; border-radius:4px; margin-top:8px; letter-spacing:0.03em; }
-  .tag-exists { background:#DFF6DD; color:#107C10; }
-  .tag-new { background:#E8EBFA; color:#5B5FC7; }
-  .tag-gap { background:#FEF3C7; color:#E87400; }
-
-  /* ═══ Arrow connector ═══ */
-  .arrow {
-    width:80px; flex-shrink:0; display:flex; flex-direction:column;
-    align-items:center; justify-content:center; position:relative;
-  }
-  .arrow-line { width:100%; height:2px; background:#B0A8A0; position:relative; }
-  .arrow-line::after {
-    content:''; position:absolute; right:-1px; top:-4px;
-    border:5px solid transparent; border-left:6px solid #B0A8A0;
-  }
-  .arrow-label {
-    font-size:10px; font-weight:600; color:#616161; text-align:center;
-    margin-bottom:6px; line-height:1.4;
-  }
-
-  /* ═══ Vertical arrow ═══ */
-  .v-arrow {
-    display:flex; flex-direction:column; align-items:center;
-    padding:12px 0; position:relative;
-  }
-  .v-arrow-line { width:2px; height:32px; background:#B0A8A0; position:relative; }
-  .v-arrow-line.down::after {
-    content:''; position:absolute; bottom:-1px; left:-4px;
-    border:5px solid transparent; border-top:6px solid #B0A8A0;
-  }
-  .v-arrow-line.up::after {
-    content:''; position:absolute; top:-1px; left:-4px;
-    border:5px solid transparent; border-bottom:6px solid #107C10;
-  }
-  .v-arrow-line.up { background:#107C10; }
-  .v-arrow-label { font-size:10px; font-weight:600; color:#616161; margin:4px 0; text-align:center; }
-
-  /* ═══ Lateral flow ═══ */
-  .lateral-section {
-    max-width:1100px; margin:0 auto; padding:0 24px;
-  }
-  .lateral-header {
-    font-size:11px; font-weight:700; color:#E87400; text-transform:uppercase;
-    letter-spacing:0.08em; text-align:center; margin:32px 0 16px;
-    display:flex; align-items:center; gap:12px; justify-content:center;
-  }
-  .lateral-header .lh-line { flex:1; max-width:120px; height:1px; background:#E87400; opacity:0.3; }
-  .lateral-row { display:flex; align-items:stretch; gap:0; }
-  .lateral-arrow {
-    width:60px; flex-shrink:0; display:flex; flex-direction:column;
-    align-items:center; justify-content:center;
-  }
-  .lateral-arrow .arrow-line { background:#E87400; }
-  .lateral-arrow .arrow-line::after { border-left-color:#E87400; }
-  .lateral-arrow .arrow-line.reverse::after { border-left:none; border-right:6px solid #E87400; left:-1px; right:auto; }
-  .lateral-arrow .arrow-label { color:#E87400; }
-
-  /* ═══ Loop section ═══ */
-  .loop-section {
-    max-width:1100px; margin:24px auto 0; padding:0 24px 80px;
-  }
-  .loop-header {
-    font-size:11px; font-weight:700; color:#107C10; text-transform:uppercase;
-    letter-spacing:0.08em; text-align:center; margin:32px 0 16px;
-    display:flex; align-items:center; gap:12px; justify-content:center;
-  }
-  .loop-header .lh-line { flex:1; max-width:120px; height:1px; background:#107C10; opacity:0.3; }
-  .loop-row { display:flex; align-items:stretch; gap:0; }
-  .loop-arrow {
-    width:80px; flex-shrink:0; display:flex; flex-direction:column;
-    align-items:center; justify-content:center;
-  }
-  .loop-arrow .arrow-line { background:#107C10; }
-  .loop-arrow .arrow-line::after { border-left-color:#107C10; }
-  .loop-arrow .arrow-line.reverse { }
-  .loop-arrow .arrow-line.reverse::after { border-left:none; border-right:6px solid #107C10; left:-1px; right:auto; }
-
-  /* ═══ Section dividers ═══ */
-  .section-title {
-    max-width:1100px; margin:40px auto 0; padding:0 24px;
+  /* ═══ The Before/After ═══ */
+  .compare { margin:40px 0 48px; }
+  .compare-header {
     font-size:11px; font-weight:700; color:#999; text-transform:uppercase;
-    letter-spacing:0.08em;
-    display:flex; align-items:center; gap:12px;
+    letter-spacing:0.08em; text-align:center; margin-bottom:20px;
   }
-  .section-title .st-line { flex:1; height:1px; background:#D9D3CC; }
+  .compare-row { display:flex; gap:16px; }
+  .compare-col { flex:1; border-radius:14px; padding:24px; }
+  .compare-col.before { background:#F0F0F0; border:1px solid #E0E0E0; }
+  .compare-col.after { background:white; border:2px solid #5B5FC7; }
+  .compare-col h3 { font-size:16px; font-weight:700; margin-bottom:12px; display:flex; align-items:center; gap:8px; }
+  .compare-col h3 .badge { font-size:9px; font-weight:700; padding:2px 8px; border-radius:4px; }
+  .compare-col.before h3 .badge { background:#E0E0E0; color:#999; }
+  .compare-col.after h3 .badge { background:#E8EBFA; color:#5B5FC7; }
+  .compare-item { font-size:13px; color:#616161; padding:6px 0; line-height:1.55; display:flex; gap:8px; }
+  .compare-item + .compare-item { border-top:1px solid rgba(0,0,0,0.04); }
+  .compare-item .ci-icon { flex-shrink:0; font-size:14px; margin-top:1px; }
+  .compare-item strong { color:#242424; }
+  .compare-col.before .compare-item { color:#999; }
+  .compare-col.before .compare-item strong { color:#999; }
 
-  /* ═══ Responsive ═══ */
-  @media (max-width:900px) {
-    .row, .lateral-row, .loop-row { flex-direction:column; align-items:center; }
-    .arrow, .lateral-arrow, .loop-arrow { width:auto; transform:rotate(90deg); padding:8px 0; }
-    .stage { max-width:400px; }
+  /* Arrow between */
+  .compare-arrow {
+    display:flex; align-items:center; justify-content:center;
+    font-size:28px; color:#5B5FC7; flex-shrink:0; width:40px;
+  }
+
+  /* ═══ Section ═══ */
+  .section { margin:0 0 48px; }
+  .section-header {
+    font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:0.08em;
+    color:#999; margin-bottom:20px; display:flex; align-items:center; gap:12px;
+  }
+  .section-header .sh-line { flex:1; height:1px; background:#D9D3CC; }
+
+  /* ═══ Capability Row ═══ */
+  .cap-row { display:flex; gap:0; align-items:stretch; margin-bottom:24px; }
+  .cap-left {
+    width:200px; flex-shrink:0; padding:16px 20px;
+    background:#F0F0F0; border-radius:12px 0 0 12px;
+    border:1px solid #E0E0E0; border-right:none;
+    display:flex; flex-direction:column; justify-content:center;
+  }
+  .cap-left-label { font-size:10px; font-weight:700; color:#999; text-transform:uppercase; letter-spacing:0.04em; margin-bottom:4px; }
+  .cap-left-val { font-size:13px; color:#999; line-height:1.5; }
+  .cap-arrow {
+    width:48px; flex-shrink:0; display:flex; flex-direction:column;
+    align-items:center; justify-content:center;
+    background:linear-gradient(90deg, #F0F0F0, white);
+    border-top:1px solid #E0E0E0; border-bottom:1px solid #E5DFD9;
+  }
+  .cap-arrow-icon { font-size:20px; color:#5B5FC7; }
+  .cap-arrow-label { font-size:8px; font-weight:700; color:#5B5FC7; text-transform:uppercase; letter-spacing:0.04em; }
+  .cap-right {
+    flex:1; padding:16px 20px;
+    background:white; border-radius:0 12px 12px 0;
+    border:1px solid #E5DFD9; border-left:none;
+  }
+  .cap-right-title { font-size:14px; font-weight:700; color:#242424; margin-bottom:4px; display:flex; align-items:center; gap:6px; }
+  .cap-right-desc { font-size:12px; color:#616161; line-height:1.65; }
+  .cap-right-desc strong { color:#242424; }
+  .cap-right-example { font-size:11px; color:#5B5FC7; margin-top:6px; font-style:italic; }
+  .cap-tag { display:inline-block; font-size:8px; font-weight:700; padding:2px 6px; border-radius:4px; }
+  .cap-tag.new { background:#E8EBFA; color:#5B5FC7; }
+  .cap-tag.gap { background:#FEF3C7; color:#E87400; }
+
+  /* ═══ Mesh Diagram ═══ */
+  .mesh-diagram {
+    display:flex; align-items:center; gap:0; margin:24px 0;
+    background:white; border-radius:14px; border:2px solid #E87400;
+    padding:20px 24px; position:relative;
+  }
+  .mesh-diagram::before {
+    content:'THE GAP'; position:absolute; top:-10px; left:20px;
+    font-size:9px; font-weight:700; color:#E87400; background:#FEF3C7;
+    padding:2px 8px; border-radius:4px; letter-spacing:0.04em;
+  }
+  .mesh-person {
+    flex:1; text-align:center; padding:12px;
+  }
+  .mesh-person-icon { font-size:24px; margin-bottom:4px; }
+  .mesh-person-name { font-size:12px; font-weight:700; }
+  .mesh-person-data { font-size:10px; color:#999; margin-top:2px; }
+  .mesh-center {
+    flex:1.5; text-align:center; padding:12px 16px;
+    background:#FFF7ED; border-radius:10px; margin:0 8px;
+  }
+  .mesh-center-title { font-size:12px; font-weight:700; color:#E87400; margin-bottom:8px; }
+  .mesh-signal { font-size:10px; color:#616161; padding:3px 0; }
+  .mesh-signal strong { color:#E87400; }
+  .mesh-arr { font-size:20px; color:#E87400; flex-shrink:0; }
+
+  /* ═══ Loop Diagram ═══ */
+  .loop-strip { display:flex; gap:0; align-items:stretch; margin:24px 0; }
+  .loop-step {
+    flex:1; padding:14px 16px; background:white;
+    border:1px solid #E5DFD9; text-align:center;
+  }
+  .loop-step:first-child { border-radius:10px 0 0 10px; }
+  .loop-step:last-child { border-radius:0 10px 10px 0; }
+  .loop-step-icon { font-size:20px; margin-bottom:4px; }
+  .loop-step-title { font-size:11px; font-weight:700; color:#242424; margin-bottom:2px; }
+  .loop-step-desc { font-size:10px; color:#999; line-height:1.4; }
+  .loop-arr { display:flex; align-items:center; font-size:18px; color:#107C10; flex-shrink:0; }
+
+  /* ═══ Bottom line ═══ */
+  .bottom-line {
+    text-align:center; padding:32px 24px 64px; font-size:14px; color:#616161; line-height:1.7;
+  }
+  .bottom-line strong { color:#242424; }
+
+  @media (max-width:768px) {
+    .compare-row, .cap-row, .mesh-diagram, .loop-strip { flex-direction:column; }
+    .cap-left { width:auto; border-radius:12px 12px 0 0; border-right:1px solid #E0E0E0; border-bottom:none; }
+    .cap-right { border-radius:0 0 12px 12px; border-left:1px solid #E5DFD9; border-top:none; }
+    .cap-arrow { height:32px; width:auto; background:linear-gradient(180deg, #F0F0F0, white); border:none; }
+    .compare-arrow { transform:rotate(90deg); width:auto; height:32px; }
   }
 </style>
 </head>
 <body>
 
 <header>
-  <h1>Architecture Grammar</h1>
-  <div class="sub">OpenClaw × M365 — from signals to surface to learning loop</div>
+  <h1>Why OpenClaw</h1>
+  <div class="sub">M365 has the signals. Copilot has the model. What's missing is the <strong>runtime</strong> — the persistent, autonomous, learning layer that turns a chatbot into an agent.</div>
   <div class="meta">Hema Sridharan · April 2026</div>
-  <div class="reading">Read left → right, top → down. Follow the arrows.</div>
 </header>
 
-<!-- ═══════════════════════════════════════════ -->
-<!-- ROW 1: THE MAIN PIPELINE (left to right)   -->
-<!-- ═══════════════════════════════════════════ -->
+<div class="wrap">
 
-<div class="section-title"><span class="st-line"></span>Main Pipeline<span class="st-line"></span></div>
-
-<div class="pipeline">
-  <div class="row">
-
-    <!-- STAGE 1: Signals -->
-    <div class="stage">
-      <div class="stage-num" style="background:#107C10;">1</div>
-      <div class="stage-icon">📡</div>
-      <div class="stage-title">M365 Signals</div>
-      <div class="stage-owner">Graph · Exchange · Teams · SharePoint</div>
-      <div class="stage-body">
-        Raw organizational data — the inputs the agent system consumes.
-      </div>
-      <div class="stage-items">
-        <div class="stage-item"><span class="si-dot" style="background:#107C10;"></span>Mail + Calendar — inbox, invites, conflicts</div>
-        <div class="stage-item"><span class="si-dot" style="background:#107C10;"></span>Documents — comments, changes, co-authoring</div>
-        <div class="stage-item"><span class="si-dot" style="background:#107C10;"></span>Org Graph — people, skills, reporting chains</div>
-        <div class="stage-item"><span class="si-dot" style="background:#107C10;"></span>Meeting Intelligence — transcripts, commitments</div>
-        <div class="stage-item"><span class="si-dot" style="background:#5B5FC7;"></span><strong>Cross-User Inference — contradictions, institutional memory</strong></div>
-      </div>
-      <span class="stage-tag tag-exists">MOSTLY EXISTS</span>
-      <span class="stage-tag tag-new" style="margin-left:4px;">INFERENCE = NEW</span>
+<!-- ═══ THE SHIFT ═══ -->
+<div class="compare">
+  <div class="compare-header">The Shift</div>
+  <div class="compare-row">
+    <div class="compare-col before">
+      <h3>Copilot Today <span class="badge">REQUEST → RESPONSE</span></h3>
+      <div class="compare-item"><span class="ci-icon">💬</span>You ask, it answers, it forgets</div>
+      <div class="compare-item"><span class="ci-icon">⏸</span>Waits for you to open it</div>
+      <div class="compare-item"><span class="ci-icon">🔄</span>Every session starts from zero</div>
+      <div class="compare-item"><span class="ci-icon">🙋</span>One model does everything</div>
+      <div class="compare-item"><span class="ci-icon">👤</span>Sees only your data, only when asked</div>
+      <div class="compare-item"><span class="ci-icon">📝</span>Can't act — only suggests</div>
     </div>
-
-    <!-- Arrow 1→2 -->
-    <div class="arrow">
-      <div class="arrow-label">raw signals<br>enriched with<br>memory</div>
-      <div class="arrow-line"></div>
+    <div class="compare-arrow">→</div>
+    <div class="compare-col after">
+      <h3>With OpenClaw <span class="badge">PERSISTENT RUNTIME</span></h3>
+      <div class="compare-item"><span class="ci-icon">🧠</span><strong>Remembers</strong> — lessons, patterns, your corrections</div>
+      <div class="compare-item"><span class="ci-icon">☀️</span><strong>Proactive</strong> — works overnight, briefs you at 6:45 AM</div>
+      <div class="compare-item"><span class="ci-icon">📝</span><strong>Learns</strong> — saves mistakes, won't repeat them</div>
+      <div class="compare-item"><span class="ci-icon">🧩</span><strong>Dispatches</strong> — specialist agents, each session-isolated</div>
+      <div class="compare-item"><span class="ci-icon">🔗</span><strong>Coordinates</strong> — agents talk to agents across people</div>
+      <div class="compare-item"><span class="ci-icon">⚡</span><strong>Acts</strong> — within scoped trust boundaries</div>
     </div>
-
-    <!-- STAGE 2: Orchestrator -->
-    <div class="stage">
-      <div class="stage-num" style="background:#5B5FC7;">2</div>
-      <div class="stage-icon">🎯</div>
-      <div class="stage-title">Cadbury (Orchestrator)</div>
-      <div class="stage-owner">OpenClaw Runtime</div>
-      <div class="stage-body">
-        The brain. Receives enriched signals, decides what to act on, dispatches to specialist agents, compiles the briefing.
-      </div>
-      <div class="stage-items">
-        <div class="stage-item"><span class="si-dot" style="background:#5B5FC7;"></span>Routes to <strong>Mail Agent</strong> (session-isolated, no raw bodies)</div>
-        <div class="stage-item"><span class="si-dot" style="background:#5B5FC7;"></span>Routes to <strong>Calendar Agent</strong> (coordinates via mesh)</div>
-        <div class="stage-item"><span class="si-dot" style="background:#5B5FC7;"></span>Routes to <strong>Doc Agent</strong> (reads, drafts, proposes changes)</div>
-        <div class="stage-item"><span class="si-dot" style="background:#5B5FC7;"></span>Consults <strong>Memory</strong> before every decision</div>
-      </div>
-      <span class="stage-tag tag-new">NEW · THIS IS OPENCLAW</span>
-    </div>
-
-    <!-- Arrow 2→3 -->
-    <div class="arrow">
-      <div class="arrow-label">proposed<br>actions</div>
-      <div class="arrow-line"></div>
-    </div>
-
-    <!-- STAGE 3: Trust Gate -->
-    <div class="stage" style="border-color:#E87400; flex:0.6;">
-      <div class="stage-num" style="background:#E87400;">3</div>
-      <div class="stage-icon">⏸</div>
-      <div class="stage-title">Trust Gate</div>
-      <div class="stage-owner">Per-Action Autonomy</div>
-      <div class="stage-body">
-        Every action passes through. The gate decides: auto, review, or locked.
-      </div>
-      <div class="stage-items">
-        <div class="stage-item"><span class="si-dot" style="background:#107C10;"></span><strong>Auto</strong> — newsletters, confirmations, data refresh</div>
-        <div class="stage-item"><span class="si-dot" style="background:#E87400;"></span><strong>Review</strong> — peer replies (graduated over time)</div>
-        <div class="stage-item"><span class="si-dot" style="background:#D13438;"></span><strong>Locked</strong> — exec email, financial, moving others' meetings</div>
-      </div>
-      <span class="stage-tag tag-new">NEW</span>
-    </div>
-
-    <!-- Arrow 3→4 -->
-    <div class="arrow">
-      <div class="arrow-label">approved<br>actions only</div>
-      <div class="arrow-line"></div>
-    </div>
-
-    <!-- STAGE 4: Surface -->
-    <div class="stage">
-      <div class="stage-num" style="background:#D13438;">4</div>
-      <div class="stage-icon">💬</div>
-      <div class="stage-title">Surface (Teams / Mobile)</div>
-      <div class="stage-owner">Where the Human Lives</div>
-      <div class="stage-body">
-        1:1 chat with Cadbury. Approval gates show as gen UI cards. Notifications for async. Mobile-first.
-      </div>
-      <div class="stage-items">
-        <div class="stage-item"><span class="si-dot" style="background:#5B5FC7;"></span>Teams Chat — primary, gen UI cards</div>
-        <div class="stage-item"><span class="si-dot" style="background:#5B5FC7;"></span>Mobile — notifications, lock-screen approvals</div>
-        <div class="stage-item"><span class="si-dot" style="background:#E87400;"></span><strong>In-App Agent Mode</strong> — Word/Excel/PPT pane</div>
-        <div class="stage-item"><span class="si-dot" style="background:#E87400;"></span><strong>Voice</strong> — same agent, spoken</div>
-      </div>
-      <span class="stage-tag tag-new">NEW</span>
-      <span class="stage-tag tag-gap" style="margin-left:4px;">IN-APP = GAP</span>
-    </div>
-
   </div>
 </div>
 
-<!-- ═══════════════════════════════════════════ -->
-<!-- ROW 2: AGENT MESH (lateral)                -->
-<!-- ═══════════════════════════════════════════ -->
+<!-- ═══ WHAT OPENCLAW ADDS ═══ -->
+<div class="section">
+  <div class="section-header"><span class="sh-line"></span>What OpenClaw Adds to M365<span class="sh-line"></span></div>
 
-<div class="lateral-section">
-  <div class="lateral-header"><span class="lh-line"></span>Agent Mesh — Lateral Coordination<span class="lh-line"></span></div>
-
-  <div class="lateral-row">
-
-    <div class="stage" style="border-color:#E87400; border-style:dashed; flex:1;">
-      <div class="stage-icon">👤</div>
-      <div class="stage-title">Sarah's Agent</div>
-      <div class="stage-body">Sarah's own orchestrator. Reads her docs, her email. Knows her projections assume +15% growth.</div>
-      <span class="stage-tag tag-gap">DOESN'T EXIST YET</span>
+  <!-- 1. Persistent Memory -->
+  <div class="cap-row">
+    <div class="cap-left">
+      <div class="cap-left-label">Copilot Today</div>
+      <div class="cap-left-val">Session resets. No memory of yesterday's conversation.</div>
     </div>
-
-    <div class="lateral-arrow">
-      <div class="arrow-label" style="color:#E87400;">conflict<br>signal</div>
-      <div class="arrow-line"></div>
-    </div>
-
-    <div class="stage" style="border-color:#E87400; border-width:2px; flex:1.4;">
-      <div class="stage-icon">🔗</div>
-      <div class="stage-title">Platform Mesh Layer</div>
-      <div class="stage-owner" style="color:#E87400;">THE GAP</div>
-      <div class="stage-body">
-        <strong>Signals only — never raw data.</strong> Each agent sees only its person's data. The mesh passes structured signals between them.
+    <div class="cap-arrow"><div class="cap-arrow-icon">→</div><div class="cap-arrow-label">OpenClaw</div></div>
+    <div class="cap-right">
+      <div class="cap-right-title">Persistent Memory <span class="cap-tag new">NEW</span></div>
+      <div class="cap-right-desc">
+        Multi-layered: <strong>daily logs</strong> (what happened), <strong>curated lessons</strong> (LESSONS.md — corrections and preferences), <strong>vector search</strong> (semantic recall), <strong>personality</strong> (SOUL.md). Dream cycles at 4 AM consolidate short-term into long-term.
       </div>
-      <div class="stage-items">
-        <div class="stage-item"><span class="si-dot" style="background:#E87400;"></span>"Assumption mismatch between two docs"</div>
-        <div class="stage-item"><span class="si-dot" style="background:#E87400;"></span>"Meeting ended — action items per person"</div>
-        <div class="stage-item"><span class="si-dot" style="background:#E87400;"></span>"Mia confirms Wed 10 AM free"</div>
-        <div class="stage-item"><span class="si-dot" style="background:#E87400;"></span>"Dependency chain: Omar → Sarah → Raj"</div>
+      <div class="cap-right-example">"Omar has told me MULTIPLE TIMES not to CC legal on draft-stage emails."</div>
+    </div>
+  </div>
+
+  <!-- 2. Proactive Execution -->
+  <div class="cap-row">
+    <div class="cap-left">
+      <div class="cap-left-label">Copilot Today</div>
+      <div class="cap-left-val">Idle until you ask. No background processing.</div>
+    </div>
+    <div class="cap-arrow"><div class="cap-arrow-icon">→</div><div class="cap-arrow-label">OpenClaw</div></div>
+    <div class="cap-right">
+      <div class="cap-right-title">Proactive Execution <span class="cap-tag new">NEW</span></div>
+      <div class="cap-right-desc">
+        Runs <strong>continuously</strong>. Ingests M365 signals overnight. Triages 47 emails. Refreshes data. Detects calendar conflicts. Compiles a morning briefing — all <strong>before you wake up</strong>.
       </div>
-      <span class="stage-tag tag-gap">GAP · THIS IS THE MULTIPLIER</span>
+      <div class="cap-right-example">6:45 AM: "Good morning, Hema. Here's what your agents handled overnight."</div>
     </div>
+  </div>
 
-    <div class="lateral-arrow">
-      <div class="arrow-label" style="color:#E87400;">availability<br>+ deps</div>
-      <div class="arrow-line"></div>
+  <!-- 3. Autonomous Action -->
+  <div class="cap-row">
+    <div class="cap-left">
+      <div class="cap-left-label">Copilot Today</div>
+      <div class="cap-left-val">Can draft, but can't send. Suggests, never acts.</div>
     </div>
-
-    <div class="stage" style="border-color:#E87400; border-style:dashed; flex:1;">
-      <div class="stage-icon">👤</div>
-      <div class="stage-title">Mia's Agent</div>
-      <div class="stage-body">Mia's agent. Calendar queries go through mesh: "Wed 10 AM?" → "Confirmed free."</div>
-      <span class="stage-tag tag-gap">DOESN'T EXIST YET</span>
+    <div class="cap-arrow"><div class="cap-arrow-icon">→</div><div class="cap-arrow-label">OpenClaw</div></div>
+    <div class="cap-right">
+      <div class="cap-right-title">Scoped Autonomy + Trust Gates <span class="cap-tag new">NEW</span></div>
+      <div class="cap-right-desc">
+        <strong>Acts within boundaries.</strong> Newsletters → auto-archived. Peer reply → draft shown, graduated. Exec email → always locked. Each action category has its <strong>own trust level, earned independently</strong>. Not a global dial.
+      </div>
+      <div class="cap-right-example">44 emails handled automatically. 2 paused for your approval. You made 2 decisions.</div>
     </div>
+  </div>
 
+  <!-- 4. Multi-Agent Orchestration -->
+  <div class="cap-row">
+    <div class="cap-left">
+      <div class="cap-left-label">Copilot Today</div>
+      <div class="cap-left-val">One model, one session, does everything itself.</div>
+    </div>
+    <div class="cap-arrow"><div class="cap-arrow-icon">→</div><div class="cap-arrow-label">OpenClaw</div></div>
+    <div class="cap-right">
+      <div class="cap-right-title">Multi-Agent Orchestration <span class="cap-tag new">NEW</span></div>
+      <div class="cap-right-desc">
+        <strong>Cadbury</strong> (orchestrator) dispatches to specialists: <strong>Mail Agent</strong> (session-isolated, never returns raw bodies), <strong>Calendar Agent</strong> (coordinates via mesh), <strong>Document Agent</strong> (reads, drafts, proposes tracked changes). Each agent has <strong>scoped permissions and isolated sessions</strong>.
+      </div>
+      <div class="cap-right-example">Mail Agent can't read your calendar. Doc Agent can't send email. Security by design.</div>
+    </div>
+  </div>
+
+  <!-- 5. Agent Mesh -->
+  <div class="cap-row">
+    <div class="cap-left">
+      <div class="cap-left-label">Copilot Today</div>
+      <div class="cap-left-val">Sees only your data. No concept of "Sarah's agent."</div>
+    </div>
+    <div class="cap-arrow"><div class="cap-arrow-icon">→</div><div class="cap-arrow-label">OpenClaw</div></div>
+    <div class="cap-right">
+      <div class="cap-right-title">Agent Mesh <span class="cap-tag gap">GAP · THE MULTIPLIER</span></div>
+      <div class="cap-right-desc">
+        Cross-person coordination through <strong>signal exchange</strong> — never raw data. Post-meeting action distribution. Calendar coordination. Dependency chains. <strong>Each agent sees only its person's data; the mesh passes structured signals.</strong>
+      </div>
+      <div class="cap-right-example">"Mia's agent confirms Wed 10 AM." · "Sarah's projections assume +15%." · "If Omar slips, Sarah's agent adjusts."</div>
+    </div>
+  </div>
+
+  <!-- 6. Learning Loop -->
+  <div class="cap-row">
+    <div class="cap-left">
+      <div class="cap-left-label">Copilot Today</div>
+      <div class="cap-left-val">Can't learn from your corrections. Same mistakes.</div>
+    </div>
+    <div class="cap-arrow"><div class="cap-arrow-icon">→</div><div class="cap-arrow-label">OpenClaw</div></div>
+    <div class="cap-right">
+      <div class="cap-right-title">Learning Loop <span class="cap-tag new">NEW</span></div>
+      <div class="cap-right-desc">
+        User corrects → lesson saved → behavior changes. <strong>LESSONS.md grows with every interaction.</strong> The agent improves because you use it, not because someone fine-tuned a model.
+      </div>
+      <div class="cap-right-example">"📝 Lesson: frame exec discrepancies as alignment, not conflicts. Won't repeat."</div>
+    </div>
   </div>
 </div>
 
-<!-- ═══════════════════════════════════════════ -->
-<!-- ROW 3: LEARNING LOOP (right to left)       -->
-<!-- ═══════════════════════════════════════════ -->
+<!-- ═══ MESH DETAIL ═══ -->
+<div class="section">
+  <div class="section-header"><span class="sh-line"></span>Agent Mesh — Cross-Person Data Flow<span class="sh-line"></span></div>
 
-<div class="loop-section">
-  <div class="loop-header"><span class="lh-line"></span>Learning Loop — Flows Back Up<span class="lh-line"></span></div>
-
-  <div class="loop-row">
-
-    <div class="stage" style="flex:1;">
-      <div class="stage-icon">👤</div>
-      <div class="stage-title">User Corrects</div>
-      <div class="stage-body">"Don't call it a conflict — frame as alignment." The human teaches the agent through daily use.</div>
+  <div class="mesh-diagram">
+    <div class="mesh-person">
+      <div class="mesh-person-icon">👤</div>
+      <div class="mesh-person-name">Hema's Cadbury</div>
+      <div class="mesh-person-data">Reads Hema's docs, email, calendar</div>
+      <div class="mesh-person-data" style="color:#D13438;">Never sees Sarah's raw data</div>
     </div>
-
-    <div class="loop-arrow">
-      <div class="arrow-label" style="color:#107C10;">correction</div>
-      <div class="arrow-line"></div>
+    <div class="mesh-arr">⇄</div>
+    <div class="mesh-center">
+      <div class="mesh-center-title">Signals Only</div>
+      <div class="mesh-signal"><strong>Conflict:</strong> "Assumption mismatch between two docs"</div>
+      <div class="mesh-signal"><strong>Coordination:</strong> "Meeting ended — items per person"</div>
+      <div class="mesh-signal"><strong>Availability:</strong> "Mia confirms Wed 10 AM"</div>
+      <div class="mesh-signal"><strong>Dependency:</strong> "Omar → Sarah → Raj chain"</div>
     </div>
-
-    <div class="stage" style="flex:1;">
-      <div class="stage-icon">📝</div>
-      <div class="stage-title">Lesson Saved</div>
-      <div class="stage-body"><strong>LESSONS.md updated.</strong> "Don't flag exec discrepancies as conflicts — frame as alignment." Won't repeat.</div>
+    <div class="mesh-arr">⇄</div>
+    <div class="mesh-person">
+      <div class="mesh-person-icon">👤</div>
+      <div class="mesh-person-name">Sarah's Cadbury</div>
+      <div class="mesh-person-data">Reads Sarah's docs, email, calendar</div>
+      <div class="mesh-person-data" style="color:#D13438;">Never sees Hema's raw data</div>
     </div>
-
-    <div class="loop-arrow">
-      <div class="arrow-label" style="color:#107C10;">enriches</div>
-      <div class="arrow-line"></div>
-    </div>
-
-    <div class="stage" style="flex:1;">
-      <div class="stage-icon">🧠</div>
-      <div class="stage-title">Memory</div>
-      <div class="stage-body">Multi-layered: daily logs, curated lessons, vector search, personality. <strong>Dream cycles at 4 AM</strong> consolidate short-term → long-term.</div>
-      <span class="stage-tag tag-new">NEW</span>
-    </div>
-
-    <div class="loop-arrow">
-      <div class="arrow-label" style="color:#107C10;">informs next<br>decision</div>
-      <div class="arrow-line"></div>
-    </div>
-
-    <div class="stage" style="flex:1;">
-      <div class="stage-icon">🎯</div>
-      <div class="stage-title">Orchestrator</div>
-      <div class="stage-body">Next time Cadbury encounters a similar situation, it checks lessons first. Different behavior. <strong>The flywheel.</strong></div>
-    </div>
-
   </div>
+</div>
+
+<!-- ═══ LEARNING LOOP ═══ -->
+<div class="section">
+  <div class="section-header"><span class="sh-line"></span>The Flywheel<span class="sh-line"></span></div>
+
+  <div class="loop-strip">
+    <div class="loop-step">
+      <div class="loop-step-icon">👤</div>
+      <div class="loop-step-title">User Corrects</div>
+      <div class="loop-step-desc">"Frame as alignment, not conflict"</div>
+    </div>
+    <div class="loop-arr">→</div>
+    <div class="loop-step">
+      <div class="loop-step-icon">📝</div>
+      <div class="loop-step-title">Lesson Saved</div>
+      <div class="loop-step-desc">LESSONS.md updated</div>
+    </div>
+    <div class="loop-arr">→</div>
+    <div class="loop-step">
+      <div class="loop-step-icon">🧠</div>
+      <div class="loop-step-title">Memory Enriched</div>
+      <div class="loop-step-desc">Dream cycle consolidates at 4 AM</div>
+    </div>
+    <div class="loop-arr">→</div>
+    <div class="loop-step">
+      <div class="loop-step-icon">🎯</div>
+      <div class="loop-step-title">Better Next Time</div>
+      <div class="loop-step-desc">Cadbury checks lessons before acting</div>
+    </div>
+    <div class="loop-arr">→</div>
+    <div class="loop-step">
+      <div class="loop-step-icon">📈</div>
+      <div class="loop-step-title">Trust Earned</div>
+      <div class="loop-step-desc">Gate removed after consistent quality</div>
+    </div>
+  </div>
+</div>
+
+</div><!-- /wrap -->
+
+<div class="bottom-line">
+  M365 has the signals. The model has the intelligence.<br>
+  <strong>OpenClaw is the runtime that makes it an agent.</strong>
 </div>
 
 </body>

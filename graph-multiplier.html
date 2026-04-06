@@ -3,124 +3,240 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>The Graph Multiplier</title>
+<title>The Graph Multiplier — OpenClaw × M365</title>
 <style>
-  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
-  body {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
-    background: #0f172a; color: #e2e8f0;
-    line-height: 1.65; -webkit-font-smoothing: antialiased;
-    height: 100vh; overflow: hidden;
+  :root {
+    --bg: #FFFFFF;
+    --surface: #F5F1EC;
+    --surface-hover: #EDE8E3;
+    --border: #D9D3CC;
+    --border-light: #E5DFD9;
+    --text: #242424;
+    --text-secondary: #616161;
+    --text-muted: #999;
+    --brand-blue: #0F6CBD;
+    --copilot-purple: #7B57FF;
+    --green: #107C10;
+    --green-light: #DFF6DD;
+    --red: #D13438;
+    --yellow: #FFB900;
+    --orange: #E87400;
+    --blue-light: #EBF3FC;
+    --purple-light: #F3EEFF;
+    --font: 'Segoe UI Variable Display', 'Segoe UI Variable', 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
+    --sidebar-w: 240px;
   }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: var(--font); background: var(--bg); color: var(--text); height: 100vh; overflow: hidden; }
 
   /* ═══ Landing ═══ */
   .landing {
     position: fixed; inset: 0; z-index: 200;
-    background: #0f172a;
+    background: var(--surface); color: var(--text);
     display: flex; flex-direction: column; align-items: center; justify-content: center;
-    transition: opacity 0.6s, visibility 0.6s;
+    transition: opacity 0.5s ease, visibility 0.5s;
   }
   .landing.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
-  .landing h1 {
-    font-size: 44px; font-weight: 700; letter-spacing: -0.04em;
-    color: #f8fafc; margin-bottom: 16px;
+  .landing h1 { font-size: 36px; font-weight: 700; color: var(--text); margin-bottom: 20px; }
+  .landing-card {
+    background: white; border: 1px solid var(--border-light); border-radius: 16px;
+    padding: 28px 32px; max-width: 480px; width: 90%; margin-bottom: 28px;
+    text-align: left; box-shadow: 0 2px 12px rgba(0,0,0,0.04);
   }
-  .landing .premise {
-    max-width: 560px; text-align: center; font-size: 18px; line-height: 1.8;
-    color: #64748b; margin-bottom: 48px;
-  }
-  .landing .premise strong { color: #94a3b8; }
-  .landing .enter-btn {
-    padding: 14px 52px; border-radius: 8px; border: 1px solid #334155;
-    background: transparent; color: #94a3b8; font-size: 15px; font-family: inherit;
-    cursor: pointer; transition: all 0.25s; letter-spacing: 0.01em;
-  }
-  .landing .enter-btn:hover { border-color: #5eead4; color: #e2e8f0; }
+  .landing-card .lc-intro { font-size: 13px; color: var(--text-secondary); line-height: 1.6; margin-bottom: 16px; text-align: center; }
+  .landing-card .lc-item { font-size: 12px; line-height: 1.8; color: var(--text-secondary); }
+  .landing-card .lc-item strong { color: var(--text); }
+  .start-btn { padding: 14px 44px; border-radius: 28px; border: none; background: var(--text); color: white; font-size: 15px; font-weight: 600; cursor: pointer; box-shadow: 0 4px 16px rgba(0,0,0,0.15); transition: transform 0.2s; }
+  .start-btn:hover { transform: translateY(-2px); }
+  .landing .meta { margin-top: 32px; font-size: 11px; color: var(--text-muted); }
 
-  /* ═══ Main container ═══ */
-  .container {
-    height: 100vh; overflow-y: auto; scroll-behavior: smooth;
-    scroll-snap-type: y mandatory;
-  }
+  /* ═══ Shell ═══ */
+  .shell { display: flex; height: 100vh; width: 100vw; }
 
-  /* ═══ Moment (full viewport) ═══ */
-  .moment {
-    min-height: 100vh; display: flex; align-items: center; justify-content: center;
-    padding: 60px 40px;
-    scroll-snap-align: start;
-    opacity: 0; transition: opacity 0.8s ease;
+  /* ═══ Sidebar ═══ */
+  .sidebar {
+    width: var(--sidebar-w); min-width: var(--sidebar-w); height: 100%;
+    background: var(--surface); border-right: 1px solid var(--border-light);
+    display: flex; flex-direction: column; overflow-y: auto; font-size: 14px;
   }
-  .moment.visible { opacity: 1; }
-  .moment-inner { max-width: 680px; width: 100%; }
+  .sb-top { padding: 10px 14px; display: flex; align-items: center; gap: 8px; }
+  .sb-brand { font-size: 20px; font-weight: 700; color: var(--text); letter-spacing: -0.5px; }
+  .sb-icons { margin-left: auto; display: flex; gap: 4px; }
+  .sb-icon-btn { width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; border: none; background: none; cursor: pointer; color: var(--text-muted); font-size: 14px; border-radius: 4px; }
+  .sb-divider { height: 1px; background: var(--border-light); margin: 8px 14px; }
+  .sb-nav { padding: 2px 8px; }
+  .sb-nav-item { display: flex; align-items: center; gap: 10px; padding: 7px 10px; border-radius: 6px; font-size: 14px; color: var(--text); cursor: pointer; }
+  .sb-nav-item:hover { background: var(--surface-hover); }
+  .sb-nav-icon { width: 20px; display: inline-flex; align-items: center; justify-content: center; }
+  .sb-section-label { font-size: 13px; font-weight: 700; color: var(--text); padding: 10px 18px 6px; letter-spacing: -0.2px; }
+  .sb-item { display: flex; flex-direction: column; padding: 5px 10px; margin: 0 8px; border-radius: 6px; cursor: pointer; }
+  .sb-item:hover { background: var(--surface-hover); }
+  .sb-item.active { background: var(--surface-hover); font-weight: 500; }
+  .sb-item-row { display: flex; align-items: center; gap: 6px; }
+  .sb-item-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+  .sb-item-name { font-size: 14px; color: var(--text); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; flex: 1; }
+  .sb-item-sub { font-size: 11px; color: var(--text-muted); padding-left: 14px; }
+  .sb-bottom { margin-top: auto; padding: 10px 14px; border-top: 1px solid var(--border-light); }
 
-  /* ═══ Source label ═══ */
-  .source-label {
-    font-size: 11px; font-weight: 700; letter-spacing: 0.12em;
-    text-transform: uppercase; margin-bottom: 24px;
-    display: flex; align-items: center; gap: 8px;
+  /* ═══ Main ═══ */
+  .main { flex: 1; display: flex; flex-direction: column; min-width: 0; overflow: hidden; }
+  .topbar {
+    height: 44px; display: flex; align-items: center; padding: 0 20px;
+    border-bottom: 1px solid var(--border-light); background: var(--bg); flex-shrink: 0; position: relative;
   }
-  .source-dot { width: 8px; height: 8px; border-radius: 50%; }
+  .topbar-title { font-size: 14px; font-weight: 500; color: var(--text); }
+  .topbar-center { position: absolute; left: 50%; transform: translateX(-50%); display: flex; border: 1px solid var(--border); border-radius: 20px; overflow: hidden; }
+  .topbar-center button { padding: 4px 16px; border: none; background: transparent; font-size: 12px; font-family: var(--font); cursor: pointer; color: var(--text-secondary); }
+  .topbar-center button.active { background: var(--blue-light); color: var(--brand-blue); font-weight: 600; }
+  .topbar-right { margin-left: auto; display: flex; align-items: center; gap: 10px; }
 
-  /* ═══ The agent says ═══ */
-  .agent-says {
-    font-size: 26px; font-weight: 500; letter-spacing: -0.02em;
-    line-height: 1.55; color: #f1f5f9; margin-bottom: 32px;
-  }
-  .agent-says .highlight {
-    background: linear-gradient(135deg, rgba(94, 234, 212, 0.15), rgba(56, 189, 248, 0.15));
-    padding: 0 6px; border-radius: 4px; color: #5eead4;
-  }
+  /* ═══ Chat area ═══ */
+  .chat-area { flex: 1; overflow-y: auto; display: flex; flex-direction: column; align-items: center; scroll-behavior: smooth; }
+  .chat-inner { width: 100%; max-width: 660px; padding: 20px 20px 40px; display: flex; flex-direction: column; gap: 6px; }
 
-  /* ═══ Why card ═══ */
-  .why-card {
-    border: 1px solid #1e293b; border-radius: 12px;
-    overflow: hidden; margin-bottom: 24px;
-  }
-  .why-header {
-    padding: 12px 20px; background: #1e293b;
-    font-size: 11px; font-weight: 700; letter-spacing: 0.08em;
-    text-transform: uppercase; color: #475569;
-  }
-  .why-body { padding: 20px; }
-  .signal {
-    display: flex; align-items: flex-start; gap: 12px;
-    padding: 8px 0; font-size: 14px; color: #94a3b8; line-height: 1.6;
-  }
-  .signal + .signal { border-top: 1px solid rgba(30, 41, 59, 0.6); padding-top: 12px; }
-  .signal-icon { font-size: 16px; flex-shrink: 0; margin-top: 2px; }
-  .signal strong { color: #cbd5e1; }
+  /* ═══ Copilot message ═══ */
+  .cp-msg { margin: 12px 0; }
+  .cp-label { display: flex; align-items: center; gap: 6px; margin-bottom: 8px; font-size: 13px; font-weight: 600; color: var(--text); }
+  .cp-body { font-size: 14px; line-height: 1.75; color: var(--text); }
+  .cp-body p { margin-bottom: 10px; }
+  .cp-body p:last-child { margin-bottom: 0; }
 
-  /* ═══ Impossible badge ═══ */
-  .impossible {
-    display: inline-flex; align-items: center; gap: 6px;
-    font-size: 12px; color: #475569; border: 1px solid #1e293b;
-    padding: 6px 14px; border-radius: 6px;
-  }
-  .impossible-x { color: #ef4444; font-weight: 700; }
+  /* ═══ User bubble ═══ */
+  .user-msg { display: flex; justify-content: flex-end; margin: 8px 0 16px; }
+  .user-bubble { background: var(--surface); color: var(--text); padding: 10px 18px; border-radius: 18px 18px 4px 18px; font-size: 14px; max-width: 420px; line-height: 1.5; }
 
-  /* ═══ Divider ═══ */
-  .scroll-hint {
-    text-align: center; font-size: 12px; color: #334155;
-    padding-top: 24px; letter-spacing: 0.04em;
-  }
+  /* ═══ Thinking dots ═══ */
+  .thinking { display: flex; align-items: center; gap: 4px; padding: 8px 0; margin: 4px 0; }
+  .thinking-label { font-size: 13px; font-weight: 600; color: var(--text-muted); margin-right: 6px; }
+  .thinking-dot { width: 5px; height: 5px; background: var(--text-muted); border-radius: 50%; animation: pulse 1.4s ease infinite; }
+  .thinking-dot:nth-child(3) { animation-delay: 0.2s; }
+  .thinking-dot:nth-child(4) { animation-delay: 0.4s; }
+  @keyframes pulse { 0%,80%,100%{opacity:0.25;transform:scale(0.8)} 40%{opacity:1;transform:scale(1.1)} }
 
-  /* ═══ Final moment ═══ */
-  .moment.final .agent-says {
-    font-size: 22px; font-weight: 400; color: #94a3b8;
-    line-height: 1.8;
+  /* ═══ Graph Insight Card ═══ */
+  .graph-card {
+    background: #F9F9F9; border-radius: 16px; overflow: hidden; margin: 8px 0;
+    border-left: 3px solid var(--copilot-purple);
   }
-  .moment.final .agent-says strong { color: #f1f5f9; font-weight: 600; }
-  .moment.final .punchline {
-    font-size: 32px; font-weight: 700; color: #f8fafc;
-    letter-spacing: -0.03em; margin-top: 32px; line-height: 1.4;
+  .graph-card-header {
+    padding: 10px 16px; display: flex; align-items: center; gap: 8px;
+    border-bottom: 1px solid rgba(0,0,0,0.04);
   }
+  .graph-badge { font-size: 10px; font-weight: 700; color: var(--copilot-purple); background: var(--purple-light); padding: 2px 8px; border-radius: 10px; letter-spacing: 0.02em; }
+  .graph-card-title { font-size: 12px; font-weight: 600; color: var(--text); }
+  .graph-card-body { padding: 14px 16px; font-size: 13px; color: var(--text-secondary); line-height: 1.7; }
+  .graph-card-body strong { color: var(--text); }
 
-  /* ═══ Responsive ═══ */
-  @media (max-width: 640px) {
-    .moment { padding: 40px 20px; }
-    .agent-says { font-size: 20px; }
-    .moment.final .punchline { font-size: 24px; }
+  /* Signal rows */
+  .signal-row { display: flex; align-items: flex-start; gap: 8px; padding: 6px 0; font-size: 12px; color: var(--text-muted); line-height: 1.5; }
+  .signal-row + .signal-row { border-top: 1px solid rgba(0,0,0,0.03); padding-top: 8px; }
+  .signal-icon { flex-shrink: 0; font-size: 14px; margin-top: 1px; }
+  .signal-row strong { color: var(--text-secondary); }
+
+  /* ═══ Person card ═══ */
+  .person-card {
+    display: flex; align-items: center; gap: 12px;
+    background: white; border: 1px solid var(--border-light); border-radius: 12px;
+    padding: 12px 16px; margin: 8px 0;
   }
+  .person-avatar {
+    width: 36px; height: 36px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 13px; color: white; font-weight: 600; flex-shrink: 0;
+  }
+  .person-name { font-size: 13px; font-weight: 600; color: var(--text); }
+  .person-detail { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
+  .person-match { font-size: 11px; color: var(--green); font-weight: 600; margin-top: 2px; }
+
+  /* ═══ Conflict card ═══ */
+  .conflict-card {
+    background: #FFF7ED; border-radius: 12px; border-left: 3px solid var(--orange);
+    padding: 14px 16px; margin: 8px 0;
+  }
+  .conflict-header { font-size: 12px; font-weight: 700; color: var(--orange); margin-bottom: 8px; display: flex; align-items: center; gap: 6px; }
+  .conflict-body { font-size: 13px; color: var(--text-secondary); line-height: 1.65; }
+  .conflict-body strong { color: var(--text); }
+  .conflict-data { display: flex; gap: 16px; margin-top: 10px; padding-top: 10px; border-top: 1px solid rgba(0,0,0,0.06); }
+  .conflict-col { flex: 1; }
+  .conflict-col-label { font-size: 10px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 4px; }
+  .conflict-col-val { font-size: 16px; font-weight: 700; }
+
+  /* ═══ History card ═══ */
+  .history-card {
+    background: #FFFBEB; border-radius: 12px; border-left: 3px solid var(--yellow);
+    padding: 14px 16px; margin: 8px 0;
+  }
+  .history-header { font-size: 12px; font-weight: 700; color: #92400E; margin-bottom: 6px; display: flex; align-items: center; gap: 6px; }
+  .history-body { font-size: 13px; color: var(--text-secondary); line-height: 1.65; }
+  .history-body strong { color: var(--text); }
+  .history-source { font-size: 11px; color: var(--text-muted); margin-top: 8px; padding-top: 8px; border-top: 1px solid rgba(0,0,0,0.06); }
+
+  /* ═══ Meeting aftermath card ═══ */
+  .aftermath-card { background: #F9F9F9; border-radius: 12px; margin: 8px 0; overflow: hidden; }
+  .aftermath-header { padding: 10px 16px; font-size: 11px; font-weight: 600; color: var(--text-muted); border-bottom: 1px solid rgba(0,0,0,0.04); text-transform: uppercase; letter-spacing: 0.03em; }
+  .aftermath-row {
+    display: flex; align-items: flex-start; gap: 10px; padding: 10px 16px;
+    font-size: 12px; color: var(--text-secondary); line-height: 1.5;
+  }
+  .aftermath-row + .aftermath-row { border-top: 1px solid rgba(0,0,0,0.04); }
+  .aftermath-avatar {
+    width: 24px; height: 24px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 9px; color: white; font-weight: 600; flex-shrink: 0;
+  }
+  .aftermath-check { color: var(--green); font-size: 11px; flex-shrink: 0; margin-top: 2px; }
+
+  /* ═══ App icons ═══ */
+  .app-icon { width: 16px; height: 16px; border-radius: 3px; display: inline-flex; align-items: center; justify-content: center; font-size: 8px; color: white; font-weight: 700; vertical-align: -2px; flex-shrink: 0; }
+  .app-icon.w { background: #185ABD; }
+  .app-icon.x { background: #107C10; }
+  .app-icon.t { background: #6264A7; }
+
+  /* ═══ Annotation tags ═══ */
+  .ptag {
+    display: inline-block; font-size: 11px; color: #B4A0FF;
+    background: rgba(30,30,30,0.92); border-radius: 10px; padding: 8px 16px;
+    margin-top: 10px; line-height: 1.5; backdrop-filter: blur(6px);
+  }
+  .ptag-title { font-weight: 700; font-size: 10px; text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 3px; display: block; color: rgba(255,255,255,0.5); }
+  .chat-inner .ptag { position: fixed; right: 20px; z-index: 50; margin: 0; max-width: 220px; }
+
+  /* ═══ Action buttons ═══ */
+  .action-row { display: flex; align-items: center; gap: 8px; margin-top: 12px; }
+  .btn { padding: 8px 20px; border-radius: 20px; font-size: 13px; font-weight: 600; cursor: pointer; font-family: var(--font); border: none; transition: background 0.15s; }
+  .btn.pri { background: #EDE8E3; color: var(--text); border: 1px solid var(--border); }
+  .btn.pri:hover { background: #E5DFD9; }
+  .btn.sec { background: white; color: var(--text-secondary); border: 1px solid var(--border-light); }
+  .btn.sec:hover { background: #F9F9F9; }
+  .btn.used { opacity: 0.35; pointer-events: none; }
+
+  /* ═══ Bottom composer ═══ */
+  .task-composer { padding: 8px 16%; border-top: 1px solid var(--border-light); background: var(--bg); flex-shrink: 0; }
+  .composer { width: 100%; border: 1px solid var(--border); border-radius: 16px; background: white; overflow: hidden; }
+  .composer input { width: 100%; border: none; outline: none; font-size: 14px; font-family: var(--font); background: transparent; color: var(--text); padding: 14px 18px 6px; }
+  .composer input::placeholder { color: var(--text-muted); }
+  .composer-bottom { display: flex; align-items: center; justify-content: space-between; padding: 4px 14px 10px; }
+  .composer-left { display: flex; align-items: center; gap: 10px; }
+  .composer-plus { font-size: 18px; color: var(--text-muted); cursor: pointer; }
+  .composer-model { font-size: 11px; color: var(--text-muted); background: var(--surface); border: 1px solid var(--border-light); border-radius: 10px; padding: 2px 8px; }
+  .task-disclaimer { text-align: center; font-size: 11px; color: var(--text-muted); margin-top: 4px; }
+
+  /* ═══ End overlay ═══ */
+  .end-overlay {
+    position: fixed; inset: 0; z-index: 300;
+    background: rgba(0,0,0,0.65); display: flex; align-items: center; justify-content: center;
+    opacity: 0; visibility: hidden; transition: opacity 0.5s, visibility 0.5s;
+  }
+  .end-overlay.visible { opacity: 1; visibility: visible; }
+  .end-card { background: white; border-radius: 16px; padding: 40px 48px; max-width: 480px; text-align: center; box-shadow: 0 8px 40px rgba(0,0,0,0.3); }
+  .end-card h2 { font-size: 22px; margin-bottom: 8px; }
+  .end-card .end-sub { font-size: 14px; color: var(--text-secondary); line-height: 1.65; margin-bottom: 8px; }
+  .end-card .end-muted { font-size: 12px; color: var(--text-muted); line-height: 1.6; }
+
+  /* ═══ Animations ═══ */
+  .hidden { display: none !important; }
+  @keyframes fadeInUp { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:translateY(0); } }
+  .anim-in { animation: fadeInUp 0.4s ease both; }
 </style>
 </head>
 <body>
@@ -128,181 +244,380 @@
 <!-- ═══ LANDING ═══ -->
 <div class="landing" id="landing">
   <h1>The Graph Multiplier</h1>
-  <div class="premise">
-    Lobster is powerful because it has access to <strong>one person's life</strong>.<br><br>
-    What happens when the agent has access to the <strong>entire organization</strong>?
+  <div class="landing-card">
+    <div class="lc-intro">Lobster is powerful because it sees one person's life. What happens when the agent sees the <strong>entire organization</strong>?</div>
+    <div class="lc-item"><strong>Cross-person knowledge</strong> — connects people who don't know they need each other</div>
+    <div class="lc-item"><strong>Cross-document intelligence</strong> — catches contradictions across teams</div>
+    <div class="lc-item"><strong>Institutional memory</strong> — surfaces decisions from people who left</div>
+    <div class="lc-item"><strong>Agent-to-agent</strong> — meetings end, agents coordinate the aftermath</div>
   </div>
-  <button class="enter-btn" onclick="enter()">Show me →</button>
+  <button class="start-btn" onclick="startDemo()">Enter prototype →</button>
+  <div class="meta">Prototype by Hema Sridharan</div>
 </div>
 
-<!-- ═══ MOMENTS ═══ -->
-<div class="container" id="container">
+<!-- ═══ SHELL ═══ -->
+<div class="shell">
 
-  <!-- MOMENT 1: Cross-person knowledge -->
-  <div class="moment" id="m1">
-    <div class="moment-inner">
-      <div class="source-label">
-        <span class="source-dot" style="background: #5eead4;"></span>
-        <span style="color: #5eead4;">Moment 1</span>
-        <span style="color: #334155;">·</span>
-        <span style="color: #475569;">Cross-person knowledge</span>
+  <!-- ═══ SIDEBAR ═══ -->
+  <div class="sidebar">
+    <div class="sb-top">
+      <span class="sb-brand">Copilot</span>
+      <div class="sb-icons">
+        <button class="sb-icon-btn"><svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="#444" stroke-width="1.5"><rect x="2" y="3" width="16" height="14" rx="2"/><line x1="12" y1="3" x2="12" y2="17"/></svg></button>
       </div>
-      <div class="agent-says">
-        Your budget proposal mentions needing 2 ML Engineers by Q3. <span class="highlight">Priya Sharma's team in Seattle has 3 ML Engineers finishing Project Helios in 2 weeks.</span> Want me to set up an intro?
-      </div>
-      <div class="why-card">
-        <div class="why-header">Signals Only Graph Knows</div>
-        <div class="why-body">
-          <div class="signal"><span class="signal-icon">👥</span><span><strong>Org chart traversal:</strong> Priya's team is in the same division, different org. Not in your contacts.</span></div>
-          <div class="signal"><span class="signal-icon">📊</span><span><strong>Project timeline:</strong> Helios end date is in Planner. Bench availability is inferred, not published.</span></div>
-          <div class="signal"><span class="signal-icon">📄</span><span><strong>Skills matching:</strong> Your budget doc says "ML Engineers with production ranking experience." Their team profiles match.</span></div>
+    </div>
+    <div class="sb-nav">
+      <div class="sb-nav-item"><span class="sb-nav-icon"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="#444" stroke-width="1.3"><path d="M12 2.5L3.5 11l-1 2.5 2.5-1L13.5 4"/><path d="M10 4.5l1.5 1.5"/></svg></span> New chat</div>
+      <div class="sb-nav-item"><span class="sb-nav-icon"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="#444" stroke-width="1.3"><rect x="2" y="2" width="12" height="12" rx="2"/><path d="M5 8l2 2 4-4"/></svg></span> Tasks <span style="font-size:8px; color:var(--text-muted); border:1px solid var(--border); padding:0 4px; border-radius:3px; margin-left:2px; font-weight:600;">PREVIEW</span></div>
+    </div>
+    <div class="sb-divider"></div>
+    <div class="sb-section-label">Tasks</div>
+    <div class="sb-item active">
+      <div class="sb-item-row"><span class="sb-item-dot" style="background:var(--red);"></span><span class="sb-item-name">Q3 Budget Finalization</span></div>
+      <span class="sb-item-sub">4 graph signals</span>
+    </div>
+    <div class="sb-item">
+      <div class="sb-item-row"><span class="sb-item-dot" style="background:var(--orange);"></span><span class="sb-item-name">Engineering Hiring</span></div>
+      <span class="sb-item-sub">Cross-team match found</span>
+    </div>
+    <div class="sb-item">
+      <div class="sb-item-row"><span class="sb-item-dot" style="background:var(--brand-blue);"></span><span class="sb-item-name">Product Strategy H2</span></div>
+      <span class="sb-item-sub">Deck due Friday</span>
+    </div>
+    <div class="sb-item">
+      <div class="sb-item-row"><span class="sb-item-dot" style="background:transparent;"></span><span class="sb-item-name">Weekly Exec Metrics</span></div>
+      <span class="sb-item-sub">Auto-generating Mon 8 AM</span>
+    </div>
+    <div class="sb-divider"></div>
+    <div class="sb-section-label">Conversations</div>
+    <div class="sb-item"><div class="sb-item-row"><span class="sb-item-name">Q3 Budget Review</span></div></div>
+    <div class="sb-item"><div class="sb-item-row"><span class="sb-item-name">Hiring Pipeline</span></div></div>
+    <div class="sb-bottom">
+      <div style="display:flex; align-items:center; gap:10px; padding:2px 0;">
+        <div style="width:28px; height:28px; border-radius:50%; background:linear-gradient(135deg, #E89B35, #D4782F); display:flex; align-items:center; justify-content:center; font-size:11px; color:white; font-weight:600;">OS</div>
+        <div>
+          <div style="font-size:13px; font-weight:600;">Omar Shahine</div>
+          <div style="font-size:10px; color:var(--text-muted);">M365 Copilot (Premium)</div>
         </div>
       </div>
-      <div class="impossible">
-        <span class="impossible-x">✕</span>
-        Impossible with a personal agent. No access to org graph, team rosters, or cross-team project data.
-      </div>
-      <div class="scroll-hint">scroll ↓</div>
     </div>
   </div>
 
-  <!-- MOMENT 2: Agent-to-agent -->
-  <div class="moment" id="m2">
-    <div class="moment-inner">
-      <div class="source-label">
-        <span class="source-dot" style="background: #818cf8;"></span>
-        <span style="color: #818cf8;">Moment 2</span>
-        <span style="color: #334155;">·</span>
-        <span style="color: #475569;">Agent-to-agent collaboration</span>
+  <!-- ═══ MAIN ═══ -->
+  <div class="main">
+    <div class="topbar">
+      <span class="topbar-title">Q3 Budget Finalization</span>
+      <div class="topbar-center">
+        <button class="active">Work</button>
+        <button>Web</button>
       </div>
-      <div class="agent-says">
-        Your 2 PM was a 5-person meeting. <span class="highlight">Each person's agent coordinated after the meeting ended.</span> Action items distributed. No one took notes.
+      <div class="topbar-right">
+        <span style="font-size:12px; color:var(--text-secondary); border:1px solid var(--border); padding:3px 10px; border-radius:6px;">Auto ▾</span>
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M10 2L4 5v4c0 4.5 2.6 8.1 6 9 3.4-.9 6-4.5 6-9V5L10 2z" fill="#107C10" stroke="#107C10" stroke-width="0.5"/><path d="M7.5 10l2 2 3.5-4" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
       </div>
-      <div class="why-card">
-        <div class="why-header">What happened after the meeting</div>
-        <div class="why-body">
-          <div class="signal"><span class="signal-icon">🎯</span><span><strong>Your agent:</strong> "Omar committed to revising the budget by Friday. Added to his task queue. Pulled latest actuals."</span></div>
-          <div class="signal"><span class="signal-icon">📋</span><span><strong>Sarah's agent:</strong> "Sarah asked for the marketing rationale. Added follow-up to her review queue for Thursday."</span></div>
-          <div class="signal"><span class="signal-icon">📊</span><span><strong>Raj's agent:</strong> "Raj agreed to validate legal compliance. Agent pre-loaded the addendum for his review."</span></div>
-          <div class="signal"><span class="signal-icon">🔄</span><span><strong>Coordination:</strong> All three agents aware of the dependency chain. If Omar's revision slips, Sarah's and Raj's agents adjust automatically.</span></div>
+    </div>
+
+    <div class="chat-area" id="chatArea">
+      <div class="chat-inner" id="chatInner">
+
+        <!-- Thinking dots -->
+        <div class="thinking hidden" id="thinkDots">
+          <span class="thinking-label">✦ Copilot</span>
+          <span class="thinking-dot"></span>
+          <span class="thinking-dot"></span>
+          <span class="thinking-dot"></span>
+        </div>
+
+        <!-- ═══ BEAT 1: Briefing + Cross-person match ═══ -->
+        <div class="cp-msg hidden" id="b1">
+          <div class="cp-label">✦ Copilot</div>
+          <div class="cp-body">
+            <p><strong>Since you were last here:</strong></p>
+            <p>• <span class="app-icon w">W</span> <strong>Sarah Chen (CFO)</strong> left 2 comments on Q3_Budget_Proposal.docx</p>
+            <p>• <span class="app-icon x">X</span> Q3_Actuals.xlsx updated by Finance · 3h ago</p>
+            <p>• <span class="app-icon x">X</span> Hiring_Plan_H2.xlsx refreshed overnight</p>
+          </div>
+          <div class="cp-body" style="margin-top:14px;">
+            <p>While reviewing your budget, I noticed something across the org:</p>
+          </div>
+
+          <div class="graph-card">
+            <div class="graph-card-header">
+              <span class="graph-badge">Graph</span>
+              <span class="graph-card-title">Cross-team people match</span>
+            </div>
+            <div class="graph-card-body">
+              Your budget requests <strong>2 ML Engineers</strong> with production ranking experience. <strong>Priya Sharma's team in Seattle</strong> has 3 finishing Project Helios in 2 weeks. Skills match. Same division, different org.
+            </div>
+            <div style="padding: 0 16px 14px;">
+              <div class="person-card">
+                <div class="person-avatar" style="background: linear-gradient(135deg, #7c3aed, #6d28d9);">PS</div>
+                <div>
+                  <div class="person-name">Priya Sharma</div>
+                  <div class="person-detail">Principal Eng Manager · Seattle · ML Platform</div>
+                  <div class="person-match">3 ML Engineers available in ~2 weeks</div>
+                </div>
+              </div>
+              <div class="signal-row"><span class="signal-icon">👥</span><span><strong>Org graph:</strong> Same division, different skip-level. Not in your contacts.</span></div>
+              <div class="signal-row"><span class="signal-icon">📋</span><span><strong>Planner:</strong> Helios ships Apr 18. Team transitions to bench Apr 21.</span></div>
+              <div class="signal-row"><span class="signal-icon">📄</span><span><strong>Profile match:</strong> "production ranking systems" in 2 of 3 engineers' skill profiles.</span></div>
+            </div>
+          </div>
+          <div class="ptag" style="top:100px;"><span class="ptag-title">Graph Multiplier</span>Requires org chart, team rosters, project timelines, and skill profiles. No personal agent can see this.</div>
+          <div class="action-row">
+            <button class="btn pri" onclick="advanceBeat(this, 'Set up intro with Priya')">Set up intro</button>
+            <button class="btn sec">Remind me later</button>
+          </div>
+        </div>
+
+        <!-- ═══ BEAT 2: Cross-document conflict ═══ -->
+        <div class="cp-msg hidden" id="b2">
+          <div class="cp-label">✦ Copilot</div>
+          <div class="cp-body"><p>I also found a discrepancy before Thursday's sync:</p></div>
+
+          <div class="conflict-card">
+            <div class="conflict-header">⚠ Cross-document conflict detected</div>
+            <div class="conflict-body">
+              <strong>Sarah's Q3 Revenue Projections</strong> assume 15% marketing-driven growth. <strong>Your budget</strong> cuts marketing from 33% to 28%. The growth target requires the spend level you're cutting.
+            </div>
+            <div class="conflict-data">
+              <div class="conflict-col">
+                <div class="conflict-col-label">Sarah's projection</div>
+                <div class="conflict-col-val" style="color:var(--green);">+15%</div>
+                <div style="font-size:11px; color:var(--text-muted);">marketing-driven growth</div>
+              </div>
+              <div class="conflict-col">
+                <div class="conflict-col-label">Your budget</div>
+                <div class="conflict-col-val" style="color:var(--red);">−5%</div>
+                <div style="font-size:11px; color:var(--text-muted);">marketing allocation</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="graph-card" style="border-left-color:var(--orange);">
+            <div class="graph-card-header">
+              <span class="graph-badge" style="color:var(--orange); background:#FEF3C7;">Graph</span>
+              <span class="graph-card-title">How this was detected</span>
+            </div>
+            <div style="padding:10px 16px 14px;">
+              <div class="signal-row"><span class="signal-icon">📄</span><span><strong>Cross-user doc read:</strong> Your agent reads your docs. Sarah's reads hers. The platform spotted the conflict.</span></div>
+              <div class="signal-row"><span class="signal-icon">🔐</span><span><strong>Permission-aware:</strong> Neither agent exposes the other's data. Only the conflict signal is shared.</span></div>
+              <div class="signal-row"><span class="signal-icon">⏰</span><span><strong>Pre-meeting:</strong> Surfaced now, not during Thursday's sync.</span></div>
+            </div>
+          </div>
+          <div class="ptag" style="top:180px;"><span class="ptag-title">Graph Multiplier</span>Personal agents are blind to other people's documents. Only a platform can detect cross-user contradictions.</div>
+          <div class="action-row">
+            <button class="btn pri" onclick="advanceBeat(this, 'Draft alignment note for Sarah')">Draft alignment note</button>
+            <button class="btn sec">Show both docs</button>
+          </div>
+        </div>
+
+        <!-- ═══ BEAT 3: Institutional memory ═══ -->
+        <div class="cp-msg hidden" id="b3">
+          <div class="cp-label">✦ Copilot</div>
+          <div class="cp-body"><p>One more thing before you finalize:</p></div>
+
+          <div class="history-card">
+            <div class="history-header">📚 Institutional memory</div>
+            <div class="history-body">
+              A similar marketing reallocation was <strong>proposed in Q1 2025 by David Park</strong> and <strong>rolled back after 3 weeks</strong>. The post-mortem cited channel partner dependencies that weren't accounted for.
+              <br><br>
+              Your situation may differ — Q3 actuals show improved campaign efficiency that Q1 2025 didn't have — but the channel partner risk is worth validating.
+            </div>
+            <div class="history-source">
+              <span class="app-icon w">W</span> Q1_Marketing_Reallocation_Postmortem.docx · David Park (no longer at company) · Jan 2025
+            </div>
+          </div>
+
+          <div class="graph-card" style="border-left-color:var(--yellow);">
+            <div class="graph-card-header">
+              <span class="graph-badge" style="color:#92400E; background:#FEF3C7;">Graph</span>
+              <span class="graph-card-title">How this was found</span>
+            </div>
+            <div style="padding:10px 16px 14px;">
+              <div class="signal-row"><span class="signal-icon">🏢</span><span><strong>Org-wide search:</strong> Found a doc you've never opened, written by someone who left.</span></div>
+              <div class="signal-row"><span class="signal-icon">🔗</span><span><strong>Topic matching:</strong> Connected by content similarity. No one tagged these as related.</span></div>
+              <div class="signal-row"><span class="signal-icon">💡</span><span><strong>Non-blocking:</strong> Shows history and nuance — doesn't block you.</span></div>
+            </div>
+          </div>
+          <div class="ptag" style="top:260px;"><span class="ptag-title">Graph Multiplier</span>Org decisions live in docs owned by people you've never met. Only Graph threads these across time.</div>
+          <div class="action-row">
+            <button class="btn pri" onclick="advanceBeat(this, 'Show the post-mortem')">Show post-mortem</button>
+            <button class="btn sec">Noted, proceed</button>
+          </div>
+        </div>
+
+        <!-- ═══ BEAT 4: Agent-to-agent coordination ═══ -->
+        <div class="cp-msg hidden" id="b4">
+          <div class="cp-label">✦ Copilot</div>
+          <div class="cp-body">
+            <p>Your 2 PM budget sync just ended. <strong>5 attendees, 4 action items.</strong></p>
+            <p>Each person's agent coordinated the aftermath — no one took notes:</p>
+          </div>
+
+          <div class="aftermath-card">
+            <div class="aftermath-header">Post-meeting agent coordination</div>
+            <div class="aftermath-row">
+              <div class="aftermath-avatar" style="background:linear-gradient(135deg, #E89B35, #D4782F);">OS</div>
+              <div style="flex:1;">
+                <div style="font-weight:600; color:var(--text);">Your agent</div>
+                <div>"Omar committed to revised budget by Friday." Added to task queue. Pulled latest actuals.</div>
+              </div>
+              <span class="aftermath-check">✓</span>
+            </div>
+            <div class="aftermath-row">
+              <div class="aftermath-avatar" style="background:linear-gradient(135deg, #0078D4, #005a9e);">SC</div>
+              <div style="flex:1;">
+                <div style="font-weight:600; color:var(--text);">Sarah's agent</div>
+                <div>"Review marketing rationale by Thursday." Queued for her morning briefing.</div>
+              </div>
+              <span class="aftermath-check">✓</span>
+            </div>
+            <div class="aftermath-row">
+              <div class="aftermath-avatar" style="background:linear-gradient(135deg, #107C10, #0a5e0a);">RB</div>
+              <div style="flex:1;">
+                <div style="font-weight:600; color:var(--text);">Raj's agent</div>
+                <div>"Validate legal compliance addendum." Pre-loaded for his next available slot.</div>
+              </div>
+              <span class="aftermath-check">✓</span>
+            </div>
+            <div class="aftermath-row">
+              <div style="width:24px; height:24px; border-radius:50%; background:var(--blue-light); display:flex; align-items:center; justify-content:center; font-size:10px; color:var(--brand-blue); flex-shrink:0;">🔄</div>
+              <div style="flex:1;">
+                <div style="font-weight:600; color:var(--brand-blue);">Dependency chain</div>
+                <div>All 3 agents track the chain: Omar → Sarah → Raj. If Omar's revision slips, Sarah's and Raj's agents adjust automatically.</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="graph-card" style="border-left-color:var(--brand-blue);">
+            <div class="graph-card-header">
+              <span class="graph-badge" style="color:var(--brand-blue); background:var(--blue-light);">Graph</span>
+              <span class="graph-card-title">Agent-to-agent coordination</span>
+            </div>
+            <div style="padding:10px 16px 14px;">
+              <div class="signal-row"><span class="signal-icon">🎤</span><span><strong>Meeting transcript:</strong> <span class="app-icon t">T</span> Teams recorded the meeting. Each agent extracted its person's commitments only.</span></div>
+              <div class="signal-row"><span class="signal-icon">🔗</span><span><strong>Cross-agent sync:</strong> Agents exchanged commitments and deadlines. Each updated its own person's task queue.</span></div>
+              <div class="signal-row"><span class="signal-icon">⚡</span><span><strong>Auto-cascade:</strong> A slip by one person ripples to downstream agents and adjusts timelines.</span></div>
+            </div>
+          </div>
+          <div class="ptag" style="top:340px;"><span class="ptag-title">Graph Multiplier</span>5 personal agents on 5 Macs can't coordinate. Agent-to-agent needs a shared platform with meeting context.</div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="task-composer">
+      <div class="composer">
+        <input type="text" placeholder="" readonly>
+        <div class="composer-bottom">
+          <div class="composer-left"><span class="composer-plus">+</span><span class="composer-model">Smart (GPT-5) ▾</span></div>
+          <div style="font-size:16px; color:var(--text-muted); cursor:pointer;">🎙</div>
         </div>
       </div>
-      <div class="impossible">
-        <span class="impossible-x">✕</span>
-        Impossible with personal agents on separate Macs. No shared meeting context. No cross-agent coordination.
-      </div>
-      <div class="scroll-hint">scroll ↓</div>
+      <div class="task-disclaimer">AI-generated content may be incorrect</div>
     </div>
   </div>
+</div>
 
-  <!-- MOMENT 3: Contradiction detection -->
-  <div class="moment" id="m3">
-    <div class="moment-inner">
-      <div class="source-label">
-        <span class="source-dot" style="background: #f59e0b;"></span>
-        <span style="color: #f59e0b;">Moment 3</span>
-        <span style="color: #334155;">·</span>
-        <span style="color: #475569;">Cross-document intelligence</span>
-      </div>
-      <div class="agent-says">
-        <span class="highlight">Sarah's Q3 projections assume 15% marketing growth. Your budget cuts marketing to 28%.</span> Neither of you flagged the discrepancy. Your agents did.
-      </div>
-      <div class="why-card">
-        <div class="why-header">Signals Only Graph Knows</div>
-        <div class="why-body">
-          <div class="signal"><span class="signal-icon">📄</span><span><strong>Cross-document reading:</strong> Your agent reads YOUR docs. Sarah's agent reads HERS. The platform sees both and detects the conflict.</span></div>
-          <div class="signal"><span class="signal-icon">🔐</span><span><strong>Permission-aware:</strong> Neither agent surfaces the other person's data. Only the conflict signal is shared — with both parties.</span></div>
-          <div class="signal"><span class="signal-icon">⏰</span><span><strong>Time-critical:</strong> Surfaced before Thursday's sync, not during it. Pre-meeting prep, not a surprise in the room.</span></div>
-        </div>
-      </div>
-      <div class="impossible">
-        <span class="impossible-x">✕</span>
-        Impossible without cross-user document access with permission boundaries. Personal agents are blind to other people's work.
-      </div>
-      <div class="scroll-hint">scroll ↓</div>
+<!-- ═══ END ═══ -->
+<div class="end-overlay" id="endOverlay">
+  <div class="end-card">
+    <h2>The Graph Multiplier</h2>
+    <div class="end-sub">
+      Lobster is 10x because it deeply knows <strong>one person</strong>.<br>
+      Graph makes it <strong>100x</strong> — the agent sees across people, documents, teams, and time.
     </div>
-  </div>
-
-  <!-- MOMENT 4: Institutional memory -->
-  <div class="moment" id="m4">
-    <div class="moment-inner">
-      <div class="source-label">
-        <span class="source-dot" style="background: #ec4899;"></span>
-        <span style="color: #ec4899;">Moment 4</span>
-        <span style="color: #334155;">·</span>
-        <span style="color: #475569;">Institutional memory</span>
-      </div>
-      <div class="agent-says">
-        You're about to propose the same marketing reallocation that <span class="highlight">was tried in Q1 2025 and rolled back after 3 weeks</span>. The decision rationale is in a doc you've never opened, written by someone who left the company.
-      </div>
-      <div class="why-card">
-        <div class="why-header">Signals Only Graph Knows</div>
-        <div class="why-body">
-          <div class="signal"><span class="signal-icon">🏢</span><span><strong>Organizational memory:</strong> Searches across ALL accessible docs, not just yours. Finds the Q1 2025 post-mortem from a former employee's folder.</span></div>
-          <div class="signal"><span class="signal-icon">📎</span><span><strong>Decision threading:</strong> Links the current proposal to the prior attempt through topic matching, not explicit references. No one tagged these as related.</span></div>
-          <div class="signal"><span class="signal-icon">💡</span><span><strong>Actionable nuance:</strong> Doesn't block you. Says "here's what happened last time and why it failed — your situation may be different because..."</span></div>
-        </div>
-      </div>
-      <div class="impossible">
-        <span class="impossible-x">✕</span>
-        Impossible for a personal agent. Organizational decisions live in documents owned by people you may never have met.
-      </div>
-      <div class="scroll-hint">scroll ↓</div>
+    <div class="end-muted">
+      OpenClaw is the runtime. Graph is the nervous system.<br>The surface is where trust is earned.
     </div>
+    <div style="margin-top:20px; font-size:11px; color:var(--text-muted);">(press any key to restart)</div>
   </div>
-
-  <!-- FINAL -->
-  <div class="moment final" id="m5">
-    <div class="moment-inner">
-      <div class="agent-says">
-        Lobster is a 10x agent because it has deep access to <strong>one person's life.</strong>
-        <br><br>
-        <strong>The Graph makes it 100x</strong> — because now the agent sees across people, across documents, across teams, across time.
-        <br><br>
-        Not just what <em>you</em> know. What the <em>organization</em> knows.
-        <br><br>
-        That's the multiplier. And it only exists inside M365.
-      </div>
-      <div class="punchline">
-        OpenClaw is the runtime.<br>
-        Graph is the nervous system.<br>
-        The surface is where trust is earned.
-      </div>
-      <div style="margin-top: 48px; font-size: 12px; color: #334155;">Hema Sridharan · April 2026</div>
-    </div>
-  </div>
-
 </div>
 
 <script>
-function enter() {
+var beat = 0;
+var beats = ['b1','b2','b3','b4'];
+var animating = false;
+
+function startDemo() {
   document.getElementById('landing').classList.add('hidden');
-  setTimeout(function () {
-    document.getElementById('m1').classList.add('visible');
-  }, 400);
+  setTimeout(function () { showBeat(0); }, 600);
 }
 
-// Intersection observer for scroll-triggered visibility
-var observer = new IntersectionObserver(function (entries) {
-  entries.forEach(function (entry) {
-    if (entry.isIntersecting) {
-      entry.target.classList.add('visible');
-    }
-  });
-}, { threshold: 0.3 });
+function showBeat(index) {
+  animating = true;
+  showEl('thinkDots');
+  scrollChat();
+  setTimeout(function () {
+    hideEl('thinkDots');
+    setTimeout(function () {
+      showEl(beats[index]);
+      scrollChat();
+      animating = false;
+    }, 300);
+  }, 800);
+}
 
-document.querySelectorAll('.moment').forEach(function (m) {
-  observer.observe(m);
-});
+function advanceBeat(btn, text) {
+  if (animating) return;
+  btn.parentElement.querySelectorAll('.btn').forEach(function (b) { b.classList.add('used'); });
+  // Hide current annotation
+  var ptags = document.querySelectorAll('#' + beats[beat] + ' .ptag');
+  ptags.forEach(function (p) { p.style.opacity = '0'; p.style.transition = 'opacity 0.3s'; });
+  // Insert user bubble
+  var inner = document.getElementById('chatInner');
+  var bubble = document.createElement('div');
+  bubble.className = 'user-msg anim-in';
+  bubble.innerHTML = '<div class="user-bubble">' + text + '</div>';
+  inner.appendChild(bubble);
+  scrollChat();
 
-// Keyboard
+  beat++;
+  if (beat >= beats.length) {
+    setTimeout(function () {
+      document.getElementById('endOverlay').classList.add('visible');
+    }, 1500);
+    return;
+  }
+  setTimeout(function () { showBeat(beat); }, 600);
+}
+
+function showEl(id) {
+  var el = document.getElementById(id);
+  if (!el) return;
+  el.parentNode.appendChild(el);
+  el.classList.remove('hidden');
+  el.classList.add('anim-in');
+}
+function hideEl(id) {
+  var el = document.getElementById(id);
+  if (!el) return;
+  el.style.transition = 'opacity 0.3s'; el.style.opacity = '0';
+  setTimeout(function () { el.classList.add('hidden'); el.style.opacity = ''; el.style.transition = ''; }, 300);
+}
+function scrollChat() {
+  var c = document.getElementById('chatArea');
+  setTimeout(function () { c.scrollTo({ top: c.scrollHeight, behavior: 'smooth' }); }, 150);
+}
+
 document.addEventListener('keydown', function (e) {
-  if (e.key === 'Enter' || e.code === 'Space') {
-    var landing = document.getElementById('landing');
-    if (!landing.classList.contains('hidden')) {
-      e.preventDefault();
-      enter();
-    }
+  var endOv = document.getElementById('endOverlay');
+  if (endOv.classList.contains('visible')) {
+    endOv.classList.remove('visible');
+    document.getElementById('landing').classList.remove('hidden');
+    beats.forEach(function (id) { var el = document.getElementById(id); if (el) { el.classList.add('hidden'); el.classList.remove('anim-in'); } });
+    document.querySelectorAll('.user-msg').forEach(function (el) { el.remove(); });
+    document.querySelectorAll('.btn.used').forEach(function (b) { b.classList.remove('used'); });
+    document.querySelectorAll('.ptag').forEach(function (p) { p.style.opacity = ''; p.style.transition = ''; });
+    beat = 0; animating = false;
+    document.getElementById('chatArea').scrollTop = 0;
+    return;
+  }
+  if (e.code === 'Space' || e.code === 'ArrowRight') {
+    e.preventDefault();
+    var activeBtn = document.querySelector('#' + beats[beat] + ' .btn.pri:not(.used)');
+    if (activeBtn) activeBtn.click();
   }
 });
 </script>

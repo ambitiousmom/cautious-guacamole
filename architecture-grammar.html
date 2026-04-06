@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OpenClaw × M365 — Architecture Grammar</title>
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI Variable Display', 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
+    background: #F5F1EC; color: #242424; min-height: 100vh;
+    padding: 48px 40px 120px;
+  }
+
+  /* Header */
+  header { max-width: 900px; margin: 0 auto 48px; }
+  header h1 { font-size: 32px; font-weight: 700; letter-spacing: -0.02em; margin-bottom: 8px; }
+  header .sub { font-size: 15px; color: #616161; line-height: 1.6; max-width: 640px; }
+  header .meta { font-size: 11px; color: #999; margin-top: 12px; }
+
+  /* Layer sections */
+  .layer { max-width: 900px; margin: 0 auto 40px; }
+  .layer-header {
+    display: flex; align-items: center; gap: 12px; margin-bottom: 16px;
+    padding-bottom: 12px; border-bottom: 1px solid #D9D3CC;
+  }
+  .layer-num {
+    width: 28px; height: 28px; border-radius: 8px; display: flex; align-items: center;
+    justify-content: center; font-size: 13px; font-weight: 700; color: white; flex-shrink: 0;
+  }
+  .layer-title { font-size: 18px; font-weight: 700; color: #242424; }
+  .layer-owner { font-size: 11px; color: #999; margin-left: auto; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; }
+
+  /* Cards grid */
+  .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 14px; }
+  .card {
+    background: white; border-radius: 12px; padding: 18px 20px;
+    border: 1px solid #E5DFD9; transition: box-shadow 0.2s;
+  }
+  .card:hover { box-shadow: 0 2px 12px rgba(0,0,0,0.06); }
+  .card-name { font-size: 14px; font-weight: 700; color: #242424; margin-bottom: 6px; display: flex; align-items: center; gap: 6px; }
+  .card-desc { font-size: 12px; color: #616161; line-height: 1.6; }
+  .card-tag {
+    display: inline-block; font-size: 9px; font-weight: 700; padding: 2px 6px;
+    border-radius: 4px; letter-spacing: 0.03em; margin-top: 8px;
+  }
+  .tag-exists { background: #DFF6DD; color: #107C10; }
+  .tag-new { background: #E8EBFA; color: #5B5FC7; }
+  .tag-gap { background: #FEF3C7; color: #E87400; }
+
+  /* Flow arrows between layers */
+  .flow {
+    max-width: 900px; margin: -20px auto 20px;
+    text-align: center; font-size: 18px; color: #D9D3CC;
+    letter-spacing: 8px;
+  }
+
+  /* Data flow diagram */
+  .diagram-wrap {
+    max-width: 900px; margin: 48px auto 40px;
+    background: white; border-radius: 16px; border: 1px solid #E5DFD9;
+    padding: 32px; overflow-x: auto;
+  }
+  .diagram-title { font-size: 16px; font-weight: 700; margin-bottom: 20px; }
+  .diagram-sub { font-size: 12px; color: #616161; margin-bottom: 20px; line-height: 1.6; }
+
+  /* The actual flow diagram */
+  .flow-diagram {
+    display: flex; align-items: stretch; gap: 0; min-width: 700px;
+  }
+  .fd-col {
+    flex: 1; display: flex; flex-direction: column; align-items: center; gap: 8px;
+    position: relative;
+  }
+  .fd-label {
+    font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em;
+    color: #999; margin-bottom: 4px;
+  }
+  .fd-box {
+    background: #F9F9F9; border: 1px solid #E5DFD9; border-radius: 10px;
+    padding: 10px 14px; font-size: 11px; color: #616161; text-align: center;
+    line-height: 1.5; width: 100%;
+  }
+  .fd-box strong { color: #242424; display: block; font-size: 12px; margin-bottom: 2px; }
+  .fd-arrow {
+    width: 40px; display: flex; align-items: center; justify-content: center;
+    color: #D9D3CC; font-size: 20px; flex-shrink: 0;
+  }
+
+  /* Trust model */
+  .trust-table {
+    width: 100%; border-collapse: collapse; margin-top: 12px; font-size: 12px;
+  }
+  .trust-table th {
+    text-align: left; padding: 8px 12px; font-weight: 600; color: #999;
+    font-size: 10px; text-transform: uppercase; letter-spacing: 0.04em;
+    border-bottom: 1px solid #E5DFD9;
+  }
+  .trust-table td {
+    padding: 8px 12px; border-bottom: 1px solid #F5F5F5; color: #616161;
+  }
+  .trust-table td:first-child { font-weight: 600; color: #242424; }
+  .trust-dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; margin-right: 6px; }
+
+  /* Principles strip */
+  .principles {
+    max-width: 900px; margin: 48px auto 0;
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px;
+  }
+  .principle {
+    background: white; border-radius: 12px; padding: 16px 18px;
+    border: 1px solid #E5DFD9; border-top: 3px solid #5B5FC7;
+  }
+  .principle-title { font-size: 12px; font-weight: 700; color: #5B5FC7; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.04em; }
+  .principle-text { font-size: 12px; color: #616161; line-height: 1.55; }
+
+  /* Responsive */
+  @media (max-width: 768px) {
+    body { padding: 24px 16px 80px; }
+    .cards { grid-template-columns: 1fr; }
+    .principles { grid-template-columns: repeat(2, 1fr); }
+    .flow-diagram { min-width: 500px; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Architecture Grammar</h1>
+  <div class="sub">How a personal agent becomes an organizational platform. The layers, trust boundaries, and the pieces that don't exist yet.</div>
+  <div class="meta">Hema Sridharan · April 2026</div>
+</header>
+
+<!-- ═══ LAYER 1: Signals ═══ -->
+<div class="layer">
+  <div class="layer-header">
+    <div class="layer-num" style="background: #107C10;">1</div>
+    <span class="layer-title">Signals</span>
+    <span class="layer-owner">M365 Graph</span>
+  </div>
+  <div class="cards">
+    <div class="card">
+      <div class="card-name">📧 Mail &amp; Calendar</div>
+      <div class="card-desc">Inbox triage, meeting prep, scheduling conflicts, attendee context. The daily heartbeat.</div>
+      <span class="card-tag tag-exists">EXISTS</span>
+    </div>
+    <div class="card">
+      <div class="card-name">📄 Documents</div>
+      <div class="card-desc">Comments, tracked changes, co-authoring signals. Cross-user content reading with permission boundaries.</div>
+      <span class="card-tag tag-exists">EXISTS</span>
+    </div>
+    <div class="card">
+      <div class="card-name">👥 Org Graph</div>
+      <div class="card-desc">Reporting chains, team rosters, skill profiles, project assignments. Who knows what.</div>
+      <span class="card-tag tag-exists">EXISTS</span>
+    </div>
+    <div class="card">
+      <div class="card-name">🎤 Meeting Intelligence</div>
+      <div class="card-desc">Transcripts, action items, commitments, sentiment. What was promised and by whom.</div>
+      <span class="card-tag tag-exists">EXISTS</span>
+    </div>
+    <div class="card">
+      <div class="card-name">📋 Tasks &amp; Planner</div>
+      <div class="card-desc">Project timelines, team capacity, bench availability. When teams finish and what's next.</div>
+      <span class="card-tag tag-exists">EXISTS</span>
+    </div>
+    <div class="card">
+      <div class="card-name">🔍 Cross-User Inference</div>
+      <div class="card-desc">Contradictions between documents. Alignment gaps across teams. Institutional memory from departed employees.</div>
+      <span class="card-tag tag-new">NEW · THIS IS THE MULTIPLIER</span>
+    </div>
+  </div>
+</div>
+
+<div class="flow">↓ ↓ ↓</div>
+
+<!-- ═══ LAYER 2: Agent Runtime ═══ -->
+<div class="layer">
+  <div class="layer-header">
+    <div class="layer-num" style="background: #5B5FC7;">2</div>
+    <span class="layer-title">Agent Runtime</span>
+    <span class="layer-owner">OpenClaw</span>
+  </div>
+  <div class="cards">
+    <div class="card">
+      <div class="card-name">🎯 Orchestrator</div>
+      <div class="card-desc">The "Cadbury" — routes work to specialist agents, compiles briefings, owns the conversation with the user.</div>
+      <span class="card-tag tag-new">NEW</span>
+    </div>
+    <div class="card">
+      <div class="card-name">🧩 Specialist Agents</div>
+      <div class="card-desc">Mail, Calendar, Document, Data — each session-isolated with scoped permissions. Plugins, not monoliths.</div>
+      <span class="card-tag tag-new">NEW</span>
+    </div>
+    <div class="card">
+      <div class="card-name">🧠 Memory</div>
+      <div class="card-desc">Multi-layered: daily logs, curated lessons (LESSONS.md), vector search, personality. Dream cycles consolidate overnight.</div>
+      <span class="card-tag tag-new">NEW</span>
+    </div>
+    <div class="card">
+      <div class="card-name">🔐 Trust &amp; Autonomy</div>
+      <div class="card-desc">Per-action trust levels. Routine → auto. Exec communication → review gate. Financial → locked. Not a global dial.</div>
+      <span class="card-tag tag-new">NEW</span>
+    </div>
+    <div class="card">
+      <div class="card-name">🛡️ Security Boundary</div>
+      <div class="card-desc">Exec approvals, credential isolation (SecretRef), prompt injection defenses, plugin allowlists. Defense in depth.</div>
+      <span class="card-tag tag-new">NEW</span>
+    </div>
+    <div class="card">
+      <div class="card-name">🔗 Agent Mesh</div>
+      <div class="card-desc">Cross-person agent coordination. Mia's agent confirms free. Sarah's agent surfaces a dependency. Post-meeting cascade.</div>
+      <span class="card-tag tag-gap">GAP · DOESN'T EXIST YET</span>
+    </div>
+  </div>
+</div>
+
+<div class="flow">↓ ↓ ↓</div>
+
+<!-- ═══ LAYER 3: Surfaces ═══ -->
+<div class="layer">
+  <div class="layer-header">
+    <div class="layer-num" style="background: #E87400;">3</div>
+    <span class="layer-title">Surfaces</span>
+    <span class="layer-owner">User-Facing</span>
+  </div>
+  <div class="cards">
+    <div class="card">
+      <div class="card-name">💬 Teams Chat</div>
+      <div class="card-desc">Primary surface. 1:1 with Cadbury. Gen UI cards, approval gates, notification handoffs. Mobile-first.</div>
+      <span class="card-tag tag-new">NEW</span>
+    </div>
+    <div class="card">
+      <div class="card-name">📱 Mobile Notifications</div>
+      <div class="card-desc">Agent pings you when stuck or when approval is needed. You respond from lock screen or inline.</div>
+      <span class="card-tag tag-new">NEW</span>
+    </div>
+    <div class="card">
+      <div class="card-name">📄 In-App Agent Mode</div>
+      <div class="card-desc">Copilot pane in Word/Excel/PPT. Same agent, same memory. Document is the artifact, not the chat.</div>
+      <span class="card-tag tag-gap">GAP · HARNESS UX</span>
+    </div>
+    <div class="card">
+      <div class="card-name">🎙️ Voice</div>
+      <div class="card-desc">Same agent, same tools, spoken. Compositional voice for editing, triage from the car, hands-free approval.</div>
+      <span class="card-tag tag-gap">GAP</span>
+    </div>
+  </div>
+</div>
+
+<div class="flow">↓ ↓ ↓</div>
+
+<!-- ═══ LAYER 4: Trust Loop ═══ -->
+<div class="layer">
+  <div class="layer-header">
+    <div class="layer-num" style="background: #D13438;">4</div>
+    <span class="layer-title">Trust Loop</span>
+    <span class="layer-owner">The Product</span>
+  </div>
+  <div class="cards">
+    <div class="card">
+      <div class="card-name">📊 Show the Work</div>
+      <div class="card-desc">Chain of thought, source citations, confidence signals. User calibrates trust by seeing reasoning, not just results.</div>
+    </div>
+    <div class="card">
+      <div class="card-name">⏸ Propose, Never Impose</div>
+      <div class="card-desc">Agent drafts, user approves. Approval gates scoped by risk level. Never acts on high-stakes decisions without consent.</div>
+    </div>
+    <div class="card">
+      <div class="card-name">📝 Learn from Correction</div>
+      <div class="card-desc">User corrects tone, approach, or judgment. Agent saves the lesson. Won't repeat the mistake. LESSONS.md grows.</div>
+    </div>
+    <div class="card">
+      <div class="card-name">📈 Earn More Autonomy</div>
+      <div class="card-desc">Consistent quality in a category → approval gate removed. Trust is graduated per-skill, not globally. Ratchet, not switch.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ TRUST MODEL ═══ -->
+<div class="diagram-wrap">
+  <div class="diagram-title">Autonomy Spectrum</div>
+  <div class="diagram-sub">Not a global dial. Each action category has its own trust level, earned independently through consistent quality.</div>
+  <table class="trust-table">
+    <tr>
+      <th>Action Category</th>
+      <th>Level</th>
+      <th>Behavior</th>
+      <th>Graduation Criteria</th>
+    </tr>
+    <tr>
+      <td>Newsletter triage</td>
+      <td><span class="trust-dot" style="background:#107C10;"></span>Auto</td>
+      <td>Archive + file without asking</td>
+      <td>—</td>
+    </tr>
+    <tr>
+      <td>Meeting confirmations</td>
+      <td><span class="trust-dot" style="background:#107C10;"></span>Auto</td>
+      <td>Accept + sync to calendar</td>
+      <td>—</td>
+    </tr>
+    <tr>
+      <td>Data refresh</td>
+      <td><span class="trust-dot" style="background:#107C10;"></span>Auto</td>
+      <td>Pull latest, index, surface changes</td>
+      <td>—</td>
+    </tr>
+    <tr>
+      <td>Reply to peer</td>
+      <td><span class="trust-dot" style="background:#E87400;"></span>Review</td>
+      <td>Draft shown, user approves</td>
+      <td>10 consecutive approvals without edit</td>
+    </tr>
+    <tr>
+      <td>Reply to executive</td>
+      <td><span class="trust-dot" style="background:#D13438;"></span>Locked</td>
+      <td>Draft shown, always requires approval</td>
+      <td>Never auto — organizational policy</td>
+    </tr>
+    <tr>
+      <td>Move someone's meeting</td>
+      <td><span class="trust-dot" style="background:#D13438;"></span>Locked</td>
+      <td>Proposes, coordinates with their agent, waits for OK</td>
+      <td>Never auto — affects others</td>
+    </tr>
+    <tr>
+      <td>Financial data in emails</td>
+      <td><span class="trust-dot" style="background:#D13438;"></span>Locked</td>
+      <td>Flags for human review before sending</td>
+      <td>Never auto — compliance</td>
+    </tr>
+  </table>
+</div>
+
+<!-- ═══ DATA FLOW ═══ -->
+<div class="diagram-wrap">
+  <div class="diagram-title">Cross-Person Data Flow</div>
+  <div class="diagram-sub">The agent mesh: how agents coordinate across people without exposing private data. Permission-aware, signal-only.</div>
+  <div class="flow-diagram">
+    <div class="fd-col">
+      <div class="fd-label">Person A's Agent</div>
+      <div class="fd-box"><strong>Hema's Cadbury</strong>Budget doc: 28% mktg allocation</div>
+      <div class="fd-box"><strong>Reads</strong>Hema's docs, email, calendar</div>
+      <div class="fd-box"><strong>Never sees</strong>Sarah's raw data</div>
+    </div>
+    <div class="fd-arrow">⇄</div>
+    <div class="fd-col">
+      <div class="fd-label">Platform Layer</div>
+      <div class="fd-box" style="border-color:#5B5FC7; background:#F8F7FF;"><strong>Conflict Signal</strong>"Assumption mismatch detected between two docs"</div>
+      <div class="fd-box" style="border-color:#5B5FC7; background:#F8F7FF;"><strong>Coordination Signal</strong>"Meeting ended — action items extracted per person"</div>
+      <div class="fd-box" style="border-color:#5B5FC7; background:#F8F7FF;"><strong>Availability Signal</strong>"Mia's agent confirms Wed 10 AM free"</div>
+    </div>
+    <div class="fd-arrow">⇄</div>
+    <div class="fd-col">
+      <div class="fd-label">Person B's Agent</div>
+      <div class="fd-box"><strong>Sarah's Cadbury</strong>Revenue model: +15% mktg growth</div>
+      <div class="fd-box"><strong>Reads</strong>Sarah's docs, email, calendar</div>
+      <div class="fd-box"><strong>Never sees</strong>Hema's raw data</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ PRINCIPLES ═══ -->
+<div class="principles">
+  <div class="principle">
+    <div class="principle-title">Show the Work</div>
+    <div class="principle-text">Not just the result. Chain of thought, sources, confidence. Trust is calibrated through transparency.</div>
+  </div>
+  <div class="principle">
+    <div class="principle-title">Propose, Never Impose</div>
+    <div class="principle-text">The document is the artifact, not the chat. Every change is a proposal until the human approves.</div>
+  </div>
+  <div class="principle">
+    <div class="principle-title">Context Survives</div>
+    <div class="principle-text">Chat follows the file. Memory persists across sessions. Switching apps doesn't reset the agent.</div>
+  </div>
+  <div class="principle">
+    <div class="principle-title">Admit Uncertainty</div>
+    <div class="principle-text">When the agent is stuck, it asks. When it's wrong, it learns. The mistake is valuable. The silence is not.</div>
+  </div>
+</div>
+
+</body>
+</html>

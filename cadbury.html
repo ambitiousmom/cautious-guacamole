@@ -223,7 +223,26 @@
   }
   .ann.visible { opacity: 1; transform: none; }
   .ann-title { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: #818cf8; margin-bottom: 4px; }
-  @media (max-width: 900px) { .ann-wrap { display: none; } }
+
+  /* End label */
+  .end-label {
+    position: absolute; right: -280px; bottom: 60px; width: 260px;
+    display: flex; align-items: center; gap: 10px;
+    opacity: 0; transform: translateX(10px);
+    transition: opacity 0.5s, transform 0.5s;
+    pointer-events: none;
+  }
+  .end-label.visible { opacity: 1; transform: none; pointer-events: auto; }
+  .end-label-text { font-size: 14px; font-weight: 600; color: rgba(255,255,255,0.5); }
+  .end-label-restart {
+    width: 32px; height: 32px; border-radius: 50%; border: 1px solid rgba(255,255,255,0.2);
+    background: none; color: rgba(255,255,255,0.4); font-size: 16px;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer; transition: all 0.2s;
+  }
+  .end-label-restart:hover { border-color: rgba(255,255,255,0.5); color: rgba(255,255,255,0.7); }
+
+  @media (max-width: 900px) { .ann-wrap { display: none; } .end-label { display: none; } }
 
   /* ═══ Composer ═══ */
   .compose {
@@ -254,15 +273,6 @@
   @keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
   .anim { animation: fadeIn 0.3s ease both; }
 
-  /* ═══ End ═══ */
-  .end-overlay {
-    position: fixed; inset: 0; z-index: 300; background: rgba(0,0,0,0.7);
-    display: flex; align-items: center; justify-content: center;
-    opacity: 0; visibility: hidden; transition: opacity 0.5s, visibility 0.5s;
-  }
-  .end-overlay.visible { opacity: 1; visibility: visible; }
-  .end-text { font-size: 48px; font-weight: 300; color: white; font-style: italic; font-family: Georgia, serif; }
-  .end-sub { margin-top: 12px; font-size: 12px; color: rgba(255,255,255,0.3); }
 </style>
 </head>
 <body>
@@ -305,6 +315,12 @@
       <div class="ann-title">Agent-to-Agent</div>
       After the meeting, each person's agent picks up their action items. No one took notes. Dependencies cascade automatically.
     </div>
+  </div>
+
+  <!-- End label -->
+  <div class="end-label" id="endLabel">
+    <span class="end-label-text">End</span>
+    <button class="end-label-restart" onclick="restartDemo()" title="Restart">↺</button>
   </div>
   <!-- Status bar -->
   <div class="notch"><div class="notch-pill"></div></div>
@@ -410,7 +426,7 @@
           <div class="m-bubble" style="margin-top: 4px;">
             <p>I'm stuck — should I mention this to Sarah, and if so, how?</p>
           </div>
-          <div style="display:flex; align-items:center; gap:6px; padding:8px 0 2px; font-size:11px; color:#999; cursor:pointer;" onclick="userResolves(this)">
+          <div style="display:flex; align-items:center; gap:6px; padding:8px 0 2px; font-size:11px; color:#242424; cursor:pointer;" onclick="userResolves(this)">
             <span>🔔</span> Sent desktop notification to Hema
           </div>
         </div>
@@ -491,13 +507,7 @@
   </div>
 </div>
 
-<!-- End -->
-<div class="end-overlay" id="endOverlay">
-  <div style="text-align:center;">
-    <div style="font-size:28px; font-weight:600; color:white;">We need Cadbury.</div>
-    <div style="margin-top:16px; font-size:12px; color:rgba(255,255,255,0.4);">(press any key to restart)</div>
-  </div>
-</div>
+<!-- No overlay — end label on the side -->
 
 <script>
 var beats = ['b1','b2','b3','b4','b5'];
@@ -549,8 +559,8 @@ function runSequence() {
     function(cb) { showEl('think'); scroll(); setTimeout(cb, 1200); },
     // 12. Hide dots, show post-meeting + closing
     function(cb) { hideEl('think'); setTimeout(function() { showEl('b5'); scroll(); showAnn('ann4'); setTimeout(cb, 5000); }, 250); },
-    // 13. End
-    function(cb) { hideAnn('ann4'); document.getElementById('endOverlay').classList.add('visible'); }
+    // 13. End — show restart on the right
+    function(cb) { hideAnn('ann4'); showEndLabel(); }
   ];
 
   var i = 0;
@@ -585,6 +595,21 @@ function insertUser(text) {
 function showAnn(id) { var el = document.getElementById(id); if (el) el.classList.add('visible'); }
 function hideAnn(id) { var el = document.getElementById(id); if (el) el.classList.remove('visible'); }
 
+function showEndLabel() {
+  document.getElementById('endLabel').classList.add('visible');
+}
+function restartDemo() {
+  document.getElementById('endLabel').classList.remove('visible');
+  document.getElementById('landing').classList.remove('hidden');
+  ['b1','b2','b3','b4','b5'].forEach(function(id) { var el = document.getElementById(id); if (el) { el.classList.add('hidden'); el.classList.remove('anim'); } });
+  document.querySelectorAll('.m.user').forEach(function(el) { el.remove(); });
+  document.querySelectorAll('.btn.used').forEach(function(b) { b.classList.remove('used'); });
+  document.querySelectorAll('.ann').forEach(function(a) { a.classList.remove('visible'); });
+  var resolve = document.querySelector('[onclick="userResolves(this)"]');
+  if (resolve) { resolve.style.opacity = ''; resolve.style.pointerEvents = ''; }
+  document.getElementById('msgs').scrollTop = 0;
+}
+
 function showEl(id) {
   var el = document.getElementById(id);
   if (!el) return;
@@ -602,20 +627,6 @@ function scroll() {
   setTimeout(function() { m.scrollTo({ top: m.scrollHeight, behavior: 'smooth' }); }, 80);
 }
 
-document.addEventListener('keydown', function(e) {
-  var endOv = document.getElementById('endOverlay');
-  if (endOv.classList.contains('visible')) {
-    endOv.classList.remove('visible');
-    // Reset everything back to landing
-    document.getElementById('landing').classList.remove('hidden');
-    beats.forEach(function(id) { var el = document.getElementById(id); if (el) { el.classList.add('hidden'); el.classList.remove('anim'); } });
-    document.querySelectorAll('.m.user').forEach(function(el) { el.remove(); });
-    document.querySelectorAll('.btn.used').forEach(function(b) { b.classList.remove('used'); });
-    document.querySelectorAll('.ann').forEach(function(a) { a.classList.remove('visible'); });
-    beat = -1; busy = false;
-    document.getElementById('msgs').scrollTop = 0;
-    return;
-  }
 });
 </script>
 </body>

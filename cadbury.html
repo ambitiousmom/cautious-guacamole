@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Cadbury</title>
+<title>OpenClaw × M365</title>
 <style>
   *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
   body {
@@ -15,22 +15,28 @@
 
   /* ═══ Landing ═══ */
   .landing {
-    position: fixed; inset: 0; z-index: 200; background: #1a1a2e;
+    position: fixed; inset: 0; z-index: 200; background: #F5F1EC;
     display: flex; flex-direction: column; align-items: center; justify-content: center;
     transition: opacity 0.6s, visibility 0.6s;
   }
   .landing.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
-  .landing h1 { font-size: 42px; font-weight: 700; color: #f0f0f0; letter-spacing: -0.03em; margin-bottom: 8px; }
-  .landing .sub { font-size: 16px; color: #666; margin-bottom: 36px; font-style: italic; }
-  .landing .desc { max-width: 420px; text-align: center; font-size: 14px; color: #555; line-height: 1.7; margin-bottom: 40px; }
-  .landing .desc strong { color: #999; }
-  .start-btn {
-    padding: 14px 48px; border-radius: 28px; border: 1px solid #333;
-    background: transparent; color: #888; font-size: 15px; font-family: inherit;
-    cursor: pointer; transition: all 0.25s;
+  .landing h1 { font-size: 36px; font-weight: 700; color: #242424; letter-spacing: -0.02em; margin-bottom: 20px; }
+  .landing .sub { font-size: 16px; color: #616161; margin-bottom: 0; font-style: italic; }
+  .landing-card {
+    background: white; border: 1px solid #E5DFD9; border-radius: 16px;
+    padding: 28px 32px; max-width: 440px; width: 90%; margin-bottom: 28px;
+    text-align: left; box-shadow: 0 2px 12px rgba(0,0,0,0.04);
   }
-  .start-btn:hover { border-color: #5B5FC7; color: #e0e0e0; }
-  .landing .lmeta { margin-top: 28px; font-size: 11px; color: #333; }
+  .landing-card .lc-intro { font-size: 14px; color: #616161; line-height: 1.6; margin-bottom: 16px; text-align: center; font-style: italic; }
+  .landing-card .lc-item { font-size: 12px; line-height: 1.8; color: #616161; }
+  .landing-card .lc-item strong { color: #242424; }
+  .start-btn {
+    padding: 14px 44px; border-radius: 28px; border: none;
+    background: #242424; color: white; font-size: 15px; font-weight: 600; font-family: inherit;
+    cursor: pointer; box-shadow: 0 4px 16px rgba(0,0,0,0.15); transition: transform 0.2s;
+  }
+  .start-btn:hover { transform: translateY(-2px); }
+  .landing .lmeta { margin-top: 32px; font-size: 11px; color: #999; }
 
   /* ═══ Phone frame ═══ */
   .phone {
@@ -246,16 +252,19 @@
 
 <!-- ═══ LANDING ═══ -->
 <div class="landing" id="landing">
-  <h1>Cadbury</h1>
-  <div class="sub">Your butler in M365</div>
-  <div class="desc">
-    One assistant you talk to. Specialist agents working behind the scenes. 
-    <strong>Proactive.</strong> <strong>Observant.</strong> <strong>Always on.</strong>
-    <br><br>
-    Cadbury handles the complexity so you don't have to.
+  <h1>OpenClaw × M365</h1>
+
+  <div class="landing-card">
+    <div class="lc-intro">If Richie Rich can have Cadbury, why not one for you?</div>
+    <div class="lc-item"><strong>Cadbury</strong> — your personal butler in M365. One assistant you talk to, specialist agents working behind the scenes.</div>
+    <div class="lc-item"><strong>Proactive</strong> — works overnight, briefs you in the morning</div>
+    <div class="lc-item"><strong>Observant</strong> — catches conflicts, contradictions, and history you'd miss</div>
+    <div class="lc-item"><strong>Agent-to-agent</strong> — coordinates across people after meetings end</div>
+    <div class="lc-item"><strong>Graduated autonomy</strong> — handles routine automatically, pauses for high-stakes decisions</div>
   </div>
+
   <button class="start-btn" onclick="startDemo()">Monday morning →</button>
-  <div class="lmeta">Prototype by Hema Sridharan · April 2026</div>
+  <div class="lmeta">Prototype by Hema Sridharan</div>
 </div>
 
 <!-- ═══ PHONE ═══ -->

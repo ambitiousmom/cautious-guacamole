@@ -560,24 +560,37 @@ function next() {
     return;
   }
   busy = true;
+
+  // Beat 0: briefing is pre-compiled, show instantly
+  if (beat === 0) {
+    showEl(beats[0]); scroll();
+    busy = false;
+    setTimeout(next, 3000);
+    return;
+  }
+
+  // Beat 1: user says instruction, then show calendar fix immediately (already prepared)
+  if (beat === 1) {
+    insertUser("Handle all of it. Start with the calendar.");
+    setTimeout(function() {
+      showEl(beats[1]); scroll();
+      busy = false;
+    }, 500);
+    return;
+  }
+
+  // Beats after approval gates: show thinking dots (agent is working)
   showEl('think'); scroll();
   var delay = beat === 5 ? 1500 : 900;
   setTimeout(function() {
     hideEl('think');
     setTimeout(function() {
-      // Single user instruction after briefing
-      if (beat === 1) insertUser("Handle all of it. Start with the calendar.");
-
-      setTimeout(function() {
-        showEl(beats[beat]); scroll();
-        busy = false;
-        // Auto-advance for non-interactive beats (pause at approval gates)
-        if (beat === 0) {
-          setTimeout(next, 3500);
-        } else if (beat === 4 || beat === 5 || beat === 6) {
-          setTimeout(next, beat === 6 ? 4000 : 3000);
-        }
-      }, beat === 1 ? 400 : 0);
+      showEl(beats[beat]); scroll();
+      busy = false;
+      // Auto-advance for non-interactive beats
+      if (beat === 4 || beat === 5 || beat === 6) {
+        setTimeout(next, beat === 6 ? 4000 : 3000);
+      }
     }, 250);
   }, delay);
 }

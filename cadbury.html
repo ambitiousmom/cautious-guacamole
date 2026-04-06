@@ -394,35 +394,61 @@
             </div>
           </div>
           <div class="m-bubble" style="margin-top: 4px;">
-            <p>Flag this in the email to Sarah?</p>
+            <p>I've flagged this in the draft email to Sarah.</p>
           </div>
           <div class="card">
             <div class="card-footer" id="conflictFooter">
-              <button class="btn" onclick="doAction(this, 'email')">Yes, include it</button>
-              <button class="btn" style="opacity:0.3; pointer-events:none;">Handle separately</button>
+              <button class="btn" onclick="doAction(this, 'wrong')">Wait — don't call it a conflict</button>
+              <button class="btn" style="opacity:0.3; pointer-events:none;">Looks good</button>
             </div>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- ═══ BEAT 5: Email sent + post-meeting ═══ -->
+    <!-- ═══ BEAT 5: Correction + learning ═══ -->
     <div class="hidden" id="b5">
       <div class="m anim">
         <div class="m-av" style="background: linear-gradient(135deg, #5B5FC7, #7B7FD7);">🎩</div>
         <div class="m-body-wrap">
           <div class="m-sender">Cadbury <span class="m-time">7:05 AM</span></div>
-          <div class="a-tag">✉️ via Mail Agent</div>
           <div class="m-bubble">
-            <p>✓ Email sent to Sarah with budget updates + discrepancy flag.</p>
-            <p>Your morning is clear. I'll watch for her reply.</p>
+            <p>Got it. Revised — instead of flagging a conflict, I'm framing it as an alignment opportunity:</p>
+          </div>
+          <div class="card">
+            <div class="card-body">
+              <div class="card-quote">"One note — my projections use a 28% marketing allocation, which differs from your 15% growth model. Might be worth aligning our assumptions before Thursday."</div>
+            </div>
+          </div>
+          <div class="m-bubble" style="margin-top: 4px;">
+            <p style="font-size: 12px; color: #999;">📝 Lesson saved: Don't call out conflicts with execs directly — frame as alignment. <em>LESSONS.md updated.</em></p>
+          </div>
+          <div class="card">
+            <div class="card-footer" id="sendFooter">
+              <button class="btn" onclick="doAction(this, 'send')">Send it</button>
+              <button class="btn" style="opacity:0.3; pointer-events:none;">Edit more</button>
+            </div>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- ═══ BEAT 6: After 2 PM meeting ═══ -->
+    <!-- ═══ BEAT 6: Email sent ═══ -->
     <div class="hidden" id="b6">
+      <div class="m anim">
+        <div class="m-av" style="background: linear-gradient(135deg, #5B5FC7, #7B7FD7);">🎩</div>
+        <div class="m-body-wrap">
+          <div class="m-sender">Cadbury <span class="m-time">7:06 AM</span></div>
+          <div class="a-tag">✉️ via Mail Agent</div>
+          <div class="m-bubble">
+            <p>✓ Sent. I'll watch for her reply.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ BEAT 7: After 2 PM meeting ═══ -->
+    <div class="hidden" id="b7">
       <div class="sys anim">4:15 PM · After your budget sync</div>
       <div class="m anim" style="margin-top: 8px;">
         <div class="m-av" style="background: linear-gradient(135deg, #5B5FC7, #7B7FD7);">🎩</div>
@@ -457,8 +483,8 @@
       </div>
     </div>
 
-    <!-- ═══ BEAT 7: End of day recap ═══ -->
-    <div class="hidden" id="b7">
+    <!-- ═══ BEAT 8: End of day recap ═══ -->
+    <div class="hidden" id="b8">
       <div class="m anim" style="margin-top: 8px;">
         <div class="m-av" style="background: linear-gradient(135deg, #5B5FC7, #7B7FD7);">🎩</div>
         <div class="m-body-wrap">
@@ -482,15 +508,15 @@
             </div>
             <div class="recap-item">
               <span class="recap-badge" style="background:#FEF3C7; color:#E87400;">YOU</span>
-              CFO comment responses approved + sent
-            </div>
-            <div class="recap-item">
-              <span class="recap-badge" style="background:#E8EBFA; color:#5B5FC7;">PROACTIVE</span>
-              Q1 2025 post-mortem surfaced
+              CFO responses approved + email tone corrected
             </div>
             <div class="recap-item">
               <span class="recap-badge" style="background:#E8EBFA; color:#5B5FC7;">PROACTIVE</span>
               Budget discrepancy caught pre-meeting
+            </div>
+            <div class="recap-item">
+              <span class="recap-badge" style="background:#FEE2E2; color:#D13438;">LEARNED</span>
+              Don't flag conflicts with execs — frame as alignment
             </div>
             <div class="recap-item">
               <span class="recap-badge" style="background:#E8EBFA; color:#5B5FC7;">AGENTS</span>
@@ -498,7 +524,7 @@
             </div>
           </div>
           <div class="m-bubble" style="margin-top: 6px;">
-            <p>You showed up, made <strong>2 calls</strong>, and your Monday ran itself. See you tomorrow, Hema. 🌙</p>
+            <p>You showed up, made <strong>3 calls</strong>, taught me one thing, and your Monday ran itself. See you tomorrow, Hema. 🌙</p>
           </div>
         </div>
       </div>
@@ -527,7 +553,7 @@
 </div>
 
 <script>
-var beats = ['b1','b2','b3','b4','b5','b6','b7'];
+var beats = ['b1','b2','b3','b4','b5','b6','b7','b8'];
 var beat = -1;
 var busy = false;
 
@@ -572,8 +598,8 @@ function next() {
       showEl(beats[beat]); scroll();
       busy = false;
       // Auto-advance for non-interactive beats
-      if (beat === 4 || beat === 5 || beat === 6) {
-        setTimeout(next, beat === 6 ? 4000 : 3000);
+      if (beat === 5 || beat === 6 || beat === 7) {
+        setTimeout(next, beat === 7 ? 4000 : 3000);
       }
     }, 250);
   }, delay);

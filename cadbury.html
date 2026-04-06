@@ -487,34 +487,51 @@ function next() {
   if (beat === 0) {
     showEl(beats[0]); scroll();
     busy = false;
-    setTimeout(next, 3000);
+    setTimeout(next, 2500);
     return;
   }
 
-  // Beat 1: user says instruction, then show calendar fix immediately (already prepared)
+  // Beat 1: user says instruction, then show calendar fix fast
   if (beat === 1) {
-    insertUser("Handle all of it. Start with the calendar.");
+    insertUser("Handle all of it.");
     setTimeout(function() {
       showEl(beats[1]); scroll();
       busy = false;
-    }, 500);
+      // Auto-tap approve after reading time
+      setTimeout(function() { autoTapBtn(); }, 2500);
+    }, 300);
     return;
   }
 
-  // Beats after approval gates: show thinking dots (agent is working)
+  // All other beats: show thinking dots briefly, then reveal
   showEl('think'); scroll();
-  var delay = beat === 5 ? 1500 : 900;
   setTimeout(function() {
     hideEl('think');
     setTimeout(function() {
       showEl(beats[beat]); scroll();
       busy = false;
-      // Auto-advance for non-interactive beats
-      if (beat === 4) {
-        setTimeout(next, 5000);
+      // Auto-advance or auto-tap
+      if (beat === 2) {
+        // Has user resolve — auto-trigger after reading
+        setTimeout(function() { autoResolve(); }, 3000);
+      } else if (beat === 3) {
+        // Has send button — auto-tap
+        setTimeout(function() { autoTapBtn(); }, 2500);
+      } else if (beat === 4) {
+        setTimeout(next, 4000);
       }
     }, 250);
-  }, delay);
+  }, 800);
+}
+
+function autoTapBtn() {
+  var btn = document.querySelector('.card-footer .btn:not(.used)');
+  if (btn) btn.click();
+}
+
+function autoResolve() {
+  var el = document.querySelector('[onclick="userResolves(this)"]');
+  if (el && el.style.opacity !== '0.3') userResolves(el);
 }
 
 function userResolves(el) {
@@ -522,7 +539,7 @@ function userResolves(el) {
   busy = true;
   el.style.opacity = '0.3';
   el.style.pointerEvents = 'none';
-  insertUser("Don't call it a conflict. Frame it as an alignment question — softer.");
+  insertUser("Don't call it a conflict — frame as alignment.");
   setTimeout(function() { busy = false; next(); }, 600);
 }
 

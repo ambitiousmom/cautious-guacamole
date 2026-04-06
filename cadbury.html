@@ -1,0 +1,650 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cadbury</title>
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+    background: #1a1a2e; color: #242424;
+    height: 100vh; display: flex; align-items: center; justify-content: center;
+    overflow: hidden;
+  }
+
+  /* ═══ Landing ═══ */
+  .landing {
+    position: fixed; inset: 0; z-index: 200; background: #1a1a2e;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    transition: opacity 0.6s, visibility 0.6s;
+  }
+  .landing.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
+  .landing h1 { font-size: 42px; font-weight: 700; color: #f0f0f0; letter-spacing: -0.03em; margin-bottom: 8px; }
+  .landing .sub { font-size: 16px; color: #666; margin-bottom: 36px; font-style: italic; }
+  .landing .desc { max-width: 420px; text-align: center; font-size: 14px; color: #555; line-height: 1.7; margin-bottom: 40px; }
+  .landing .desc strong { color: #999; }
+  .start-btn {
+    padding: 14px 48px; border-radius: 28px; border: 1px solid #333;
+    background: transparent; color: #888; font-size: 15px; font-family: inherit;
+    cursor: pointer; transition: all 0.25s;
+  }
+  .start-btn:hover { border-color: #5B5FC7; color: #e0e0e0; }
+  .landing .lmeta { margin-top: 28px; font-size: 11px; color: #333; }
+
+  /* ═══ Phone frame ═══ */
+  .phone {
+    width: 390px; height: 844px; border-radius: 44px; overflow: hidden;
+    background: #fff; position: relative;
+    box-shadow: 0 0 0 3px #222, 0 0 0 6px #111, 0 20px 80px rgba(0,0,0,0.5);
+  }
+
+  /* Dynamic island / notch */
+  .notch {
+    position: absolute; top: 0; left: 0; right: 0; z-index: 10;
+    height: 54px; background: #fff;
+    display: flex; align-items: flex-start; justify-content: center; padding-top: 12px;
+  }
+  .notch-pill {
+    width: 120px; height: 28px; background: #000; border-radius: 14px;
+  }
+  .status-bar {
+    position: absolute; top: 14px; left: 28px; right: 28px; z-index: 11;
+    display: flex; justify-content: space-between; align-items: center;
+    font-size: 12px; font-weight: 600; color: #000;
+  }
+  .status-bar-right { display: flex; align-items: center; gap: 4px; font-size: 11px; }
+
+  /* ═══ Teams header ═══ */
+  .t-header {
+    position: absolute; top: 54px; left: 0; right: 0; z-index: 9;
+    background: #fff; border-bottom: 1px solid #f0f0f0;
+    padding: 8px 16px; display: flex; align-items: center; gap: 12px;
+  }
+  .t-back { font-size: 22px; color: #5B5FC7; cursor: pointer; }
+  .t-avatar {
+    width: 36px; height: 36px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px; flex-shrink: 0; position: relative;
+  }
+  .t-online {
+    position: absolute; bottom: 0; right: -1px; width: 10px; height: 10px;
+    border-radius: 50%; background: #107C10; border: 2px solid white;
+  }
+  .t-info { flex: 1; }
+  .t-name { font-size: 16px; font-weight: 600; color: #242424; }
+  .t-status { font-size: 12px; color: #999; }
+  .t-actions { display: flex; gap: 12px; }
+  .t-action { font-size: 18px; color: #5B5FC7; cursor: pointer; }
+
+  /* ═══ Messages ═══ */
+  .msgs {
+    position: absolute; top: 108px; bottom: 80px; left: 0; right: 0;
+    overflow-y: auto; scroll-behavior: smooth;
+    padding: 12px 14px 20px; background: #fff;
+  }
+
+  /* System message */
+  .sys { text-align: center; font-size: 11px; color: #bbb; padding: 8px 0; margin: 8px 0; }
+
+  /* Message groups */
+  .m { display: flex; gap: 8px; margin: 3px 0; align-items: flex-start; }
+  .m + .m-break { margin-top: 14px; }
+  .m-av {
+    width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center;
+    justify-content: center; font-size: 12px; flex-shrink: 0; margin-top: 2px;
+  }
+  .m-body-wrap { flex: 1; max-width: 290px; }
+  .m-sender { font-size: 12px; font-weight: 600; color: #242424; margin-bottom: 2px; display: flex; align-items: center; gap: 6px; }
+  .m-time { font-size: 10px; color: #bbb; font-weight: 400; }
+  .m-bubble {
+    background: #f5f5f5; border-radius: 4px 16px 16px 16px; padding: 10px 14px;
+    font-size: 14px; line-height: 1.6; color: #242424;
+  }
+  .m-bubble p { margin-bottom: 6px; }
+  .m-bubble p:last-child { margin-bottom: 0; }
+  .m-bubble strong { font-weight: 600; }
+  .m-bubble em { color: #616161; }
+
+  /* User message */
+  .m.user { flex-direction: row-reverse; }
+  .m.user .m-body-wrap { display: flex; flex-direction: column; align-items: flex-end; }
+  .m.user .m-bubble {
+    background: #5B5FC7; color: white; border-radius: 16px 4px 16px 16px;
+  }
+  .m.user .m-bubble strong { color: white; }
+
+  /* Agent tag */
+  .a-tag {
+    display: inline-flex; align-items: center; gap: 3px;
+    font-size: 10px; color: #999; background: #f0f0f0; padding: 1px 6px;
+    border-radius: 8px; margin-bottom: 4px;
+  }
+
+  /* ═══ Cards ═══ */
+  .card {
+    background: #fff; border: 1px solid #e8e8e8; border-radius: 12px;
+    overflow: hidden; margin: 6px 0;
+  }
+  .card-banner {
+    padding: 6px 12px; font-size: 10px; font-weight: 700; color: #E87400;
+    background: #FEF3C7; border-bottom: 1px solid rgba(0,0,0,0.04);
+  }
+  .card-header {
+    padding: 8px 12px; font-size: 10px; font-weight: 600; color: #999;
+    border-bottom: 1px solid rgba(0,0,0,0.04);
+    display: flex; align-items: center; gap: 5px;
+  }
+  .card-body { padding: 10px 12px; font-size: 12px; color: #616161; line-height: 1.6; }
+  .card-body strong { color: #242424; }
+  .card-footer {
+    display: flex; align-items: center; gap: 6px; padding: 8px 12px;
+    border-top: 1px solid rgba(0,0,0,0.04);
+  }
+  .card-quote {
+    font-style: italic; border-left: 2px solid #ccc; padding-left: 10px;
+    color: #616161; margin: 4px 0;
+  }
+  .card-sources { font-size: 10px; color: #999; margin-top: 6px; }
+
+  /* Buttons */
+  .btn { padding: 6px 14px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; font-family: inherit; border: none; }
+  .btn.pri { background: #5B5FC7; color: white; }
+  .btn.sec { background: #f0f0f0; color: #616161; }
+  .btn.used { opacity: 0.3; pointer-events: none; }
+
+  /* Warning */
+  .warn { font-size: 10px; color: #D13438; margin-right: auto; }
+
+  /* Table */
+  .data-table { width: 100%; border-collapse: collapse; font-size: 11px; margin: 4px 0; }
+  .data-table th { text-align: left; padding: 4px 6px; font-weight: 600; color: #242424; border-bottom: 1px solid #e8e8e8; }
+  .data-table td { padding: 4px 6px; color: #616161; border-bottom: 1px solid #f5f5f5; }
+
+  /* Conflict visual */
+  .conflict-row { display: flex; gap: 8px; margin: 8px 0; }
+  .conflict-col { flex: 1; background: #f9f9f9; border-radius: 8px; padding: 8px 10px; text-align: center; }
+  .conflict-label { font-size: 9px; font-weight: 700; color: #999; text-transform: uppercase; letter-spacing: 0.04em; }
+  .conflict-val { font-size: 20px; font-weight: 700; margin: 2px 0; }
+  .conflict-sub { font-size: 10px; color: #999; }
+
+  /* History card */
+  .history-card {
+    background: #FFFBEB; border: 1px solid #FDE68A; border-radius: 10px;
+    padding: 10px 12px; margin: 6px 0; font-size: 12px; line-height: 1.6; color: #616161;
+  }
+  .history-card strong { color: #242424; }
+  .history-header { font-size: 11px; font-weight: 700; color: #92400E; margin-bottom: 4px; }
+  .history-source { font-size: 10px; color: #999; margin-top: 6px; padding-top: 6px; border-top: 1px solid rgba(0,0,0,0.06); }
+
+  /* Aftermath */
+  .aftermath { background: #f5f5f5; border-radius: 10px; margin: 6px 0; overflow: hidden; }
+  .aftermath-title { padding: 8px 12px; font-size: 10px; font-weight: 700; color: #999; text-transform: uppercase; letter-spacing: 0.03em; border-bottom: 1px solid rgba(0,0,0,0.04); }
+  .aftermath-row { display: flex; align-items: flex-start; gap: 8px; padding: 8px 12px; font-size: 11px; color: #616161; line-height: 1.5; }
+  .aftermath-row + .aftermath-row { border-top: 1px solid rgba(0,0,0,0.04); }
+  .aftermath-av { width: 20px; height: 20px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 8px; color: white; font-weight: 600; flex-shrink: 0; }
+
+  /* Word preview */
+  .word-mini { background: #fff; border: 1px solid #e0e0e0; border-radius: 10px; margin: 6px 0; overflow: hidden; }
+  .word-mini-chrome { display: flex; align-items: center; gap: 6px; padding: 6px 10px; background: #f3f3f3; border-bottom: 1px solid #e0e0e0; font-size: 11px; font-weight: 500; }
+  .word-mini-body { padding: 10px 12px; font-size: 11px; line-height: 1.7; color: #616161; }
+  .word-change { background: #E8F5E9; border-left: 2px solid #107C10; padding: 6px 10px; border-radius: 0 6px 6px 0; margin: 4px 0; font-size: 11px; }
+
+  /* Recap */
+  .recap { background: #f5f5f5; border-radius: 10px; padding: 10px 12px; margin: 6px 0; }
+  .recap-title { font-size: 10px; font-weight: 700; color: #999; text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 6px; }
+  .recap-item { display: flex; align-items: center; gap: 6px; padding: 3px 0; font-size: 11px; color: #616161; }
+  .recap-item + .recap-item { border-top: 1px solid rgba(0,0,0,0.04); padding-top: 5px; }
+  .recap-badge { font-size: 8px; font-weight: 700; padding: 1px 5px; border-radius: 3px; }
+
+  /* App icon */
+  .ai { width: 12px; height: 12px; border-radius: 2px; display: inline-flex; align-items: center; justify-content: center; font-size: 6px; color: white; font-weight: 700; vertical-align: -1px; }
+  .ai.w { background: #185ABD; }
+  .ai.x { background: #107C10; }
+
+  /* ═══ Composer ═══ */
+  .compose {
+    position: absolute; bottom: 0; left: 0; right: 0;
+    padding: 8px 12px 28px; background: #fff; border-top: 1px solid #f0f0f0;
+  }
+  .compose-box {
+    display: flex; align-items: center; gap: 8px;
+    background: #f5f5f5; border-radius: 20px; padding: 8px 14px;
+  }
+  .compose-box input {
+    flex: 1; border: none; outline: none; font-size: 14px; font-family: inherit;
+    background: transparent; color: #242424;
+  }
+  .compose-box input::placeholder { color: #bbb; }
+  .compose-icons { display: flex; gap: 8px; font-size: 18px; color: #999; }
+
+  /* Thinking dots */
+  .thinking { display: flex; gap: 8px; margin: 6px 0; align-items: center; padding-left: 36px; }
+  .t-dots { display: flex; gap: 3px; }
+  .t-dot { width: 6px; height: 6px; background: #ccc; border-radius: 50%; animation: pulse 1.4s ease infinite; }
+  .t-dot:nth-child(2) { animation-delay: 0.2s; }
+  .t-dot:nth-child(3) { animation-delay: 0.4s; }
+  @keyframes pulse { 0%,80%,100%{opacity:0.3;transform:scale(0.8)} 40%{opacity:1;transform:scale(1.1)} }
+
+  /* ═══ Animations ═══ */
+  .hidden { display: none !important; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
+  .anim { animation: fadeIn 0.3s ease both; }
+
+  /* ═══ End ═══ */
+  .end-overlay {
+    position: fixed; inset: 0; z-index: 300; background: rgba(0,0,0,0.7);
+    display: flex; align-items: center; justify-content: center;
+    opacity: 0; visibility: hidden; transition: opacity 0.5s, visibility 0.5s;
+  }
+  .end-overlay.visible { opacity: 1; visibility: visible; }
+  .end-text { font-size: 48px; font-weight: 300; color: white; font-style: italic; font-family: Georgia, serif; }
+  .end-sub { margin-top: 12px; font-size: 12px; color: rgba(255,255,255,0.3); }
+</style>
+</head>
+<body>
+
+<!-- ═══ LANDING ═══ -->
+<div class="landing" id="landing">
+  <h1>Cadbury</h1>
+  <div class="sub">Your butler in M365</div>
+  <div class="desc">
+    One assistant you talk to. Specialist agents working behind the scenes. 
+    <strong>Proactive.</strong> <strong>Observant.</strong> <strong>Always on.</strong>
+    <br><br>
+    Cadbury handles the complexity so you don't have to.
+  </div>
+  <button class="start-btn" onclick="startDemo()">Monday morning →</button>
+  <div class="lmeta">Prototype by Hema Sridharan · April 2026</div>
+</div>
+
+<!-- ═══ PHONE ═══ -->
+<div class="phone">
+  <!-- Status bar -->
+  <div class="notch"><div class="notch-pill"></div></div>
+  <div class="status-bar">
+    <span>9:41</span>
+    <span class="status-bar-right">
+      <span>📶</span>
+      <span>🔋</span>
+    </span>
+  </div>
+
+  <!-- Teams header -->
+  <div class="t-header">
+    <span class="t-back">‹</span>
+    <div class="t-avatar" style="background: linear-gradient(135deg, #5B5FC7, #7B7FD7);">
+      🎩
+      <span class="t-online"></span>
+    </div>
+    <div class="t-info">
+      <div class="t-name">Cadbury</div>
+      <div class="t-status">Active · 4 agents online</div>
+    </div>
+    <div class="t-actions">
+      <span class="t-action">📞</span>
+      <span class="t-action">📹</span>
+    </div>
+  </div>
+
+  <!-- Messages -->
+  <div class="msgs" id="msgs">
+
+    <div class="sys">Monday · Agents worked overnight</div>
+
+    <!-- Thinking -->
+    <div class="thinking hidden" id="think">
+      <div class="t-dots"><span class="t-dot"></span><span class="t-dot"></span><span class="t-dot"></span></div>
+    </div>
+
+    <!-- ═══ BEAT 1: Morning briefing ═══ -->
+    <div class="hidden" id="b1">
+      <div class="m anim">
+        <div class="m-av" style="background: linear-gradient(135deg, #5B5FC7, #7B7FD7);">🎩</div>
+        <div class="m-body-wrap">
+          <div class="m-sender">Cadbury <span class="m-time">6:45 AM</span></div>
+          <div class="m-bubble">
+            <p>Good morning. Your agents worked overnight. Here's the brief:</p>
+            <p>📬 <strong>47 emails</strong> triaged — 3 need you</p>
+            <p>📄 <strong>Sarah Chen (CFO)</strong> left 2 comments on the Q3 budget doc</p>
+            <p>📊 Q3 actuals refreshed · hiring pipeline updated</p>
+            <p>📅 <strong>Conflict:</strong> You're double-booked at 2 PM — budget sync vs. design review</p>
+            <p>I have a recommendation for each. Start with the budget?</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ BEAT 2: Calendar fix ═══ -->
+    <div class="hidden" id="b2">
+      <div class="m anim">
+        <div class="m-av" style="background: linear-gradient(135deg, #5B5FC7, #7B7FD7);">🎩</div>
+        <div class="m-body-wrap">
+          <div class="m-sender">Cadbury <span class="m-time">7:02 AM</span></div>
+          <div class="a-tag">📅 via Calendar Agent</div>
+          <div class="m-bubble">
+            <p>First — the 2 PM conflict. Budget sync has 4 execs. Design review is you and Mia (she has 3 open slots this week).</p>
+            <p>I'd move the design review to <strong>Wednesday 10 AM</strong>. Mia's agent confirms she's free.</p>
+          </div>
+          <div class="card">
+            <div class="card-banner">⏸ Needs your OK — moving someone else's meeting</div>
+            <div class="card-footer" id="calFooter">
+              <button class="btn pri" onclick="doAction(this, 'cal')">Move it</button>
+              <button class="btn sec">Show options</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ BEAT 3: Budget comments + historical catch ═══ -->
+    <div class="hidden" id="b3">
+      <div class="m anim">
+        <div class="m-av" style="background: linear-gradient(135deg, #5B5FC7, #7B7FD7);">🎩</div>
+        <div class="m-body-wrap">
+          <div class="m-sender">Cadbury <span class="m-time">7:03 AM</span></div>
+          <div class="m-bubble">
+            <p>✓ Design review moved. Mia's agent acknowledged.</p>
+            <p>Now — Sarah's comments on the budget:</p>
+          </div>
+          <div class="a-tag">📄 via Document Agent</div>
+          <div class="m-bubble">
+            <p><em>"Can we revisit the marketing allocation rationale?"</em></p>
+            <p><em>"Timeline seems aggressive for the engineering ramp"</em></p>
+            <p>I've drafted responses using Q3 actuals and the hiring pipeline.</p>
+          </div>
+          <div class="card">
+            <div class="card-banner">⏸ Exec communication — your approval needed</div>
+            <div class="card-body">
+              <div class="card-quote">"The revised 28% allocation is grounded in Q3 actual ROI data — campaign efficiency held at reduced spend. Happy to walk through the numbers Thursday."</div>
+              <div class="card-sources"><span class="ai x">X</span> Q3_Actuals.xlsx · <span class="ai w">W</span> Budget §2 · <span class="ai x">X</span> Hiring_Plan_H2.xlsx</div>
+            </div>
+            <div class="card-footer" id="approveFooter">
+              <button class="btn pri" onclick="doAction(this, 'approve')">Approve both</button>
+              <button class="btn sec">Edit</button>
+            </div>
+          </div>
+
+          <!-- Proactive: historical catch -->
+          <div class="m-bubble" style="margin-top: 8px;">
+            <p>⚡ One thing you should know —</p>
+          </div>
+          <div class="history-card">
+            <div class="history-header">📚 I found something</div>
+            A similar marketing reallocation was <strong>tried in Q1 2025 by David Park</strong> and <strong>rolled back after 3 weeks</strong>. Post-mortem cited channel partner dependencies.
+            <br><br>
+            Your situation differs — Q3 shows improved campaign efficiency — but the channel partner risk is worth mentioning to Sarah.
+            <div class="history-source"><span class="ai w">W</span> Q1_Marketing_Postmortem.docx · David Park (left company) · Jan 2025</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ BEAT 4: Contradiction + data pull ═══ -->
+    <div class="hidden" id="b4">
+      <div class="m anim">
+        <div class="m-av" style="background: linear-gradient(135deg, #5B5FC7, #7B7FD7);">🎩</div>
+        <div class="m-body-wrap">
+          <div class="m-sender">Cadbury <span class="m-time">7:04 AM</span></div>
+          <div class="m-bubble">
+            <p>✓ Responses posted. Table inserted into §3. Both comments resolved.</p>
+          </div>
+
+          <div class="a-tag">📊 via Data Agent</div>
+          <div class="m-bubble">
+            <p>Also — while pulling the data, I noticed a discrepancy between your numbers and Sarah's:</p>
+          </div>
+          <div class="card" style="border-color: #E87400;">
+            <div class="card-header" style="color: #E87400;">⚠ Cross-document conflict</div>
+            <div class="card-body">
+              <strong>Sarah's Q3 projections</strong> assume 15% marketing growth. <strong>Your budget</strong> cuts marketing to 28%. These don't align.
+              <div class="conflict-row">
+                <div class="conflict-col">
+                  <div class="conflict-label">Sarah's model</div>
+                  <div class="conflict-val" style="color: #107C10;">+15%</div>
+                  <div class="conflict-sub">mktg-driven growth</div>
+                </div>
+                <div class="conflict-col">
+                  <div class="conflict-label">Your budget</div>
+                  <div class="conflict-val" style="color: #D13438;">−5%</div>
+                  <div class="conflict-sub">mktg allocation</div>
+                </div>
+              </div>
+              Surfacing now so you can align before Thursday — not during.
+            </div>
+          </div>
+
+          <div class="m-bubble" style="margin-top: 6px;">
+            <p>Want me to flag this in the email to Sarah?</p>
+          </div>
+          <div class="card">
+            <div class="card-footer" id="conflictFooter">
+              <button class="btn pri" onclick="doAction(this, 'email')">Yes, include it</button>
+              <button class="btn sec">Handle separately</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ BEAT 5: Email sent + post-meeting ═══ -->
+    <div class="hidden" id="b5">
+      <div class="m anim">
+        <div class="m-av" style="background: linear-gradient(135deg, #5B5FC7, #7B7FD7);">🎩</div>
+        <div class="m-body-wrap">
+          <div class="m-sender">Cadbury <span class="m-time">7:05 AM</span></div>
+          <div class="a-tag">✉️ via Mail Agent</div>
+          <div class="m-bubble">
+            <p>✓ Email sent to Sarah with budget updates + discrepancy flag.</p>
+            <p>Your morning is clear. I'll watch for her reply.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ BEAT 6: After 2 PM meeting ═══ -->
+    <div class="hidden" id="b6">
+      <div class="sys anim">4:15 PM · After your budget sync</div>
+      <div class="m anim" style="margin-top: 8px;">
+        <div class="m-av" style="background: linear-gradient(135deg, #5B5FC7, #7B7FD7);">🎩</div>
+        <div class="m-body-wrap">
+          <div class="m-sender">Cadbury <span class="m-time">4:15 PM</span></div>
+          <div class="m-bubble">
+            <p>Budget sync just ended. <strong>4 action items</strong> across 5 people. Each person's agent picked up their items — no one took notes.</p>
+          </div>
+          <div class="aftermath">
+            <div class="aftermath-title">Agent-to-agent coordination</div>
+            <div class="aftermath-row">
+              <div class="aftermath-av" style="background: #E89B35;">CL</div>
+              <div><strong style="color:#242424;">Your agent:</strong> "Revise budget by Friday." Pulled latest actuals into working copy.</div>
+            </div>
+            <div class="aftermath-row">
+              <div class="aftermath-av" style="background: #0078D4;">SC</div>
+              <div><strong style="color:#242424;">Sarah's agent:</strong> "Review marketing rationale Thursday." Queued for her morning brief.</div>
+            </div>
+            <div class="aftermath-row">
+              <div class="aftermath-av" style="background: #107C10;">RB</div>
+              <div><strong style="color:#242424;">Raj's agent:</strong> "Validate compliance addendum." Pre-loaded for his next slot.</div>
+            </div>
+            <div class="aftermath-row">
+              <div style="width:20px; height:20px; border-radius:50%; background:#E8EBFA; display:flex; align-items:center; justify-content:center; font-size:9px; color:#5B5FC7;">🔗</div>
+              <div><strong style="color:#5B5FC7;">Dependency chain tracked.</strong> If your revision slips, their agents adjust.</div>
+            </div>
+          </div>
+          <div class="m-bubble" style="margin-top: 6px;">
+            <p>Sarah also mentioned in the meeting that she's open to the 28% number now. Looks like the pre-meeting flag worked.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ BEAT 7: End of day recap ═══ -->
+    <div class="hidden" id="b7">
+      <div class="m anim" style="margin-top: 8px;">
+        <div class="m-av" style="background: linear-gradient(135deg, #5B5FC7, #7B7FD7);">🎩</div>
+        <div class="m-body-wrap">
+          <div class="m-sender">Cadbury <span class="m-time">4:16 PM</span></div>
+          <div class="m-bubble">
+            <p>Here's what your agents did today:</p>
+          </div>
+          <div class="recap">
+            <div class="recap-title">Today's ledger</div>
+            <div class="recap-item">
+              <span class="recap-badge" style="background:#DFF6DD; color:#107C10;">AUTO</span>
+              44 emails triaged + 8 calendar syncs
+            </div>
+            <div class="recap-item">
+              <span class="recap-badge" style="background:#DFF6DD; color:#107C10;">AUTO</span>
+              Q3 actuals + hiring pipeline refreshed
+            </div>
+            <div class="recap-item">
+              <span class="recap-badge" style="background:#FEF3C7; color:#E87400;">YOU</span>
+              Calendar conflict resolved — design review moved
+            </div>
+            <div class="recap-item">
+              <span class="recap-badge" style="background:#FEF3C7; color:#E87400;">YOU</span>
+              CFO comment responses approved + sent
+            </div>
+            <div class="recap-item">
+              <span class="recap-badge" style="background:#E8EBFA; color:#5B5FC7;">PROACTIVE</span>
+              Q1 2025 post-mortem surfaced
+            </div>
+            <div class="recap-item">
+              <span class="recap-badge" style="background:#E8EBFA; color:#5B5FC7;">PROACTIVE</span>
+              Budget discrepancy caught pre-meeting
+            </div>
+            <div class="recap-item">
+              <span class="recap-badge" style="background:#E8EBFA; color:#5B5FC7;">AGENTS</span>
+              Post-meeting: 4 action items distributed across 3 agents
+            </div>
+          </div>
+          <div class="m-bubble" style="margin-top: 6px;">
+            <p>You made <strong>2 decisions</strong>. Everything else was handled. Good night. 🎩</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Composer -->
+  <div class="compose">
+    <div class="compose-box">
+      <input type="text" placeholder="Message Cadbury…" readonly>
+      <div class="compose-icons">
+        <span>📎</span>
+        <span>🎙</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- End -->
+<div class="end-overlay" id="endOverlay">
+  <div style="text-align:center;">
+    <div class="end-text">🎩</div>
+    <div style="margin-top:8px; font-size:16px; color:rgba(255,255,255,0.6);">You made 2 decisions. Cadbury handled the rest.</div>
+    <div class="end-sub">(press any key)</div>
+  </div>
+</div>
+
+<script>
+var beats = ['b1','b2','b3','b4','b5','b6','b7'];
+var beat = -1;
+var busy = false;
+
+function startDemo() {
+  document.getElementById('landing').classList.add('hidden');
+  setTimeout(next, 600);
+}
+
+function next() {
+  if (busy) return;
+  beat++;
+  if (beat >= beats.length) {
+    setTimeout(function() { document.getElementById('endOverlay').classList.add('visible'); }, 800);
+    return;
+  }
+  busy = true;
+  showEl('think'); scroll();
+  var delay = beat === 5 ? 1500 : 900; // longer pause before post-meeting
+  setTimeout(function() {
+    hideEl('think');
+    setTimeout(function() {
+      // Insert user reply before certain beats
+      if (beat === 1) insertUser("Yes, start with the calendar");
+      if (beat === 3) insertUser("Good, approve those. What about the timeline comment?");
+      if (beat === 4) insertUser("Yes include it, good catch");
+      if (beat === 5) insertUser("Nice, I'm heading into the sync now");
+
+      setTimeout(function() {
+        showEl(beats[beat]); scroll();
+        busy = false;
+        // Auto-advance for non-interactive beats
+        if (beat === 0 || beat === 4 || beat === 5 || beat === 6) {
+          setTimeout(next, beat === 6 ? 4000 : 3000);
+        }
+      }, beat === 1 || beat === 3 || beat === 4 || beat === 5 ? 400 : 0);
+    }, 250);
+  }, delay);
+}
+
+function doAction(btn, type) {
+  btn.closest('.card-footer').querySelectorAll('.btn').forEach(function(b) { b.classList.add('used'); });
+  if (type === 'cal') {
+    insertUser("Move it, thanks");
+  } else if (type === 'approve') {
+    insertUser("Approve both. Good find on that Q1 history.");
+  } else if (type === 'email') {
+    insertUser("Yes, include the discrepancy");
+  }
+  setTimeout(next, 600);
+}
+
+function insertUser(text) {
+  var msgs = document.getElementById('msgs');
+  var div = document.createElement('div');
+  div.className = 'm user anim';
+  div.innerHTML = '<div class="m-body-wrap"><div class="m-bubble">' + text + '</div></div>';
+  msgs.appendChild(div);
+  scroll();
+}
+
+function showEl(id) {
+  var el = document.getElementById(id);
+  if (!el) return;
+  el.parentNode.appendChild(el);
+  el.classList.remove('hidden'); el.classList.add('anim');
+}
+function hideEl(id) {
+  var el = document.getElementById(id);
+  if (!el) return;
+  el.style.transition = 'opacity 0.2s'; el.style.opacity = '0';
+  setTimeout(function() { el.classList.add('hidden'); el.style.opacity = ''; el.style.transition = ''; }, 200);
+}
+function scroll() {
+  var m = document.getElementById('msgs');
+  setTimeout(function() { m.scrollTo({ top: m.scrollHeight, behavior: 'smooth' }); }, 80);
+}
+
+document.addEventListener('keydown', function(e) {
+  var endOv = document.getElementById('endOverlay');
+  if (endOv.classList.contains('visible')) { endOv.classList.remove('visible'); return; }
+  if (e.code === 'Space' || e.code === 'ArrowRight' || e.key === 'Enter') {
+    e.preventDefault();
+    // If there's an active button, click it, otherwise advance
+    var activeBtn = document.querySelector('.card-footer .btn.pri:not(.used)');
+    if (activeBtn) { activeBtn.click(); return; }
+    next();
+  }
+});
+
+document.getElementById('msgs').addEventListener('click', function(e) {
+  if (e.target.closest('.btn')) return;
+  var activeBtn = document.querySelector('.card-footer .btn.pri:not(.used)');
+  if (activeBtn) { activeBtn.click(); return; }
+  next();
+});
+</script>
+</body>
+</html>

@@ -282,8 +282,8 @@
       <div class="t-status">Active · 4 agents online</div>
     </div>
     <div class="t-actions">
-      <span class="t-action">📞</span>
-      <span class="t-action">📹</span>
+      <span class="t-action" style="opacity:0.25; pointer-events:none;">📞</span>
+      <span class="t-action" style="opacity:0.25; pointer-events:none;">📹</span>
     </div>
   </div>
 
@@ -532,8 +532,8 @@
     <div class="compose-box">
       <input type="text" placeholder="Message Cadbury…" readonly>
       <div class="compose-icons">
-        <span>📎</span>
-        <span>🎙</span>
+        <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADoAAAAyCAYAAAAN6MhFAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAPmSURBVGhD7ZnLK35BGMf9MQohuS5cslASsSH3siBkZeESyjUiet1CWSgs7BVlgRBFUpQskA0K5ZpbLvPr+9SZnCfv61zm/NTrfGoW7/k+M2e+75l5Zs6cAPFHCOAX/BXXqL/hGvU3XKP+hmtUJUtLS6KpqUnk5+eLmJgYER0dLfLy8uja+vo6D3cER40+Pj6K8vJyERgY6LNUV1eLl5cXXl0pjhl9fX0VWVlZOkMVFRVicHCQSlVVlU7D035/f+fNKMMxow0NDdIEhune3h4PoWvZ2dkyrqenh4cowxGju7u7svM5OTni4+ODh0je3t5Eeno6xQYFBYmTkxMeogRHjCLJoOMhISGGOr6/vy//mIGBAS4rwRGjqamp1GkkIqPgyaNOQUEBl5TgiNHY2FjqdEtLC5e8UldXR3WSkpK4pARHjEZGRlKn29vbueSVjo4OqhMREcElJbhG7eBXRrG4b25uipubGy4pN3p9fU33wlJkFctGh4aGqGMlJSVcUm60qKiItNHRUS4ZxrJRX1lStdHk5GTSampquGQY1+hPuEZdo75xjf62Ue19Mz4+nkt0XALNzF63tbWV6uCYhZOYmEhafX09lwxj2WhfXx/dPDg4mEsiLS2NtLKyMi55pbS0lOrg3ZSD91Rovb29XDKMZaOTk5N0c5Tb21udVltbS9fDw8Pp3OgnUB9/GOpgpHwFOy/tPlNTUzrNDJaNLi4uyg6sra151bq7u3Xad7S1tcn41dVVnbaysiK15eVlnWYGy0afnp7oBAEdaG5u1mmfn5/y5Rtlenpap39lZGRExmVmZnJZd1rx/PzMZcNYNgq0eRUXF0fGv4LjkaioKGmisrJSzM/Pi4uLC3F6eipmZ2dFcXGx1NHG0dGRro2HhwdKTtDNnFZ8hy2jc3NzsqP9/f1cFoeHhyIhIUHGeCspKSlknoNhr8UsLCxw2RS2jALt7DY0NFQcHBxwWdzf39MaifWRG8TTGh4e/nZI4iRRmxo4ErWLbaP4pKB1HOvd1dUVDyHwLrmxsSEmJiYoe25tbXk9sD4/P6ehrLW7vb3NQ0xj2ygYGxv7cRga5fj4mHZbWnu+EpkZlBgF2AVpnUMSwoclsyBBYe3V2vF4PDzEMsqMgq6uLt0cxM4Inx28DVGAIb2zs6PLwCiYuypRahSMj4/LLZtWwsLCRGFhIWVRZGqUzs5OkZubKxOOVvB7ZmaGN2sb5UbB2dmZaGxslNs6IwVZG9n58vKSN6cER4xq3N3d0fqH/WtGRobuSeNPwE4IcxtbRiN7Yjs4apSDuYq1FhsJX/PWCf6r0d/ENepvuEb9jT9j9B9cZRNIOvtcygAAAABJRU5ErkJggg==" alt="Voice" style="width:24px; height:24px; cursor:pointer;">
+        <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADMAAAAvCAYAAABOtfLKAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAALXSURBVGhD3VpdaxQxFO2v66JiOy6r1WJbEHF98Av6ICgKgm8qKAqiiC+CBQt9KBT8QPEXFEV8VaoPyn52bdfdre1EbobsTO9NZ5JMMrvkwIHdzSQ3Z7I3OcnMBPMIE/gHG1j/NGCvVv6yxWubbKHaYofKdTY5XWfHTjX497sP/vDyXi/EVXPBqpil5S4XMBlEnZdyqhZ/Dur8+o2fu7gpI+QWA3eYdNiQMwtN3p4pcomZO9siHcrPBnv9rodDKcFIjMgB11x7oydKW8yjp9v87uHAbtjg8VShLGa7G0qCFcPzV9o8fhaUxAwGYTRLSQIVxeqlFu4WgZKYm7c7pPFRMAuZYiAJcaOjZNqkkCoGFrOiZi5VloIG7uYQqWJwQ+PC1TX5wpohJmE9xojBSfnoHChm9kyTNDJOnJqhgqRiwE7gyjZ4pGJ3scWQisGVbHBlNfqfN1t7pMyU2G0fIMbuHQTCqAhUL7dJuQnv3N/a128iBjZMrhK/FNTZ+4/9RBx6jR5r+zZ4RAzsEmklewRBAldv5LdIbz/EiygRA1taXMEFHz+L3HAY5svR6sXYsxExRRpKEAK493CLlKmyMhfnIhEDhw64gktev9UZxsZlKixN14b1iZhReDGRxDB947IslhLrDRGDL87it+//cBO58HK5S2JkUYCI0R2ZC4tt9mKpm4v9fjQym509dmJez0aljkzROXO4HHdm/pz+aU9qzhQ5m335usNjbvzY1R4RwdTZrKh1Jul6y7Pm/4bUdca1AwCKSWP98w47etxcCDDVAbj0ZsDK6XhEIF9wuR4zvBnAhWsG/vodWXYwm+DRcLkuM10zAFeyQdi5CtgQAlTaz7jYaYJDfvIcjnZpmSkxpGIA3pwBCLicCPJQ+3QGgBsZFxqdm3l1ognw5qxZwJunAACvns8AvHlyloQXzzSTKGqGS0t2GYzECHjxHkAS3ryhgTHqd2f+AwuoN1C0q90pAAAAAElFTkSuQmCC" alt="Send" style="width:24px; height:24px; cursor:pointer;">
       </div>
     </div>
   </div>

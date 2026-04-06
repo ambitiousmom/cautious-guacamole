@@ -5,448 +5,356 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Architecture Grammar — OpenClaw × M365</title>
 <style>
-  *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+  *,*::before,*::after { margin:0; padding:0; box-sizing:border-box; }
   body {
     font-family: 'Segoe UI Variable Display','Segoe UI',-apple-system,sans-serif;
-    background: #F5F1EC; color: #242424; overflow-x: hidden;
+    background: #F5F1EC; color: #242424;
   }
 
-  /* ═══ Header ═══ */
-  header { text-align:center; padding:48px 24px 32px; }
+  header { text-align:center; padding:48px 24px 16px; }
   header h1 { font-size:32px; font-weight:700; letter-spacing:-0.02em; }
   header .sub { font-size:14px; color:#616161; margin-top:8px; line-height:1.6; }
   header .meta { font-size:11px; color:#999; margin-top:8px; }
+  header .reading { font-size:12px; color:#999; margin-top:12px; font-style:italic; }
 
-  /* ═══ Diagram canvas ═══ */
-  .diagram {
-    max-width:1100px; margin:0 auto; padding:0 24px 80px; position:relative;
+  /* ═══ Main pipeline ═══ */
+  .pipeline { max-width:1100px; margin:32px auto 0; padding:0 24px; }
+  .pipe-label { font-size:11px; font-weight:700; color:#999; text-transform:uppercase; letter-spacing:0.08em; margin-bottom:24px; text-align:center; }
+
+  /* A single row: stage + arrow + stage */
+  .row { display:flex; align-items:stretch; margin-bottom:0; position:relative; }
+
+  /* ═══ Stage ═══ */
+  .stage {
+    flex:1; background:white; border-radius:14px; border:1px solid #E5DFD9;
+    padding:20px 24px; position:relative;
+    transition: box-shadow 0.2s;
   }
-  svg { width:100%; height:auto; }
-
-  /* ═══ Nodes ═══ */
-  .node { cursor:pointer; }
-  .node rect, .node circle { transition: filter 0.3s, stroke 0.3s; }
-  .node:hover rect, .node:hover circle { filter: drop-shadow(0 2px 8px rgba(0,0,0,0.12)); }
-  .node.active rect, .node.active circle { stroke-width:2.5; }
-  .node-label { font-size:11px; font-weight:600; fill:#242424; pointer-events:none; }
-  .node-sub { font-size:9px; fill:#999; pointer-events:none; }
-  .node-icon { font-size:14px; pointer-events:none; }
-
-  /* ═══ Edges ═══ */
-  .edge { stroke:#B0A8A0; stroke-width:1.5; fill:none; opacity:0.6; transition: opacity 0.4s, stroke 0.4s; }
-  .edge.active { opacity:1; stroke-width:2.5; }
-  .edge.flow-down.active { stroke:#5B5FC7; }
-  .edge.flow-up.active { stroke:#107C10; }
-  .edge.flow-lateral.active { stroke:#E87400; }
-
-  /* Edge labels */
-  .edge-label { font-size:8px; fill:#999; pointer-events:none; font-weight:600; }
-  .edge-label.active { fill:#242424; }
-
-  /* ═══ Flow dots ═══ */
-  .flow-dot { r:3; opacity:0; }
-  .flow-dot.active { opacity:1; }
-
-  /* ═══ Trust gate ═══ */
-  .gate rect { fill:#FEF3C7; stroke:#E87400; rx:4; }
-  .gate text { font-size:8px; fill:#E87400; font-weight:700; }
-
-  /* ═══ Zone labels ═══ */
-  .zone-label { font-size:10px; font-weight:700; fill:#999; letter-spacing:0.1em; text-transform:uppercase; }
-
-  /* ═══ Zone backgrounds ═══ */
-  .zone-bg { rx:12; opacity:0.35; }
-
-  /* ═══ Detail panel ═══ */
-  .detail {
-    position:fixed; bottom:0; left:0; right:0; z-index:100;
-    background:white; border-top:1px solid #E5DFD9;
-    padding:20px 32px; transform:translateY(100%);
-    transition: transform 0.35s cubic-bezier(0.16,1,0.3,1);
-    box-shadow: 0 -4px 24px rgba(0,0,0,0.08);
-    display:flex; gap:32px; align-items:flex-start;
-    max-height: 220px;
-  }
-  .detail.open { transform:none; }
-  .detail-close {
-    position:absolute; top:12px; right:20px; background:none; border:none;
-    font-size:18px; color:#999; cursor:pointer;
-  }
-  .detail-icon { font-size:28px; flex-shrink:0; margin-top:2px; }
-  .detail-content { flex:1; min-width:0; }
-  .detail-title { font-size:16px; font-weight:700; margin-bottom:4px; }
-  .detail-desc { font-size:13px; color:#616161; line-height:1.65; margin-bottom:8px; }
-  .detail-flows { display:flex; gap:16px; flex-wrap:wrap; }
-  .detail-flow { font-size:11px; display:flex; align-items:center; gap:4px; }
-  .detail-flow .arrow { font-size:14px; }
-  .detail-flow.inbound .arrow { color:#107C10; }
-  .detail-flow.outbound .arrow { color:#5B5FC7; }
-  .detail-flow.lateral .arrow { color:#E87400; }
-
-  /* ═══ Scenario strip ═══ */
-  .scenario-strip {
-    max-width:1100px; margin:0 auto; padding:0 24px 48px;
-  }
-  .scenario-title { font-size:16px; font-weight:700; margin-bottom:16px; }
-  .scenario-steps { display:flex; gap:0; overflow-x:auto; padding-bottom:8px; }
-  .scenario-step {
-    min-width:180px; padding:14px 16px; background:white;
-    border:1px solid #E5DFD9; font-size:11px; color:#616161; line-height:1.55;
-    position:relative; cursor:pointer; transition: background 0.2s;
-  }
-  .scenario-step:first-child { border-radius:10px 0 0 10px; }
-  .scenario-step:last-child { border-radius:0 10px 10px 0; }
-  .scenario-step:hover { background:#FAFAFA; }
-  .scenario-step.active { background:#F8F7FF; border-color:#5B5FC7; }
-  .scenario-step strong { color:#242424; display:block; font-size:12px; margin-bottom:4px; }
-  .scenario-step .step-num {
-    position:absolute; top:-10px; left:12px; background:#5B5FC7; color:white;
-    font-size:9px; font-weight:700; width:20px; height:20px; border-radius:50%;
+  .stage:hover { box-shadow: 0 2px 12px rgba(0,0,0,0.06); }
+  .stage-num {
+    position:absolute; top:-12px; left:20px;
+    width:24px; height:24px; border-radius:50%;
     display:flex; align-items:center; justify-content:center;
+    font-size:11px; font-weight:700; color:white;
   }
-  .scenario-arrow {
-    display:flex; align-items:center; color:#D9D3CC; font-size:18px; padding:0 2px;
+  .stage-icon { font-size:22px; margin-bottom:8px; }
+  .stage-title { font-size:15px; font-weight:700; margin-bottom:4px; }
+  .stage-owner { font-size:10px; font-weight:700; color:#999; text-transform:uppercase; letter-spacing:0.04em; margin-bottom:8px; }
+  .stage-body { font-size:12px; color:#616161; line-height:1.65; }
+  .stage-body strong { color:#242424; }
+  .stage-items { margin-top:8px; }
+  .stage-item { font-size:11px; color:#616161; padding:3px 0; display:flex; align-items:flex-start; gap:6px; line-height:1.5; }
+  .stage-item .si-dot { width:6px; height:6px; border-radius:50%; flex-shrink:0; margin-top:5px; }
+  .stage-tag { display:inline-block; font-size:8px; font-weight:700; padding:2px 6px; border-radius:4px; margin-top:8px; letter-spacing:0.03em; }
+  .tag-exists { background:#DFF6DD; color:#107C10; }
+  .tag-new { background:#E8EBFA; color:#5B5FC7; }
+  .tag-gap { background:#FEF3C7; color:#E87400; }
+
+  /* ═══ Arrow connector ═══ */
+  .arrow {
+    width:80px; flex-shrink:0; display:flex; flex-direction:column;
+    align-items:center; justify-content:center; position:relative;
+  }
+  .arrow-line { width:100%; height:2px; background:#B0A8A0; position:relative; }
+  .arrow-line::after {
+    content:''; position:absolute; right:-1px; top:-4px;
+    border:5px solid transparent; border-left:6px solid #B0A8A0;
+  }
+  .arrow-label {
+    font-size:10px; font-weight:600; color:#616161; text-align:center;
+    margin-bottom:6px; line-height:1.4;
   }
 
-  /* ═══ Legend ═══ */
-  .legend {
-    max-width:1100px; margin:0 auto; padding:0 24px 48px;
-    display:flex; gap:24px; flex-wrap:wrap;
+  /* ═══ Vertical arrow ═══ */
+  .v-arrow {
+    display:flex; flex-direction:column; align-items:center;
+    padding:12px 0; position:relative;
   }
-  .legend-item { display:flex; align-items:center; gap:6px; font-size:11px; color:#616161; }
-  .legend-line { width:24px; height:2px; border-radius:1px; }
+  .v-arrow-line { width:2px; height:32px; background:#B0A8A0; position:relative; }
+  .v-arrow-line.down::after {
+    content:''; position:absolute; bottom:-1px; left:-4px;
+    border:5px solid transparent; border-top:6px solid #B0A8A0;
+  }
+  .v-arrow-line.up::after {
+    content:''; position:absolute; top:-1px; left:-4px;
+    border:5px solid transparent; border-bottom:6px solid #107C10;
+  }
+  .v-arrow-line.up { background:#107C10; }
+  .v-arrow-label { font-size:10px; font-weight:600; color:#616161; margin:4px 0; text-align:center; }
 
-  /* ═══ Tag ═══ */
-  .tag { font-size:8px; font-weight:700; letter-spacing:0.03em; pointer-events:none; }
-  .tag-new { fill:#5B5FC7; }
-  .tag-exists { fill:#107C10; }
-  .tag-gap { fill:#E87400; }
+  /* ═══ Lateral flow ═══ */
+  .lateral-section {
+    max-width:1100px; margin:0 auto; padding:0 24px;
+  }
+  .lateral-header {
+    font-size:11px; font-weight:700; color:#E87400; text-transform:uppercase;
+    letter-spacing:0.08em; text-align:center; margin:32px 0 16px;
+    display:flex; align-items:center; gap:12px; justify-content:center;
+  }
+  .lateral-header .lh-line { flex:1; max-width:120px; height:1px; background:#E87400; opacity:0.3; }
+  .lateral-row { display:flex; align-items:stretch; gap:0; }
+  .lateral-arrow {
+    width:60px; flex-shrink:0; display:flex; flex-direction:column;
+    align-items:center; justify-content:center;
+  }
+  .lateral-arrow .arrow-line { background:#E87400; }
+  .lateral-arrow .arrow-line::after { border-left-color:#E87400; }
+  .lateral-arrow .arrow-line.reverse::after { border-left:none; border-right:6px solid #E87400; left:-1px; right:auto; }
+  .lateral-arrow .arrow-label { color:#E87400; }
+
+  /* ═══ Loop section ═══ */
+  .loop-section {
+    max-width:1100px; margin:24px auto 0; padding:0 24px 80px;
+  }
+  .loop-header {
+    font-size:11px; font-weight:700; color:#107C10; text-transform:uppercase;
+    letter-spacing:0.08em; text-align:center; margin:32px 0 16px;
+    display:flex; align-items:center; gap:12px; justify-content:center;
+  }
+  .loop-header .lh-line { flex:1; max-width:120px; height:1px; background:#107C10; opacity:0.3; }
+  .loop-row { display:flex; align-items:stretch; gap:0; }
+  .loop-arrow {
+    width:80px; flex-shrink:0; display:flex; flex-direction:column;
+    align-items:center; justify-content:center;
+  }
+  .loop-arrow .arrow-line { background:#107C10; }
+  .loop-arrow .arrow-line::after { border-left-color:#107C10; }
+  .loop-arrow .arrow-line.reverse { }
+  .loop-arrow .arrow-line.reverse::after { border-left:none; border-right:6px solid #107C10; left:-1px; right:auto; }
+
+  /* ═══ Section dividers ═══ */
+  .section-title {
+    max-width:1100px; margin:40px auto 0; padding:0 24px;
+    font-size:11px; font-weight:700; color:#999; text-transform:uppercase;
+    letter-spacing:0.08em;
+    display:flex; align-items:center; gap:12px;
+  }
+  .section-title .st-line { flex:1; height:1px; background:#D9D3CC; }
+
+  /* ═══ Responsive ═══ */
+  @media (max-width:900px) {
+    .row, .lateral-row, .loop-row { flex-direction:column; align-items:center; }
+    .arrow, .lateral-arrow, .loop-arrow { width:auto; transform:rotate(90deg); padding:8px 0; }
+    .stage { max-width:400px; }
+  }
 </style>
 </head>
 <body>
 
 <header>
   <h1>Architecture Grammar</h1>
-  <div class="sub">How signals flow up, decisions flow down, agents coordinate laterally, and trust gates regulate everything in between.</div>
-  <div class="meta">Hema Sridharan · April 2026 · Click any component to explore</div>
+  <div class="sub">OpenClaw × M365 — from signals to surface to learning loop</div>
+  <div class="meta">Hema Sridharan · April 2026</div>
+  <div class="reading">Read left → right, top → down. Follow the arrows.</div>
 </header>
 
-<!-- ═══ SCENARIO STRIP ═══ -->
-<div class="scenario-strip">
-  <div class="scenario-title">Trace: Monday Morning with Cadbury</div>
-  <div class="scenario-steps" id="scenarioSteps">
-    <div class="scenario-step" data-highlight="graph-mail,graph-cal,graph-docs,edge-g-ingest" onclick="traceStep(this)">
-      <div class="step-num">1</div>
-      <strong>Overnight Signals</strong>
-      Mail, Calendar, Docs feed raw signals into the ingestion layer. 47 emails, 2 comments, 1 conflict.
+<!-- ═══════════════════════════════════════════ -->
+<!-- ROW 1: THE MAIN PIPELINE (left to right)   -->
+<!-- ═══════════════════════════════════════════ -->
+
+<div class="section-title"><span class="st-line"></span>Main Pipeline<span class="st-line"></span></div>
+
+<div class="pipeline">
+  <div class="row">
+
+    <!-- STAGE 1: Signals -->
+    <div class="stage">
+      <div class="stage-num" style="background:#107C10;">1</div>
+      <div class="stage-icon">📡</div>
+      <div class="stage-title">M365 Signals</div>
+      <div class="stage-owner">Graph · Exchange · Teams · SharePoint</div>
+      <div class="stage-body">
+        Raw organizational data — the inputs the agent system consumes.
+      </div>
+      <div class="stage-items">
+        <div class="stage-item"><span class="si-dot" style="background:#107C10;"></span>Mail + Calendar — inbox, invites, conflicts</div>
+        <div class="stage-item"><span class="si-dot" style="background:#107C10;"></span>Documents — comments, changes, co-authoring</div>
+        <div class="stage-item"><span class="si-dot" style="background:#107C10;"></span>Org Graph — people, skills, reporting chains</div>
+        <div class="stage-item"><span class="si-dot" style="background:#107C10;"></span>Meeting Intelligence — transcripts, commitments</div>
+        <div class="stage-item"><span class="si-dot" style="background:#5B5FC7;"></span><strong>Cross-User Inference — contradictions, institutional memory</strong></div>
+      </div>
+      <span class="stage-tag tag-exists">MOSTLY EXISTS</span>
+      <span class="stage-tag tag-new" style="margin-left:4px;">INFERENCE = NEW</span>
     </div>
-    <div class="scenario-arrow">→</div>
-    <div class="scenario-step" data-highlight="ingest,memory,edge-ingest-orch,edge-mem-orch" onclick="traceStep(this)">
-      <div class="step-num">2</div>
-      <strong>Ingestion + Memory</strong>
-      Signals enriched with learned patterns (LESSONS.md). Dream cycle consolidates overnight logs.
+
+    <!-- Arrow 1→2 -->
+    <div class="arrow">
+      <div class="arrow-label">raw signals<br>enriched with<br>memory</div>
+      <div class="arrow-line"></div>
     </div>
-    <div class="scenario-arrow">→</div>
-    <div class="scenario-step" data-highlight="orchestrator,edge-orch-mail-agent,edge-orch-cal-agent,edge-orch-doc-agent" onclick="traceStep(this)">
-      <div class="step-num">3</div>
-      <strong>Orchestrator Dispatches</strong>
-      Cadbury routes to specialists: Mail Agent triages, Calendar Agent finds conflict, Doc Agent reads comments.
+
+    <!-- STAGE 2: Orchestrator -->
+    <div class="stage">
+      <div class="stage-num" style="background:#5B5FC7;">2</div>
+      <div class="stage-icon">🎯</div>
+      <div class="stage-title">Cadbury (Orchestrator)</div>
+      <div class="stage-owner">OpenClaw Runtime</div>
+      <div class="stage-body">
+        The brain. Receives enriched signals, decides what to act on, dispatches to specialist agents, compiles the briefing.
+      </div>
+      <div class="stage-items">
+        <div class="stage-item"><span class="si-dot" style="background:#5B5FC7;"></span>Routes to <strong>Mail Agent</strong> (session-isolated, no raw bodies)</div>
+        <div class="stage-item"><span class="si-dot" style="background:#5B5FC7;"></span>Routes to <strong>Calendar Agent</strong> (coordinates via mesh)</div>
+        <div class="stage-item"><span class="si-dot" style="background:#5B5FC7;"></span>Routes to <strong>Doc Agent</strong> (reads, drafts, proposes changes)</div>
+        <div class="stage-item"><span class="si-dot" style="background:#5B5FC7;"></span>Consults <strong>Memory</strong> before every decision</div>
+      </div>
+      <span class="stage-tag tag-new">NEW · THIS IS OPENCLAW</span>
     </div>
-    <div class="scenario-arrow">→</div>
-    <div class="scenario-step" data-highlight="trust-gate,edge-orch-surface" onclick="traceStep(this)">
-      <div class="step-num">4</div>
-      <strong>Trust Gate</strong>
-      44 emails auto-handled. Exec reply + calendar move → paused at gate. User approves in Teams.
+
+    <!-- Arrow 2→3 -->
+    <div class="arrow">
+      <div class="arrow-label">proposed<br>actions</div>
+      <div class="arrow-line"></div>
     </div>
-    <div class="scenario-arrow">→</div>
-    <div class="scenario-step" data-highlight="mesh,mesh-sarah,edge-mesh" onclick="traceStep(this)">
-      <div class="step-num">5</div>
-      <strong>Agent Mesh</strong>
-      Mia's agent confirms Wed 10 AM. Sarah's budget discrepancy detected. Signals only — no raw data crosses.
+
+    <!-- STAGE 3: Trust Gate -->
+    <div class="stage" style="border-color:#E87400; flex:0.6;">
+      <div class="stage-num" style="background:#E87400;">3</div>
+      <div class="stage-icon">⏸</div>
+      <div class="stage-title">Trust Gate</div>
+      <div class="stage-owner">Per-Action Autonomy</div>
+      <div class="stage-body">
+        Every action passes through. The gate decides: auto, review, or locked.
+      </div>
+      <div class="stage-items">
+        <div class="stage-item"><span class="si-dot" style="background:#107C10;"></span><strong>Auto</strong> — newsletters, confirmations, data refresh</div>
+        <div class="stage-item"><span class="si-dot" style="background:#E87400;"></span><strong>Review</strong> — peer replies (graduated over time)</div>
+        <div class="stage-item"><span class="si-dot" style="background:#D13438;"></span><strong>Locked</strong> — exec email, financial, moving others' meetings</div>
+      </div>
+      <span class="stage-tag tag-new">NEW</span>
     </div>
-    <div class="scenario-arrow">→</div>
-    <div class="scenario-step" data-highlight="surface-teams,memory,edge-surface-mem" onclick="traceStep(this)">
-      <div class="step-num">6</div>
-      <strong>Learn + Loop</strong>
-      User corrects tone. Lesson saved. Memory updated. Next time, Cadbury frames differently.
+
+    <!-- Arrow 3→4 -->
+    <div class="arrow">
+      <div class="arrow-label">approved<br>actions only</div>
+      <div class="arrow-line"></div>
     </div>
+
+    <!-- STAGE 4: Surface -->
+    <div class="stage">
+      <div class="stage-num" style="background:#D13438;">4</div>
+      <div class="stage-icon">💬</div>
+      <div class="stage-title">Surface (Teams / Mobile)</div>
+      <div class="stage-owner">Where the Human Lives</div>
+      <div class="stage-body">
+        1:1 chat with Cadbury. Approval gates show as gen UI cards. Notifications for async. Mobile-first.
+      </div>
+      <div class="stage-items">
+        <div class="stage-item"><span class="si-dot" style="background:#5B5FC7;"></span>Teams Chat — primary, gen UI cards</div>
+        <div class="stage-item"><span class="si-dot" style="background:#5B5FC7;"></span>Mobile — notifications, lock-screen approvals</div>
+        <div class="stage-item"><span class="si-dot" style="background:#E87400;"></span><strong>In-App Agent Mode</strong> — Word/Excel/PPT pane</div>
+        <div class="stage-item"><span class="si-dot" style="background:#E87400;"></span><strong>Voice</strong> — same agent, spoken</div>
+      </div>
+      <span class="stage-tag tag-new">NEW</span>
+      <span class="stage-tag tag-gap" style="margin-left:4px;">IN-APP = GAP</span>
+    </div>
+
   </div>
 </div>
 
-<!-- ═══ MAIN DIAGRAM ═══ -->
-<div class="diagram">
-<svg viewBox="0 0 1050 680" xmlns="http://www.w3.org/2000/svg">
+<!-- ═══════════════════════════════════════════ -->
+<!-- ROW 2: AGENT MESH (lateral)                -->
+<!-- ═══════════════════════════════════════════ -->
 
-  <!-- Zone backgrounds -->
-  <rect class="zone-bg" x="20" y="30" width="330" height="620" fill="#E8F5E9"/>
-  <rect class="zone-bg" x="370" y="30" width="310" height="620" fill="#E8EBFA"/>
-  <rect class="zone-bg" x="700" y="30" width="330" height="620" fill="#FFF7ED"/>
+<div class="lateral-section">
+  <div class="lateral-header"><span class="lh-line"></span>Agent Mesh — Lateral Coordination<span class="lh-line"></span></div>
 
-  <!-- Zone labels -->
-  <text class="zone-label" x="185" y="55" text-anchor="middle">M365 Signals</text>
-  <text class="zone-label" x="525" y="55" text-anchor="middle">Agent Runtime (OpenClaw)</text>
-  <text class="zone-label" x="865" y="55" text-anchor="middle">Surfaces + Trust</text>
+  <div class="lateral-row">
 
-  <!-- ═══ EDGES (drawn first, under nodes) ═══ -->
-  <!-- Graph → Ingestion -->
-  <path class="edge flow-down" id="edge-g-ingest" d="M310,118 C360,118 380,180 420,235"/>
-  <text class="edge-label" x="355" y="165" transform="rotate(-40,355,165)">raw signals</text>
+    <div class="stage" style="border-color:#E87400; border-style:dashed; flex:1;">
+      <div class="stage-icon">👤</div>
+      <div class="stage-title">Sarah's Agent</div>
+      <div class="stage-body">Sarah's own orchestrator. Reads her docs, her email. Knows her projections assume +15% growth.</div>
+      <span class="stage-tag tag-gap">DOESN'T EXIST YET</span>
+    </div>
 
-  <path class="edge flow-down" id="edge-g-ingest2" d="M310,228 C360,228 390,235 420,245"/>
-  <path class="edge flow-down" id="edge-g-ingest3" d="M310,340 C360,330 390,290 420,265"/>
+    <div class="lateral-arrow">
+      <div class="arrow-label" style="color:#E87400;">conflict<br>signal</div>
+      <div class="arrow-line"></div>
+    </div>
 
-  <!-- Ingestion → Orchestrator -->
-  <path class="edge flow-down" id="edge-ingest-orch" d="M470,270 L500,310"/>
-  <text class="edge-label" x="475" y="285">structured context</text>
+    <div class="stage" style="border-color:#E87400; border-width:2px; flex:1.4;">
+      <div class="stage-icon">🔗</div>
+      <div class="stage-title">Platform Mesh Layer</div>
+      <div class="stage-owner" style="color:#E87400;">THE GAP</div>
+      <div class="stage-body">
+        <strong>Signals only — never raw data.</strong> Each agent sees only its person's data. The mesh passes structured signals between them.
+      </div>
+      <div class="stage-items">
+        <div class="stage-item"><span class="si-dot" style="background:#E87400;"></span>"Assumption mismatch between two docs"</div>
+        <div class="stage-item"><span class="si-dot" style="background:#E87400;"></span>"Meeting ended — action items per person"</div>
+        <div class="stage-item"><span class="si-dot" style="background:#E87400;"></span>"Mia confirms Wed 10 AM free"</div>
+        <div class="stage-item"><span class="si-dot" style="background:#E87400;"></span>"Dependency chain: Omar → Sarah → Raj"</div>
+      </div>
+      <span class="stage-tag tag-gap">GAP · THIS IS THE MULTIPLIER</span>
+    </div>
 
-  <!-- Memory ↔ Orchestrator -->
-  <path class="edge flow-up" id="edge-mem-orch" d="M515,420 L515,370"/>
-  <text class="edge-label" x="490" y="398" text-anchor="end">lessons</text>
-  <path class="edge flow-down" id="edge-orch-mem" d="M545,370 L545,420"/>
-  <text class="edge-label" x="550" y="398">corrections</text>
+    <div class="lateral-arrow">
+      <div class="arrow-label" style="color:#E87400;">availability<br>+ deps</div>
+      <div class="arrow-line"></div>
+    </div>
 
-  <!-- Orchestrator → Specialist Agents -->
-  <path class="edge flow-down" id="edge-orch-mail-agent" d="M490,360 L430,360 L430,510"/>
-  <text class="edge-label" x="415" y="440" text-anchor="end">triage</text>
-  <path class="edge flow-down" id="edge-orch-cal-agent" d="M525,370 L525,510"/>
-  <text class="edge-label" x="530" y="440">resolve</text>
-  <path class="edge flow-down" id="edge-orch-doc-agent" d="M560,360 L610,360 L610,510"/>
-  <text class="edge-label" x="615" y="440">draft</text>
+    <div class="stage" style="border-color:#E87400; border-style:dashed; flex:1;">
+      <div class="stage-icon">👤</div>
+      <div class="stage-title">Mia's Agent</div>
+      <div class="stage-body">Mia's agent. Calendar queries go through mesh: "Wed 10 AM?" → "Confirmed free."</div>
+      <span class="stage-tag tag-gap">DOESN'T EXIST YET</span>
+    </div>
 
-  <!-- Orchestrator → Trust Gate -->
-  <path class="edge flow-down" id="edge-orch-surface" d="M620,330 C670,320 720,310 750,310"/>
-  <text class="edge-label" x="680" y="305">proposed actions</text>
-
-  <!-- Trust Gate → Surface -->
-  <path class="edge flow-down" id="edge-trust-surface" d="M830,290 L870,230"/>
-  <text class="edge-label" x="855" y="255">approved</text>
-
-  <!-- Agent Mesh (lateral) -->
-  <path class="edge flow-lateral" id="edge-mesh" d="M430,600 C350,630 250,630 200,620"/>
-  <text class="edge-label" x="300" y="645">signals only</text>
-  <path class="edge flow-lateral" id="edge-mesh2" d="M610,600 C690,630 760,620 800,615"/>
-  <text class="edge-label" x="710" y="645">availability</text>
-
-  <!-- Surface → Memory (learning loop) -->
-  <path class="edge flow-up" id="edge-surface-mem" d="M850,395 C780,430 620,450 560,450"/>
-  <text class="edge-label" x="720" y="440">user feedback → LESSONS.md</text>/>
-
-  <!-- ═══ M365 SIGNAL NODES ═══ -->
-  <!-- Mail -->
-  <g class="node" id="graph-mail" onclick="showDetail(this)" data-icon="📧" data-title="Mail + Calendar" data-desc="Inbox signals, meeting invites, scheduling conflicts, attendee context. The daily heartbeat of organizational communication. Mail Agent consumes this in session-isolated mode — never returns raw email bodies." data-in="Exchange, Outlook" data-out="Ingestion Layer" data-tag="exists">
-    <rect x="50" y="90" width="260" height="56" rx="10" fill="white" stroke="#107C10" stroke-width="1"/>
-    <text class="node-icon" x="70" y="124">📧</text>
-    <text class="node-label" x="90" y="115">Mail + Calendar</text>
-    <text class="node-sub" x="90" y="130">Inbox triage · meeting prep · conflicts</text>
-    <text class="tag tag-exists" x="270" y="106" text-anchor="end">EXISTS</text>
-  </g>
-
-  <!-- Docs -->
-  <g class="node" id="graph-docs" onclick="showDetail(this)" data-icon="📄" data-title="Documents + Co-Auth" data-desc="Comments, tracked changes, co-authoring signals across Word, Excel, PowerPoint. Cross-user content reading with permission boundaries — Person A's agent sees A's docs, Person B's agent sees B's. Only conflict signals cross the boundary." data-in="SharePoint, OneDrive" data-out="Ingestion Layer, Cross-User Inference" data-tag="exists">
-    <rect x="50" y="200" width="260" height="56" rx="10" fill="white" stroke="#107C10" stroke-width="1"/>
-    <text class="node-icon" x="70" y="234">📄</text>
-    <text class="node-label" x="90" y="225">Documents + Co-Authoring</text>
-    <text class="node-sub" x="90" y="240">Comments · tracked changes · cross-user</text>
-    <text class="tag tag-exists" x="270" y="216" text-anchor="end">EXISTS</text>
-  </g>
-
-  <!-- Org Graph -->
-  <g class="node" id="graph-org" onclick="showDetail(this)" data-icon="👥" data-title="Org Graph + People" data-desc="Reporting chains, team rosters, skill profiles, project assignments. Who knows what. Who's finishing a project. Who has capacity. The signal that enables cross-team people matching." data-in="Azure AD, Viva" data-out="Ingestion Layer, Agent Mesh" data-tag="exists">
-    <rect x="50" y="310" width="260" height="56" rx="10" fill="white" stroke="#107C10" stroke-width="1"/>
-    <text class="node-icon" x="70" y="344">👥</text>
-    <text class="node-label" x="90" y="335">Org Graph + People</text>
-    <text class="node-sub" x="90" y="350">Rosters · skills · capacity · reporting</text>
-    <text class="tag tag-exists" x="270" y="326" text-anchor="end">EXISTS</text>
-  </g>
-
-  <!-- Meeting Intelligence -->
-  <g class="node" id="graph-meetings" onclick="showDetail(this)" data-icon="🎤" data-title="Meeting Intelligence" data-desc="Teams transcripts, action items, commitments, sentiment. What was promised and by whom. Fed to post-meeting agent coordination — each person's agent extracts their commitments." data-in="Teams" data-out="Ingestion Layer, Agent Mesh" data-tag="exists">
-    <rect x="50" y="420" width="260" height="56" rx="10" fill="white" stroke="#107C10" stroke-width="1"/>
-    <text class="node-icon" x="70" y="454">🎤</text>
-    <text class="node-label" x="90" y="445">Meeting Intelligence</text>
-    <text class="node-sub" x="90" y="460">Transcripts · action items · commitments</text>
-    <text class="tag tag-exists" x="270" y="436" text-anchor="end">EXISTS</text>
-  </g>
-
-  <!-- Cross-User Inference -->
-  <g class="node" id="graph-xuser" onclick="showDetail(this)" data-icon="🔍" data-title="Cross-User Inference" data-desc="The multiplier. Contradictions between documents owned by different people. Institutional memory from departed employees. Alignment gaps across teams. Permission-aware: only SIGNALS cross the boundary, never raw data." data-in="Documents, Org Graph" data-out="Orchestrator, Agent Mesh" data-tag="new">
-    <rect x="50" y="530" width="260" height="56" rx="10" fill="white" stroke="#5B5FC7" stroke-width="1.5" stroke-dasharray="4,3"/>
-    <text class="node-icon" x="70" y="564">🔍</text>
-    <text class="node-label" x="90" y="555">Cross-User Inference</text>
-    <text class="node-sub" x="90" y="570">Contradictions · history · alignment gaps</text>
-    <text class="tag tag-new" x="270" y="546" text-anchor="end">NEW</text>
-  </g>
-
-  <!-- ═══ AGENT RUNTIME NODES ═══ -->
-  <!-- Ingestion -->
-  <g class="node" id="ingest" onclick="showDetail(this)" data-icon="⬇️" data-title="Signal Ingestion" data-desc="Normalizes raw M365 signals into structured context the orchestrator can reason over. Enriches with learned patterns from memory. Runs continuously — overnight batch + real-time stream." data-in="All M365 signals" data-out="Orchestrator" data-tag="new">
-    <rect x="400" y="220" width="140" height="50" rx="8" fill="white" stroke="#5B5FC7" stroke-width="1"/>
-    <text class="node-label" x="470" y="245" text-anchor="middle">Ingestion</text>
-    <text class="node-sub" x="470" y="258" text-anchor="middle">normalize · enrich</text>
-  </g>
-
-  <!-- Orchestrator (Cadbury) -->
-  <g class="node" id="orchestrator" onclick="showDetail(this)" data-icon="🎯" data-title="Orchestrator (Cadbury)" data-desc="The brain. Routes work to specialist agents, compiles briefings, manages conversation state. Owns the relationship with the user. Decides what to handle autonomously vs. what to escalate. Consults memory before every decision." data-in="Ingestion, Memory, Agent Mesh, User responses" data-out="Mail Agent, Calendar Agent, Doc Agent, Trust Gate, Memory" data-tag="new">
-    <rect x="460" y="300" width="160" height="60" rx="10" fill="#5B5FC7" stroke="none"/>
-    <text class="node-label" x="540" y="328" text-anchor="middle" fill="white">🎯 Cadbury</text>
-    <text class="node-sub" x="540" y="345" text-anchor="middle" fill="rgba(255,255,255,0.7)">orchestrate · decide · brief</text>
-  </g>
-
-  <!-- Memory -->
-  <g class="node" id="memory" onclick="showDetail(this)" data-icon="🧠" data-title="Memory System" data-desc="Multi-layered: daily logs (what happened), curated lessons (LESSONS.md — corrections, preferences, patterns), vector search (semantic recall), personality (SOUL.md). Dream cycles at 4 AM consolidate short-term into long-term. Feeds back into every orchestrator decision." data-in="Orchestrator (corrections), Surface (user feedback), Dream cycle" data-out="Orchestrator (context), Ingestion (enrichment)" data-tag="new">
-    <rect x="440" y="420" width="180" height="56" rx="10" fill="white" stroke="#5B5FC7" stroke-width="1.5"/>
-    <text class="node-icon" x="460" y="454">🧠</text>
-    <text class="node-label" x="485" y="445">Memory</text>
-    <text class="node-sub" x="485" y="460">Lessons · logs · vectors · dreams</text>
-    <text class="tag tag-new" x="580" y="438" text-anchor="end">NEW</text>
-  </g>
-
-  <!-- Specialist Agents -->
-  <g class="node" id="agent-mail" onclick="showDetail(this)" data-icon="✉️" data-title="Mail Agent" data-desc="Session-isolated. Classifies by sender trust + content analysis. Auto-replies to established patterns (confidence >95%). Escalates exec/financial/ambiguous. NEVER returns raw email bodies — breaks prompt injection chains." data-in="Orchestrator" data-out="Orchestrator (structured summary)" data-tag="new">
-    <rect x="380" y="510" width="100" height="70" rx="8" fill="white" stroke="#5B5FC7" stroke-width="1"/>
-    <text class="node-icon" x="430" y="538" text-anchor="middle">✉️</text>
-    <text class="node-label" x="430" y="555" text-anchor="middle">Mail</text>
-    <text class="node-sub" x="430" y="568" text-anchor="middle">isolated</text>
-  </g>
-  <g class="node" id="agent-cal" onclick="showDetail(this)" data-icon="📅" data-title="Calendar Agent" data-desc="Detects conflicts, proposes resolutions. Coordinates with other people's agents through the mesh — e.g. 'Mia's agent confirms free.' Never moves someone's meeting without approval gate." data-in="Orchestrator, Agent Mesh" data-out="Orchestrator, Agent Mesh" data-tag="new">
-    <rect x="490" y="510" width="100" height="70" rx="8" fill="white" stroke="#5B5FC7" stroke-width="1"/>
-    <text class="node-icon" x="540" y="538" text-anchor="middle">📅</text>
-    <text class="node-label" x="540" y="555" text-anchor="middle">Calendar</text>
-    <text class="node-sub" x="540" y="568" text-anchor="middle">cross-person</text>
-  </g>
-  <g class="node" id="agent-doc" onclick="showDetail(this)" data-icon="📄" data-title="Document Agent" data-desc="Reads comments, drafts responses, proposes tracked changes. Pulls cross-app data (e.g. hiring pipeline from Excel into Word). Always pauses at exec communication gate." data-in="Orchestrator, Data Agent" data-out="Orchestrator (drafts), Documents (changes)" data-tag="new">
-    <rect x="600" y="510" width="100" height="70" rx="8" fill="white" stroke="#5B5FC7" stroke-width="1"/>
-    <text class="node-icon" x="650" y="538" text-anchor="middle">📄</text>
-    <text class="node-label" x="650" y="555" text-anchor="middle">Document</text>
-    <text class="node-sub" x="650" y="568" text-anchor="middle">cross-app</text>
-  </g>
-
-  <!-- Agent Mesh -->
-  <g class="node" id="mesh" onclick="showDetail(this)" data-icon="🔗" data-title="Agent Mesh" data-desc="The layer that doesn't exist yet. Cross-person agent coordination through signal exchange — never raw data. Post-meeting action item distribution. Calendar coordination. Dependency chain tracking. Each agent sees only its person's data; the mesh passes structured signals between them." data-in="Meeting Intelligence, Calendar Agent, Orchestrator" data-out="All agents (coordination signals)" data-tag="gap">
-    <rect x="400" y="600" width="280" height="40" rx="8" fill="white" stroke="#E87400" stroke-width="1.5" stroke-dasharray="4,3"/>
-    <text class="node-label" x="540" y="624" text-anchor="middle">🔗 Agent Mesh — cross-person coordination</text>
-    <text class="tag tag-gap" x="660" y="614" text-anchor="end">GAP</text>
-  </g>
-  <!-- External agents -->
-  <g class="node" id="mesh-sarah" onclick="showDetail(this)" data-icon="👤" data-title="Sarah's Agent" data-desc="Sarah's own Cadbury instance. Reads Sarah's docs, manages Sarah's tasks. Communicates with your agent ONLY through the mesh — structured signals, never raw data. Example: 'Sarah's projections assume +15% growth' is a signal. The actual spreadsheet never crosses." data-in="Sarah's M365 signals" data-out="Agent Mesh (signals only)" data-tag="gap">
-    <circle cx="180" cy="610" r="22" fill="white" stroke="#E87400" stroke-width="1.5" stroke-dasharray="4,3"/>
-    <text x="180" y="614" text-anchor="middle" font-size="11" font-weight="600" fill="#E87400">SC</text>
-  </g>
-  <g class="node" id="mesh-mia" onclick="showDetail(this)" data-icon="👤" data-title="Mia's Agent" data-desc="Mia's agent. Calendar Agent queries it through the mesh: 'Is Mia free Wed 10 AM?' The response is a structured signal: 'confirmed free.' No access to Mia's inbox or docs." data-in="Mia's M365 signals" data-out="Agent Mesh (availability)" data-tag="gap">
-    <circle cx="820" cy="610" r="22" fill="white" stroke="#E87400" stroke-width="1.5" stroke-dasharray="4,3"/>
-    <text x="820" y="614" text-anchor="middle" font-size="11" font-weight="600" fill="#E87400">MA</text>
-  </g>
-
-  <!-- ═══ SURFACES + TRUST ═══ -->
-  <!-- Trust Gate -->
-  <g class="node gate" id="trust-gate" onclick="showDetail(this)" data-icon="⏸" data-title="Trust Gate" data-desc="The boundary between autonomous and human-approved actions. Each action category has its own gate threshold. Routine email triage → passes automatically. Exec communication → pauses. Financial data → always locked. Gates can be graduated: 10 consecutive approvals without edit → gate removed for that category." data-in="Orchestrator (proposed actions)" data-out="Surface (approved) or Orchestrator (rejected)" data-tag="new">
-    <rect x="750" y="270" width="80" height="80" rx="6" fill="#FEF3C7" stroke="#E87400" stroke-width="1.5"/>
-    <text x="790" y="305" text-anchor="middle" font-size="18">⏸</text>
-    <text x="790" y="325" text-anchor="middle" font-size="9" font-weight="700" fill="#E87400">TRUST</text>
-    <text x="790" y="337" text-anchor="middle" font-size="9" font-weight="700" fill="#E87400">GATE</text>
-  </g>
-
-  <!-- Teams Surface -->
-  <g class="node" id="surface-teams" onclick="showDetail(this)" data-icon="💬" data-title="Teams Chat (Cadbury)" data-desc="Primary surface. 1:1 conversation with your orchestrator. Gen UI cards for structured data. Approval buttons for trust gates. Notification handoffs for async. Mobile-first — the exec surface. Voice mode for hands-free." data-in="Trust Gate (approved actions), Orchestrator (briefings)" data-out="User decisions → Orchestrator, Corrections → Memory" data-tag="new">
-    <rect x="850" y="130" width="160" height="100" rx="12" fill="white" stroke="#E87400" stroke-width="1"/>
-    <text class="node-icon" x="930" y="168" text-anchor="middle" font-size="24">💬</text>
-    <text class="node-label" x="930" y="195" text-anchor="middle">Teams · Mobile</text>
-    <text class="node-sub" x="930" y="210" text-anchor="middle">primary surface</text>
-    <text class="tag tag-new" x="990" y="150" text-anchor="end">NEW</text>
-  </g>
-
-  <!-- In-App Agent -->
-  <g class="node" id="surface-app" onclick="showDetail(this)" data-icon="📝" data-title="In-App Agent Mode" data-desc="Copilot pane inside Word/Excel/PPT. Same orchestrator, same memory. Document is the artifact. Tracked changes proposed, not imposed. Chat history follows the file — open a file from a chat, that chat continues in the pane." data-in="Orchestrator, Document Agent" data-out="Document changes, User decisions" data-tag="gap">
-    <rect x="850" y="260" width="160" height="70" rx="10" fill="white" stroke="#E87400" stroke-width="1" stroke-dasharray="4,3"/>
-    <text class="node-icon" x="875" y="298">📝</text>
-    <text class="node-label" x="900" y="295">In-App Agent</text>
-    <text class="node-sub" x="900" y="310">Word · Excel · PPT</text>
-    <text class="tag tag-gap" x="990" y="278" text-anchor="end">GAP</text>
-  </g>
-
-  <!-- Learning Loop arrow -->
-  <g class="node" id="learn-loop" onclick="showDetail(this)" data-icon="📝" data-title="Learning Loop" data-desc="The feedback cycle that makes the agent better over time. User corrects a response → correction stored as lesson → next time agent checks lessons before acting → different behavior. This is the flywheel. Every interaction is training data for the agent's judgment." data-in="User corrections, Approval patterns" data-out="Memory (LESSONS.md)" data-tag="new">
-    <rect x="850" y="370" width="160" height="50" rx="8" fill="white" stroke="#5B5FC7" stroke-width="1"/>
-    <text class="node-icon" x="875" y="400">📝</text>
-    <text class="node-label" x="900" y="398">Learning Loop</text>
-    <text class="node-sub" x="900" y="410">corrections → memory</text>
-  </g>
-
-  <!-- User -->
-  <g class="node" id="user-node" onclick="showDetail(this)" data-icon="👤" data-title="The Human" data-desc="You. Makes 2-3 decisions per day. Approves high-stakes actions. Corrects tone, judgment, approach. Teaches the agent through daily use. The agent gets better because you use it, not because someone fine-tuned it." data-in="Briefings, proposals, questions" data-out="Approvals, corrections, instructions" data-tag="">
-    <circle cx="930" cy="80" r="28" fill="#242424"/>
-    <text x="930" y="84" text-anchor="middle" font-size="14" fill="white">👤</text>
-  </g>
-
-  <!-- User → Surface -->
-  <path class="edge flow-up" d="M930,108 L930,130" stroke="#999" stroke-width="1.5" opacity="0.6"/>
-
-</svg>
-</div>
-
-<!-- ═══ LEGEND ═══ -->
-<div class="legend">
-  <div class="legend-item"><div class="legend-line" style="background:#5B5FC7;"></div> Control/data flows down</div>
-  <div class="legend-item"><div class="legend-line" style="background:#107C10;"></div> Feedback/learning flows up</div>
-  <div class="legend-item"><div class="legend-line" style="background:#E87400;"></div> Agent-to-agent flows laterally</div>
-  <div class="legend-item"><div class="legend-line" style="background:#E87400; border:1px dashed #E87400; height:0;"></div> Dashed = doesn't exist yet</div>
-  <div class="legend-item"><span style="font-size:14px;">⏸</span> Trust gate (human approval)</div>
-</div>
-
-<!-- ═══ DETAIL PANEL ═══ -->
-<div class="detail" id="detailPanel">
-  <button class="detail-close" onclick="closeDetail()">✕</button>
-  <div class="detail-icon" id="detailIcon"></div>
-  <div class="detail-content">
-    <div class="detail-title" id="detailTitle"></div>
-    <div class="detail-desc" id="detailDesc"></div>
-    <div class="detail-flows" id="detailFlows"></div>
   </div>
 </div>
 
-<script>
-function showDetail(node) {
-  var d = node.dataset;
-  document.getElementById('detailIcon').textContent = d.icon;
-  document.getElementById('detailTitle').textContent = d.title;
-  document.getElementById('detailDesc').textContent = d.desc;
+<!-- ═══════════════════════════════════════════ -->
+<!-- ROW 3: LEARNING LOOP (right to left)       -->
+<!-- ═══════════════════════════════════════════ -->
 
-  var flows = document.getElementById('detailFlows');
-  flows.innerHTML = '';
-  if (d.in) {
-    flows.innerHTML += '<div class="detail-flow inbound"><span class="arrow">← </span>From: ' + d.in + '</div>';
-  }
-  if (d.out) {
-    flows.innerHTML += '<div class="detail-flow outbound"><span class="arrow">→ </span>To: ' + d.out + '</div>';
-  }
+<div class="loop-section">
+  <div class="loop-header"><span class="lh-line"></span>Learning Loop — Flows Back Up<span class="lh-line"></span></div>
 
-  document.getElementById('detailPanel').classList.add('open');
+  <div class="loop-row">
 
-  // Highlight node
-  document.querySelectorAll('.node').forEach(function(n) { n.classList.remove('active'); });
-  node.classList.add('active');
-}
+    <div class="stage" style="flex:1;">
+      <div class="stage-icon">👤</div>
+      <div class="stage-title">User Corrects</div>
+      <div class="stage-body">"Don't call it a conflict — frame as alignment." The human teaches the agent through daily use.</div>
+    </div>
 
-function closeDetail() {
-  document.getElementById('detailPanel').classList.remove('open');
-  document.querySelectorAll('.node').forEach(function(n) { n.classList.remove('active'); });
-  document.querySelectorAll('.edge').forEach(function(e) { e.classList.remove('active'); });
-}
+    <div class="loop-arrow">
+      <div class="arrow-label" style="color:#107C10;">correction</div>
+      <div class="arrow-line"></div>
+    </div>
 
-function traceStep(step) {
-  // Highlight scenario step
-  document.querySelectorAll('.scenario-step').forEach(function(s) { s.classList.remove('active'); });
-  step.classList.add('active');
+    <div class="stage" style="flex:1;">
+      <div class="stage-icon">📝</div>
+      <div class="stage-title">Lesson Saved</div>
+      <div class="stage-body"><strong>LESSONS.md updated.</strong> "Don't flag exec discrepancies as conflicts — frame as alignment." Won't repeat.</div>
+    </div>
 
-  // Highlight relevant nodes and edges
-  var ids = (step.dataset.highlight || '').split(',');
-  document.querySelectorAll('.node').forEach(function(n) { n.classList.remove('active'); });
-  document.querySelectorAll('.edge').forEach(function(e) { e.classList.remove('active'); });
-  ids.forEach(function(id) {
-    var el = document.getElementById(id.trim());
-    if (el) el.classList.add('active');
-  });
-}
-</script>
+    <div class="loop-arrow">
+      <div class="arrow-label" style="color:#107C10;">enriches</div>
+      <div class="arrow-line"></div>
+    </div>
+
+    <div class="stage" style="flex:1;">
+      <div class="stage-icon">🧠</div>
+      <div class="stage-title">Memory</div>
+      <div class="stage-body">Multi-layered: daily logs, curated lessons, vector search, personality. <strong>Dream cycles at 4 AM</strong> consolidate short-term → long-term.</div>
+      <span class="stage-tag tag-new">NEW</span>
+    </div>
+
+    <div class="loop-arrow">
+      <div class="arrow-label" style="color:#107C10;">informs next<br>decision</div>
+      <div class="arrow-line"></div>
+    </div>
+
+    <div class="stage" style="flex:1;">
+      <div class="stage-icon">🎯</div>
+      <div class="stage-title">Orchestrator</div>
+      <div class="stage-body">Next time Cadbury encounters a similar situation, it checks lessons first. Different behavior. <strong>The flywheel.</strong></div>
+    </div>
+
+  </div>
+</div>
+
 </body>
 </html>

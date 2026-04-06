@@ -1,0 +1,1559 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Agent Harness — UX Foundation for WXP</title>
+<style>
+  :root {
+    --bg: #FFFFFF;
+    --surface: #F5F1EC;
+    --surface-hover: #EDE8E3;
+    --border: #D9D3CC;
+    --border-light: #E5DFD9;
+    --text: #242424;
+    --text-secondary: #616161;
+    --text-muted: #999;
+    --brand-blue: #0F6CBD;
+    --copilot-purple: #7B57FF;
+    --green: #107C10;
+    --green-light: #DFF6DD;
+    --red: #D13438;
+    --yellow: #FFB900;
+    --orange: #E87400;
+    --blue-light: #EBF3FC;
+    --purple-light: #F3EEFF;
+    --font: 'Segoe UI Variable Display', 'Segoe UI Variable', 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
+    --sidebar-w: 260px;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: var(--font); background: var(--bg); color: var(--text); height: 100vh; overflow: hidden; }
+
+  /* ═══ Landing ═══ */
+  .landing {
+    position: fixed; inset: 0; z-index: 200;
+    background: var(--surface);
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    color: var(--text); transition: opacity 0.5s ease, visibility 0.5s;
+  }
+  .landing.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
+  .landing h1 { font-size: 36px; font-weight: 700; margin-bottom: 6px; }
+  .landing h2 { font-size: 16px; font-weight: 400; color: var(--text-secondary); margin-bottom: 28px; }
+  .landing-card {
+    background: white; border: 1px solid var(--border-light); border-radius: 16px;
+    padding: 28px 32px; max-width: 580px; width: 92%; margin-bottom: 28px;
+    text-align: left; box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+  }
+  .landing-card .intro { font-size: 13px; color: var(--text-secondary); line-height: 1.6; margin-bottom: 16px; text-align: center; }
+  .tier-preview { margin-bottom: 12px; }
+  .tier-preview-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 6px; display: flex; align-items: center; gap: 6px; }
+  .tier-preview-label.t1 { color: var(--red); }
+  .tier-preview-label.t2 { color: var(--orange); }
+  .tier-preview-label.t3 { color: var(--brand-blue); }
+  .tier-preview-label.t4 { color: var(--copilot-purple); }
+  .tier-preview-items { font-size: 12px; color: var(--text-secondary); line-height: 1.7; padding-left: 18px; }
+  .start-btn {
+    padding: 14px 44px; border-radius: 28px; border: none;
+    background: var(--text); color: white; font-size: 15px; font-weight: 600;
+    cursor: pointer; box-shadow: 0 4px 16px rgba(0,0,0,0.15); transition: transform 0.2s;
+  }
+  .start-btn:hover { transform: translateY(-2px); }
+  .landing .meta { margin-top: 24px; font-size: 11px; color: var(--text-muted); }
+
+  /* ═══ Shell ═══ */
+  .shell { display: flex; height: 100vh; width: 100vw; }
+
+  /* ═══ Sidebar ═══ */
+  .sidebar {
+    width: var(--sidebar-w); min-width: var(--sidebar-w); height: 100%;
+    background: var(--surface); border-right: 1px solid var(--border-light);
+    display: flex; flex-direction: column; overflow-y: auto; overflow-x: hidden;
+    font-size: 14px;
+  }
+  .sb-top { padding: 10px 14px; display: flex; align-items: center; gap: 8px; }
+  .sb-brand { font-size: 20px; font-weight: 700; color: var(--text); letter-spacing: -0.5px; }
+  .sb-divider { height: 1px; background: var(--border-light); margin: 8px 14px; }
+  .sb-section-label { font-size: 11px; font-weight: 700; color: var(--text-muted); padding: 10px 18px 6px; letter-spacing: 0.8px; text-transform: uppercase; }
+  .sb-nav { padding: 2px 8px; }
+  .sb-nav-item { display: flex; align-items: center; gap: 10px; padding: 7px 10px; border-radius: 6px; font-size: 14px; color: var(--text); cursor: pointer; }
+  .sb-nav-item:hover { background: var(--surface-hover); }
+  .sb-nav-item.active { background: var(--surface-hover); font-weight: 600; }
+  .sb-cap-item {
+    display: flex; flex-direction: column; padding: 6px 10px; margin: 0 8px; border-radius: 6px; cursor: pointer;
+    transition: background 0.15s;
+  }
+  .sb-cap-item:hover { background: var(--surface-hover); }
+  .sb-cap-item.active { background: var(--surface-hover); }
+  .sb-cap-row { display: flex; align-items: center; gap: 8px; }
+  .sb-cap-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+  .sb-cap-name { font-size: 13px; color: var(--text); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; flex: 1; }
+  .sb-cap-sub { font-size: 11px; color: var(--text-muted); padding-left: 16px; margin-top: 2px; }
+  .sb-cap-tier {
+    font-size: 9px; font-weight: 700; letter-spacing: 0.5px; padding: 1px 6px; border-radius: 4px;
+    flex-shrink: 0; text-transform: uppercase;
+  }
+  .sb-cap-tier.t1 { background: #FDECEC; color: var(--red); }
+  .sb-cap-tier.t2 { background: #FFF4E5; color: var(--orange); }
+  .sb-cap-tier.t3 { background: var(--blue-light); color: var(--brand-blue); }
+  .sb-cap-tier.t4 { background: var(--purple-light); color: var(--copilot-purple); }
+  .sb-bottom { margin-top: auto; padding: 10px 14px; border-top: 1px solid var(--border-light); }
+
+  /* ═══ Main area ═══ */
+  .main { flex: 1; display: flex; flex-direction: column; min-width: 0; overflow: hidden; }
+  .topbar {
+    height: 48px; display: flex; align-items: center; padding: 0 20px;
+    border-bottom: 1px solid var(--border-light); background: var(--bg); flex-shrink: 0;
+    position: relative;
+  }
+  .topbar-title { font-size: 14px; font-weight: 600; color: var(--text); }
+  .topbar-tier { font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 4px; margin-left: 10px; text-transform: uppercase; letter-spacing: 0.5px; }
+  .topbar-right { margin-left: auto; display: flex; align-items: center; gap: 12px; }
+  .app-toggle { display: flex; border: 1px solid var(--border); border-radius: 20px; overflow: hidden; }
+  .app-toggle button {
+    padding: 4px 14px; border: none; background: transparent; font-size: 12px;
+    font-family: var(--font); cursor: pointer; color: var(--text-secondary); transition: all 0.2s;
+  }
+  .app-toggle button.active { background: var(--blue-light); color: var(--brand-blue); font-weight: 600; }
+
+  /* Content area */
+  .content-area { flex: 1; overflow-y: auto; padding: 0; }
+  .content-scroll { max-width: 780px; margin: 0 auto; padding: 28px 32px 60px; }
+
+  /* ═══ Principle cards ═══ */
+  .principle-hero {
+    margin-bottom: 28px; padding-bottom: 28px; border-bottom: 1px solid var(--border-light);
+  }
+  .principle-hero h2 { font-size: 24px; font-weight: 700; margin-bottom: 6px; }
+  .principle-hero .p-sub { font-size: 14px; color: var(--text-secondary); line-height: 1.6; }
+  .principle-hero .p-tier { font-size: 10px; font-weight: 700; padding: 3px 10px; border-radius: 6px; display: inline-block; margin-bottom: 12px; text-transform: uppercase; letter-spacing: 0.8px; }
+
+  .law-tag {
+    display: inline-flex; align-items: center; gap: 6px; font-size: 11px;
+    background: rgba(30,30,30,0.92); color: #B4A0FF; padding: 5px 12px;
+    border-radius: 8px; margin-top: 12px; backdrop-filter: blur(6px);
+  }
+  .law-tag-num { font-weight: 800; font-size: 10px; color: rgba(255,255,255,0.5); }
+  .law-tag-text { color: rgba(255,255,255,0.85); }
+
+  /* Demo block */
+  .demo-block {
+    background: #FAFAF8; border: 1px solid var(--border-light); border-radius: 16px;
+    overflow: hidden; margin: 20px 0;
+  }
+  .demo-header {
+    padding: 14px 20px; border-bottom: 1px solid var(--border-light);
+    display: flex; align-items: center; gap: 10px; font-size: 12px; color: var(--text-muted);
+  }
+  .demo-header .demo-label { font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; color: var(--copilot-purple); }
+  .demo-body { padding: 20px 24px; }
+
+  /* Simulated chat within demos */
+  .sim-user { display: flex; justify-content: flex-end; margin: 8px 0; }
+  .sim-user-bubble {
+    background: var(--surface); color: var(--text); padding: 10px 18px;
+    border-radius: 18px 18px 4px 18px; font-size: 13px; max-width: 400px; line-height: 1.5;
+  }
+  .sim-cp { margin: 12px 0; }
+  .sim-cp-label { display: flex; align-items: center; gap: 6px; margin-bottom: 6px; font-size: 12px; font-weight: 600; color: var(--text); }
+  .sim-cp-body { font-size: 13px; line-height: 1.7; color: var(--text-secondary); }
+  .sim-cp-body strong { color: var(--text); }
+
+  /* App-icon badges */
+  .app-icon { width: 16px; height: 16px; border-radius: 3px; display: inline-flex; align-items: center; justify-content: center; font-size: 8px; color: white; font-weight: 700; vertical-align: -2px; flex-shrink: 0; }
+  .app-icon.w { background: #185ABD; }
+  .app-icon.x { background: #107C10; }
+  .app-icon.p { background: #D24726; }
+
+  /* Inline diff highlight */
+  .diff-add { background: #DFF6DD; padding: 1px 4px; border-radius: 3px; }
+  .diff-del { background: #FDECEC; text-decoration: line-through; padding: 1px 4px; border-radius: 3px; color: var(--text-muted); }
+
+  /* Confidence callout */
+  .confidence-callout {
+    background: #FFF8E5; border-left: 3px solid var(--yellow); border-radius: 0 10px 10px 0;
+    padding: 10px 14px; margin: 10px 0; font-size: 12px; color: #6B5900;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .confidence-callout.error { background: #FDF2F2; border-left-color: var(--red); color: #8B1A1D; }
+
+  /* Consent block */
+  .consent-block {
+    background: white; border: 1px solid var(--border); border-radius: 12px;
+    padding: 14px 18px; margin: 10px 0;
+  }
+  .consent-title { font-size: 12px; font-weight: 700; color: var(--text); margin-bottom: 8px; display: flex; align-items: center; gap: 6px; }
+  .consent-item { font-size: 12px; color: var(--text-secondary); padding: 4px 0; display: flex; align-items: center; gap: 6px; }
+  .consent-item .check { color: var(--green); font-weight: 700; }
+  .consent-actions { display: flex; gap: 8px; margin-top: 12px; }
+  .btn { padding: 7px 18px; border-radius: 20px; font-size: 12px; font-weight: 600; cursor: pointer; font-family: var(--font); border: none; transition: all 0.15s; }
+  .btn.pri { background: #EDE8E3; color: var(--text); border: 1px solid var(--border); }
+  .btn.pri:hover { background: #E5DFD9; }
+  .btn.sec { background: white; color: var(--text-secondary); border: 1px solid var(--border-light); }
+  .btn.sec:hover { background: #F9F9F9; }
+  .btn.brand { background: var(--copilot-purple); color: white; border: none; }
+  .btn.brand:hover { background: #6A48E6; }
+
+  /* Source pill */
+  .source-pill {
+    display: inline-flex; align-items: center; gap: 6px;
+    background: #F5F5F5; border-radius: 8px; padding: 5px 10px;
+    font-size: 11px; color: var(--text-secondary); margin: 3px 2px; cursor: pointer;
+  }
+  .source-pill:hover { background: #EDEDED; }
+
+  /* Thinking rail inside demo */
+  .sim-rail {
+    border-left: 2px solid var(--border-light); padding-left: 14px; margin: 10px 0;
+  }
+  .sim-rail-step { display: flex; gap: 8px; align-items: flex-start; margin-bottom: 10px; font-size: 12px; }
+  .sim-rail-dot { width: 18px; height: 18px; border-radius: 50%; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 9px; font-weight: 700; }
+  .sim-rail-dot.done { background: var(--green-light); color: var(--green); }
+  .sim-rail-dot.active { background: var(--blue-light); color: var(--brand-blue); border: 1.5px solid var(--brand-blue); }
+  .sim-rail-dot.pending { background: #F0F0F0; color: var(--text-muted); }
+  .sim-rail-label { color: var(--text); line-height: 1.4; }
+  .sim-rail-label.muted { color: var(--text-muted); }
+
+  /* Voice mode indicator */
+  .voice-indicator {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: linear-gradient(135deg, #7B57FF20, #0F6CBD20); border: 1px solid #7B57FF40;
+    border-radius: 24px; padding: 8px 16px; font-size: 12px; color: var(--copilot-purple); font-weight: 600;
+  }
+  .voice-wave { display: flex; align-items: center; gap: 2px; }
+  .voice-wave span {
+    width: 3px; border-radius: 2px; background: var(--copilot-purple);
+    animation: vwave 0.8s ease infinite alternate;
+  }
+  .voice-wave span:nth-child(1) { height: 8px; animation-delay: 0s; }
+  .voice-wave span:nth-child(2) { height: 14px; animation-delay: 0.15s; }
+  .voice-wave span:nth-child(3) { height: 10px; animation-delay: 0.3s; }
+  .voice-wave span:nth-child(4) { height: 16px; animation-delay: 0.1s; }
+  .voice-wave span:nth-child(5) { height: 8px; animation-delay: 0.25s; }
+  @keyframes vwave { from { height: 4px; } to { height: 16px; } }
+
+  /* Input control shared */
+  .shared-input {
+    border: 1px solid var(--border); border-radius: 16px; background: white; overflow: hidden; margin: 10px 0;
+  }
+  .shared-input-field { width: 100%; border: none; outline: none; font-size: 13px; font-family: var(--font); padding: 12px 16px 4px; background: transparent; color: var(--text); }
+  .shared-input-field::placeholder { color: var(--text-muted); }
+  .shared-input-bottom { display: flex; align-items: center; justify-content: space-between; padding: 4px 12px 8px; }
+  .shared-input-left { display: flex; align-items: center; gap: 6px; }
+  .shared-input-right { display: flex; align-items: center; gap: 6px; }
+  .input-affordance {
+    font-size: 11px; color: var(--text-muted); background: var(--surface); border: 1px solid var(--border-light);
+    border-radius: 10px; padding: 2px 8px; cursor: pointer; transition: all 0.15s;
+  }
+  .input-affordance:hover { background: var(--surface-hover); color: var(--text-secondary); }
+  .input-affordance.active { background: var(--blue-light); color: var(--brand-blue); border-color: var(--brand-blue); }
+  .input-icon { font-size: 14px; color: var(--text-muted); cursor: pointer; }
+
+  /* Task status indicators */
+  .task-status { display: inline-flex; align-items: center; gap: 4px; font-size: 11px; font-weight: 600; padding: 2px 8px; border-radius: 10px; }
+  .task-status.active { background: var(--blue-light); color: var(--brand-blue); }
+  .task-status.done { background: var(--green-light); color: var(--green); }
+  .task-status.overdue { background: #FDECEC; color: var(--red); }
+  .task-status.auto { background: var(--purple-light); color: var(--copilot-purple); }
+
+  /* Harness contract card */
+  .contract-card {
+    background: white; border: 1px solid var(--border-light); border-radius: 12px;
+    padding: 16px 20px; margin: 14px 0;
+  }
+  .contract-header { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 10px; display: flex; align-items: center; gap: 8px; }
+  .contract-header.harness { color: var(--red); }
+  .contract-header.app { color: var(--brand-blue); }
+  .contract-items { font-size: 12px; line-height: 1.7; color: var(--text-secondary); }
+  .contract-items li { margin-bottom: 4px; }
+
+  /* Extension point callout */
+  .ext-point {
+    background: #F0F7FF; border-left: 3px solid var(--brand-blue); border-radius: 0 10px 10px 0;
+    padding: 10px 14px; margin: 10px 0; font-size: 12px; color: #0A4A8A;
+  }
+  .ext-point strong { color: #0F6CBD; }
+
+  /* Sensitivity label */
+  .sens-label {
+    display: inline-flex; align-items: center; gap: 4px; font-size: 10px; font-weight: 600;
+    color: var(--green); padding: 2px 8px; border-radius: 4px; border: 1px solid #C5E8C5;
+    background: #F0FAF0;
+  }
+
+  /* Section divider */
+  .section-divider { border: none; height: 1px; background: var(--border-light); margin: 24px 0; }
+
+  /* Annotations */
+  .ann-inline {
+    background: rgba(30,30,30,0.92); color: white; padding: 8px 14px; border-radius: 8px;
+    font-size: 11px; line-height: 1.5; margin: 10px 0; border-left: 3px solid #B4A0FF;
+  }
+  .ann-inline .ann-tag { font-size: 9px; text-transform: uppercase; letter-spacing: 0.8px; color: #B4A0FF; margin-bottom: 3px; font-weight: 700; display: block; }
+  .ann-inline .ann-body { color: rgba(255,255,255,0.85); }
+
+  /* Prototype reference tags */
+  .proto-ref {
+    display: inline-flex; align-items: center; gap: 4px; font-size: 10px;
+    border-radius: 10px; padding: 2px 8px; font-weight: 600; margin: 2px 2px;
+  }
+  .proto-ref.one { background: #E8F0FE; color: #1A5BB5; }
+  .proto-ref.voice { background: #F3EEFF; color: #6B48C9; }
+  .proto-ref.score { background: #FFF4E5; color: #9A6700; }
+  .proto-ref.tasks { background: #DFF6DD; color: #107C10; }
+
+  /* Grid for app extension examples */
+  .app-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin: 12px 0; }
+  .app-grid-cell {
+    background: white; border: 1px solid var(--border-light); border-radius: 10px;
+    padding: 12px 14px; font-size: 12px;
+  }
+  .app-grid-cell h4 { font-size: 11px; font-weight: 700; margin-bottom: 6px; display: flex; align-items: center; gap: 6px; }
+  .app-grid-cell p { color: var(--text-secondary); line-height: 1.5; font-size: 11px; }
+
+  /* Timeline for plan mode */
+  .plan-timeline { margin: 12px 0; }
+  .plan-step {
+    display: flex; gap: 12px; align-items: flex-start; position: relative; padding-bottom: 16px;
+  }
+  .plan-step:not(:last-child)::before {
+    content: ''; position: absolute; left: 11px; top: 24px;
+    width: 1.5px; height: calc(100% - 24px); background: var(--border-light);
+  }
+  .plan-dot {
+    width: 22px; height: 22px; border-radius: 50%; flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 10px; font-weight: 700;
+  }
+  .plan-dot.done { background: var(--green-light); color: var(--green); }
+  .plan-dot.active { background: var(--blue-light); color: var(--brand-blue); border: 2px solid var(--brand-blue); }
+  .plan-dot.pending { background: #F0F0F0; color: var(--text-muted); }
+  .plan-info { flex: 1; }
+  .plan-label { font-size: 13px; font-weight: 600; color: var(--text); }
+  .plan-label.muted { color: var(--text-muted); font-weight: 400; }
+  .plan-meta { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
+
+  /* Smooth card */
+  .smooth-card {
+    background: #F9F9F9; border-radius: 14px; padding: 14px 18px;
+    margin: 10px 0; font-size: 13px; line-height: 1.65; color: var(--text-secondary);
+  }
+  .smooth-card strong { color: var(--text); }
+  .smooth-card-title { font-size: 11px; font-weight: 700; color: var(--text-muted); margin-bottom: 8px; letter-spacing: 0.3px; text-transform: uppercase; }
+
+  .hidden { display: none !important; }
+  @keyframes fadeInUp { from { opacity:0; transform: translateY(8px); } to { opacity:1; transform: translateY(0); } }
+  .anim-in { animation: fadeInUp 0.4s ease both; }
+
+  /* Scrollbar */
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: #D0D0D0; border-radius: 3px; }
+</style>
+</head>
+<body>
+
+<!-- ═══ LANDING ═══ -->
+<div class="landing" id="landing">
+  <h1>Agent Harness — UX Foundation</h1>
+  <h2>What the Harness owns. What apps extend. What ships.</h2>
+
+  <div class="landing-card">
+    <div class="intro">Every principle is derived from prototypes and mapped to the Agent Harness architecture.<br/>Walk through each capability to see what the Harness must provide and what Word, Excel, and PowerPoint customize.</div>
+
+    <div class="tier-preview">
+      <div class="tier-preview-label t1">🔴 Tier 1 — Non-Negotiable (Harness Must)</div>
+      <div class="tier-preview-items">Visible reasoning · Consent before action · Multi-modal input · Context continuity · Identity & auth · RAI & safety · Streaming & performance</div>
+    </div>
+    <div class="tier-preview">
+      <div class="tier-preview-label t2">🟠 Tier 2 — Adaptive Bridge (Harness Provides, Apps Shape)</div>
+      <div class="tier-preview-items">Grounding & source transparency · Memory & continuity · Confidence signaling · Context-aware adaptation · Precision scoping</div>
+    </div>
+    <div class="tier-preview">
+      <div class="tier-preview-label t3">🔵 Tier 3 — Vertical Nuance (App Owns)</div>
+      <div class="tier-preview-items">Canvas artifacts · Domain clarification · Domain visualization · App-specific error recovery</div>
+    </div>
+    <div class="tier-preview">
+      <div class="tier-preview-label t4">🟣 Tier 4 — Delightful (Innovate Forward)</div>
+      <div class="tier-preview-items">Plan mode · Cross-app workflows · Ambient tasks · Scheduling · Generative UI · Long-running projects · Collaboration spaces</div>
+    </div>
+  </div>
+
+  <button class="start-btn" onclick="startDemo()">Explore the Foundation →</button>
+  <div class="meta">Prototype by Hema Sridharan · March 2026</div>
+</div>
+
+<!-- ═══ SHELL ═══ -->
+<div class="shell">
+
+  <!-- ═══ SIDEBAR ═══ -->
+  <div class="sidebar">
+    <div class="sb-top">
+      <span class="sb-brand">Harness UX</span>
+    </div>
+
+    <div class="sb-section-label">Tier 1 — Non-Negotiable</div>
+    <div class="sb-cap-item active" id="nav-reasoning" onclick="showSection('reasoning')">
+      <div class="sb-cap-row">
+        <span class="sb-cap-dot" style="background:var(--red);"></span>
+        <span class="sb-cap-name">Visible Reasoning</span>
+        <span class="sb-cap-tier t1">T1</span>
+      </div>
+      <span class="sb-cap-sub">CoT · Thinking UX · Sources</span>
+    </div>
+    <div class="sb-cap-item" id="nav-consent" onclick="showSection('consent')">
+      <div class="sb-cap-row">
+        <span class="sb-cap-dot" style="background:var(--red);"></span>
+        <span class="sb-cap-name">Consent Before Action</span>
+        <span class="sb-cap-tier t1">T1</span>
+      </div>
+      <span class="sb-cap-sub">Propose, never impose</span>
+    </div>
+    <div class="sb-cap-item" id="nav-input" onclick="showSection('input')">
+      <div class="sb-cap-row">
+        <span class="sb-cap-dot" style="background:var(--red);"></span>
+        <span class="sb-cap-name">Multi-Modal Input</span>
+        <span class="sb-cap-tier t1">T1</span>
+      </div>
+      <span class="sb-cap-sub">Text · Voice · Image · Selection</span>
+    </div>
+    <div class="sb-cap-item" id="nav-handoff" onclick="showSection('handoff')">
+      <div class="sb-cap-row">
+        <span class="sb-cap-dot" style="background:var(--red);"></span>
+        <span class="sb-cap-name">Handoff & Continuity</span>
+        <span class="sb-cap-tier t1">T1</span>
+      </div>
+      <span class="sb-cap-sub">Context survives everything</span>
+    </div>
+    <div class="sb-cap-item" id="nav-streaming" onclick="showSection('streaming')">
+      <div class="sb-cap-row">
+        <span class="sb-cap-dot" style="background:var(--red);"></span>
+        <span class="sb-cap-name">Streaming & Performance</span>
+        <span class="sb-cap-tier t1">T1</span>
+      </div>
+      <span class="sb-cap-sub">&lt;1s frame · &lt;500ms first token</span>
+    </div>
+    <div class="sb-cap-item" id="nav-safety" onclick="showSection('safety')">
+      <div class="sb-cap-row">
+        <span class="sb-cap-dot" style="background:var(--red);"></span>
+        <span class="sb-cap-name">Safety & Compliance</span>
+        <span class="sb-cap-tier t1">T1</span>
+      </div>
+      <span class="sb-cap-sub">RAI · Labels · Governance</span>
+    </div>
+
+    <div class="sb-divider"></div>
+    <div class="sb-section-label">Tier 2 — Adaptive Bridge</div>
+    <div class="sb-cap-item" id="nav-grounding" onclick="showSection('grounding')">
+      <div class="sb-cap-row">
+        <span class="sb-cap-dot" style="background:var(--orange);"></span>
+        <span class="sb-cap-name">Grounding & Transparency</span>
+        <span class="sb-cap-tier t2">T2</span>
+      </div>
+      <span class="sb-cap-sub">Enterprise · Web · Sources UI</span>
+    </div>
+    <div class="sb-cap-item" id="nav-memory" onclick="showSection('memory')">
+      <div class="sb-cap-row">
+        <span class="sb-cap-dot" style="background:var(--orange);"></span>
+        <span class="sb-cap-name">Memory & State</span>
+        <span class="sb-cap-tier t2">T2</span>
+      </div>
+      <span class="sb-cap-sub">Session · Cross-session · Ambient</span>
+    </div>
+    <div class="sb-cap-item" id="nav-confidence" onclick="showSection('confidence')">
+      <div class="sb-cap-row">
+        <span class="sb-cap-dot" style="background:var(--orange);"></span>
+        <span class="sb-cap-name">Confidence & Uncertainty</span>
+        <span class="sb-cap-tier t2">T2</span>
+      </div>
+      <span class="sb-cap-sub">Admit what you don't know</span>
+    </div>
+    <div class="sb-cap-item" id="nav-scoping" onclick="showSection('scoping')">
+      <div class="sb-cap-row">
+        <span class="sb-cap-dot" style="background:var(--orange);"></span>
+        <span class="sb-cap-name">Precision Scoping</span>
+        <span class="sb-cap-tier t2">T2</span>
+      </div>
+      <span class="sb-cap-sub">Object-level targeting</span>
+    </div>
+
+    <div class="sb-divider"></div>
+    <div class="sb-section-label">Tier 3 — Vertical Nuance</div>
+    <div class="sb-cap-item" id="nav-canvas" onclick="showSection('canvas')">
+      <div class="sb-cap-row">
+        <span class="sb-cap-dot" style="background:var(--brand-blue);"></span>
+        <span class="sb-cap-name">Canvas-First Artifacts</span>
+        <span class="sb-cap-tier t3">T3</span>
+      </div>
+      <span class="sb-cap-sub">Doc is the artifact, not chat</span>
+    </div>
+    <div class="sb-cap-item" id="nav-clarification" onclick="showSection('clarification')">
+      <div class="sb-cap-row">
+        <span class="sb-cap-dot" style="background:var(--brand-blue);"></span>
+        <span class="sb-cap-name">Domain Clarification</span>
+        <span class="sb-cap-tier t3">T3</span>
+      </div>
+      <span class="sb-cap-sub">Smart questions, not wizards</span>
+    </div>
+
+    <div class="sb-divider"></div>
+    <div class="sb-section-label">Tier 4 — Delightful</div>
+    <div class="sb-cap-item" id="nav-plan" onclick="showSection('plan')">
+      <div class="sb-cap-row">
+        <span class="sb-cap-dot" style="background:var(--copilot-purple);"></span>
+        <span class="sb-cap-name">Plan Mode</span>
+        <span class="sb-cap-tier t4">T4</span>
+      </div>
+      <span class="sb-cap-sub">Decompose → Execute → Verify</span>
+    </div>
+    <div class="sb-cap-item" id="nav-crossapp" onclick="showSection('crossapp')">
+      <div class="sb-cap-row">
+        <span class="sb-cap-dot" style="background:var(--copilot-purple);"></span>
+        <span class="sb-cap-name">Cross-App Workflows</span>
+        <span class="sb-cap-tier t4">T4</span>
+      </div>
+      <span class="sb-cap-sub">Excel → Word → PPT</span>
+    </div>
+    <div class="sb-cap-item" id="nav-tasks" onclick="showSection('tasks')">
+      <div class="sb-cap-row">
+        <span class="sb-cap-dot" style="background:var(--copilot-purple);"></span>
+        <span class="sb-cap-name">Ambient Tasks & Scheduling</span>
+        <span class="sb-cap-tier t4">T4</span>
+      </div>
+      <span class="sb-cap-sub">Proactive · Recurring · Ambient</span>
+    </div>
+    <div class="sb-cap-item" id="nav-genui" onclick="showSection('genui')">
+      <div class="sb-cap-row">
+        <span class="sb-cap-dot" style="background:var(--copilot-purple);"></span>
+        <span class="sb-cap-name">Generative UI</span>
+        <span class="sb-cap-tier t4">T4</span>
+      </div>
+      <span class="sb-cap-sub">SDL · Governed components</span>
+    </div>
+
+    <div class="sb-bottom">
+      <div style="font-size: 10px; color: var(--text-muted); line-height: 1.5;">
+        Derived from:<br/>
+        <span class="proto-ref one">One Copilot</span>
+        <span class="proto-ref voice">Voice Edit</span><br/>
+        <span class="proto-ref score">Agent Scorecard</span>
+        <span class="proto-ref tasks">Work Tasks</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ MAIN ═══ -->
+  <div class="main">
+    <div class="topbar">
+      <span class="topbar-title" id="topTitle">Visible Reasoning</span>
+      <span class="topbar-tier" id="topTier" style="background:#FDECEC; color:var(--red);">TIER 1 — NON-NEGOTIABLE</span>
+      <div class="topbar-right">
+        <div class="app-toggle">
+          <button class="active" id="togAll" onclick="setAppFilter('all')">All</button>
+          <button id="togWord" onclick="setAppFilter('word')"><span class="app-icon w" style="width:14px;height:14px;font-size:7px;">W</span></button>
+          <button id="togExcel" onclick="setAppFilter('excel')"><span class="app-icon x" style="width:14px;height:14px;font-size:7px;">X</span></button>
+          <button id="togPPT" onclick="setAppFilter('ppt')"><span class="app-icon p" style="width:14px;height:14px;font-size:7px;">P</span></button>
+        </div>
+      </div>
+    </div>
+
+    <div class="content-area">
+
+      <!-- ═══ SECTION: VISIBLE REASONING ═══ -->
+      <div class="content-scroll section-content" id="sec-reasoning">
+        <div class="principle-hero">
+          <div class="p-tier" style="background:#FDECEC; color:var(--red);">Tier 1 — Non-Negotiable</div>
+          <h2>Show the Work, Not Just the Result</h2>
+          <p class="p-sub">The user always knows <em>that</em> the agent is working and <em>what</em> it is considering. Reasoning is visible. Sources are named. Progress is decomposed into legible steps.</p>
+          <div>
+            <span class="proto-ref one">One Copilot</span>
+            <span class="proto-ref voice">Voice Edit</span>
+            <span class="proto-ref score">Agent Scorecard</span>
+          </div>
+        </div>
+
+        <div class="demo-block">
+          <div class="demo-header">
+            <span class="demo-label">Live Demo</span>
+            <span>Streaming chain-of-thought with source citations</span>
+          </div>
+          <div class="demo-body">
+            <div class="sim-user"><div class="sim-user-bubble">Review the Q3 Budget Proposal and flag anything where marketing allocation looks disproportionate to engineering headcount growth.</div></div>
+
+            <div class="sim-cp">
+              <div class="sim-cp-label">✦ Copilot</div>
+              <div class="sim-rail">
+                <div class="sim-rail-step"><span class="sim-rail-dot done">✓</span><span class="sim-rail-label">Reading Q3_Budget_Proposal.docx</span></div>
+                <div class="sim-rail-step"><span class="sim-rail-dot done">✓</span><span class="sim-rail-label">Cross-referencing with Q3_Actuals.xlsx</span></div>
+                <div class="sim-rail-step"><span class="sim-rail-dot done">✓</span><span class="sim-rail-label">Comparing to org-stage benchmarks</span></div>
+                <div class="sim-rail-step"><span class="sim-rail-dot done">✓</span><span class="sim-rail-label">Generating tracked changes</span></div>
+              </div>
+              <div class="sim-cp-body">
+                <p>I reviewed <strong>Q3_Budget_Proposal.docx</strong>. Marketing is allocated at 33% ($1.4M) — significantly above the <strong>22% benchmark</strong> for your org's growth stage. I've suggested tracked changes reducing it to 28% and reallocating $350K to engineering headcount.</p>
+              </div>
+              <div style="margin-top: 8px;">
+                <span class="source-pill"><span class="app-icon w">W</span> Q3_Budget_Proposal.docx</span>
+                <span class="source-pill"><span class="app-icon x">X</span> Q3_Actuals.xlsx</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="contract-card">
+          <div class="contract-header harness">🔒 Harness Contract (non-negotiable)</div>
+          <ul class="contract-items">
+            <li><strong>Streaming chain-of-thought</strong> with collapsed/expanded state — shipped as a shared component</li>
+            <li><strong>Source citation rendering</strong> — collapsible sources below every grounded response</li>
+            <li><strong>Progress decomposition</strong> — multi-step execution shows what step is happening, not a generic spinner</li>
+            <li><strong>Configurable CoT depth</strong> via Harness API — agents choose level of detail per scenario</li>
+          </ul>
+        </div>
+
+        <div class="ext-point">
+          <strong>App Extension Point:</strong> Apps customize <em>what</em> gets surfaced in chain of thought (Excel: formula derivation; PPT: design rationale; Word: editorial reasoning). The rendering pattern is Harness-owned.
+        </div>
+
+        <div class="app-grid">
+          <div class="app-grid-cell">
+            <h4><span class="app-icon w">W</span> Word</h4>
+            <p>"Comparing marketing allocation against Section 2 benchmarks… revising to 28%"</p>
+          </div>
+          <div class="app-grid-cell">
+            <h4><span class="app-icon x">X</span> Excel</h4>
+            <p>"Evaluating SUMIFS across Q3 range… detected 3 outlier cells in row 47-52"</p>
+          </div>
+          <div class="app-grid-cell">
+            <h4><span class="app-icon p">P</span> PowerPoint</h4>
+            <p>"Analyzing slide structure… recommending executive summary on slide 2 with data viz"</p>
+          </div>
+        </div>
+
+        <div class="ann-inline">
+          <span class="ann-tag">Harness Architecture</span>
+          <span class="ann-body">Streaming updates (Cap 1.4) delivers CoT, LLM state, and intermediate artifacts to the client. Both Claude SDK and GHCP SDK support this — the Harness normalizes the output format.</span>
+        </div>
+      </div>
+
+      <!-- ═══ SECTION: CONSENT BEFORE ACTION ═══ -->
+      <div class="content-scroll section-content hidden" id="sec-consent">
+        <div class="principle-hero">
+          <div class="p-tier" style="background:#FDECEC; color:var(--red);">Tier 1 — Non-Negotiable</div>
+          <h2>Propose, Never Impose</h2>
+          <p class="p-sub">The agent proposes changes. The user disposes. No irreversible action happens without acknowledgment. Autonomous execution is explicitly opted into, never defaulted.</p>
+          <div>
+            <span class="proto-ref one">One Copilot</span>
+            <span class="proto-ref tasks">Work Tasks</span>
+            <span class="proto-ref score">Agent Scorecard</span>
+          </div>
+        </div>
+
+        <div class="demo-block">
+          <div class="demo-header"><span class="demo-label">Live Demo</span> Tracked changes pending approval</div>
+          <div class="demo-body">
+            <div class="sim-cp">
+              <div class="sim-cp-label">✦ Copilot</div>
+              <div class="sim-cp-body">
+                <p>I've prepared the following changes to your document:</p>
+              </div>
+
+              <div class="consent-block">
+                <div class="consent-title">🛡️ Review before applying</div>
+                <div class="consent-item"><span class="check">✓</span> <span class="app-icon w">W</span> Section 2 — marketing revised from <span class="diff-del">33% ($1.4M)</span> to <span class="diff-add">28% ($1.18M)</span></div>
+                <div class="consent-item"><span class="check">✓</span> <span class="app-icon w">W</span> Section 3 — hiring pipeline table inserted</div>
+                <div class="consent-item"><span class="check">✓</span> <span class="app-icon w">W</span> Sarah Chen's 2 comments — replies drafted</div>
+                <div class="consent-actions">
+                  <button class="btn pri">Accept all as tracked changes</button>
+                  <button class="btn sec">Review individually</button>
+                  <button class="btn sec">Reject</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="contract-card">
+          <div class="contract-header harness">🔒 Harness Contract (non-negotiable)</div>
+          <ul class="contract-items">
+            <li><strong>All canvas-modifying actions</strong> produce a reviewable diff before committing</li>
+            <li><strong>Accept/reject/modify affordances</strong> always present after agent action</li>
+            <li><strong>Autonomous execution</strong> (Plan Mode) explicitly opts user in — never defaults to autonomous</li>
+            <li><strong>Human-in-the-Loop</strong> (Harness Cap 2.5) — ask-question tool, approval gates, preference capture</li>
+          </ul>
+        </div>
+
+        <div class="ext-point">
+          <strong>App Extension Point:</strong> The <em>form</em> of consent is app-specific. Word: tracked changes. Excel: highlighted cell changes with undo stack. PPT: slide comparison view with before/after. The <em>requirement</em> for consent is Harness-enforced.
+        </div>
+
+        <div class="app-grid">
+          <div class="app-grid-cell">
+            <h4><span class="app-icon w">W</span> Word</h4>
+            <p>Tracked changes in the document. Accept/reject inline with Word's native review flow.</p>
+          </div>
+          <div class="app-grid-cell">
+            <h4><span class="app-icon x">X</span> Excel</h4>
+            <p>Highlighted cells with before/after values. Undo stack preserved. Named range scoping shown.</p>
+          </div>
+          <div class="app-grid-cell">
+            <h4><span class="app-icon p">P</span> PowerPoint</h4>
+            <p>Side-by-side slide comparison. Slide sorter view showing which slides changed.</p>
+          </div>
+        </div>
+
+        <div class="ann-inline">
+          <span class="ann-tag">From Work Tasks Prototype</span>
+          <span class="ann-body">"Human in the loop — you approve before it acts" is a stated design principle. The Tasks prototype never auto-sends an email or auto-updates a document without the user clicking approve.</span>
+        </div>
+      </div>
+
+      <!-- ═══ SECTION: MULTI-MODAL INPUT ═══ -->
+      <div class="content-scroll section-content hidden" id="sec-input">
+        <div class="principle-hero">
+          <div class="p-tier" style="background:#FDECEC; color:var(--red);">Tier 1 — Non-Negotiable</div>
+          <h2>Speak the User's Modality</h2>
+          <p class="p-sub">The user communicates however is natural for the moment — text, voice, image, file attachment, or object selection. The Harness normalizes all input into a single stream for the orchestrator. Voice is first-class, not an afterthought.</p>
+          <div>
+            <span class="proto-ref voice">Voice Edit</span>
+            <span class="proto-ref one">One Copilot</span>
+            <span class="proto-ref score">Agent Scorecard</span>
+          </div>
+        </div>
+
+        <div class="demo-block">
+          <div class="demo-header"><span class="demo-label">Live Demo</span> Shared input control — progressive disclosure</div>
+          <div class="demo-body">
+            <p style="font-size:12px; color:var(--text-muted); margin-bottom:12px;">The shared input control defaults to a clean text box. Affordances surface contextually — never all at once.</p>
+
+            <div class="shared-input">
+              <input class="shared-input-field" type="text" placeholder="Message Copilot" readonly />
+              <div class="shared-input-bottom">
+                <div class="shared-input-left">
+                  <span class="input-affordance">+ Peek</span>
+                  <span class="input-affordance">Sources ▾</span>
+                  <span class="input-affordance">Skills</span>
+                  <span class="input-affordance">📎</span>
+                </div>
+                <div class="shared-input-right">
+                  <span class="input-affordance" style="font-size:13px;">📷</span>
+                  <span class="input-affordance active" style="font-size:13px;">🎙</span>
+                  <span style="font-size:11px; color:var(--text-muted); border:1px solid var(--border); padding:2px 8px; border-radius:8px;">Auto ▾</span>
+                </div>
+              </div>
+            </div>
+
+            <div style="margin-top:16px;">
+              <div class="voice-indicator">
+                <div class="voice-wave"><span></span><span></span><span></span><span></span><span></span></div>
+                Listening — "Make the executive summary more concise and add the P0 incident data"
+              </div>
+            </div>
+
+            <div class="sim-cp" style="margin-top:16px;">
+              <div class="sim-cp-label">✦ Copilot</div>
+              <div class="sim-cp-body">
+                <p>I heard: <em>"Make the executive summary more concise and add the P0 incident data."</em></p>
+                <p>Condensing Section 1 from 4 sentences to 2. Pulling P0 incident data from <strong>Operations_Dashboard.xlsx</strong>. I'll show you the changes before applying.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="contract-card">
+          <div class="contract-header harness">🔒 Harness Contract (non-negotiable)</div>
+          <ul class="contract-items">
+            <li><strong>Shared input control</strong> with text, voice (dictation + realtime), image paste, file attachment, and Peek</li>
+            <li><strong>Progressive disclosure</strong> — clean text box by default, affordances surface contextually</li>
+            <li><strong>Voice and text are interchangeable</strong> — same command produces same result regardless of modality</li>
+            <li><strong>Input normalization</strong> — all modalities feed a single stream to the orchestrator (Harness API)</li>
+          </ul>
+        </div>
+
+        <div class="ext-point">
+          <strong>App Extension Point:</strong> Peek/selection adapts to what's selectable. Excel: named ranges, cell references. PPT: slides, text boxes, shapes. Word: paragraphs, headings, sections. The input control frame is Harness-owned; what's selectable is app-owned.
+        </div>
+
+        <div class="ann-inline">
+          <span class="ann-tag">Voice Edit Prototype</span>
+          <span class="ann-body">"Copilot adapts based on audience stakes, time pressure, and shows confidence levels." Voice editing is not dictation — it's contextual command interpretation. A CVP-facing doc gets different treatment than an internal draft.</span>
+        </div>
+      </div>
+
+      <!-- ═══ SECTION: HANDOFF & CONTINUITY ═══ -->
+      <div class="content-scroll section-content hidden" id="sec-handoff">
+        <div class="principle-hero">
+          <div class="p-tier" style="background:#FDECEC; color:var(--red);">Tier 1 — Non-Negotiable</div>
+          <h2>Context Survives Everything</h2>
+          <p class="p-sub">Moving between surfaces, apps, or agents never resets progress. The agent remembers what happened — yesterday, last session, across apps. "Since you were last here" is the universal re-entry pattern.</p>
+          <div>
+            <span class="proto-ref one">One Copilot</span>
+            <span class="proto-ref tasks">Work Tasks</span>
+          </div>
+        </div>
+
+        <div class="demo-block">
+          <div class="demo-header"><span class="demo-label">Live Demo</span> "Since you were last here" — context handoff</div>
+          <div class="demo-body">
+            <div class="sim-cp">
+              <div class="sim-cp-label">✦ Copilot</div>
+              <div class="smooth-card">
+                <div class="smooth-card-title">🔔 Since you were last here</div>
+                <div style="padding:4px 0;"><strong><span class="app-icon w">W</span> Sarah Chen (CFO)</strong> left 2 comments on Q3_Budget_Proposal.docx</div>
+                <div style="padding:4px 0; font-size:12px; color:var(--text-muted); padding-left:22px;">• "Can we revisit the marketing allocation rationale?"</div>
+                <div style="padding:4px 0; font-size:12px; color:var(--text-muted); padding-left:22px;">• "Timeline seems aggressive for the engineering ramp"</div>
+                <div style="padding:4px 0; margin-top:6px;"><strong><span class="app-icon x">X</span> Q3_Actuals.xlsx</strong> updated by Finance · 3 hours ago</div>
+                <div style="padding:4px 0; margin-top:6px;"><strong><span class="app-icon p">P</span> Strategy_Deck_H2.pptx</strong> — slide 4 content conflicts with updated budget</div>
+              </div>
+              <div class="sim-cp-body">
+                <p>Want me to address Sarah's comments first? I can cross-reference the updated actuals to draft responses.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="contract-card">
+          <div class="contract-header harness">🔒 Harness Contract (non-negotiable)</div>
+          <ul class="contract-items">
+            <li><strong>Context serialization on handoff</strong> — what the agent knows, artifacts, user's goal</li>
+            <li><strong>"Since you were last here" pattern</strong> — universal re-entry after any interruption</li>
+            <li><strong>Cross-app artifact references maintain identity</strong> — an Excel table referenced in Word stays linked</li>
+            <li><strong>Conversation history persistence</strong> via IC3 — multi-turn coherence across sessions</li>
+            <li><strong>Container state serialization</strong> to ODSP — survive recycling, pauses, and resumption (Harness Cap 5.2)</li>
+          </ul>
+        </div>
+
+        <div class="ann-inline">
+          <span class="ann-tag">Harness Architecture</span>
+          <span class="ann-body">A2A Handoff (Cap 1.6) supports in-container multi-agent, orchestrator-level handoff, and deep agent-to-agent coordination. Phase 1 state persistence (ODSP) is the enabler — without it, context dies on container recycle.</span>
+        </div>
+      </div>
+
+      <!-- ═══ SECTION: STREAMING & PERFORMANCE ═══ -->
+      <div class="content-scroll section-content hidden" id="sec-streaming">
+        <div class="principle-hero">
+          <div class="p-tier" style="background:#FDECEC; color:var(--red);">Tier 1 — Non-Negotiable</div>
+          <h2>Instant or It's Broken</h2>
+          <p class="p-sub">Performance is the foundational UX. If agent mode takes 3+ seconds to become interactive, users go back to the Claude add-in. Every millisecond of delay erodes trust.</p>
+          <div><span class="proto-ref score">Agent Scorecard</span></div>
+        </div>
+
+        <div class="contract-card">
+          <div class="contract-header harness">🔒 Harness Contract (non-negotiable)</div>
+          <ul class="contract-items">
+            <li><strong>&lt;1 second</strong> to interactive frame from DAB tap</li>
+            <li><strong>&lt;500ms</strong> first token latency after submit</li>
+            <li><strong>Streaming always on</strong> — every response streams token-by-token (Harness Cap 1.4)</li>
+            <li><strong>Memory-efficient loading</strong> — no BizChat dependencies during frame load</li>
+            <li><strong>Consistent measurement</strong> — auth → load → first turn → completion funnel across WXP</li>
+          </ul>
+        </div>
+
+        <div class="ann-inline">
+          <span class="ann-tag">Competitive Context</span>
+          <span class="ann-body">Claude sets the bar for streaming UX — smooth, token-by-token, with near-instant first token. The Harness must match this. AugLoop proxy and OfficeBerry container latency are the risks. Bebop's server-first approach with lazy loading is the right architectural direction.</span>
+        </div>
+      </div>
+
+      <!-- ═══ SECTION: SAFETY & COMPLIANCE ═══ -->
+      <div class="content-scroll section-content hidden" id="sec-safety">
+        <div class="principle-hero">
+          <div class="p-tier" style="background:#FDECEC; color:var(--red);">Tier 1 — Non-Negotiable</div>
+          <h2>Safety Is a Silent Guarantee</h2>
+          <p class="p-sub">Security, compliance, and responsible AI are invisible to the user — but always present. Sensitivity labels propagate automatically. Content filtering happens server-side. Enterprise governance is built into the architecture, not bolted on.</p>
+          <div><span class="proto-ref score">Agent Scorecard</span></div>
+        </div>
+
+        <div class="demo-block">
+          <div class="demo-header"><span class="demo-label">Live Demo</span> Sensitivity label propagation</div>
+          <div class="demo-body">
+            <div class="sim-cp">
+              <div class="sim-cp-label">✦ Copilot</div>
+              <div class="sim-cp-body">
+                <p>Created your executive summary by combining data from three sources.</p>
+              </div>
+              <div style="margin-top: 10px; display: flex; align-items: center; gap: 10px;">
+                <span class="sens-label">🛡 Confidential — Leadership Only</span>
+                <span style="font-size:11px; color:var(--text-muted);">Inherited from Q3_Actuals.xlsx (highest source label)</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="contract-card">
+          <div class="contract-header harness">🔒 Harness Contract (non-negotiable)</div>
+          <ul class="contract-items">
+            <li><strong>Sensitivity labels</strong> — highest source label auto-applied to generated artifacts (Harness Cap 7.2)</li>
+            <li><strong>RAI guardrails</strong> — content filtering and harm detection in AugLoop (Cap 7.3)</li>
+            <li><strong>Sandbox enforcement</strong> — container only makes outbound calls to AugLoop. No direct network access. (Cap 7.5)</li>
+            <li><strong>Artifact validation</strong> — every artifact checked for compliance before reaching user or ODSP</li>
+            <li><strong>Audit trail</strong> — immutable logs for agent actions, tool calls, and data access (Cap 7.4)</li>
+          </ul>
+        </div>
+
+        <div class="ann-inline">
+          <span class="ann-tag">Competitive Moat</span>
+          <span class="ann-body">Claude add-ins have no sensitivity label awareness, no Purview/Entra integration, and run within Office add-in sandbox constraints (less control over execution environment). The Harness's security model is enterprise-grade by architecture, not by retrofit.</span>
+        </div>
+      </div>
+
+      <!-- ═══ SECTION: GROUNDING ═══ -->
+      <div class="content-scroll section-content hidden" id="sec-grounding">
+        <div class="principle-hero">
+          <div class="p-tier" style="background:#FFF4E5; color:var(--orange);">Tier 2 — Adaptive Bridge</div>
+          <h2>You Always Know What the Agent Used</h2>
+          <p class="p-sub">Sources are named, not hidden. The user can see what the agent grounded its response on — enterprise files, web, org data — and course-correct if the wrong source was used.</p>
+          <div>
+            <span class="proto-ref one">One Copilot</span>
+            <span class="proto-ref score">Agent Scorecard</span>
+          </div>
+        </div>
+
+        <div class="demo-block">
+          <div class="demo-header"><span class="demo-label">Live Demo</span> Enterprise grounding with source transparency</div>
+          <div class="demo-body">
+            <div class="sim-cp">
+              <div class="sim-cp-label">✦ Copilot</div>
+              <div class="sim-cp-body">
+                <p>Regarding Sarah's first comment — cross-referenced <strong>Q3 actuals</strong> with the marketing allocation. Campaign efficiency held at reduced spend, confirming the 28% revision is data-backed.</p>
+                <p>✓ Reply drafted and posted to Q3_Budget_Proposal.docx, Section 2</p>
+              </div>
+              <div class="smooth-card" style="margin-top:10px;">
+                <div class="smooth-card-title">Sources used</div>
+                <div style="display:flex; flex-wrap:wrap; gap:6px;">
+                  <span class="source-pill"><span class="app-icon w">W</span> Q3_Budget_Proposal.docx · Section 2</span>
+                  <span class="source-pill"><span class="app-icon x">X</span> Q3_Actuals.xlsx · Marketing tab</span>
+                  <span class="source-pill">🔍 Org benchmarks (3S Enterprise Search)</span>
+                  <span class="source-pill">👤 Sarah Chen · CFO · Finance org</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="contract-card">
+          <div class="contract-header harness">🏗️ Harness Provides</div>
+          <ul class="contract-items">
+            <li><strong>Enterprise Search</strong> (3S) — files, emails, meetings, chats, people, calendar</li>
+            <li><strong>Enterprise Fetch</strong> (ODSP/Substrate/Graph) — full content retrieval</li>
+            <li><strong>Web Search</strong> (Lumina) — public internet grounding</li>
+            <li><strong>User Context</strong> — recent meetings, org structure, profile via Graph</li>
+            <li><strong>Source citation UI component</strong> — collapsible, showing implicit and explicit sources</li>
+          </ul>
+        </div>
+        <div class="contract-card">
+          <div class="contract-header app">🎯 Apps Shape</div>
+          <ul class="contract-items">
+            <li><strong>Word:</strong> Source = referenced document section + paragraph</li>
+            <li><strong>Excel:</strong> Source = data range used + cell references + formula chain</li>
+            <li><strong>PPT:</strong> Source = design template + referenced slides + image origin</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- ═══ SECTION: MEMORY ═══ -->
+      <div class="content-scroll section-content hidden" id="sec-memory">
+        <div class="principle-hero">
+          <div class="p-tier" style="background:#FFF4E5; color:var(--orange);">Tier 2 — Adaptive Bridge</div>
+          <h2>The Agent Remembers</h2>
+          <p class="p-sub">Memory spans sessions, days, and apps. The user never starts from zero. Tasks persist. Status updates accumulate. The agent loops back when things change — without being asked.</p>
+          <div>
+            <span class="proto-ref tasks">Work Tasks</span>
+            <span class="proto-ref one">One Copilot</span>
+          </div>
+        </div>
+
+        <div class="demo-block">
+          <div class="demo-header"><span class="demo-label">Live Demo</span> Ambient monitoring — from Work Tasks prototype</div>
+          <div class="demo-body">
+            <div style="display:flex; flex-direction:column; gap:8px;">
+              <div style="display:flex; align-items:center; gap:8px; padding:8px 12px; background:#F9F9F9; border-radius:10px;">
+                <span style="width:8px; height:8px; border-radius:50%; background:var(--red);"></span>
+                <span style="font-size:13px; font-weight:600;">Q3 Budget Finalization</span>
+                <span class="task-status active">Sarah replied · draft ready</span>
+              </div>
+              <div style="display:flex; align-items:center; gap:8px; padding:8px 12px; background:#F9F9F9; border-radius:10px;">
+                <span style="width:8px; height:8px; border-radius:50%; background:var(--orange);"></span>
+                <span style="font-size:13px; font-weight:600;">Legal Compliance Review</span>
+                <span class="task-status overdue">Pending reply · 6d overdue</span>
+              </div>
+              <div style="display:flex; align-items:center; gap:8px; padding:8px 12px; background:#F9F9F9; border-radius:10px;">
+                <span style="width:8px; height:8px; border-radius:50%; background:var(--brand-blue);"></span>
+                <span style="font-size:13px; font-weight:600;">Engineering Hiring Pipeline</span>
+                <span class="task-status auto">Data refreshed overnight</span>
+              </div>
+              <div style="display:flex; align-items:center; gap:8px; padding:8px 12px; background:#F9F9F9; border-radius:10px;">
+                <span style="width:8px; height:8px; border-radius:50%; background:transparent; border:1px solid var(--border);"></span>
+                <span style="font-size:13px; font-weight:600;">Weekly Exec Metrics</span>
+                <span class="task-status auto">Auto-generating · Mon 8 AM</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="contract-card">
+          <div class="contract-header harness">🏗️ Harness Provides</div>
+          <ul class="contract-items">
+            <li><strong>Session persistence</strong> via IC3 — conversation state anchors all other stores</li>
+            <li><strong>Container rehydration</strong> — state survives recycling (Phase 1: ODSP, Phase 2: FUSE mount)</li>
+            <li><strong>Auto context compaction</strong> — prevents context rot as conversations grow (Cap 2.6)</li>
+            <li><strong>User preferences store</strong> (planned) — persistent behavioral preferences auto-applied</li>
+          </ul>
+        </div>
+        <div class="contract-card">
+          <div class="contract-header app">🎯 Apps Shape</div>
+          <ul class="contract-items">
+            <li><strong>Word:</strong> Writing style preferences, formatting conventions, document templates</li>
+            <li><strong>Excel:</strong> Preferred chart types, data sources, formula conventions</li>
+            <li><strong>PPT:</strong> Brand templates, slide structures, image style preferences</li>
+          </ul>
+        </div>
+
+        <div class="ann-inline">
+          <span class="ann-tag">From Work Tasks Prototype</span>
+          <span class="ann-body">"Ambient — watches and loops back when things change." "Smart priority — sidebar reorders by actionability." "Cross-project sync — data flows between workstreams." These are memory-first principles expressed as UX patterns.</span>
+        </div>
+      </div>
+
+      <!-- ═══ SECTION: CONFIDENCE ═══ -->
+      <div class="content-scroll section-content hidden" id="sec-confidence">
+        <div class="principle-hero">
+          <div class="p-tier" style="background:#FFF4E5; color:var(--orange);">Tier 2 — Adaptive Bridge</div>
+          <h2>Admit What You Don't Know</h2>
+          <p class="p-sub">When the agent encounters unverifiable data, conflicting sources, or low confidence, it says so — clearly, prominently, and actionably. Uncertainty is not a footnote. It's a first-class UI pattern.</p>
+          <div><span class="proto-ref voice">Voice Edit</span></div>
+        </div>
+
+        <div class="demo-block">
+          <div class="demo-header"><span class="demo-label">Live Demo</span> From the Voice Edit prototype — inline uncertainty</div>
+          <div class="demo-body">
+            <div class="sim-cp">
+              <div class="sim-cp-label">✦ Copilot</div>
+              <div class="sim-cp-body">
+                <p>I've updated the ROI section with the revised incident cost data and projected payback period.</p>
+              </div>
+              <div class="confidence-callout">
+                ⚠️ <strong>Input needed:</strong> Can't verify $180K per P0 incident cost. This figure appears in your draft but isn't confirmed by any source I can access. Need confirmation before finalizing Section 4.
+              </div>
+              <div style="margin-top:8px;">
+                <button class="btn pri" style="font-size:11px;">Confirm $180K</button>
+                <button class="btn sec" style="font-size:11px;">Update figure</button>
+                <button class="btn sec" style="font-size:11px;">Find source</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="contract-card">
+          <div class="contract-header harness">🏗️ Harness Provides</div>
+          <ul class="contract-items">
+            <li><strong>Standard confidence signal component</strong> — visual indicator + explanation + actionable buttons</li>
+            <li><strong>Hallucination detection infrastructure</strong> (from Agent Scorecard Tier 2)</li>
+            <li><strong>Transparency & Confidence</strong> scoring integrated with grounding results</li>
+          </ul>
+        </div>
+        <div class="contract-card">
+          <div class="contract-header app">🎯 Apps Shape</div>
+          <ul class="contract-items">
+            <li><strong>Word:</strong> Unverifiable claim without grounding source → confidence callout</li>
+            <li><strong>Excel:</strong> Formula referencing stale or circular data → uncertainty flag on cell</li>
+            <li><strong>PPT:</strong> Image style mismatch with brand guidelines → suggestion with alternatives</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- ═══ SECTION: PRECISION SCOPING ═══ -->
+      <div class="content-scroll section-content hidden" id="sec-scoping">
+        <div class="principle-hero">
+          <div class="p-tier" style="background:#FFF4E5; color:var(--orange);">Tier 2 — Adaptive Bridge</div>
+          <h2>Point at Exactly What You Want Changed</h2>
+          <p class="p-sub">Users can select specific objects (paragraphs, slides, cell ranges, text boxes) and tell the agent to work on just those. No more "edit the third paragraph" ambiguity. This is the hero differentiator vs. Claude, which has no object-level targeting.</p>
+          <div><span class="proto-ref one">One Copilot</span></div>
+        </div>
+
+        <div class="demo-block">
+          <div class="demo-header"><span class="demo-label">Live Demo</span> Object-level scoping across apps</div>
+          <div class="demo-body">
+            <div class="app-grid">
+              <div class="app-grid-cell" style="border-color:var(--brand-blue);">
+                <h4><span class="app-icon w">W</span> Word — Selection</h4>
+                <div style="background:#E8F0FE; padding:8px 10px; border-radius:6px; font-size:11px; margin:6px 0; border-left:3px solid #185ABD;">
+                  <strong>Selected:</strong> Section 2, Paragraphs 1-3<br/>
+                  <span style="color:var(--text-muted);">"Marketing allocation revised to..."</span>
+                </div>
+                <p style="font-size:11px; color:var(--text-muted);">Scoped to paragraphs, headings, sections, or full document</p>
+              </div>
+              <div class="app-grid-cell" style="border-color:var(--brand-blue);">
+                <h4><span class="app-icon x">X</span> Excel — Selection</h4>
+                <div style="background:#E7F5E7; padding:8px 10px; border-radius:6px; font-size:11px; margin:6px 0; border-left:3px solid #107C10;">
+                  <strong>Selected:</strong> Marketing_Budget (B4:G12)<br/>
+                  <span style="color:var(--text-muted);">Named range · 54 cells</span>
+                </div>
+                <p style="font-size:11px; color:var(--text-muted);">Scoped to cells, ranges, named ranges, tables, sheets</p>
+              </div>
+              <div class="app-grid-cell" style="border-color:var(--brand-blue);">
+                <h4><span class="app-icon p">P</span> PPT — Selection</h4>
+                <div style="background:#FDE9E4; padding:8px 10px; border-radius:6px; font-size:11px; margin:6px 0; border-left:3px solid #D24726;">
+                  <strong>Selected:</strong> Slides 3-5<br/>
+                  <span style="color:var(--text-muted);">3 slides · "ROI & Investment"</span>
+                </div>
+                <p style="font-size:11px; color:var(--text-muted);">Scoped to slides, text boxes, shapes, charts, images</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="contract-card">
+          <div class="contract-header harness">🏗️ Harness Provides</div>
+          <ul class="contract-items">
+            <li><strong>Precision scoping UX pattern</strong> — select → scope → act — integrated with Peek</li>
+            <li><strong>Selection context serialization</strong> for the orchestrator to understand what's targeted</li>
+          </ul>
+        </div>
+        <div class="contract-card">
+          <div class="contract-header app">🎯 Apps Own</div>
+          <ul class="contract-items">
+            <li><strong>What's selectable</strong> and how selection is visualized — entirely app-specific</li>
+            <li>Selection highlight styles, scope labels, granularity options</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- ═══ SECTION: CANVAS-FIRST ═══ -->
+      <div class="content-scroll section-content hidden" id="sec-canvas">
+        <div class="principle-hero">
+          <div class="p-tier" style="background:var(--blue-light); color:var(--brand-blue);">Tier 3 — Vertical Nuance</div>
+          <h2>The Document Is the Artifact, Not the Chat</h2>
+          <p class="p-sub">Agent output lives natively in the app's canvas. Tracked changes in Word, cell values in Excel, slides in PPT. The chat records what happened, but the artifact is in the document. This is the single biggest advantage over Claude — which generates text the user must copy-paste.</p>
+          <div><span class="proto-ref one">One Copilot</span></div>
+        </div>
+
+        <div class="demo-block">
+          <div class="demo-header"><span class="demo-label">Live Demo</span> Canvas-first execution — diff visibility</div>
+          <div class="demo-body">
+            <div class="sim-cp">
+              <div class="sim-cp-label">✦ Copilot</div>
+              <div class="sim-cp-body">
+                <p>Applied to your document:</p>
+              </div>
+
+              <div class="smooth-card">
+                <div class="smooth-card-title">Changes applied to canvas</div>
+                <div style="padding:6px 0; border-bottom:1px solid rgba(0,0,0,0.04);">
+                  <span class="app-icon w">W</span> <strong>Section 2:</strong> <span class="diff-del">$1.4M (33%)</span> → <span class="diff-add">$1.18M (28%)</span>
+                </div>
+                <div style="padding:6px 0; border-bottom:1px solid rgba(0,0,0,0.04);">
+                  <span class="app-icon w">W</span> <strong>Section 3:</strong> <span class="diff-add">Hiring pipeline table inserted (5 rows × 4 columns)</span>
+                </div>
+                <div style="padding:6px 0;">
+                  <span class="app-icon w">W</span> <strong>Comments:</strong> <span class="diff-add">2 replies drafted and posted</span> to Sarah Chen
+                </div>
+              </div>
+
+              <p style="font-size:12px; color:var(--text-secondary); margin-top:8px;">Review the tracked changes above, accept/reject, or tell me to adjust.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="contract-card">
+          <div class="contract-header app">🎯 Apps Own Entirely</div>
+          <ul class="contract-items">
+            <li><strong>Word:</strong> Tracked changes via native review flow — accept/reject at paragraph level</li>
+            <li><strong>Excel:</strong> Cell population with formatting, formula insertion, chart generation in-sheet</li>
+            <li><strong>PPT:</strong> Slide creation with layout, text box population, design application</li>
+          </ul>
+        </div>
+
+        <div class="ext-point">
+          <strong>Harness enables this through:</strong> Document Skills (Cap 3.4) — headless Office document creation and editing with collaboration support. OfficeJS APIs for Word, Excel, PPT. The canvas-binding layer is what makes this possible and is impossible for Claude's add-in to replicate.
+        </div>
+      </div>
+
+      <!-- ═══ SECTION: DOMAIN CLARIFICATION ═══ -->
+      <div class="content-scroll section-content hidden" id="sec-clarification">
+        <div class="principle-hero">
+          <div class="p-tier" style="background:var(--blue-light); color:var(--brand-blue);">Tier 3 — Vertical Nuance</div>
+          <h2>Smart Questions, Not Wizards</h2>
+          <p class="p-sub">Clarification is conversational. The model asks the right questions for the domain and context. No "Step 1 of 3: Select audience." Instead: "Is this for executives (concise, high-level) or engineers (detailed, technical)?" Generative UI via SDL enables this.</p>
+          <div>
+            <span class="proto-ref one">One Copilot</span>
+            <span class="proto-ref score">Agent Scorecard</span>
+          </div>
+        </div>
+
+        <div class="demo-block">
+          <div class="demo-header"><span class="demo-label">Good vs. Bad</span> Clarification flow comparison</div>
+          <div class="demo-body">
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px;">
+              <div style="border:1px solid var(--red); border-radius:12px; padding:14px;">
+                <div style="font-size:11px; font-weight:700; color:var(--red); margin-bottom:8px;">❌ WIZARD (don't ship this)</div>
+                <div style="font-size:12px; color:var(--text-secondary); line-height:1.6;">
+                  <p style="margin-bottom:4px;"><strong>Step 1 of 3:</strong> Select audience</p>
+                  <p style="margin-bottom:4px;">○ Executives  ○ Team  ○ External</p>
+                  <p style="margin-bottom:4px;"><strong>Step 2 of 3:</strong> Select length</p>
+                  <p style="margin-bottom:4px;">○ Brief  ○ Standard  ○ Detailed</p>
+                  <p><strong>Step 3 of 3:</strong> Select template</p>
+                </div>
+              </div>
+              <div style="border:1px solid var(--green); border-radius:12px; padding:14px;">
+                <div style="font-size:11px; font-weight:700; color:var(--green); margin-bottom:8px;">✓ CONVERSATIONAL (ship this)</div>
+                <div style="font-size:12px; color:var(--text-secondary); line-height:1.6;">
+                  <p><strong>✦ Copilot:</strong> I see this is going to Sarah Chen (CFO) and the Finance leadership team. I'll keep it concise and data-forward. Want me to include the hiring pipeline impact, or keep it focused on budget allocation only?</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="contract-card">
+          <div class="contract-header app">🎯 Apps Own</div>
+          <ul class="contract-items">
+            <li><strong>PPT:</strong> Visual style examples for image generation — thumbnail selection, not text description</li>
+            <li><strong>Excel:</strong> Chart type selection with previews — visual, not textual</li>
+            <li><strong>Word:</strong> Tone and structure options — contextually generated based on audience</li>
+          </ul>
+        </div>
+
+        <div class="ann-inline">
+          <span class="ann-tag">Generative UI Connection</span>
+          <span class="ann-body">The SDL governed component catalog enables this: the model selects from clarification components (radio groups, thumbnail selectors, text options) and returns a JSON payload. The client renders it. No hardcoded wizard flows.</span>
+        </div>
+      </div>
+
+      <!-- ═══ SECTION: PLAN MODE ═══ -->
+      <div class="content-scroll section-content hidden" id="sec-plan">
+        <div class="principle-hero">
+          <div class="p-tier" style="background:var(--purple-light); color:var(--copilot-purple);">Tier 4 — Delightful</div>
+          <h2>Decompose → Execute → Verify</h2>
+          <p class="p-sub">Plan Mode moves beyond chat to outcome-oriented execution. The agent decomposes a goal into steps, executes them with user checkpoints, and verifies results. The plan is a visual stepper — lightweight, not a project management tool.</p>
+          <div>
+            <span class="proto-ref tasks">Work Tasks</span>
+            <span class="proto-ref score">Agent Scorecard</span>
+          </div>
+        </div>
+
+        <div class="demo-block">
+          <div class="demo-header"><span class="demo-label">Live Demo</span> Plan execution with approval gates</div>
+          <div class="demo-body">
+            <div class="sim-user"><div class="sim-user-bubble">Finalize the Q3 budget proposal — address Sarah's comments, update with latest actuals, and prepare for CFO review.</div></div>
+
+            <div class="sim-cp">
+              <div class="sim-cp-label">✦ Copilot — Plan</div>
+              <div class="plan-timeline">
+                <div class="plan-step">
+                  <span class="plan-dot done">✓</span>
+                  <div class="plan-info">
+                    <div class="plan-label">Read Sarah's comments & Q3 actuals</div>
+                    <div class="plan-meta"><span class="app-icon w">W</span> Q3_Budget_Proposal.docx · <span class="app-icon x">X</span> Q3_Actuals.xlsx</div>
+                  </div>
+                </div>
+                <div class="plan-step">
+                  <span class="plan-dot done">✓</span>
+                  <div class="plan-info">
+                    <div class="plan-label">Revise marketing allocation with data backing</div>
+                    <div class="plan-meta">33% → 28% · $350K reallocated to eng</div>
+                  </div>
+                </div>
+                <div class="plan-step">
+                  <span class="plan-dot active">3</span>
+                  <div class="plan-info">
+                    <div class="plan-label">Draft replies to Sarah's comments</div>
+                    <div class="plan-meta">⏳ In progress — awaiting your review</div>
+                  </div>
+                </div>
+                <div class="plan-step">
+                  <span class="plan-dot pending">4</span>
+                  <div class="plan-info">
+                    <div class="plan-label muted">Insert hiring pipeline table from Hiring_Plan_H2.xlsx</div>
+                  </div>
+                </div>
+                <div class="plan-step">
+                  <span class="plan-dot pending">5</span>
+                  <div class="plan-info">
+                    <div class="plan-label muted">Final formatting & label check for CFO review</div>
+                  </div>
+                </div>
+              </div>
+              <div class="consent-actions">
+                <button class="btn brand" style="font-size:11px;">Continue execution</button>
+                <button class="btn sec" style="font-size:11px;">Skip step 4</button>
+                <button class="btn sec" style="font-size:11px;">Edit plan</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="contract-card">
+          <div class="contract-header harness">🏗️ Harness Provides</div>
+          <ul class="contract-items">
+            <li><strong>Plan generation and step tracking</strong> — Claude SDK supports natively (Cap 2.10)</li>
+            <li><strong>Approval gates</strong> — pause at checkpoints, user confirms before next step</li>
+            <li><strong>Visual stepper component</strong> — vertical progress indicator, not a Gantt chart</li>
+            <li><strong>Default: pause after each step.</strong> Users opt into "run full plan, notify when done."</li>
+          </ul>
+        </div>
+
+        <div class="ann-inline">
+          <span class="ann-tag">Gap Alert</span>
+          <span class="ann-body">Plan Mode is a Gap on GHCP SDK today, Supported on Claude SDK. This is a strategic risk — the most visible execution-oriented feature only works on one orchestrator path. GHCP parity should be prioritized.</span>
+        </div>
+      </div>
+
+      <!-- ═══ SECTION: CROSS-APP WORKFLOWS ═══ -->
+      <div class="content-scroll section-content hidden" id="sec-crossapp">
+        <div class="principle-hero">
+          <div class="p-tier" style="background:var(--purple-light); color:var(--copilot-purple);">Tier 4 — Delightful</div>
+          <h2>Artifacts Flow Between Apps</h2>
+          <p class="p-sub">A single agent can create and edit multiple artifact types — Word, Excel, PPT — within the same conversation, without user-driven handoffs. Data from Excel grounds a Word narrative that feeds a PPT deck. This is the cross-app proof point Claude cannot match.</p>
+          <div>
+            <span class="proto-ref one">One Copilot</span>
+            <span class="proto-ref tasks">Work Tasks</span>
+          </div>
+        </div>
+
+        <div class="demo-block">
+          <div class="demo-header"><span class="demo-label">Live Demo</span> Cross-app artifact flow — from One Copilot prototype</div>
+          <div class="demo-body">
+            <div class="sim-cp">
+              <div class="sim-cp-label">✦ Copilot</div>
+              <div class="sim-cp-body">
+                <p>Here's what I did across your workstream:</p>
+              </div>
+              <div style="display:flex; flex-direction:column; gap:8px; margin-top:10px;">
+                <div style="display:flex; align-items:center; gap:10px; padding:10px 14px; background:#F9F9F9; border-radius:10px;">
+                  <span class="app-icon x" style="width:24px; height:24px; font-size:10px;">X</span>
+                  <div>
+                    <div style="font-size:12px; font-weight:600;">Hiring_Plan_H2.xlsx</div>
+                    <div style="font-size:11px; color:var(--text-muted);">Pulled pipeline data — 13 candidates across 5 roles</div>
+                  </div>
+                  <span style="font-size:11px; color:var(--green); margin-left:auto;">Source</span>
+                </div>
+                <div style="font-size:16px; color:var(--text-muted); text-align:center;">↓</div>
+                <div style="display:flex; align-items:center; gap:10px; padding:10px 14px; background:#F9F9F9; border-radius:10px;">
+                  <span class="app-icon w" style="width:24px; height:24px; font-size:10px;">W</span>
+                  <div>
+                    <div style="font-size:12px; font-weight:600;">Q3_Budget_Proposal.docx</div>
+                    <div style="font-size:11px; color:var(--text-muted);">Inserted pipeline table into Section 3 · Revised Section 2</div>
+                  </div>
+                  <span style="font-size:11px; color:var(--brand-blue); margin-left:auto;">Modified</span>
+                </div>
+                <div style="font-size:16px; color:var(--text-muted); text-align:center;">↓</div>
+                <div style="display:flex; align-items:center; gap:10px; padding:10px 14px; background:#F9F9F9; border-radius:10px;">
+                  <span class="app-icon p" style="width:24px; height:24px; font-size:10px;">P</span>
+                  <div>
+                    <div style="font-size:12px; font-weight:600;">Strategy_Deck_H2.pptx</div>
+                    <div style="font-size:11px; color:var(--text-muted);">Updated slide 4 with revised allocation · Added hiring ramp chart</div>
+                  </div>
+                  <span style="font-size:11px; color:var(--copilot-purple); margin-left:auto;">Generated</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="contract-card">
+          <div class="contract-header harness">🏗️ Harness Provides</div>
+          <ul class="contract-items">
+            <li><strong>Unified Cross-App Artifact Workflows</strong> (Cap 2.8) — single agent, multiple doc types, shared LLM context</li>
+            <li><strong>Document Skills</strong> for DOCX, PPTX, XLSX, PDF — headless creation and editing</li>
+            <li><strong>Entity reuse</strong> — tables, charts, images are referenceable interim artifacts</li>
+          </ul>
+        </div>
+
+        <div class="ann-inline">
+          <span class="ann-tag">Competitive Race</span>
+          <span class="ann-body">Claude is announcing cross-app orchestration imminently (Brian Jones flagged this). The Harness has Unified Cross-App Artifact Workflows (Cap 2.8) — supported on both SDKs — but the end-to-end demo must be polished and fast.</span>
+        </div>
+      </div>
+
+      <!-- ═══ SECTION: AMBIENT TASKS ═══ -->
+      <div class="content-scroll section-content hidden" id="sec-tasks">
+        <div class="principle-hero">
+          <div class="p-tier" style="background:var(--purple-light); color:var(--copilot-purple);">Tier 4 — Delightful</div>
+          <h2>Proactive, Recurring, Ambient</h2>
+          <p class="p-sub">Tasks persist across sessions. The agent surfaces what changed before you ask, reorders by actionability, generates reports on schedule, and loops back when things change. This transforms Copilot from a reactive assistant to a proactive coworker.</p>
+          <div><span class="proto-ref tasks">Work Tasks</span></div>
+        </div>
+
+        <div class="demo-block">
+          <div class="demo-header"><span class="demo-label">Live Demo</span> Seven principles from Work Tasks prototype</div>
+          <div class="demo-body">
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+              <div style="padding:12px; border-radius:10px; border:1px solid var(--border-light);">
+                <div style="font-size:12px; font-weight:700; color:var(--text); margin-bottom:4px;">Proactive</div>
+                <div style="font-size:11px; color:var(--text-secondary); line-height:1.5;">Surfaces what changed before you ask. "Sarah replied · draft ready" appears without prompting.</div>
+              </div>
+              <div style="padding:12px; border-radius:10px; border:1px solid var(--border-light);">
+                <div style="font-size:12px; font-weight:700; color:var(--text); margin-bottom:4px;">Cross-app</div>
+                <div style="font-size:11px; color:var(--text-secondary); line-height:1.5;">Connects all of M365. A hiring pipeline update in Excel automatically flags the budget doc.</div>
+              </div>
+              <div style="padding:12px; border-radius:10px; border:1px solid var(--border-light);">
+                <div style="font-size:12px; font-weight:700; color:var(--text); margin-bottom:4px;">Human in the loop</div>
+                <div style="font-size:11px; color:var(--text-secondary); line-height:1.5;">You approve before it acts. No auto-sent emails, no auto-applied changes.</div>
+              </div>
+              <div style="padding:12px; border-radius:10px; border:1px solid var(--border-light);">
+                <div style="font-size:12px; font-weight:700; color:var(--text); margin-bottom:4px;">Inline editing</div>
+                <div style="font-size:11px; color:var(--text-secondary); line-height:1.5;">Word tracked changes appear in the chat. You review diffs without switching context.</div>
+              </div>
+              <div style="padding:12px; border-radius:10px; border:1px solid var(--border-light);">
+                <div style="font-size:12px; font-weight:700; color:var(--text); margin-bottom:4px;">Cross-project sync</div>
+                <div style="font-size:11px; color:var(--text-secondary); line-height:1.5;">Data flows between workstreams. Hiring pipeline data syncs into budget finalization task.</div>
+              </div>
+              <div style="padding:12px; border-radius:10px; border:1px solid var(--border-light);">
+                <div style="font-size:12px; font-weight:700; color:var(--text); margin-bottom:4px;">Smart priority</div>
+                <div style="font-size:11px; color:var(--text-secondary); line-height:1.5;">Sidebar reorders by actionability. Overdue items surface. On-track items recede.</div>
+              </div>
+              <div style="padding:12px; border-radius:10px; border:1px solid var(--border-light); grid-column:span 2;">
+                <div style="font-size:12px; font-weight:700; color:var(--text); margin-bottom:4px;">Ambient</div>
+                <div style="font-size:11px; color:var(--text-secondary); line-height:1.5;">Watches and loops back when things change. "Data refreshed overnight" — the agent noticed a source updated and resurfaced the task. "Auto-generating · Mon 8 AM" — recurring execution on schedule.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="contract-card">
+          <div class="contract-header harness">🏗️ Harness Provides</div>
+          <ul class="contract-items">
+            <li><strong>Scheduling / Recurring Tasks</strong> (Cap 2.15) — PowerPlatform integration, TimeBot triggers, Dataverse state</li>
+            <li><strong>Autonomous Agent</strong> (Cap 2.11) — background execution, notification on completion</li>
+            <li><strong>Container state persistence</strong> — tasks survive across days via ODSP storage</li>
+            <li><strong>Execution isolation</strong> — manual and scheduled triggers are indistinguishable to the container</li>
+          </ul>
+        </div>
+
+        <div class="ann-inline">
+          <span class="ann-tag">Competitive Context</span>
+          <span class="ann-body">Claude Cowork already has scheduled and recurring tasks today. The Harness's PowerPlatform scheduling integration is "Planned" in both SDK columns. This capability needs to ship — Claude has user habits forming here.</span>
+        </div>
+      </div>
+
+      <!-- ═══ SECTION: GENERATIVE UI ═══ -->
+      <div class="content-scroll section-content hidden" id="sec-genui">
+        <div class="principle-hero">
+          <div class="p-tier" style="background:var(--purple-light); color:var(--copilot-purple);">Tier 4 — Delightful</div>
+          <h2>The Model Composes the Interface</h2>
+          <p class="p-sub">Instead of hardcoded UI flows, the LLM selects from a governed catalog of components and returns a JSON payload (SDL) validated against a strict server-side schema. The UI becomes a thin rendering layer. This is architecturally safer than Claude's raw HTML artifact generation — and must feel just as expressive.</p>
+          <div><span class="proto-ref score">Agent Scorecard</span></div>
+        </div>
+
+        <div class="demo-block">
+          <div class="demo-header"><span class="demo-label">Architecture</span> SDL vs. Claude Artifacts</div>
+          <div class="demo-body">
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px;">
+              <div style="border:1px solid var(--green); border-radius:12px; padding:14px;">
+                <div style="font-size:11px; font-weight:700; color:var(--green); margin-bottom:8px;">✓ HARNESS — SDL Governed</div>
+                <div style="font-size:11px; color:var(--text-secondary); line-height:1.6;">
+                  <p>Model selects from curated component catalog</p>
+                  <p>Returns JSON validated server-side</p>
+                  <p>Client is a thin rendering layer</p>
+                  <p>Safe by construction — no XPIA/injection risk</p>
+                  <p style="color:var(--orange); margin-top:6px;">⚠️ Risk: catalog too sparse → feels rigid</p>
+                </div>
+              </div>
+              <div style="border:1px solid var(--orange); border-radius:12px; padding:14px;">
+                <div style="font-size:11px; font-weight:700; color:var(--orange); margin-bottom:8px;">⚠ CLAUDE — Raw Artifacts</div>
+                <div style="font-size:11px; color:var(--text-secondary); line-height:1.6;">
+                  <p>Model generates full HTML/React/SVG</p>
+                  <p>iFrame sandbox with script removal</p>
+                  <p>CDN-hosted library replacements</p>
+                  <p>More expressive but constant sanitization risk</p>
+                  <p style="color:var(--red); margin-top:6px;">Ongoing XPIA, prompt injection, exfiltration vectors</p>
+                </div>
+              </div>
+            </div>
+
+            <div style="margin-top:16px; padding:12px 16px; background:#F0F7FF; border-radius:10px; font-size:12px; color:#0A4A8A; line-height:1.6;">
+              <strong>Product Direction:</strong> The SDL component catalog must be rich enough to cover interactive charts, editable tables, thumbnail selectors, slide previews, code blocks, and forms. The test: <strong>can a user <em>modify</em> an interim artifact without typing?</strong> If not, it's a presentation, not a tool.
+            </div>
+          </div>
+        </div>
+
+        <div class="contract-card">
+          <div class="contract-header harness">🏗️ Harness Provides</div>
+          <ul class="contract-items">
+            <li><strong>Governed SDL schema</strong> — server-validated, schema-defined component payloads</li>
+            <li><strong>Component catalog</strong> — shared primitives (ChatKit, MAIKit-style) + app-registered domain components</li>
+            <li><strong>Evals for generative UI</strong> — correctness, coherence, safety, adaptiveness</li>
+          </ul>
+        </div>
+        <div class="contract-card">
+          <div class="contract-header app">🎯 Apps Register</div>
+          <ul class="contract-items">
+            <li>Domain-specific SDL components — each app can register custom components in the catalog</li>
+            <li>PPT: slide thumbnail selectors, layout previews, image style grids</li>
+            <li>Excel: interactive data tables, chart type pickers, range highlighters</li>
+            <li>Word: formatting previews, structure outlines, tone selectors</li>
+          </ul>
+        </div>
+      </div>
+
+    </div><!-- /content-area -->
+  </div><!-- /main -->
+</div><!-- /shell -->
+
+<script>
+  // ═══ NAVIGATION ═══
+  const sections = ['reasoning','consent','input','handoff','streaming','safety','grounding','memory','confidence','scoping','canvas','clarification','plan','crossapp','tasks','genui'];
+  const tierLabels = {
+    reasoning: {name:'Visible Reasoning', tier:'TIER 1 — NON-NEGOTIABLE', bg:'#FDECEC', color:'#D13438'},
+    consent: {name:'Consent Before Action', tier:'TIER 1 — NON-NEGOTIABLE', bg:'#FDECEC', color:'#D13438'},
+    input: {name:'Multi-Modal Input', tier:'TIER 1 — NON-NEGOTIABLE', bg:'#FDECEC', color:'#D13438'},
+    handoff: {name:'Handoff & Continuity', tier:'TIER 1 — NON-NEGOTIABLE', bg:'#FDECEC', color:'#D13438'},
+    streaming: {name:'Streaming & Performance', tier:'TIER 1 — NON-NEGOTIABLE', bg:'#FDECEC', color:'#D13438'},
+    safety: {name:'Safety & Compliance', tier:'TIER 1 — NON-NEGOTIABLE', bg:'#FDECEC', color:'#D13438'},
+    grounding: {name:'Grounding & Transparency', tier:'TIER 2 — ADAPTIVE BRIDGE', bg:'#FFF4E5', color:'#E87400'},
+    memory: {name:'Memory & State', tier:'TIER 2 — ADAPTIVE BRIDGE', bg:'#FFF4E5', color:'#E87400'},
+    confidence: {name:'Confidence & Uncertainty', tier:'TIER 2 — ADAPTIVE BRIDGE', bg:'#FFF4E5', color:'#E87400'},
+    scoping: {name:'Precision Scoping', tier:'TIER 2 — ADAPTIVE BRIDGE', bg:'#FFF4E5', color:'#E87400'},
+    canvas: {name:'Canvas-First Artifacts', tier:'TIER 3 — VERTICAL NUANCE', bg:'#EBF3FC', color:'#0F6CBD'},
+    clarification: {name:'Domain Clarification', tier:'TIER 3 — VERTICAL NUANCE', bg:'#EBF3FC', color:'#0F6CBD'},
+    plan: {name:'Plan Mode', tier:'TIER 4 — DELIGHTFUL', bg:'#F3EEFF', color:'#7B57FF'},
+    crossapp: {name:'Cross-App Workflows', tier:'TIER 4 — DELIGHTFUL', bg:'#F3EEFF', color:'#7B57FF'},
+    tasks: {name:'Ambient Tasks & Scheduling', tier:'TIER 4 — DELIGHTFUL', bg:'#F3EEFF', color:'#7B57FF'},
+    genui: {name:'Generative UI', tier:'TIER 4 — DELIGHTFUL', bg:'#F3EEFF', color:'#7B57FF'},
+  };
+
+  function startDemo() {
+    document.getElementById('landing').classList.add('hidden');
+  }
+
+  function showSection(id) {
+    // Hide all sections
+    document.querySelectorAll('.section-content').forEach(s => s.classList.add('hidden'));
+    // Show target
+    document.getElementById('sec-' + id).classList.remove('hidden');
+    // Scroll to top
+    document.querySelector('.content-area').scrollTop = 0;
+    // Update topbar
+    const info = tierLabels[id];
+    document.getElementById('topTitle').textContent = info.name;
+    const tierEl = document.getElementById('topTier');
+    tierEl.textContent = info.tier;
+    tierEl.style.background = info.bg;
+    tierEl.style.color = info.color;
+    // Update sidebar active
+    document.querySelectorAll('.sb-cap-item').forEach(el => el.classList.remove('active'));
+    const navEl = document.getElementById('nav-' + id);
+    if (navEl) navEl.classList.add('active');
+  }
+
+  function setAppFilter(app) {
+    document.querySelectorAll('.app-toggle button').forEach(b => b.classList.remove('active'));
+    document.getElementById('tog' + app.charAt(0).toUpperCase() + app.slice(1)).classList.add('active');
+    // Filter logic could be added here to show/hide app-specific content
+  }
+
+  // Keyboard navigation
+  document.addEventListener('keydown', e => {
+    const currentIdx = sections.findIndex(s => !document.getElementById('sec-' + s).classList.contains('hidden'));
+    if (e.key === 'ArrowDown' || e.key === 'ArrowRight') {
+      e.preventDefault();
+      const next = (currentIdx + 1) % sections.length;
+      showSection(sections[next]);
+    } else if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') {
+      e.preventDefault();
+      const prev = (currentIdx - 1 + sections.length) % sections.length;
+      showSection(sections[prev]);
+    }
+  });
+</script>
+
+</body>
+</html>

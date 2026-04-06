@@ -370,31 +370,34 @@
             </div>
           </div>
           <div class="m-bubble" style="margin-top: 4px;">
-            <p>How should I mention this to Sarah?</p>
+            <p>I'm stuck — should I mention this to Sarah, and if so, how?</p>
           </div>
-          <div class="card">
-            <div class="card-footer" id="conflictFooter">
-              <button class="btn" onclick="doAction(this, 'wrong')">Flag the conflict directly</button>
-              <button class="btn" onclick="doAction(this, 'right')">Frame as alignment</button>
+          <div class="card" style="cursor:pointer;" onclick="userResolves(this)">
+            <div class="card-footer" id="conflictFooter" style="justify-content:center; color:#5B5FC7; font-size:13px;">
+              Tap to respond
             </div>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- ═══ BEAT 4: Response based on choice ═══ -->
+    <!-- ═══ BEAT 4: Cadbury learns + send ═══ -->
     <div class="hidden" id="b4">
       <div class="m anim">
         <div class="m-av" style="background: linear-gradient(135deg, #5B5FC7, #7B7FD7);">🎩</div>
         <div class="m-body-wrap">
           <div class="m-sender">Cadbury <span class="m-time">7:04 AM</span></div>
-          <div class="m-bubble" id="b4msg"></div>
-          <div class="card" id="b4card" style="display:none;">
+          <div class="m-bubble">
+            <p>Got it — framing as alignment, not conflict:</p>
+          </div>
+          <div class="card">
             <div class="card-body">
-              <div class="card-quote" id="b4quote"></div>
+              <div class="card-quote">"My projections use 28% marketing, which differs from your growth model. Worth aligning before Thursday."</div>
             </div>
           </div>
-          <div class="m-bubble" style="margin-top: 4px;" id="b4lesson" style="display:none;"></div>
+          <div class="m-bubble" style="margin-top: 4px;">
+            <p style="font-size: 12px; color: #999;">📝 Lesson saved. Won't flag discrepancies as conflicts with execs.</p>
+          </div>
           <div class="card">
             <div class="card-footer" id="sendFooter">
               <button class="btn" onclick="doAction(this, 'send')">Send it</button>
@@ -503,25 +506,6 @@ function next() {
   setTimeout(function() {
     hideEl('think');
     setTimeout(function() {
-      // Populate beat 4 based on choice before showing
-      if (beat === 3) {
-        var msg = document.getElementById('b4msg');
-        var card = document.getElementById('b4card');
-        var quote = document.getElementById('b4quote');
-        var lesson = document.getElementById('b4lesson');
-        if (window.b4choice === 'wrong') {
-          msg.innerHTML = '<p>Hmm, noted — but calling it a conflict might put Sarah on the defensive. Here\'s a softer framing:</p>';
-          card.style.display = '';
-          quote.textContent = '"My projections use 28% marketing, which differs from your growth model. Worth aligning before Thursday."';
-          lesson.innerHTML = '<p style="font-size:12px; color:#999;">📝 Lesson: frame exec discrepancies as alignment, not conflicts. <em>Updated.</em></p>';
-          lesson.style.display = '';
-        } else {
-          msg.innerHTML = '<p>Good call. Here\'s the draft:</p>';
-          card.style.display = '';
-          quote.textContent = '"My projections use 28% marketing, which differs from your growth model. Worth aligning before Thursday."';
-          lesson.style.display = 'none';
-        }
-      }
       showEl(beats[beat]); scroll();
       busy = false;
       // Auto-advance for non-interactive beats
@@ -532,20 +516,21 @@ function next() {
   }, delay);
 }
 
+function userResolves(el) {
+  if (busy) return;
+  busy = true;
+  el.style.opacity = '0.3';
+  el.style.pointerEvents = 'none';
+  insertUser("Don't call it a conflict. Frame it as an alignment question — softer.");
+  setTimeout(function() { busy = false; next(); }, 600);
+}
+
 function doAction(btn, type) {
   if (busy) return;
   busy = true;
   var label = btn.textContent;
   btn.closest('.card-footer').querySelectorAll('.btn').forEach(function(b) { b.classList.add('used'); });
   insertUser(label);
-
-  // Set beat 4 content based on choice
-  if (type === 'wrong') {
-    window.b4choice = 'wrong';
-  } else if (type === 'right') {
-    window.b4choice = 'right';
-  }
-
   setTimeout(function() { busy = false; next(); }, 600);
 }
 

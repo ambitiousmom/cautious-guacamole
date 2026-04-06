@@ -1,0 +1,906 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OpenClaw × M365 — Agent Team</title>
+<style>
+  :root {
+    --bg: #FFFFFF;
+    --surface: #F5F1EC;
+    --surface-hover: #EDE8E3;
+    --border: #D9D3CC;
+    --border-light: #E5DFD9;
+    --text: #242424;
+    --text-secondary: #616161;
+    --text-muted: #999;
+    --brand-blue: #0F6CBD;
+    --copilot-purple: #7B57FF;
+    --green: #107C10;
+    --green-light: #DFF6DD;
+    --red: #D13438;
+    --yellow: #FFB900;
+    --orange: #E87400;
+    --blue-light: #EBF3FC;
+    --purple-light: #F3EEFF;
+    --font: 'Segoe UI Variable Display', 'Segoe UI Variable', 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
+    --sidebar-w: 260px;
+    --claw-teal: #0D9488;
+    --claw-teal-light: #CCFBF1;
+    --claw-amber: #D97706;
+    --claw-amber-light: #FEF3C7;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: var(--font); background: var(--bg); color: var(--text); height: 100vh; overflow: hidden; }
+
+  /* ═══ Landing ═══ */
+  .landing {
+    position: fixed; inset: 0; z-index: 200;
+    background: #0f172a;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    color: white; transition: opacity 0.6s ease, visibility 0.6s;
+  }
+  .landing.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
+  .landing-icon { font-size: 48px; margin-bottom: 20px; }
+  .landing h1 {
+    font-size: 40px; font-weight: 700; letter-spacing: -0.03em;
+    background: linear-gradient(135deg, #5eead4, #38bdf8);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    margin-bottom: 8px;
+  }
+  .landing h2 { font-size: 18px; font-weight: 400; color: rgba(255,255,255,0.4); margin-bottom: 36px; }
+  .landing .tagline {
+    max-width: 520px; text-align: center; font-size: 15px; line-height: 1.75;
+    color: rgba(255,255,255,0.55); margin-bottom: 40px;
+  }
+  .landing .tagline strong { color: rgba(255,255,255,0.85); }
+  .start-btn {
+    padding: 14px 48px; border-radius: 28px; border: none;
+    background: linear-gradient(135deg, var(--claw-teal), #0284c7);
+    color: white; font-size: 15px; font-weight: 600; cursor: pointer;
+    box-shadow: 0 4px 24px rgba(13,148,136,0.35);
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  .start-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 32px rgba(13,148,136,0.45); }
+  .landing .meta { margin-top: 28px; font-size: 11px; color: rgba(255,255,255,0.15); }
+
+  /* ═══ Shell ═══ */
+  .shell { display: flex; height: 100vh; width: 100vw; }
+
+  /* ═══ Sidebar ═══ */
+  .sidebar {
+    width: var(--sidebar-w); min-width: var(--sidebar-w); height: 100%;
+    background: var(--surface); border-right: 1px solid var(--border-light);
+    display: flex; flex-direction: column; overflow-y: auto; font-size: 14px;
+  }
+  .sb-top { padding: 12px 16px; display: flex; align-items: center; gap: 10px; }
+  .sb-brand { font-size: 18px; font-weight: 700; color: var(--text); letter-spacing: -0.5px; }
+  .sb-brand-sub { font-size: 10px; color: var(--text-muted); margin-left: 2px; font-weight: 400; }
+  .sb-divider { height: 1px; background: var(--border-light); margin: 6px 14px; }
+  .sb-section-label { font-size: 11px; font-weight: 700; color: var(--text-muted); padding: 12px 18px 6px; letter-spacing: 0.06em; text-transform: uppercase; }
+
+  /* Agent roster */
+  .agent-item {
+    display: flex; align-items: center; gap: 10px;
+    padding: 8px 14px; margin: 2px 8px; border-radius: 8px; cursor: pointer;
+    transition: background 0.15s;
+  }
+  .agent-item:hover { background: var(--surface-hover); }
+  .agent-item.active { background: var(--surface-hover); }
+  .agent-avatar {
+    width: 28px; height: 28px; border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 13px; flex-shrink: 0;
+  }
+  .agent-info { flex: 1; min-width: 0; }
+  .agent-name { font-size: 13px; font-weight: 600; color: var(--text); }
+  .agent-status { font-size: 11px; color: var(--text-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .agent-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+  .agent-dot.active { background: var(--green); }
+  .agent-dot.idle { background: var(--border); }
+
+  /* Trust level badge */
+  .trust-badge {
+    font-size: 9px; font-weight: 700; letter-spacing: 0.04em;
+    padding: 2px 6px; border-radius: 4px; white-space: nowrap;
+  }
+  .trust-badge.auto { background: var(--green-light); color: var(--green); }
+  .trust-badge.review { background: var(--claw-amber-light); color: var(--claw-amber); }
+  .trust-badge.locked { background: #FEE2E2; color: var(--red); }
+
+  /* Sidebar activity feed */
+  .activity-item {
+    padding: 6px 18px; font-size: 11px; color: var(--text-muted); line-height: 1.5;
+    display: flex; gap: 8px; align-items: flex-start;
+  }
+  .activity-time { font-size: 10px; color: var(--border); flex-shrink: 0; width: 36px; }
+  .activity-text { flex: 1; }
+  .activity-text strong { color: var(--text-secondary); font-weight: 600; }
+
+  .sb-bottom { margin-top: auto; padding: 12px 16px; border-top: 1px solid var(--border-light); }
+
+  /* ═══ Main ═══ */
+  .main { flex: 1; display: flex; flex-direction: column; min-width: 0; overflow: hidden; }
+
+  .topbar {
+    height: 48px; display: flex; align-items: center; padding: 0 24px;
+    border-bottom: 1px solid var(--border-light); background: var(--bg); flex-shrink: 0;
+  }
+  .topbar-title { font-size: 15px; font-weight: 600; color: var(--text); display: flex; align-items: center; gap: 8px; }
+  .topbar-right { margin-left: auto; display: flex; align-items: center; gap: 12px; }
+  .autonomy-control {
+    display: flex; align-items: center; gap: 6px;
+    border: 1px solid var(--border); border-radius: 20px; padding: 4px 12px;
+    font-size: 11px; color: var(--text-secondary); cursor: pointer;
+  }
+  .autonomy-dot { width: 6px; height: 6px; border-radius: 50%; }
+
+  /* ═══ Content ═══ */
+  .content-area { flex: 1; overflow-y: auto; display: flex; flex-direction: column; }
+  .content-inner { width: 100%; max-width: 720px; padding: 24px 28px; margin: 0 auto; }
+
+  /* ═══ Briefing Card ═══ */
+  .briefing {
+    background: linear-gradient(135deg, #f0fdfa, #ecfeff);
+    border: 1px solid #99f6e4;
+    border-radius: 16px; padding: 24px 28px; margin-bottom: 24px;
+  }
+  .briefing-header {
+    display: flex; align-items: center; gap: 10px; margin-bottom: 16px;
+  }
+  .briefing-icon { font-size: 20px; }
+  .briefing-title { font-size: 16px; font-weight: 700; color: var(--text); }
+  .briefing-time { font-size: 11px; color: var(--text-muted); margin-left: auto; }
+  .briefing-summary {
+    font-size: 14px; line-height: 1.7; color: var(--text-secondary); margin-bottom: 16px;
+  }
+  .briefing-summary strong { color: var(--text); }
+
+  /* Stats row */
+  .stats-row { display: flex; gap: 12px; margin-bottom: 20px; }
+  .stat-card {
+    flex: 1; background: white; border-radius: 10px; padding: 12px 16px;
+    border: 1px solid rgba(0,0,0,0.04);
+  }
+  .stat-num { font-size: 24px; font-weight: 700; color: var(--text); }
+  .stat-label { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
+  .stat-detail { font-size: 11px; color: var(--text-secondary); margin-top: 4px; }
+
+  /* ═══ Agent Action Cards ═══ */
+  .action-card {
+    background: white; border: 1px solid var(--border-light); border-radius: 14px;
+    margin-bottom: 16px; overflow: hidden;
+    transition: box-shadow 0.2s;
+  }
+  .action-card:hover { box-shadow: 0 2px 12px rgba(0,0,0,0.06); }
+  .action-header {
+    display: flex; align-items: center; gap: 10px;
+    padding: 14px 20px; border-bottom: 1px solid rgba(0,0,0,0.04);
+  }
+  .action-agent-icon {
+    width: 24px; height: 24px; border-radius: 6px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px; flex-shrink: 0;
+  }
+  .action-agent-name { font-size: 12px; font-weight: 600; color: var(--text); }
+  .action-trust { margin-left: auto; }
+  .action-body { padding: 16px 20px; }
+  .action-title { font-size: 14px; font-weight: 600; color: var(--text); margin-bottom: 8px; }
+  .action-desc { font-size: 13px; color: var(--text-secondary); line-height: 1.65; }
+  .action-desc strong { color: var(--text); }
+
+  /* Chain of thought */
+  .cot {
+    margin: 12px 0; padding: 10px 14px;
+    background: #FAFAFA; border-radius: 10px; border-left: 3px solid var(--border);
+    font-size: 12px; line-height: 1.6; color: var(--text-muted);
+    cursor: pointer; position: relative;
+  }
+  .cot-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-muted); margin-bottom: 4px; }
+  .cot-steps { display: none; }
+  .cot.open .cot-steps { display: block; }
+  .cot-toggle { font-size: 11px; color: var(--text-muted); }
+  .cot.open .cot-toggle { display: none; }
+  .cot-step { padding: 3px 0; display: flex; align-items: center; gap: 6px; }
+  .cot-check { color: var(--green); font-size: 11px; }
+
+  /* Sources */
+  .sources { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 10px; }
+  .source-pill {
+    display: inline-flex; align-items: center; gap: 4px;
+    font-size: 11px; color: var(--text-muted); background: #F5F5F5;
+    padding: 3px 10px; border-radius: 8px;
+  }
+  .source-pill .app-icon { width: 14px; height: 14px; font-size: 7px; border-radius: 2px; }
+
+  /* Confidence */
+  .confidence {
+    display: inline-flex; align-items: center; gap: 4px;
+    font-size: 11px; margin-top: 8px;
+  }
+  .conf-bar { width: 40px; height: 4px; border-radius: 2px; background: #E5E5E5; overflow: hidden; }
+  .conf-fill { height: 100%; border-radius: 2px; }
+
+  /* Action footer */
+  .action-footer {
+    display: flex; align-items: center; gap: 8px;
+    padding: 12px 20px; border-top: 1px solid rgba(0,0,0,0.04);
+    background: #FAFAFA;
+  }
+  .btn { padding: 7px 18px; border-radius: 20px; font-size: 12px; font-weight: 600; cursor: pointer; font-family: var(--font); border: none; transition: all 0.15s; }
+  .btn.pri { background: var(--text); color: white; }
+  .btn.pri:hover { background: #000; }
+  .btn.sec { background: white; color: var(--text-secondary); border: 1px solid var(--border); }
+  .btn.sec:hover { background: #F9F9F9; }
+  .btn.approve { background: var(--green); color: white; }
+  .btn.approve:hover { background: #0E6B0E; }
+  .btn.used { opacity: 0.35; pointer-events: none; }
+  .action-note { font-size: 11px; color: var(--text-muted); margin-left: auto; }
+
+  /* ═══ Autonomy Log (expandable) ═══ */
+  .auto-log {
+    background: #F9F9F9; border-radius: 12px; padding: 14px 18px;
+    margin-bottom: 16px; font-size: 12px;
+  }
+  .auto-log-title { font-size: 11px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 10px; }
+  .auto-log-item {
+    display: flex; align-items: flex-start; gap: 8px;
+    padding: 5px 0; font-size: 12px; color: var(--text-secondary); line-height: 1.5;
+  }
+  .auto-log-item + .auto-log-item { border-top: 1px solid rgba(0,0,0,0.04); padding-top: 8px; }
+  .auto-check { color: var(--green); flex-shrink: 0; font-size: 11px; margin-top: 2px; }
+  .auto-label { font-size: 10px; padding: 1px 6px; border-radius: 4px; flex-shrink: 0; }
+
+  /* ═══ File artifacts ═══ */
+  .file-card {
+    display: flex; align-items: center; gap: 10px;
+    background: white; border: 1px solid var(--border-light); border-radius: 10px;
+    padding: 10px 14px; margin: 8px 0; cursor: pointer;
+    transition: background 0.15s;
+  }
+  .file-card:hover { background: #FAFAFA; }
+  .file-name { font-size: 13px; font-weight: 600; color: var(--text); }
+  .file-meta { font-size: 11px; color: var(--text-muted); }
+  .file-open { margin-left: auto; font-size: 12px; color: var(--text-muted); }
+
+  /* App icons */
+  .app-icon { width: 16px; height: 16px; border-radius: 3px; display: inline-flex; align-items: center; justify-content: center; font-size: 8px; color: white; font-weight: 700; vertical-align: -2px; flex-shrink: 0; }
+  .app-icon.w { background: #185ABD; }
+  .app-icon.x { background: #107C10; }
+  .app-icon.p { background: #D24726; }
+  .app-icon.o { background: #0078D4; }
+  .app-icon.t { background: #6264A7; }
+  .app-icon.m { background: #0078D4; }
+
+  /* ═══ Sections ═══ */
+  .section-label {
+    font-size: 12px; font-weight: 700; color: var(--text-muted);
+    text-transform: uppercase; letter-spacing: 0.06em;
+    padding: 16px 0 8px; margin-top: 8px;
+    border-top: 1px solid var(--border-light);
+  }
+  .section-label:first-child { border-top: none; margin-top: 0; }
+
+  /* ═══ Dream cycle card ═══ */
+  .dream-card {
+    background: linear-gradient(135deg, #1e1b4b, #312e81);
+    border-radius: 14px; padding: 18px 22px; margin-bottom: 16px;
+    color: rgba(255,255,255,0.85); font-size: 13px; line-height: 1.65;
+  }
+  .dream-header { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; }
+  .dream-title { font-size: 12px; font-weight: 700; color: rgba(255,255,255,0.5); text-transform: uppercase; letter-spacing: 0.06em; }
+  .dream-time { font-size: 11px; color: rgba(255,255,255,0.3); margin-left: auto; }
+  .dream-item { padding: 4px 0; display: flex; align-items: flex-start; gap: 8px; }
+  .dream-bullet { color: #818cf8; flex-shrink: 0; }
+
+  /* ═══ Pending Approval Card ═══ */
+  .pending-card {
+    border: 2px solid var(--claw-amber);
+    border-radius: 14px; overflow: hidden; margin-bottom: 16px;
+  }
+  .pending-banner {
+    background: var(--claw-amber-light); padding: 8px 20px;
+    font-size: 11px; font-weight: 700; color: var(--claw-amber);
+    text-transform: uppercase; letter-spacing: 0.06em;
+    display: flex; align-items: center; gap: 6px;
+  }
+
+  /* ═══ Composer ═══ */
+  .composer-wrap { padding: 12px 24px; border-top: 1px solid var(--border-light); background: var(--bg); flex-shrink: 0; }
+  .composer {
+    max-width: 720px; margin: 0 auto;
+    border: 1px solid var(--border); border-radius: 14px;
+    background: white; overflow: hidden;
+  }
+  .composer input {
+    width: 100%; border: none; outline: none; font-size: 14px; font-family: var(--font);
+    background: transparent; color: var(--text); padding: 12px 18px 6px;
+  }
+  .composer input::placeholder { color: var(--text-muted); }
+  .composer-bottom { display: flex; align-items: center; justify-content: space-between; padding: 4px 14px 10px; }
+  .composer-left { display: flex; align-items: center; gap: 10px; }
+  .composer-tag { font-size: 11px; color: var(--text-muted); background: var(--surface); border: 1px solid var(--border-light); border-radius: 10px; padding: 2px 8px; }
+  .composer-disclaimer { text-align: center; font-size: 10px; color: var(--text-muted); margin-top: 4px; max-width: 720px; margin-left: auto; margin-right: auto; }
+
+  /* ═══ Transitions ═══ */
+  .hidden { display: none !important; }
+  @keyframes fadeInUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+  .anim-in { animation: fadeInUp 0.45s ease both; }
+
+  /* ═══ Step Overlay (annotations) ═══ */
+  .step-overlay {
+    position: fixed; z-index: 100;
+    background: rgba(15, 23, 42, 0.95); color: white;
+    padding: 14px 20px; border-radius: 12px; max-width: 280px;
+    font-size: 13px; line-height: 1.6; backdrop-filter: blur(12px);
+    box-shadow: 0 8px 32px rgba(0,0,0,0.3); border-left: 3px solid var(--claw-teal);
+    opacity: 0; visibility: hidden; transition: opacity 0.4s, visibility 0.4s;
+    pointer-events: none;
+  }
+  .step-overlay.visible { opacity: 1; visibility: visible; }
+  .step-tag { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: #5eead4; margin-bottom: 4px; }
+
+  /* ═══ End ═══ */
+  .end-overlay {
+    position: fixed; inset: 0; z-index: 300;
+    background: rgba(15, 23, 42, 0.9); display: flex; align-items: center; justify-content: center;
+    opacity: 0; visibility: hidden; transition: opacity 0.5s, visibility 0.5s;
+    backdrop-filter: blur(8px);
+  }
+  .end-overlay.visible { opacity: 1; visibility: visible; }
+  .end-content { text-align: center; }
+  .end-content h2 { font-size: 28px; font-weight: 700; color: white; margin-bottom: 12px; letter-spacing: -0.02em; }
+  .end-content p { font-size: 14px; color: rgba(255,255,255,0.5); line-height: 1.7; max-width: 400px; }
+  .end-content .end-reset { margin-top: 24px; font-size: 12px; color: rgba(255,255,255,0.25); cursor: pointer; }
+</style>
+</head>
+<body>
+
+<!-- ═══ LANDING ═══ -->
+<div class="landing" id="landing">
+  <div class="landing-icon">🦞</div>
+  <h1>OpenClaw × M365</h1>
+  <h2>Your agent team, always on</h2>
+  <div class="tagline">
+    A <strong>Chief of Staff</strong>, an <strong>Executive Assistant</strong>, and a roster of specialist agents — working 24/7 inside Microsoft 365.<br><br>
+    Not a chatbot. A persistent runtime.
+  </div>
+  <button class="start-btn" onclick="startDemo()">Monday morning →</button>
+  <div class="meta">Prototype by Hema Sridharan · April 2026</div>
+</div>
+
+<!-- ═══ SHELL ═══ -->
+<div class="shell">
+
+  <!-- ═══ SIDEBAR ═══ -->
+  <div class="sidebar">
+    <div class="sb-top">
+      <span class="sb-brand">Copilot <span class="sb-brand-sub">OpenClaw</span></span>
+    </div>
+
+    <div class="sb-divider"></div>
+
+    <!-- Agent Roster -->
+    <div class="sb-section-label">Agent Team</div>
+
+    <div class="agent-item active" id="agentCoS">
+      <div class="agent-avatar" style="background: linear-gradient(135deg, var(--claw-teal), #0e7490);">🎯</div>
+      <div class="agent-info">
+        <div class="agent-name">Chief of Staff</div>
+        <div class="agent-status">Briefing ready</div>
+      </div>
+      <div class="agent-dot active"></div>
+    </div>
+
+    <div class="agent-item" id="agentEA">
+      <div class="agent-avatar" style="background: linear-gradient(135deg, #7c3aed, #6d28d9);">📋</div>
+      <div class="agent-info">
+        <div class="agent-name">Executive Assistant</div>
+        <div class="agent-status">Calendar prepped</div>
+      </div>
+      <div class="agent-dot active"></div>
+    </div>
+
+    <div class="agent-item" id="agentMail">
+      <div class="agent-avatar" style="background: linear-gradient(135deg, #0078D4, #005a9e);">✉️</div>
+      <div class="agent-info">
+        <div class="agent-name">Mail Agent</div>
+        <div class="agent-status">47 → 3 need you</div>
+      </div>
+      <div class="agent-dot active"></div>
+    </div>
+
+    <div class="agent-item" id="agentDoc">
+      <div class="agent-avatar" style="background: linear-gradient(135deg, #185ABD, #1048A0);">📄</div>
+      <div class="agent-info">
+        <div class="agent-name">Document Agent</div>
+        <div class="agent-status">2 reviews pending</div>
+      </div>
+      <div class="agent-dot active"></div>
+    </div>
+
+    <div class="agent-item" id="agentData">
+      <div class="agent-avatar" style="background: linear-gradient(135deg, var(--green), #0a5e0a);">📊</div>
+      <div class="agent-info">
+        <div class="agent-name">Data Agent</div>
+        <div class="agent-status">Q3 actuals refreshed</div>
+      </div>
+      <div class="agent-dot idle"></div>
+    </div>
+
+    <div class="sb-divider"></div>
+
+    <!-- Overnight Activity -->
+    <div class="sb-section-label">Overnight</div>
+    <div class="activity-item"><span class="activity-time">4:00a</span><span class="activity-text">🌙 Dream cycle — 12 lessons consolidated</span></div>
+    <div class="activity-item"><span class="activity-time">5:15a</span><span class="activity-text"><strong>Mail</strong> triaged 47 emails</span></div>
+    <div class="activity-item"><span class="activity-time">5:30a</span><span class="activity-text"><strong>EA</strong> prepped 6 meetings</span></div>
+    <div class="activity-item"><span class="activity-time">6:00a</span><span class="activity-text"><strong>Data</strong> refreshed Q3 actuals</span></div>
+    <div class="activity-item"><span class="activity-time">6:45a</span><span class="activity-text"><strong>CoS</strong> compiled briefing</span></div>
+
+    <div class="sb-bottom">
+      <div style="display:flex; align-items:center; gap:10px;">
+        <div style="width:28px; height:28px; border-radius:50%; background:linear-gradient(135deg, var(--claw-teal), #0e7490); display:flex; align-items:center; justify-content:center; font-size:11px; color:white; font-weight:600;">OS</div>
+        <div>
+          <div style="font-size:13px; font-weight:600; color:var(--text);">Omar Shahine</div>
+          <div style="font-size:10px; color:var(--text-muted);">5 agents · 9 plugins · 142 lessons</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ MAIN ═══ -->
+  <div class="main">
+    <div class="topbar">
+      <div class="topbar-title">
+        <span>🎯</span>
+        <span>Chief of Staff</span>
+      </div>
+      <div class="topbar-right">
+        <div class="autonomy-control">
+          <span class="autonomy-dot" style="background: var(--green);"></span>
+          Autonomy: Graduated
+        </div>
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M10 2L4 5v4c0 4.5 2.6 8.1 6 9 3.4-.9 6-4.5 6-9V5L10 2z" fill="var(--green)" stroke="var(--green)" stroke-width="0.5"/><path d="M7.5 10l2 2 3.5-4" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+    </div>
+
+    <div class="content-area" id="contentArea">
+      <div class="content-inner" id="contentInner">
+
+        <!-- ═══ STEP 0: Morning Briefing ═══ -->
+        <div id="s0" class="hidden">
+          <div class="briefing anim-in">
+            <div class="briefing-header">
+              <span class="briefing-icon">☀️</span>
+              <span class="briefing-title">Monday Morning Briefing</span>
+              <span class="briefing-time">Compiled 6:45 AM · before you woke up</span>
+            </div>
+            <div class="briefing-summary">
+              Good morning. While you slept, your agents processed <strong>47 emails</strong>, prepped <strong>6 meetings</strong>, and refreshed <strong>3 data sources</strong>. Here's what needs your attention.
+            </div>
+            <div class="stats-row">
+              <div class="stat-card">
+                <div class="stat-num">3</div>
+                <div class="stat-label">Need you</div>
+                <div class="stat-detail">Of 47 emails triaged</div>
+              </div>
+              <div class="stat-card">
+                <div class="stat-num">1</div>
+                <div class="stat-label">Conflict</div>
+                <div class="stat-detail">Double-booked at 2 PM</div>
+              </div>
+              <div class="stat-card">
+                <div class="stat-num">2</div>
+                <div class="stat-label">Approvals</div>
+                <div class="stat-detail">Agents waiting on you</div>
+              </div>
+              <div class="stat-card">
+                <div class="stat-num">12</div>
+                <div class="stat-label">Lessons</div>
+                <div class="stat-detail">Dream cycle at 4 AM</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ═══ STEP 1: Dream Cycle ═══ -->
+        <div id="s1" class="hidden">
+          <div class="dream-card anim-in">
+            <div class="dream-header">
+              <span>🌙</span>
+              <span class="dream-title">Dream Cycle · Memory Consolidation</span>
+              <span class="dream-time">4:00 AM</span>
+            </div>
+            <div class="dream-item"><span class="dream-bullet">→</span> Sarah Chen (CFO) responds best to data-backed arguments with inline citations. Updated LESSONS.md.</div>
+            <div class="dream-item"><span class="dream-bullet">→</span> Budget meetings before 10 AM get 23% shorter resolution times. Added to CALENDAR_PATTERNS.md.</div>
+            <div class="dream-item"><span class="dream-bullet">→</span> Q3 actuals spreadsheet schema changed last Tuesday. Re-indexed column mappings in TOOLS.md.</div>
+            <div class="dream-item"><span class="dream-bullet">→</span> "Omar has told me MULTIPLE TIMES not to CC legal on draft-stage budget emails." Severity: high. Will not repeat.</div>
+          </div>
+        </div>
+
+        <!-- ═══ STEP 2: Mail Triage ═══ -->
+        <div id="s2" class="hidden">
+          <div class="section-label anim-in">Mail Triage — overnight</div>
+          <div class="action-card anim-in">
+            <div class="action-header">
+              <div class="action-agent-icon" style="background: linear-gradient(135deg, #0078D4, #005a9e);">✉️</div>
+              <span class="action-agent-name">Mail Agent</span>
+              <div class="action-trust">
+                <span class="trust-badge auto">AUTO</span>
+              </div>
+            </div>
+            <div class="action-body">
+              <div class="action-title">47 emails processed while you slept</div>
+              <div class="action-desc">
+                <strong>Handled autonomously (44):</strong> 12 marked FYI and filed · 18 newsletters archived · 8 meeting confirmations synced to calendar · 6 auto-replied (routine requests with established patterns)
+              </div>
+              <div class="cot" onclick="this.classList.toggle('open')">
+                <div class="cot-label">Chain of Thought</div>
+                <div class="cot-toggle">Click to expand reasoning →</div>
+                <div class="cot-steps">
+                  <div class="cot-step"><span class="cot-check">✓</span> Classified 47 emails by sender trust level + content analysis</div>
+                  <div class="cot-step"><span class="cot-check">✓</span> Cross-referenced LESSONS.md for sender-specific patterns</div>
+                  <div class="cot-step"><span class="cot-check">✓</span> 6 auto-replies matched established response templates (confidence &gt; 95%)</div>
+                  <div class="cot-step"><span class="cot-check">✓</span> Session-isolated: never returned raw email bodies to prevent prompt injection</div>
+                  <div class="cot-step"><span class="cot-check">✓</span> 3 emails escalated — executive sender, financial data, or ambiguous intent</div>
+                </div>
+              </div>
+              <div style="margin-top: 14px;">
+                <div class="action-desc"><strong>Escalated to you (3):</strong></div>
+              </div>
+              <div style="margin: 8px 0; padding: 10px 14px; background: #FEF3C7; border-radius: 10px; border-left: 3px solid var(--claw-amber);">
+                <div style="font-size: 13px; font-weight: 600; color: var(--text);">1. Sarah Chen (CFO) — Q3 Budget Feedback</div>
+                <div style="font-size: 12px; color: var(--text-secondary); margin-top: 4px;">"Can we revisit the marketing allocation rationale?" + 1 more comment on Q3_Budget_Proposal.docx</div>
+                <div style="font-size: 11px; color: var(--claw-amber); margin-top: 4px;">⚠ Executive sender · Financial data · Requires your judgment</div>
+              </div>
+              <div style="margin: 8px 0; padding: 10px 14px; background: #F9F9F9; border-radius: 10px;">
+                <div style="font-size: 13px; font-weight: 600; color: var(--text);">2. Legal — Compliance Review Overdue</div>
+                <div style="font-size: 12px; color: var(--text-secondary); margin-top: 4px;">6 days overdue. Raj needs sign-off on data handling addendum.</div>
+              </div>
+              <div style="margin: 8px 0; padding: 10px 14px; background: #F9F9F9; border-radius: 10px;">
+                <div style="font-size: 13px; font-weight: 600; color: var(--text);">3. VP Eng — Headcount Reallocation Question</div>
+                <div style="font-size: 12px; color: var(--text-secondary); margin-top: 4px;">Ambiguous intent — could be FYI or action needed. Flagged for your read.</div>
+              </div>
+              <div class="confidence">
+                <span style="color: var(--text-muted);">Triage confidence:</span>
+                <div class="conf-bar"><div class="conf-fill" style="width: 94%; background: var(--green);"></div></div>
+                <span style="color: var(--green); font-weight: 600;">94%</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ═══ STEP 3: Pending Approval — Budget Response ═══ -->
+        <div id="s3" class="hidden">
+          <div class="section-label anim-in">Needs your approval</div>
+          <div class="pending-card anim-in">
+            <div class="pending-banner">⏳ Awaiting Approval — Graduated Autonomy Gate</div>
+            <div class="action-header">
+              <div class="action-agent-icon" style="background: linear-gradient(135deg, #185ABD, #1048A0);">📄</div>
+              <span class="action-agent-name">Document Agent</span>
+              <div class="action-trust">
+                <span class="trust-badge review">REVIEW</span>
+              </div>
+            </div>
+            <div class="action-body">
+              <div class="action-title">Drafted response to CFO's budget comments</div>
+              <div class="action-desc">
+                Sarah left 2 comments on Q3_Budget_Proposal.docx. I've drafted responses and prepared edits — but this involves <strong>executive communication</strong> and <strong>financial data</strong>, so I'm pausing for your review.
+              </div>
+
+              <div class="cot" onclick="this.classList.toggle('open')">
+                <div class="cot-label">Chain of Thought</div>
+                <div class="cot-toggle">Click to expand reasoning →</div>
+                <div class="cot-steps">
+                  <div class="cot-step"><span class="cot-check">✓</span> Read Sarah's 2 comments on §2 and §3</div>
+                  <div class="cot-step"><span class="cot-check">✓</span> Pulled Q3 actual ROI data from Q3_Actuals.xlsx</div>
+                  <div class="cot-step"><span class="cot-check">✓</span> Cross-referenced hiring pipeline from Hiring_Plan_H2.xlsx</div>
+                  <div class="cot-step"><span class="cot-check">✓</span> Applied LESSONS.md: "Sarah responds best to data-backed arguments"</div>
+                  <div class="cot-step"><span class="cot-check">✓</span> Drafted 2 comment responses + 2 tracked changes in doc</div>
+                  <div class="cot-step" style="color: var(--claw-amber);">⏸ Paused: Exec recipient + financial data → requires human approval</div>
+                </div>
+              </div>
+
+              <!-- The draft -->
+              <div style="margin-top: 14px; background: #F9F9F9; border-radius: 12px; overflow: hidden;">
+                <div style="padding: 10px 16px; font-size: 11px; font-weight: 600; color: var(--text-muted); border-bottom: 1px solid rgba(0,0,0,0.04);">Proposed comment responses</div>
+                <div style="padding: 12px 16px;">
+                  <div style="font-size: 12px; color: var(--text-muted); margin-bottom: 6px;">Re: "Can we revisit the marketing allocation rationale?"</div>
+                  <div style="font-size: 13px; color: var(--text-secondary); line-height: 1.7; border-left: 3px solid var(--claw-teal); padding-left: 14px; font-style: italic;">
+                    "The revised marketing allocation is grounded in Q3 actual ROI data — campaign efficiency held at reduced spend levels. The 28% target balances growth investment with the engineering ramp funding. Happy to walk through the numbers in our Thursday sync."
+                  </div>
+                  <div class="sources">
+                    <span class="source-pill"><span class="app-icon x">X</span> Q3_Actuals.xlsx</span>
+                    <span class="source-pill"><span class="app-icon w">W</span> Q3_Budget_Proposal §2</span>
+                    <span class="source-pill"><span class="app-icon x">X</span> Hiring_Plan_H2.xlsx</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Word preview -->
+              <div style="margin-top: 12px; background: white; border: 1px solid var(--border); border-radius: 12px; overflow: hidden;">
+                <div style="display:flex; align-items:center; gap:8px; padding:6px 12px; background:#F3F3F3; border-bottom:1px solid #E0E0E0;">
+                  <span class="app-icon w" style="width:20px; height:20px; font-size:10px;">W</span>
+                  <span style="font-size:12px; font-weight:500;">Q3_Budget_Proposal.docx</span>
+                  <span style="font-size:10px; color:var(--text-muted); margin-left:auto;">Preview</span>
+                </div>
+                <div style="padding: 16px 20px; font-size: 12px; line-height: 1.8; color: var(--text-secondary);">
+                  <div style="font-weight: 600; color: var(--text); margin-bottom: 6px;">§2 Marketing Allocation</div>
+                  <div style="background: #CCFBF1; border-left: 3px solid var(--claw-teal); padding: 8px 12px; border-radius: 0 8px 8px 0; position: relative;">
+                    <span style="position: absolute; right: 8px; top: -8px; background: var(--claw-teal); color: white; font-size: 8px; padding: 1px 6px; border-radius: 8px;">Agent</span>
+                    Marketing allocation revised to $1.18M (28%), grounded in Q3 actual ROI data.
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="action-footer" id="approvalFooter">
+              <button class="btn approve" onclick="approveAction(this)">✓ Approve &amp; Post</button>
+              <button class="btn sec">Edit First</button>
+              <button class="btn sec" style="color: var(--text-muted); border: none;">Reject</button>
+              <span class="action-note">Exec approval gate</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- ═══ STEP 4: Approved — Email Draft ═══ -->
+        <div id="s4" class="hidden">
+          <div style="display: flex; align-items: center; gap: 8px; padding: 10px 0; font-size: 13px; color: var(--green); font-weight: 600;" class="anim-in">
+            ✓ Comments posted · Tracked changes applied to Q3_Budget_Proposal.docx
+          </div>
+          <div class="action-card anim-in">
+            <div class="action-header">
+              <div class="action-agent-icon" style="background: linear-gradient(135deg, var(--claw-teal), #0e7490);">🎯</div>
+              <span class="action-agent-name">Chief of Staff</span>
+              <div class="action-trust">
+                <span class="trust-badge review">REVIEW</span>
+              </div>
+            </div>
+            <div class="action-body">
+              <div class="action-title">Notify Sarah?</div>
+              <div class="action-desc">
+                Budget proposal updated. Draft email to CFO with summary of changes:
+              </div>
+              <div style="margin-top: 10px; background: #F9F9F9; border-radius: 12px; overflow: hidden;">
+                <div style="padding: 10px 16px; font-size: 11px; font-weight: 600; color: var(--text-muted); border-bottom: 1px solid rgba(0,0,0,0.04);">Draft email</div>
+                <div style="padding: 12px 16px;">
+                  <div style="font-size: 12px; color: var(--text-secondary); margin-bottom: 6px;"><strong>To:</strong> Sarah Chen (CFO) · <strong>Subject:</strong> Q3 Budget — Updated per your comments</div>
+                  <div style="font-size: 13px; color: var(--text-secondary); line-height: 1.7; border-left: 3px solid var(--text-muted); padding-left: 14px; font-style: italic;">
+                    "Hi Sarah — updated the Q3 Budget Proposal based on your comments. Marketing revised to 28% with ROI data, engineering timeline backed by pipeline data. Both comments resolved in doc. Happy to discuss Thursday."
+                  </div>
+                </div>
+                <div style="display: flex; align-items: center; gap: 8px; padding: 8px 16px; border-top: 1px solid rgba(0,0,0,0.04);">
+                  <span style="font-size: 11px; color: var(--red);">⚠ 1 executive recipient</span>
+                </div>
+              </div>
+            </div>
+            <div class="action-footer" id="emailFooter">
+              <button class="btn approve" onclick="sendEmail(this)">Send</button>
+              <button class="btn sec">Edit draft</button>
+              <span class="action-note">Exec email gate</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- ═══ STEP 5: Autonomy Log ═══ -->
+        <div id="s5" class="hidden">
+          <div style="display: flex; align-items: center; gap: 8px; padding: 10px 0; font-size: 13px; color: var(--green); font-weight: 600;" class="anim-in">
+            ✓ Email sent to Sarah Chen (CFO)
+          </div>
+
+          <div class="auto-log anim-in">
+            <div class="auto-log-title">Autonomy Ledger — This Session</div>
+            <div class="auto-log-item">
+              <span class="auto-check">✓</span>
+              <span class="auto-label" style="background: var(--green-light); color: var(--green);">AUTO</span>
+              <span>Triaged 44 routine emails — established patterns, confidence &gt; 90%</span>
+            </div>
+            <div class="auto-log-item">
+              <span class="auto-check">✓</span>
+              <span class="auto-label" style="background: var(--green-light); color: var(--green);">AUTO</span>
+              <span>Synced 8 meeting confirmations to calendar</span>
+            </div>
+            <div class="auto-log-item">
+              <span class="auto-check">✓</span>
+              <span class="auto-label" style="background: var(--green-light); color: var(--green);">AUTO</span>
+              <span>Refreshed Q3 actuals from Finance data feed</span>
+            </div>
+            <div class="auto-log-item">
+              <span style="color: var(--claw-amber);">⏸</span>
+              <span class="auto-label" style="background: var(--claw-amber-light); color: var(--claw-amber);">REVIEW</span>
+              <span>Budget comment responses — exec communication + financial data → <strong>approved</strong></span>
+            </div>
+            <div class="auto-log-item">
+              <span style="color: var(--claw-amber);">⏸</span>
+              <span class="auto-label" style="background: var(--claw-amber-light); color: var(--claw-amber);">REVIEW</span>
+              <span>Email to CFO — executive recipient → <strong>approved</strong></span>
+            </div>
+          </div>
+
+          <div class="action-card anim-in">
+            <div class="action-header">
+              <div class="action-agent-icon" style="background: linear-gradient(135deg, var(--claw-teal), #0e7490);">🎯</div>
+              <span class="action-agent-name">Chief of Staff</span>
+            </div>
+            <div class="action-body">
+              <div class="action-desc">
+                Q3 Budget task resolved. I'll <strong>monitor for Sarah's reply</strong> and surface it when she responds. Ambient mode — no action needed from you.
+              </div>
+              <div style="margin-top: 12px; font-size: 13px; color: var(--text);">
+                <strong>Next:</strong> Legal compliance review is 6 days overdue. Want me to pull it up?
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="composer-wrap">
+      <div class="composer">
+        <input type="text" placeholder="Talk to your agents..." readonly>
+        <div class="composer-bottom">
+          <div class="composer-left">
+            <span class="composer-tag">🎯 Chief of Staff</span>
+            <span class="composer-tag" style="cursor: pointer;">Switch agent ▾</span>
+          </div>
+          <div style="display: flex; align-items: center; gap: 8px;">
+            <span style="font-size: 16px; color: var(--text-muted); cursor: pointer;">🎙</span>
+          </div>
+        </div>
+      </div>
+      <div class="composer-disclaimer">Agents operate under graduated autonomy · All actions logged</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ ANNOTATIONS ═══ -->
+<div class="step-overlay" id="ann0" style="bottom: 120px; right: 40px;">
+  <div class="step-tag">What's Different</div>
+  <div>The briefing was compiled <strong>before you woke up</strong>. Five agents worked overnight. This is a persistent runtime, not a chat that starts when you type.</div>
+</div>
+<div class="step-overlay" id="ann1" style="top: 120px; right: 40px;">
+  <div class="step-tag">Omar's Learning #2</div>
+  <div><strong>Memory is multi-layered.</strong> Dream cycles at 4 AM — the agent reviews its own logs and extracts lessons, patterns, and corrections into persistent memory files.</div>
+</div>
+<div class="step-overlay" id="ann2" style="top: 180px; right: 40px;">
+  <div class="step-tag">Omar's Learning #3</div>
+  <div><strong>Security must be designed in.</strong> Mail agent is session-isolated — never returns raw email bodies. Prompt injection chains broken by design.</div>
+</div>
+<div class="step-overlay" id="ann3" style="top: 200px; right: 40px;">
+  <div class="step-tag">Omar's Learning #4</div>
+  <div><strong>Graduated autonomy is the pattern.</strong> Routine emails → auto. Executive communication → human gate. Trust earned per-category, not globally.</div>
+</div>
+<div class="step-overlay" id="ann5" style="bottom: 180px; right: 40px;">
+  <div class="step-tag">The Ledger</div>
+  <div>Every autonomous action logged. Every approval gate recorded. The user sees <em>exactly</em> what their agents did and what they waited for. <strong>Show the work, not just the result.</strong></div>
+</div>
+
+<!-- ═══ END ═══ -->
+<div class="end-overlay" id="endOverlay">
+  <div class="end-content">
+    <h2>This is the surface layer.</h2>
+    <p>What does the harness look like from the user's side? What does graduated autonomy feel like in a UI? How does a team of agents show its work?</p>
+    <p style="margin-top: 16px; color: rgba(255,255,255,0.35);">OpenClaw built the runtime. M365 has the signals. This is where they meet the human.</p>
+    <div class="end-reset" onclick="resetDemo()">Press Esc to restart</div>
+  </div>
+</div>
+
+<script>
+var step = -1;
+var maxStep = 5;
+var advancing = false;
+
+function startDemo() {
+  document.getElementById('landing').classList.add('hidden');
+  setTimeout(function () { advance(); }, 600);
+}
+
+function advance() {
+  if (advancing) return;
+  if (step >= maxStep) {
+    document.getElementById('endOverlay').classList.add('visible');
+    return;
+  }
+  advancing = true;
+
+  // Hide previous annotation
+  var prevAnn = document.getElementById('ann' + step);
+  if (prevAnn) prevAnn.classList.remove('visible');
+
+  step++;
+  var el = document.getElementById('s' + step);
+  if (el) {
+    el.classList.remove('hidden');
+    el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  // Show annotation after a delay
+  setTimeout(function () {
+    var ann = document.getElementById('ann' + step);
+    if (ann) ann.classList.add('visible');
+    advancing = false;
+  }, 600);
+}
+
+function approveAction(btn) {
+  btn.parentElement.querySelectorAll('.btn').forEach(function (b) { b.classList.add('used'); });
+  // Hide approval annotation
+  var ann3 = document.getElementById('ann3');
+  if (ann3) ann3.classList.remove('visible');
+  // Show next step
+  step = 3;
+  setTimeout(function () {
+    var el = document.getElementById('s4');
+    el.classList.remove('hidden');
+    el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    advancing = false;
+  }, 500);
+}
+
+function sendEmail(btn) {
+  btn.parentElement.querySelectorAll('.btn').forEach(function (b) { b.classList.add('used'); });
+  step = 4;
+  setTimeout(function () {
+    var el = document.getElementById('s5');
+    el.classList.remove('hidden');
+    el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    // Show ledger annotation
+    setTimeout(function () {
+      var ann5 = document.getElementById('ann5');
+      if (ann5) ann5.classList.add('visible');
+      advancing = false;
+    }, 600);
+    // Auto-end after reading time
+    setTimeout(function () {
+      document.getElementById('endOverlay').classList.add('visible');
+    }, 6000);
+  }, 500);
+}
+
+/* Keyboard + click navigation */
+document.addEventListener('keydown', function (e) {
+  var endOv = document.getElementById('endOverlay');
+  if (e.key === 'Escape') {
+    if (endOv.classList.contains('visible')) {
+      resetDemo();
+    }
+    return;
+  }
+  if (endOv.classList.contains('visible')) {
+    endOv.classList.remove('visible');
+    return;
+  }
+  if (e.code === 'Space' || e.code === 'ArrowRight' || e.key === 'Enter') {
+    e.preventDefault();
+    advance();
+  }
+});
+
+document.addEventListener('click', function (e) {
+  if (e.target.closest('.btn, .start-btn, .cot, .composer, .agent-item, .end-reset, a')) return;
+  var endOv = document.getElementById('endOverlay');
+  if (endOv.classList.contains('visible')) return;
+  if (step >= 0) advance();
+});
+
+function resetDemo() {
+  document.getElementById('endOverlay').classList.remove('visible');
+  document.getElementById('landing').classList.remove('hidden');
+  for (var i = 0; i <= maxStep; i++) {
+    var el = document.getElementById('s' + i);
+    if (el) el.classList.add('hidden');
+    var ann = document.getElementById('ann' + i);
+    if (ann) ann.classList.remove('visible');
+  }
+  // Reset buttons
+  document.querySelectorAll('.btn.used').forEach(function (b) { b.classList.remove('used'); });
+  step = -1;
+  advancing = false;
+  // Scroll to top
+  document.getElementById('contentArea').scrollTop = 0;
+}
+</script>
+</body>
+</html>

@@ -370,35 +370,31 @@
             </div>
           </div>
           <div class="m-bubble" style="margin-top: 4px;">
-            <p>I've flagged this as a conflict in the email draft.</p>
+            <p>How should I mention this to Sarah?</p>
           </div>
           <div class="card">
             <div class="card-footer" id="conflictFooter">
-              <button class="btn" onclick="doAction(this, 'wrong')">Wait — don't call it a conflict</button>
-              <button class="btn" style="opacity:0.3; pointer-events:none;">Looks good</button>
+              <button class="btn" onclick="doAction(this, 'wrong')">Flag the conflict directly</button>
+              <button class="btn" onclick="doAction(this, 'right')">Frame as alignment</button>
             </div>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- ═══ BEAT 4: Correction + learning + send ═══ -->
+    <!-- ═══ BEAT 4: Response based on choice ═══ -->
     <div class="hidden" id="b4">
       <div class="m anim">
         <div class="m-av" style="background: linear-gradient(135deg, #5B5FC7, #7B7FD7);">🎩</div>
         <div class="m-body-wrap">
           <div class="m-sender">Cadbury <span class="m-time">7:04 AM</span></div>
-          <div class="m-bubble">
-            <p>Got it. Reframed as alignment:</p>
-          </div>
-          <div class="card">
+          <div class="m-bubble" id="b4msg"></div>
+          <div class="card" id="b4card" style="display:none;">
             <div class="card-body">
-              <div class="card-quote">"My projections use 28% marketing, which differs from your 15% growth model. Worth aligning before Thursday."</div>
+              <div class="card-quote" id="b4quote"></div>
             </div>
           </div>
-          <div class="m-bubble" style="margin-top: 4px;">
-            <p style="font-size: 12px; color: #999;">📝 Lesson: frame exec discrepancies as alignment, not conflicts. <em>Updated.</em></p>
-          </div>
+          <div class="m-bubble" style="margin-top: 4px;" id="b4lesson" style="display:none;"></div>
           <div class="card">
             <div class="card-footer" id="sendFooter">
               <button class="btn" onclick="doAction(this, 'send')">Send it</button>
@@ -435,8 +431,8 @@
             </div>
           </div>
           <div class="m-bubble" style="margin-top: 4px;">
-            <p>Sarah's open to 28%. The alignment framing worked. 👍</p>
-            <p>You showed up, made <strong>2 calls</strong>, taught me one thing, and your Monday ran itself. See you tomorrow, Hema. 🌙</p>
+            <p>Sarah's open to 28%. Your framing worked. 👍</p>
+            <p>You showed up, made <strong>2 calls</strong>, and your Monday ran itself. See you tomorrow, Hema. 🌙</p>
           </div>
         </div>
       </div>
@@ -507,6 +503,25 @@ function next() {
   setTimeout(function() {
     hideEl('think');
     setTimeout(function() {
+      // Populate beat 4 based on choice before showing
+      if (beat === 3) {
+        var msg = document.getElementById('b4msg');
+        var card = document.getElementById('b4card');
+        var quote = document.getElementById('b4quote');
+        var lesson = document.getElementById('b4lesson');
+        if (window.b4choice === 'wrong') {
+          msg.innerHTML = '<p>Hmm, noted — but calling it a conflict might put Sarah on the defensive. Here\'s a softer framing:</p>';
+          card.style.display = '';
+          quote.textContent = '"My projections use 28% marketing, which differs from your growth model. Worth aligning before Thursday."';
+          lesson.innerHTML = '<p style="font-size:12px; color:#999;">📝 Lesson: frame exec discrepancies as alignment, not conflicts. <em>Updated.</em></p>';
+          lesson.style.display = '';
+        } else {
+          msg.innerHTML = '<p>Good call. Here\'s the draft:</p>';
+          card.style.display = '';
+          quote.textContent = '"My projections use 28% marketing, which differs from your growth model. Worth aligning before Thursday."';
+          lesson.style.display = 'none';
+        }
+      }
       showEl(beats[beat]); scroll();
       busy = false;
       // Auto-advance for non-interactive beats
@@ -523,6 +538,14 @@ function doAction(btn, type) {
   var label = btn.textContent;
   btn.closest('.card-footer').querySelectorAll('.btn').forEach(function(b) { b.classList.add('used'); });
   insertUser(label);
+
+  // Set beat 4 content based on choice
+  if (type === 'wrong') {
+    window.b4choice = 'wrong';
+  } else if (type === 'right') {
+    window.b4choice = 'right';
+  }
+
   setTimeout(function() { busy = false; next(); }, 600);
 }
 

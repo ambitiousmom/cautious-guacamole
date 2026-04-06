@@ -627,21 +627,6 @@ document.addEventListener('keydown', function(e) {
     document.getElementById('msgs').scrollTop = 0;
     return;
   }
-  if (e.code === 'Space' || e.code === 'ArrowRight' || e.key === 'Enter') {
-    e.preventDefault();
-    if (busy) return;
-    // If there's an active button, click it
-    var activeBtn = document.querySelector('.card-footer .btn:not(.used)');
-    if (activeBtn) { activeBtn.click(); return; }
-    next();
-  }
-});
-
-document.getElementById('msgs').addEventListener('click', function(e) {
-  if (e.target.closest('.btn')) return;
-  var activeBtn = document.querySelector('.card-footer .btn:not(.used)');
-  if (activeBtn) { activeBtn.click(); return; }
-  next();
 });
 </script>
 </body>

@@ -214,15 +214,15 @@
     pointer-events: none;
   }
   .ann {
-    background: rgba(30,30,30,0.92); color: rgba(255,255,255,0.85);
+    background: white; color: #616161;
     padding: 12px 16px; border-radius: 10px; font-size: 12px; line-height: 1.55;
-    backdrop-filter: blur(8px); box-shadow: 0 4px 20px rgba(0,0,0,0.25);
+    box-shadow: 0 2px 12px rgba(0,0,0,0.08);
     border-left: 3px solid #5B5FC7;
     opacity: 0; transform: translateX(10px);
     transition: opacity 0.5s, transform 0.5s;
   }
   .ann.visible { opacity: 1; transform: none; }
-  .ann-title { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: #818cf8; margin-bottom: 4px; }
+  .ann-title { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: #5B5FC7; margin-bottom: 4px; }
 
   /* End label */
   .end-label {
@@ -233,14 +233,14 @@
     pointer-events: none;
   }
   .end-label.visible { opacity: 1; transform: none; pointer-events: auto; }
-  .end-label-text { font-size: 14px; font-weight: 600; color: rgba(255,255,255,0.5); }
+  .end-label-text { font-size: 14px; font-weight: 600; color: #999; }
   .end-label-restart {
-    width: 32px; height: 32px; border-radius: 50%; border: 1px solid rgba(255,255,255,0.2);
-    background: none; color: rgba(255,255,255,0.4); font-size: 16px;
+    width: 32px; height: 32px; border-radius: 50%; border: 1px solid #D9D3CC;
+    background: white; color: #616161; font-size: 16px;
     display: flex; align-items: center; justify-content: center;
     cursor: pointer; transition: all 0.2s;
   }
-  .end-label-restart:hover { border-color: rgba(255,255,255,0.5); color: rgba(255,255,255,0.7); }
+  .end-label-restart:hover { border-color: #5B5FC7; color: #5B5FC7; }
 
   @media (max-width: 900px) { .ann-wrap { display: none; } .end-label { display: none; } }
 
@@ -294,8 +294,8 @@
   <div class="lmeta">Prototype by Hema Sridharan</div>
 </div>
 
-<!-- ═══ PHONE ═══ -->
-<div class="phone" style="position:relative;">
+<!-- ═══ PHONE + ANNOTATIONS WRAPPER ═══ -->
+<div style="position:relative;">
 
   <!-- Annotation cards -->
   <div class="ann-wrap">
@@ -322,6 +322,9 @@
     <span class="end-label-text">End</span>
     <button class="end-label-restart" onclick="restartDemo()" title="Restart">↺</button>
   </div>
+
+<!-- ═══ PHONE ═══ -->
+<div class="phone">
   <!-- Status bar -->
   <div class="notch"><div class="notch-pill"></div></div>
   <div class="status-bar">
@@ -507,7 +510,10 @@
   </div>
 </div>
 
-<!-- No overlay — end label on the side -->
+<!-- Close phone -->
+</div>
+<!-- Close wrapper -->
+</div>
 
 <script>
 var beats = ['b1','b2','b3','b4','b5'];

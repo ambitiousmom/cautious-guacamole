@@ -316,46 +316,23 @@
             <p>📬 <strong>47 emails</strong> triaged — 3 need you</p>
             <p>📄 <strong>Sarah (CFO)</strong> — 2 comments on budget doc</p>
             <p>📅 <strong>Conflict</strong> at 2 PM — budget sync vs. design review</p>
-            <p>I'll handle all of it. Starting with the calendar.</p>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- ═══ BEAT 2: Calendar fix ═══ -->
+    <!-- ═══ BEAT 2: Calendar + budget handled together ═══ -->
     <div class="hidden" id="b2">
       <div class="m anim">
         <div class="m-av" style="background: linear-gradient(135deg, #5B5FC7, #7B7FD7);">🎩</div>
         <div class="m-body-wrap">
           <div class="m-sender">Cadbury <span class="m-time">7:02 AM</span></div>
-          <div class="a-tag">📅 via Calendar Agent</div>
           <div class="m-bubble">
-            <p>2 PM conflict: budget sync (4 execs) vs. design review (you + Mia).</p>
-            <p>Moving design review to <strong>Wed 10 AM</strong>. Mia's agent confirms free.</p>
+            <p>📅 Moving design review to <strong>Wed 10 AM</strong> — Mia's agent confirms free.</p>
+            <p>📄 Sarah's budget comments — drafted a response:</p>
           </div>
           <div class="card">
-            <div class="card-banner">⏸ Needs your OK — moving someone else's meeting</div>
-            <div class="card-footer" id="calFooter">
-              <button class="btn" onclick="doAction(this, 'cal')">Move it</button>
-              <button class="btn" style="opacity:0.3; pointer-events:none;">Show options</button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- ═══ BEAT 3: Budget comments + approval gate ═══ -->
-    <div class="hidden" id="b3">
-      <div class="m anim">
-        <div class="m-av" style="background: linear-gradient(135deg, #5B5FC7, #7B7FD7);">🎩</div>
-        <div class="m-body-wrap">
-          <div class="m-sender">Cadbury <span class="m-time">7:03 AM</span></div>
-          <div class="m-bubble">
-            <p>✓ Done. Mia's agent acknowledged.</p>
-            <p>Next — Sarah's budget comments. Drafted a response:</p>
-          </div>
-          <div class="card">
-            <div class="card-banner">⏸ Exec communication — your approval needed</div>
+            <div class="card-banner">⏸ Exec communication — your approval</div>
             <div class="card-body">
               <div class="card-quote">"28% allocation grounded in Q3 ROI data — efficiency held at reduced spend. Happy to discuss Thursday."</div>
               <div class="card-sources"><span class="ai x">X</span> Q3_Actuals · <span class="ai w">W</span> Budget §2</div>
@@ -369,19 +346,18 @@
       </div>
     </div>
 
-    <!-- ═══ BEAT 4: Proactive catches + conflict ═══ -->
-    <div class="hidden" id="b4">
+    <!-- ═══ BEAT 3: Conflict detection + wrong tone ═══ -->
+    <div class="hidden" id="b3">
       <div class="m anim">
         <div class="m-av" style="background: linear-gradient(135deg, #5B5FC7, #7B7FD7);">🎩</div>
         <div class="m-body-wrap">
-          <div class="m-sender">Cadbury <span class="m-time">7:04 AM</span></div>
+          <div class="m-sender">Cadbury <span class="m-time">7:03 AM</span></div>
           <div class="m-bubble">
-            <p>✓ Responses posted. Comments resolved.</p>
-            <p>While pulling data, I noticed something:</p>
+            <p>✓ Done. While drafting the email, I noticed something:</p>
           </div>
           <div style="background: linear-gradient(135deg, #FFF7ED, #FEF3C7); border-radius: 16px; padding: 16px; margin: 6px 0; box-shadow: 0 2px 8px rgba(0,0,0,0.04);">
             <div style="font-size: 12px; font-weight: 600; color: #E87400; margin-bottom: 8px;">⚠ Budget Discrepancy</div>
-            <div style="font-size: 13px; color: #616161; line-height: 1.6;">Sarah assumes <strong style="color:#242424;">+15%</strong> marketing growth. Your budget cuts marketing <strong style="color:#242424;">−5%</strong>.</div>
+            <div style="font-size: 13px; color: #616161; line-height: 1.6;">Sarah assumes <strong style="color:#242424;">+15%</strong> growth. Your budget cuts marketing <strong style="color:#242424;">−5%</strong>.</div>
             <div class="conflict-row">
               <div class="conflict-col">
                 <div class="conflict-val" style="color: #107C10;">+15%</div>
@@ -394,7 +370,7 @@
             </div>
           </div>
           <div class="m-bubble" style="margin-top: 4px;">
-            <p>I've flagged this in the draft email to Sarah.</p>
+            <p>I've flagged this as a conflict in the email draft.</p>
           </div>
           <div class="card">
             <div class="card-footer" id="conflictFooter">
@@ -406,22 +382,22 @@
       </div>
     </div>
 
-    <!-- ═══ BEAT 5: Correction + learning ═══ -->
-    <div class="hidden" id="b5">
+    <!-- ═══ BEAT 4: Correction + learning + send ═══ -->
+    <div class="hidden" id="b4">
       <div class="m anim">
         <div class="m-av" style="background: linear-gradient(135deg, #5B5FC7, #7B7FD7);">🎩</div>
         <div class="m-body-wrap">
-          <div class="m-sender">Cadbury <span class="m-time">7:05 AM</span></div>
+          <div class="m-sender">Cadbury <span class="m-time">7:04 AM</span></div>
           <div class="m-bubble">
-            <p>Got it. Revised — instead of flagging a conflict, I'm framing it as an alignment opportunity:</p>
+            <p>Got it. Reframed as alignment:</p>
           </div>
           <div class="card">
             <div class="card-body">
-              <div class="card-quote">"One note — my projections use a 28% marketing allocation, which differs from your 15% growth model. Might be worth aligning our assumptions before Thursday."</div>
+              <div class="card-quote">"My projections use 28% marketing, which differs from your 15% growth model. Worth aligning before Thursday."</div>
             </div>
           </div>
           <div class="m-bubble" style="margin-top: 4px;">
-            <p style="font-size: 12px; color: #999;">📝 Lesson saved: Don't call out conflicts with execs directly — frame as alignment. <em>LESSONS.md updated.</em></p>
+            <p style="font-size: 12px; color: #999;">📝 Lesson: frame exec discrepancies as alignment, not conflicts. <em>Updated.</em></p>
           </div>
           <div class="card">
             <div class="card-footer" id="sendFooter">
@@ -433,36 +409,18 @@
       </div>
     </div>
 
-    <!-- ═══ BEAT 6: Email sent ═══ -->
-    <div class="hidden" id="b6">
-      <div class="m anim">
-        <div class="m-av" style="background: linear-gradient(135deg, #5B5FC7, #7B7FD7);">🎩</div>
-        <div class="m-body-wrap">
-          <div class="m-sender">Cadbury <span class="m-time">7:06 AM</span></div>
-          <div class="a-tag">✉️ via Mail Agent</div>
-          <div class="m-bubble">
-            <p>✓ Sent. I'll watch for her reply.</p>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- ═══ BEAT 7: After 2 PM meeting ═══ -->
-    <div class="hidden" id="b7">
+    <!-- ═══ BEAT 5: Post-meeting + closing ═══ -->
+    <div class="hidden" id="b5">
       <div class="sys anim">4:15 PM · After your budget sync</div>
       <div class="m anim" style="margin-top: 8px;">
         <div class="m-av" style="background: linear-gradient(135deg, #5B5FC7, #7B7FD7);">🎩</div>
         <div class="m-body-wrap">
           <div class="m-sender">Cadbury <span class="m-time">4:15 PM</span></div>
           <div class="m-bubble">
-            <p>Budget sync ended. <strong>4 action items</strong>, 5 people. Agents coordinated — no one took notes:</p>
+            <p>Budget sync ended. Agents coordinated — no notes needed:</p>
           </div>
           <div class="aftermath">
             <div class="aftermath-title">Agent-to-agent</div>
-            <div class="aftermath-row">
-              <div class="aftermath-av" style="background: #E89B35;">CL</div>
-              <div><strong style="color:#242424;">You:</strong> Revise budget by Fri. Actuals pulled.</div>
-            </div>
             <div class="aftermath-row">
               <div class="aftermath-av" style="background: #0078D4;">SC</div>
               <div><strong style="color:#242424;">Sarah:</strong> Review rationale Thu. Queued.</div>
@@ -477,54 +435,8 @@
             </div>
           </div>
           <div class="m-bubble" style="margin-top: 4px;">
-            <p>Sarah's open to 28% now. Pre-meeting flag worked. 👍</p>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- ═══ BEAT 8: End of day recap ═══ -->
-    <div class="hidden" id="b8">
-      <div class="m anim" style="margin-top: 8px;">
-        <div class="m-av" style="background: linear-gradient(135deg, #5B5FC7, #7B7FD7);">🎩</div>
-        <div class="m-body-wrap">
-          <div class="m-sender">Cadbury <span class="m-time">4:16 PM</span></div>
-          <div class="m-bubble">
-            <p>Here's what your agents did today:</p>
-          </div>
-          <div class="recap">
-            <div class="recap-title">Today's ledger</div>
-            <div class="recap-item">
-              <span class="recap-badge" style="background:#DFF6DD; color:#107C10;">AUTO</span>
-              44 emails triaged + 8 calendar syncs
-            </div>
-            <div class="recap-item">
-              <span class="recap-badge" style="background:#DFF6DD; color:#107C10;">AUTO</span>
-              Q3 actuals + hiring pipeline refreshed
-            </div>
-            <div class="recap-item">
-              <span class="recap-badge" style="background:#FEF3C7; color:#E87400;">YOU</span>
-              Calendar conflict resolved — design review moved
-            </div>
-            <div class="recap-item">
-              <span class="recap-badge" style="background:#FEF3C7; color:#E87400;">YOU</span>
-              CFO responses approved + email tone corrected
-            </div>
-            <div class="recap-item">
-              <span class="recap-badge" style="background:#E8EBFA; color:#5B5FC7;">PROACTIVE</span>
-              Budget discrepancy caught pre-meeting
-            </div>
-            <div class="recap-item">
-              <span class="recap-badge" style="background:#FEE2E2; color:#D13438;">LEARNED</span>
-              Don't flag conflicts with execs — frame as alignment
-            </div>
-            <div class="recap-item">
-              <span class="recap-badge" style="background:#E8EBFA; color:#5B5FC7;">AGENTS</span>
-              Post-meeting: 4 action items distributed across 3 agents
-            </div>
-          </div>
-          <div class="m-bubble" style="margin-top: 6px;">
-            <p>You showed up, made <strong>3 calls</strong>, taught me one thing, and your Monday ran itself. See you tomorrow, Hema. 🌙</p>
+            <p>Sarah's open to 28%. The alignment framing worked. 👍</p>
+            <p>You showed up, made <strong>2 calls</strong>, taught me one thing, and your Monday ran itself. See you tomorrow, Hema. 🌙</p>
           </div>
         </div>
       </div>
@@ -553,7 +465,7 @@
 </div>
 
 <script>
-var beats = ['b1','b2','b3','b4','b5','b6','b7','b8'];
+var beats = ['b1','b2','b3','b4','b5'];
 var beat = -1;
 var busy = false;
 
@@ -598,8 +510,8 @@ function next() {
       showEl(beats[beat]); scroll();
       busy = false;
       // Auto-advance for non-interactive beats
-      if (beat === 5 || beat === 6 || beat === 7) {
-        setTimeout(next, beat === 7 ? 4000 : 3000);
+      if (beat === 4) {
+        setTimeout(next, 5000);
       }
     }, 250);
   }, delay);

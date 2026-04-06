@@ -629,7 +629,17 @@ function scroll() {
 
 document.addEventListener('keydown', function(e) {
   var endOv = document.getElementById('endOverlay');
-  if (endOv.classList.contains('visible')) { endOv.classList.remove('visible'); return; }
+  if (endOv.classList.contains('visible')) {
+    endOv.classList.remove('visible');
+    // Reset everything back to landing
+    document.getElementById('landing').classList.remove('hidden');
+    beats.forEach(function(id) { var el = document.getElementById(id); if (el) { el.classList.add('hidden'); el.classList.remove('anim'); } });
+    document.querySelectorAll('.m.user').forEach(function(el) { el.remove(); });
+    document.querySelectorAll('.btn.used').forEach(function(b) { b.classList.remove('used'); });
+    beat = -1; busy = false;
+    document.getElementById('msgs').scrollTop = 0;
+    return;
+  }
   if (e.code === 'Space' || e.code === 'ArrowRight' || e.key === 'Enter') {
     e.preventDefault();
     // If there's an active button, click it, otherwise advance

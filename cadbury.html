@@ -313,12 +313,11 @@
         <div class="m-body-wrap">
           <div class="m-sender">Cadbury <span class="m-time">6:45 AM</span></div>
           <div class="m-bubble">
-            <p>Good morning. Your agents worked overnight. Here's the brief:</p>
+            <p>Good morning. Overnight brief:</p>
             <p>📬 <strong>47 emails</strong> triaged — 3 need you</p>
-            <p>📄 <strong>Sarah Chen (CFO)</strong> left 2 comments on the Q3 budget doc</p>
-            <p>📊 Q3 actuals refreshed · hiring pipeline updated</p>
-            <p>📅 <strong>Conflict:</strong> You're double-booked at 2 PM — budget sync vs. design review</p>
-            <p>I have a recommendation for each. Start with the budget?</p>
+            <p>📄 <strong>Sarah (CFO)</strong> — 2 comments on budget doc</p>
+            <p>📅 <strong>Conflict</strong> at 2 PM — budget sync vs. design review</p>
+            <p>I'll handle all of it. Starting with the calendar.</p>
           </div>
         </div>
       </div>
@@ -332,8 +331,8 @@
           <div class="m-sender">Cadbury <span class="m-time">7:02 AM</span></div>
           <div class="a-tag">📅 via Calendar Agent</div>
           <div class="m-bubble">
-            <p>First — the 2 PM conflict. Budget sync has 4 execs. Design review is you and Mia (she has 3 open slots this week).</p>
-            <p>I'd move the design review to <strong>Wednesday 10 AM</strong>. Mia's agent confirms she's free.</p>
+            <p>2 PM conflict: budget sync (4 execs) vs. design review (you + Mia).</p>
+            <p>Moving design review to <strong>Wed 10 AM</strong>. Mia's agent confirms free.</p>
           </div>
           <div class="card">
             <div class="card-banner">⏸ Needs your OK — moving someone else's meeting</div>
@@ -353,20 +352,17 @@
         <div class="m-body-wrap">
           <div class="m-sender">Cadbury <span class="m-time">7:03 AM</span></div>
           <div class="m-bubble">
-            <p>✓ Design review moved. Mia's agent acknowledged.</p>
-            <p>Now — Sarah's comments on the budget:</p>
+            <p>✓ Done. Mia's agent acknowledged.</p>
           </div>
           <div class="a-tag">📄 via Document Agent</div>
           <div class="m-bubble">
-            <p><em>"Can we revisit the marketing allocation rationale?"</em></p>
-            <p><em>"Timeline seems aggressive for the engineering ramp"</em></p>
-            <p>I've drafted responses using Q3 actuals and the hiring pipeline.</p>
+            <p>Sarah's comments: <em>"Revisit marketing rationale"</em> + <em>"Timeline aggressive."</em> Drafted responses using Q3 actuals.</p>
           </div>
           <div class="card">
             <div class="card-banner">⏸ Exec communication — your approval needed</div>
             <div class="card-body">
-              <div class="card-quote">"The revised 28% allocation is grounded in Q3 actual ROI data — campaign efficiency held at reduced spend. Happy to walk through the numbers Thursday."</div>
-              <div class="card-sources"><span class="ai x">X</span> Q3_Actuals.xlsx · <span class="ai w">W</span> Budget §2 · <span class="ai x">X</span> Hiring_Plan_H2.xlsx</div>
+              <div class="card-quote">"28% allocation grounded in Q3 ROI data — efficiency held at reduced spend. Happy to discuss Thursday."</div>
+              <div class="card-sources"><span class="ai x">X</span> Q3_Actuals · <span class="ai w">W</span> Budget §2</div>
             </div>
             <div class="card-footer" id="approveFooter">
               <button class="btn" onclick="doAction(this, 'approve')">Approve both</button>
@@ -380,10 +376,8 @@
           </div>
           <div class="history-card">
             <div class="history-header">📚 I found something</div>
-            A similar marketing reallocation was <strong>tried in Q1 2025 by David Park</strong> and <strong>rolled back after 3 weeks</strong>. Post-mortem cited channel partner dependencies.
-            <br><br>
-            Your situation differs — Q3 shows improved campaign efficiency — but the channel partner risk is worth mentioning to Sarah.
-            <div class="history-source"><span class="ai w">W</span> Q1_Marketing_Postmortem.docx · David Park (left company) · Jan 2025</div>
+            Similar reallocation <strong>tried Q1 2025, rolled back in 3 weeks</strong> — channel partner risk. Worth flagging to Sarah.
+            <div class="history-source"><span class="ai w">W</span> Q1_Postmortem.docx · David Park (left co.)</div>
           </div>
         </div>
       </div>
@@ -396,35 +390,27 @@
         <div class="m-body-wrap">
           <div class="m-sender">Cadbury <span class="m-time">7:04 AM</span></div>
           <div class="m-bubble">
-            <p>✓ Responses posted. Table inserted into §3. Both comments resolved.</p>
+            <p>✓ Comments resolved. Table in §3.</p>
           </div>
-
           <div class="a-tag">📊 via Data Agent</div>
-          <div class="m-bubble">
-            <p>Also — while pulling the data, I noticed a discrepancy between your numbers and Sarah's:</p>
-          </div>
           <div class="card" style="border-color: #E87400;">
             <div class="card-header" style="color: #E87400;">⚠ Cross-document conflict</div>
             <div class="card-body">
-              <strong>Sarah's Q3 projections</strong> assume 15% marketing growth. <strong>Your budget</strong> cuts marketing to 28%. These don't align.
+              Sarah assumes <strong>+15%</strong> mktg growth. Your budget cuts mktg <strong>−5%</strong>. These don't align.
               <div class="conflict-row">
                 <div class="conflict-col">
-                  <div class="conflict-label">Sarah's model</div>
                   <div class="conflict-val" style="color: #107C10;">+15%</div>
-                  <div class="conflict-sub">mktg-driven growth</div>
+                  <div class="conflict-sub">Sarah's model</div>
                 </div>
                 <div class="conflict-col">
-                  <div class="conflict-label">Your budget</div>
                   <div class="conflict-val" style="color: #D13438;">−5%</div>
-                  <div class="conflict-sub">mktg allocation</div>
+                  <div class="conflict-sub">Your budget</div>
                 </div>
               </div>
-              Surfacing now so you can align before Thursday — not during.
             </div>
           </div>
-
-          <div class="m-bubble" style="margin-top: 6px;">
-            <p>Want me to flag this in the email to Sarah?</p>
+          <div class="m-bubble" style="margin-top: 4px;">
+            <p>Flag this in the email to Sarah?</p>
           </div>
           <div class="card">
             <div class="card-footer" id="conflictFooter">
@@ -459,29 +445,29 @@
         <div class="m-body-wrap">
           <div class="m-sender">Cadbury <span class="m-time">4:15 PM</span></div>
           <div class="m-bubble">
-            <p>Budget sync just ended. <strong>4 action items</strong> across 5 people. Each person's agent picked up their items — no one took notes.</p>
+            <p>Budget sync ended. <strong>4 action items</strong>, 5 people. Agents coordinated — no one took notes:</p>
           </div>
           <div class="aftermath">
-            <div class="aftermath-title">Agent-to-agent coordination</div>
+            <div class="aftermath-title">Agent-to-agent</div>
             <div class="aftermath-row">
               <div class="aftermath-av" style="background: #E89B35;">CL</div>
-              <div><strong style="color:#242424;">Your agent:</strong> "Revise budget by Friday." Pulled latest actuals into working copy.</div>
+              <div><strong style="color:#242424;">You:</strong> Revise budget by Fri. Actuals pulled.</div>
             </div>
             <div class="aftermath-row">
               <div class="aftermath-av" style="background: #0078D4;">SC</div>
-              <div><strong style="color:#242424;">Sarah's agent:</strong> "Review marketing rationale Thursday." Queued for her morning brief.</div>
+              <div><strong style="color:#242424;">Sarah:</strong> Review rationale Thu. Queued.</div>
             </div>
             <div class="aftermath-row">
               <div class="aftermath-av" style="background: #107C10;">RB</div>
-              <div><strong style="color:#242424;">Raj's agent:</strong> "Validate compliance addendum." Pre-loaded for his next slot.</div>
+              <div><strong style="color:#242424;">Raj:</strong> Validate compliance. Pre-loaded.</div>
             </div>
             <div class="aftermath-row">
               <div style="width:20px; height:20px; border-radius:50%; background:#E8EBFA; display:flex; align-items:center; justify-content:center; font-size:9px; color:#5B5FC7;">🔗</div>
-              <div><strong style="color:#5B5FC7;">Dependency chain tracked.</strong> If your revision slips, their agents adjust.</div>
+              <div><strong style="color:#5B5FC7;">Deps tracked.</strong> Slips cascade.</div>
             </div>
           </div>
-          <div class="m-bubble" style="margin-top: 6px;">
-            <p>Sarah also mentioned in the meeting that she's open to the 28% number now. Looks like the pre-meeting flag worked.</p>
+          <div class="m-bubble" style="margin-top: 4px;">
+            <p>Sarah's open to 28% now. Pre-meeting flag worked. 👍</p>
           </div>
         </div>
       </div>

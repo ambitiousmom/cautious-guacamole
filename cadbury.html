@@ -588,7 +588,9 @@ function next() {
 }
 
 function doAction(btn, type) {
+  var label = btn.textContent;
   btn.closest('.card-footer').querySelectorAll('.btn').forEach(function(b) { b.classList.add('used'); });
+  insertUser(label);
   setTimeout(next, 600);
 }
 

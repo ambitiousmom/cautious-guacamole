@@ -3,28 +3,26 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>OpenClaw × M365 — Agent Team</title>
+<title>Your Agent Team in M365</title>
 <style>
   :root {
-    --bg: #FFFFFF;
-    --surface: #F5F1EC;
-    --surface-hover: #EDE8E3;
-    --border: #D9D3CC;
-    --border-light: #E5DFD9;
+    --bg: #F5F5F5;
+    --chat-bg: #FFFFFF;
+    --teams-purple: #5B5FC7;
+    --teams-purple-light: #E8EBFA;
+    --teams-dark: #242424;
+    --teams-nav: #292929;
     --text: #242424;
     --text-secondary: #616161;
-    --text-muted: #999;
-    --brand-blue: #0F6CBD;
-    --copilot-purple: #7B57FF;
+    --text-muted: #ABABAB;
+    --border: #E0E0E0;
     --green: #107C10;
     --green-light: #DFF6DD;
     --red: #D13438;
-    --yellow: #FFB900;
     --orange: #E87400;
-    --blue-light: #EBF3FC;
-    --purple-light: #F3EEFF;
+    --orange-light: #FEF3C7;
+    --blue: #0078D4;
     --font: 'Segoe UI Variable Display', 'Segoe UI Variable', 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
-    --sidebar-w: 260px;
   }
   * { margin: 0; padding: 0; box-sizing: border-box; }
   body { font-family: var(--font); background: var(--bg); color: var(--text); height: 100vh; overflow: hidden; }
@@ -32,579 +30,564 @@
   /* ═══ Landing ═══ */
   .landing {
     position: fixed; inset: 0; z-index: 200;
-    background: var(--surface); color: var(--text);
+    background: #f0f0f0; color: var(--text);
     display: flex; flex-direction: column; align-items: center; justify-content: center;
     transition: opacity 0.5s ease, visibility 0.5s;
   }
   .landing.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
-  .landing h1 { font-size: 36px; font-weight: 700; color: var(--text); margin-bottom: 20px; }
+  .landing h1 { font-size: 32px; font-weight: 700; color: var(--text); margin-bottom: 20px; letter-spacing: -0.02em; }
   .landing-card {
-    background: white; border: 1px solid var(--border-light); border-radius: 16px;
-    padding: 28px 32px; max-width: 460px; width: 90%; margin-bottom: 28px;
-    text-align: left; box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+    background: white; border: 1px solid var(--border); border-radius: 12px;
+    padding: 28px 32px; max-width: 480px; width: 90%; margin-bottom: 28px;
+    text-align: left; box-shadow: 0 2px 8px rgba(0,0,0,0.06);
   }
-  .lc-intro { font-size: 13px; color: var(--text-secondary); line-height: 1.6; margin-bottom: 16px; text-align: center; }
-  .lc-item { font-size: 12px; line-height: 1.8; color: var(--text-secondary); }
+  .lc-intro { font-size: 14px; color: var(--text-secondary); line-height: 1.65; margin-bottom: 16px; text-align: center; }
+  .lc-item { font-size: 13px; line-height: 1.8; color: var(--text-secondary); padding: 2px 0; }
   .lc-item strong { color: var(--text); }
-  .start-btn { padding: 14px 44px; border-radius: 28px; border: none; background: var(--text); color: white; font-size: 15px; font-weight: 600; cursor: pointer; box-shadow: 0 4px 16px rgba(0,0,0,0.15); transition: transform 0.2s; }
-  .start-btn:hover { transform: translateY(-2px); }
-  .landing .lmeta { margin-top: 32px; font-size: 11px; color: var(--text-muted); }
+  .start-btn { padding: 12px 40px; border-radius: 6px; border: none; background: var(--teams-purple); color: white; font-size: 14px; font-weight: 600; cursor: pointer; transition: background 0.2s; }
+  .start-btn:hover { background: #4B4FB7; }
+  .landing .lmeta { margin-top: 24px; font-size: 11px; color: var(--text-muted); }
 
   /* ═══ Shell ═══ */
   .shell { display: flex; height: 100vh; width: 100vw; }
 
-  /* ═══ Sidebar ═══ */
-  .sidebar {
-    width: var(--sidebar-w); min-width: var(--sidebar-w); height: 100%;
-    background: var(--surface); border-right: 1px solid var(--border-light);
-    display: flex; flex-direction: column; overflow-y: auto; font-size: 14px;
+  /* ═══ Teams nav rail ═══ */
+  .nav-rail {
+    width: 68px; background: var(--teams-nav); display: flex; flex-direction: column;
+    align-items: center; padding: 12px 0; gap: 4px;
   }
-  .sb-top { padding: 10px 14px; display: flex; align-items: center; gap: 8px; }
-  .sb-brand { font-size: 20px; font-weight: 700; color: var(--text); letter-spacing: -0.5px; }
-  .sb-divider { height: 1px; background: var(--border-light); margin: 6px 14px; }
-  .sb-section-label { font-size: 11px; font-weight: 700; color: var(--text-muted); padding: 10px 18px 6px; letter-spacing: 0.05em; text-transform: uppercase; }
-
-  /* Agent items */
-  .ag-item {
-    display: flex; align-items: center; gap: 10px;
-    padding: 7px 14px; margin: 1px 8px; border-radius: 6px; cursor: pointer;
-    transition: background 0.15s;
+  .nav-icon {
+    width: 48px; height: 48px; display: flex; flex-direction: column; align-items: center;
+    justify-content: center; border-radius: 8px; cursor: pointer; color: rgba(255,255,255,0.7);
+    font-size: 10px; gap: 2px; transition: background 0.15s;
   }
-  .ag-item:hover { background: var(--surface-hover); }
-  .ag-item.active { background: var(--surface-hover); }
-  .ag-avatar {
-    width: 24px; height: 24px; border-radius: 6px;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 11px; flex-shrink: 0;
+  .nav-icon:hover { background: rgba(255,255,255,0.08); }
+  .nav-icon.active { background: rgba(255,255,255,0.12); color: white; }
+  .nav-icon svg { width: 24px; height: 24px; }
+  .nav-icon span { font-size: 10px; }
+  .nav-bottom { margin-top: auto; }
+
+  /* ═══ Chat list panel ═══ */
+  .chat-list {
+    width: 280px; background: white; border-right: 1px solid var(--border);
+    display: flex; flex-direction: column; overflow-y: auto;
   }
-  .ag-info { flex: 1; min-width: 0; }
-  .ag-name { font-size: 13px; font-weight: 600; color: var(--text); }
-  .ag-status { font-size: 10px; color: var(--text-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  .ag-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
-
-  /* Task items */
-  .sb-item { display: flex; flex-direction: column; padding: 5px 10px; margin: 0 8px; border-radius: 6px; cursor: pointer; }
-  .sb-item:hover { background: var(--surface-hover); }
-  .sb-item.active { background: var(--surface-hover); }
-  .sb-item-row { display: flex; align-items: center; gap: 6px; }
-  .sb-item-name { font-size: 14px; color: var(--text); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; flex: 1; }
-  .sb-item-sub { font-size: 11px; color: var(--text-muted); padding-left: 14px; }
-
-  /* Activity feed */
-  .act-item { padding: 4px 18px; font-size: 10px; color: var(--text-muted); line-height: 1.5; display: flex; gap: 6px; }
-  .act-time { flex-shrink: 0; width: 32px; color: var(--border); }
-
-  .sb-bottom { margin-top: auto; padding: 10px 14px; border-top: 1px solid var(--border-light); }
-
-  /* ═══ Main ═══ */
-  .main { flex: 1; display: flex; flex-direction: column; min-width: 0; overflow: hidden; }
-  .topbar {
-    height: 44px; display: flex; align-items: center; padding: 0 20px;
-    border-bottom: 1px solid var(--border-light); background: var(--bg); flex-shrink: 0; position: relative;
+  .cl-header { padding: 16px 16px 8px; }
+  .cl-title { font-size: 20px; font-weight: 700; color: var(--text); }
+  .cl-search {
+    margin: 8px 16px 12px; padding: 6px 12px; border: 1px solid var(--border);
+    border-radius: 6px; font-size: 13px; font-family: var(--font); color: var(--text);
+    background: #F5F5F5; outline: none; width: calc(100% - 32px);
   }
-  .topbar-title { font-size: 14px; font-weight: 500; color: var(--text); }
-  .topbar-center { position: absolute; left: 50%; transform: translateX(-50%); display: flex; border: 1px solid var(--border); border-radius: 20px; overflow: hidden; }
-  .topbar-center button { padding: 4px 16px; border: none; background: transparent; font-size: 12px; font-family: var(--font); cursor: pointer; color: var(--text-secondary); }
-  .topbar-center button.active { background: var(--blue-light); color: var(--brand-blue); font-weight: 600; }
-  .topbar-right { margin-left: auto; display: flex; align-items: center; gap: 10px; }
-
-  /* ═══ Content ═══ */
-  .content-area { flex: 1; overflow-y: auto; display: flex; flex-direction: column; scroll-behavior: smooth; }
-  .home-view { display: flex; flex-direction: column; align-items: center; justify-content: center; flex: 1; text-align: center; }
-  .home-greeting { font-size: 22px; font-weight: 500; color: var(--text); margin-bottom: 32px; }
-  .composer-home { width: 100%; max-width: 600px; border: 1px solid var(--border); border-radius: 16px; background: white; overflow: hidden; margin: 0 24px 24px; }
-  .composer-home input { width: 100%; border: none; outline: none; font-size: 14px; font-family: var(--font); background: transparent; color: var(--text); padding: 14px 18px 6px; }
-  .composer-home input::placeholder { color: var(--text-muted); }
-  .composer-home-bottom { display: flex; align-items: center; justify-content: space-between; padding: 4px 14px 10px; }
-  .ppills { display: flex; gap: 12px; width: 100%; max-width: 600px; padding: 0 24px; }
-  .ppill { flex: 1; border: 1px solid var(--border-light); border-radius: 12px; padding: 14px; cursor: pointer; text-align: left; background: white; transition: box-shadow 0.2s; }
-  .ppill:hover { box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
-  .ppill-icon { font-size: 18px; margin-bottom: 8px; display: block; }
-  .ppill-text { font-size: 12px; color: var(--text-secondary); line-height: 1.4; }
-
-  /* ═══ Task view ═══ */
-  .task-view { display: none; flex-direction: column; height: 100%; }
-  .task-view.active { display: flex; }
-  .task-convo { flex: 1; overflow-y: auto; padding: 24px 0; display: flex; flex-direction: column; align-items: center; scroll-behavior: smooth; }
-  .task-convo-inner { width: 100%; max-width: 660px; padding: 0 20px; display: flex; flex-direction: column; gap: 6px; }
-
-  /* ═══ Agent label (replaces ✦ Copilot) ═══ */
-  .agent-label { display: flex; align-items: center; gap: 6px; margin-bottom: 8px; font-size: 13px; font-weight: 600; color: var(--text); }
-  .agent-label-icon {
-    width: 20px; height: 20px; border-radius: 5px;
-    display: inline-flex; align-items: center; justify-content: center;
-    font-size: 10px; flex-shrink: 0;
+  .cl-item {
+    display: flex; align-items: center; gap: 12px; padding: 10px 16px;
+    cursor: pointer; transition: background 0.15s;
   }
-  .agent-label-trust { font-size: 9px; font-weight: 700; padding: 1px 6px; border-radius: 4px; margin-left: 4px; letter-spacing: 0.02em; }
+  .cl-item:hover { background: #F5F5F5; }
+  .cl-item.active { background: var(--teams-purple-light); }
+  .cl-avatar {
+    width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center;
+    justify-content: center; font-size: 14px; flex-shrink: 0; position: relative;
+  }
+  .cl-avatar .online-dot {
+    position: absolute; bottom: 0; right: 0; width: 10px; height: 10px;
+    border-radius: 50%; background: var(--green); border: 2px solid white;
+  }
+  .cl-info { flex: 1; min-width: 0; }
+  .cl-name { font-size: 14px; font-weight: 600; color: var(--text); }
+  .cl-preview { font-size: 12px; color: var(--text-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .cl-time { font-size: 11px; color: var(--text-muted); flex-shrink: 0; }
+  .cl-badge { width: 18px; height: 18px; border-radius: 50%; background: var(--teams-purple); color: white; font-size: 10px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
 
-  /* ═══ Agent handoff pill ═══ */
-  .handoff {
+  /* ═══ Chat main ═══ */
+  .chat-main { flex: 1; display: flex; flex-direction: column; background: var(--chat-bg); }
+
+  /* Chat header */
+  .chat-header {
+    height: 52px; display: flex; align-items: center; padding: 0 20px;
+    border-bottom: 1px solid var(--border); flex-shrink: 0;
+  }
+  .ch-avatar {
+    width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center;
+    justify-content: center; font-size: 14px; margin-right: 10px; flex-shrink: 0;
+  }
+  .ch-name { font-size: 16px; font-weight: 600; color: var(--text); }
+  .ch-status { font-size: 12px; color: var(--text-muted); margin-left: 8px; }
+  .ch-actions { margin-left: auto; display: flex; gap: 8px; }
+  .ch-action { width: 32px; height: 32px; border-radius: 4px; border: none; background: none; cursor: pointer; display: flex; align-items: center; justify-content: center; color: var(--text-secondary); font-size: 16px; }
+  .ch-action:hover { background: #F5F5F5; }
+
+  /* Messages area */
+  .messages { flex: 1; overflow-y: auto; padding: 20px 60px; scroll-behavior: smooth; }
+
+  /* ═══ System messages ═══ */
+  .sys-msg {
+    text-align: center; font-size: 12px; color: var(--text-muted);
+    padding: 8px 0; margin: 12px 0;
+  }
+  .sys-msg .sys-line { display: flex; align-items: center; gap: 8px; justify-content: center; }
+  .sys-msg .sys-hr { flex: 1; max-width: 80px; height: 1px; background: var(--border); }
+
+  /* ═══ Message bubbles ═══ */
+  .msg { display: flex; gap: 12px; margin: 4px 0; align-items: flex-start; }
+  .msg + .msg-group-break { margin-top: 16px; }
+  .msg-avatar {
+    width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center;
+    justify-content: center; font-size: 14px; flex-shrink: 0; margin-top: 2px;
+  }
+  .msg-content { flex: 1; max-width: 580px; }
+  .msg-header { display: flex; align-items: baseline; gap: 8px; margin-bottom: 4px; }
+  .msg-name { font-size: 14px; font-weight: 600; color: var(--text); }
+  .msg-time { font-size: 12px; color: var(--text-muted); }
+  .msg-trust { font-size: 9px; font-weight: 700; padding: 1px 6px; border-radius: 4px; }
+  .msg-body { font-size: 14px; line-height: 1.7; color: var(--text); }
+  .msg-body p { margin-bottom: 8px; }
+  .msg-body p:last-child { margin-bottom: 0; }
+  .msg-body strong { font-weight: 600; }
+  .msg-body em { color: var(--text-secondary); }
+
+  /* User messages (right-aligned) */
+  .msg.user { flex-direction: row-reverse; }
+  .msg.user .msg-content { display: flex; flex-direction: column; align-items: flex-end; }
+  .msg.user .msg-body {
+    background: var(--teams-purple); color: white; padding: 8px 14px;
+    border-radius: 12px 12px 4px 12px; max-width: 400px;
+  }
+  .msg.user .msg-body strong { color: white; }
+  .msg.user .msg-header { flex-direction: row-reverse; }
+
+  /* ═══ Agent indicator (inline, subtle) ═══ */
+  .agent-tag {
+    display: inline-flex; align-items: center; gap: 4px; font-size: 11px;
+    color: var(--text-muted); background: #F5F5F5; padding: 2px 8px;
+    border-radius: 10px; margin-bottom: 6px;
+  }
+
+  /* ═══ Cards inside messages ═══ */
+  .msg-card {
+    background: #F9F9F9; border: 1px solid var(--border); border-radius: 10px;
+    overflow: hidden; margin: 8px 0;
+  }
+  .mc-header {
+    padding: 8px 14px; font-size: 11px; font-weight: 600; color: var(--text-muted);
+    border-bottom: 1px solid rgba(0,0,0,0.04);
     display: flex; align-items: center; gap: 6px;
-    padding: 6px 0; margin: 4px 0;
-    font-size: 11px; color: var(--text-muted);
   }
-  .handoff-line { flex: 1; height: 1px; background: var(--border-light); }
-  .handoff-label { white-space: nowrap; display: flex; align-items: center; gap: 4px; }
+  .mc-body { padding: 12px 14px; font-size: 13px; color: var(--text-secondary); line-height: 1.65; }
+  .mc-body strong { color: var(--text); }
+  .mc-footer {
+    display: flex; align-items: center; gap: 8px; padding: 8px 14px;
+    border-top: 1px solid rgba(0,0,0,0.04);
+  }
 
-  /* ═══ Messages ═══ */
-  .cp-msg { margin: 12px 0; }
-  .cp-body { font-size: 14px; line-height: 1.75; color: var(--text); }
-  .cp-body p { margin-bottom: 10px; }
-  .cp-body p:last-child { margin-bottom: 0; }
-  .user-msg { display: flex; justify-content: flex-end; margin: 8px 0 16px; }
-  .user-bubble { background: var(--surface); color: var(--text); padding: 10px 18px; border-radius: 18px 18px 4px 18px; font-size: 14px; max-width: 420px; line-height: 1.5; }
-
-  /* Thinking dots */
-  .thinking { display: flex; align-items: center; gap: 4px; padding: 8px 0; margin: 4px 0; }
-  .thinking-label { font-size: 13px; font-weight: 600; color: var(--text-muted); margin-right: 6px; }
-  .thinking-dot { width: 5px; height: 5px; background: var(--text-muted); border-radius: 50%; animation: pulse 1.4s ease infinite; }
-  .thinking-dot:nth-child(3) { animation-delay: 0.2s; }
-  .thinking-dot:nth-child(4) { animation-delay: 0.4s; }
-  @keyframes pulse { 0%,80%,100%{opacity:0.25;transform:scale(0.8)} 40%{opacity:1;transform:scale(1.1)} }
-
-  /* Confirm */
-  .confirm-line { font-size: 14px; color: var(--text); margin-bottom: 8px; }
-  .confirm-line .check { color: var(--green); }
+  /* Sources */
+  .mc-sources { font-size: 11px; color: var(--text-muted); margin-top: 6px; }
 
   /* App icons */
-  .app-icon { width: 16px; height: 16px; border-radius: 3px; display: inline-flex; align-items: center; justify-content: center; font-size: 8px; color: white; font-weight: 700; vertical-align: -2px; flex-shrink: 0; }
+  .app-icon { width: 14px; height: 14px; border-radius: 2px; display: inline-flex; align-items: center; justify-content: center; font-size: 7px; color: white; font-weight: 700; vertical-align: -1px; flex-shrink: 0; }
   .app-icon.w { background: #185ABD; }
   .app-icon.x { background: #107C10; }
-  .app-icon.p { background: #D24726; }
 
-  /* Buttons */
-  .btn { padding: 8px 20px; border-radius: 20px; font-size: 13px; font-weight: 600; cursor: pointer; font-family: var(--font); border: none; transition: background 0.15s; }
-  .btn.pri { background: #EDE8E3; color: var(--text); border: 1px solid var(--border); }
-  .btn.pri:hover { background: #E5DFD9; }
-  .btn.sec { background: white; color: var(--text-secondary); border: 1px solid var(--border-light); }
-  .btn.sec:hover { background: #F9F9F9; }
+  /* Word preview */
+  .word-preview {
+    background: white; border: 1px solid var(--border); border-radius: 10px;
+    margin: 8px 0; overflow: hidden;
+  }
+  .wp-chrome { display: flex; align-items: center; gap: 8px; padding: 6px 12px; background: #F3F3F3; border-bottom: 1px solid #E0E0E0; }
+  .wp-ribbon { display: flex; gap: 2px; padding: 3px 12px; background: #F9F9F9; border-bottom: 1px solid #E8E8E8; font-size: 10px; color: var(--text-secondary); }
+  .wp-activity { display: flex; align-items: center; gap: 6px; padding: 4px 12px; background: #FAFAFA; border-bottom: 1px solid #F0F0F0; font-size: 10px; color: var(--text-muted); }
+  .wp-content { padding: 16px 24px; font-size: 13px; line-height: 1.8; color: var(--text-secondary); max-height: 180px; overflow-y: auto; }
+  .wp-change { background: #E8F5E9; border-left: 3px solid var(--green); padding: 8px 12px; border-radius: 0 6px 6px 0; margin: 6px 0; font-size: 12px; position: relative; }
+  .wp-badge { position: absolute; right: 8px; top: -8px; background: var(--green); color: white; font-size: 8px; padding: 1px 6px; border-radius: 8px; }
+
+  /* ═══ Buttons ═══ */
+  .btn { padding: 6px 16px; border-radius: 6px; font-size: 13px; font-weight: 600; cursor: pointer; font-family: var(--font); border: none; transition: background 0.15s; }
+  .btn.pri { background: var(--teams-purple); color: white; }
+  .btn.pri:hover { background: #4B4FB7; }
+  .btn.sec { background: white; color: var(--text-secondary); border: 1px solid var(--border); }
+  .btn.sec:hover { background: #F5F5F5; }
   .btn.used { opacity: 0.35; pointer-events: none; }
 
-  /* Annotation tags */
-  .ptag {
-    display: inline-block; font-size: 11px; color: #B4A0FF;
-    background: rgba(30,30,30,0.92); border-radius: 10px; padding: 8px 16px;
-    margin-top: 10px; line-height: 1.5; backdrop-filter: blur(6px);
+  /* Approval banner */
+  .approval-banner {
+    display: flex; align-items: center; gap: 6px; padding: 6px 14px;
+    background: var(--orange-light); font-size: 11px; font-weight: 600;
+    color: var(--orange); border-bottom: 1px solid rgba(0,0,0,0.04);
   }
-  .ptag-title { font-weight: 700; font-size: 10px; text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 3px; display: block; color: rgba(255,255,255,0.5); }
-  .task-convo-inner .ptag { position: fixed; right: 20px; z-index: 50; margin: 0; max-width: 220px; }
 
-  /* Bottom composer */
-  .task-composer { padding: 8px 16%; border-top: 1px solid var(--border-light); background: var(--bg); flex-shrink: 0; }
-  .task-composer .composer { margin-bottom: 0; max-width: 100%; }
-  .composer { width: 100%; border: 1px solid var(--border); border-radius: 16px; background: white; overflow: hidden; }
-  .composer input { width: 100%; border: none; outline: none; font-size: 14px; font-family: var(--font); background: transparent; color: var(--text); padding: 14px 18px 6px; }
-  .composer input::placeholder { color: var(--text-muted); }
-  .composer-bottom { display: flex; align-items: center; justify-content: space-between; padding: 4px 14px 10px; }
+  /* Thinking dots */
+  .thinking { display: flex; align-items: center; gap: 12px; padding: 8px 0; margin: 4px 0 4px 44px; }
+  .thinking-avatar {
+    width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center;
+    justify-content: center; font-size: 14px; flex-shrink: 0;
+  }
+  .thinking-dots { display: flex; gap: 4px; }
+  .thinking-dot { width: 6px; height: 6px; background: var(--text-muted); border-radius: 50%; animation: pulse 1.4s ease infinite; }
+  .thinking-dot:nth-child(2) { animation-delay: 0.2s; }
+  .thinking-dot:nth-child(3) { animation-delay: 0.4s; }
+  @keyframes pulse { 0%,80%,100%{opacity:0.25;transform:scale(0.8)} 40%{opacity:1;transform:scale(1.1)} }
 
-  /* End overlay */
+  /* ═══ Composer ═══ */
+  .chat-composer {
+    padding: 12px 60px 16px; border-top: 1px solid var(--border); flex-shrink: 0;
+  }
+  .compose-box {
+    border: 1px solid var(--border); border-radius: 8px; background: white; overflow: hidden;
+  }
+  .compose-box input {
+    width: 100%; border: none; outline: none; font-size: 14px; font-family: var(--font);
+    background: transparent; color: var(--text); padding: 10px 14px;
+  }
+  .compose-box input::placeholder { color: var(--text-muted); }
+  .compose-toolbar {
+    display: flex; align-items: center; padding: 4px 10px 6px; gap: 8px;
+  }
+  .compose-icon { width: 28px; height: 28px; border-radius: 4px; border: none; background: none; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 16px; color: var(--text-muted); }
+  .compose-icon:hover { background: #F5F5F5; }
+  .compose-send { margin-left: auto; }
+
+  /* Confirm */
+  .confirm-line { font-size: 13px; color: var(--text); margin-bottom: 6px; }
+  .confirm-line .check { color: var(--green); }
+
+  /* Session recap */
+  .recap { background: #F5F5F5; border-radius: 8px; padding: 12px 14px; margin: 8px 0; font-size: 12px; }
+  .recap-title { font-size: 11px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 8px; }
+  .recap-item { display: flex; align-items: center; gap: 8px; padding: 3px 0; color: var(--text-secondary); }
+  .recap-item + .recap-item { border-top: 1px solid rgba(0,0,0,0.04); padding-top: 6px; }
+  .recap-badge { font-size: 9px; font-weight: 700; padding: 1px 6px; border-radius: 4px; }
+
+  /* ═══ End ═══ */
   .end-overlay {
     position: fixed; inset: 0; z-index: 300;
-    background: rgba(0,0,0,0.65); display: flex; align-items: center; justify-content: center;
+    background: rgba(0,0,0,0.6); display: flex; align-items: center; justify-content: center;
     opacity: 0; visibility: hidden; transition: opacity 0.5s, visibility 0.5s;
   }
   .end-overlay.visible { opacity: 1; visibility: visible; }
 
   /* Animations */
   .hidden { display: none !important; }
-  @keyframes fadeInUp { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:translateY(0); } }
-  .anim-in { animation: fadeInUp 0.4s ease both; }
+  @keyframes fadeInUp { from { opacity:0; transform:translateY(6px); } to { opacity:1; transform:translateY(0); } }
+  .anim-in { animation: fadeInUp 0.35s ease both; }
 </style>
 </head>
 <body>
 
 <!-- ═══ LANDING ═══ -->
 <div class="landing" id="landing">
-  <h1>Copilot Tasks, OpenClaw Edition</h1>
+  <h1>Your Agent Team in M365</h1>
   <div class="landing-card">
-    <div class="lc-intro">Same task. Same flow. But now you can see <strong>who's doing the work</strong>.</div>
-    <div class="lc-item"><strong>Named agents</strong> — each step shows which agent is acting</div>
-    <div class="lc-item"><strong>Visible handoffs</strong> — Mail → Document → Data → Chief of Staff</div>
-    <div class="lc-item"><strong>Graduated autonomy</strong> — AUTO for routine, REVIEW for exec decisions</div>
-    <div class="lc-item"><strong>Graph signals</strong> — cross-person matches, org-wide memory, agent-to-agent sync</div>
-    <div class="lc-item"><strong>Overnight runtime</strong> — agents worked before you woke up</div>
+    <div class="lc-intro">What if everyone had a Lobster — but it lived inside the tools they already use, backed by the signals only an organization can provide?</div>
+    <div class="lc-item"><strong>One assistant</strong> you talk to naturally in Teams</div>
+    <div class="lc-item"><strong>Specialist agents</strong> working behind the scenes — mail, documents, data</div>
+    <div class="lc-item"><strong>Graduated autonomy</strong> — handles routine work automatically, pauses for high-stakes decisions</div>
+    <div class="lc-item"><strong>Always on</strong> — agents work overnight and brief you in the morning</div>
   </div>
-  <button class="start-btn" onclick="startDemo()">Enter prototype →</button>
+  <button class="start-btn" onclick="startDemo()">Monday morning →</button>
   <div class="lmeta">Prototype by Hema Sridharan</div>
 </div>
 
 <!-- ═══ SHELL ═══ -->
 <div class="shell">
 
-  <!-- ═══ SIDEBAR ═══ -->
-  <div class="sidebar">
-    <div class="sb-top"><span class="sb-brand">Copilot</span></div>
-    <div class="sb-divider"></div>
-
-    <!-- Agent Roster -->
-    <div class="sb-section-label">Agent Team</div>
-    <div class="ag-item active" id="agCoS">
-      <div class="ag-avatar" style="background:linear-gradient(135deg, #0d9488, #0e7490);">🎯</div>
-      <div class="ag-info"><div class="ag-name">Chief of Staff</div><div class="ag-status">Briefing ready</div></div>
-      <div class="ag-dot" style="background:var(--green);"></div>
+  <!-- ═══ Teams nav rail ═══ -->
+  <div class="nav-rail">
+    <div class="nav-icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>
+      <span>Activity</span>
     </div>
-    <div class="ag-item" id="agMail">
-      <div class="ag-avatar" style="background:linear-gradient(135deg, #0078D4, #005a9e);">✉️</div>
-      <div class="ag-info"><div class="ag-name">Mail Agent</div><div class="ag-status" id="mailStatus">47 → 3 need you</div></div>
-      <div class="ag-dot" style="background:var(--green);"></div>
+    <div class="nav-icon active">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+      <span>Chat</span>
     </div>
-    <div class="ag-item" id="agDoc">
-      <div class="ag-avatar" style="background:linear-gradient(135deg, #185ABD, #1048A0);">📄</div>
-      <div class="ag-info"><div class="ag-name">Document Agent</div><div class="ag-status" id="docStatus">2 comments to review</div></div>
-      <div class="ag-dot" style="background:var(--green);"></div>
+    <div class="nav-icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
+      <span>Teams</span>
     </div>
-    <div class="ag-item" id="agData">
-      <div class="ag-avatar" style="background:linear-gradient(135deg, var(--green), #0a5e0a);">📊</div>
-      <div class="ag-info"><div class="ag-name">Data Agent</div><div class="ag-status">Q3 actuals refreshed</div></div>
-      <div class="ag-dot" style="background:var(--border);"></div>
+    <div class="nav-icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+      <span>Calendar</span>
     </div>
-
-    <div class="sb-divider"></div>
-
-    <!-- Tasks -->
-    <div class="sb-section-label">Tasks</div>
-    <div class="sb-item active" id="sbTask1">
-      <div class="sb-item-row">
-        <span style="width:8px; height:8px; border-radius:50%; background:var(--red); flex-shrink:0;" id="task1Dot"></span>
-        <span class="sb-item-name" id="task1Name">Q3 Budget Finalization</span>
-      </div>
-      <span class="sb-item-sub" id="task1Sub">Sarah replied · draft ready</span>
-    </div>
-    <div class="sb-item" id="sbTask2">
-      <div class="sb-item-row">
-        <span style="width:8px; height:8px; border-radius:50%; background:var(--orange); flex-shrink:0;"></span>
-        <span class="sb-item-name">Legal Compliance Review</span>
-      </div>
-      <span class="sb-item-sub">Pending reply · 6d overdue</span>
-    </div>
-    <div class="sb-item" id="sbTask3">
-      <div class="sb-item-row">
-        <span style="width:8px; height:8px; border-radius:50%; background:var(--brand-blue); flex-shrink:0;"></span>
-        <span class="sb-item-name">Engineering Hiring</span>
-      </div>
-      <span class="sb-item-sub">Cross-team match found</span>
-    </div>
-    <div class="sb-item" id="sbTask4">
-      <div class="sb-item-row">
-        <span style="width:8px; height:8px; border-radius:50%; background:transparent; flex-shrink:0;"></span>
-        <span class="sb-item-name">Weekly Exec Metrics</span>
-      </div>
-      <span class="sb-item-sub">Auto-generating Mon 8 AM</span>
-    </div>
-
-    <div class="sb-divider"></div>
-
-    <!-- Overnight -->
-    <div class="sb-section-label">Overnight</div>
-    <div class="act-item"><span class="act-time">4:00a</span>🌙 Memory consolidation — 12 lessons</div>
-    <div class="act-item"><span class="act-time">5:15a</span>✉️ Mail triaged 47 emails</div>
-    <div class="act-item"><span class="act-time">5:30a</span>📊 Q3 actuals refreshed</div>
-    <div class="act-item"><span class="act-time">6:45a</span>🎯 Briefing compiled</div>
-
-    <div class="sb-bottom">
-      <div style="display:flex; align-items:center; gap:10px;">
-        <div style="width:28px; height:28px; border-radius:50%; background:linear-gradient(135deg, #E89B35, #D4782F); display:flex; align-items:center; justify-content:center; font-size:11px; color:white; font-weight:600;">CL</div>
-        <div>
-          <div style="font-size:13px; font-weight:600;">Cindy Luo</div>
-          <div style="font-size:10px; color:var(--text-muted);">4 agents · M365 Premium</div>
-        </div>
-      </div>
+    <div class="nav-icon nav-bottom">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 01-2.83 2.83l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
+      <span></span>
     </div>
   </div>
 
-  <!-- ═══ MAIN ═══ -->
-  <div class="main">
-    <div class="topbar" style="position:relative;">
-      <span class="topbar-title" id="topTitle"></span>
-      <div class="topbar-center">
-        <button class="active">Work</button>
-        <button>Web</button>
-      </div>
-      <div class="topbar-right">
-        <span style="font-size:12px; color:var(--text-secondary); border:1px solid var(--border); padding:3px 10px; border-radius:6px;">Graduated ▾</span>
-        <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M10 2L4 5v4c0 4.5 2.6 8.1 6 9 3.4-.9 6-4.5 6-9V5L10 2z" fill="#107C10" stroke="#107C10" stroke-width="0.5"/><path d="M7.5 10l2 2 3.5-4" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      </div>
-    </div>
+  <!-- ═══ Chat list ═══ -->
+  <div class="chat-list">
+    <div class="cl-header"><div class="cl-title">Chat</div></div>
+    <input class="cl-search" type="text" placeholder="Search" readonly>
 
-    <!-- HOME VIEW -->
-    <div class="content-area" id="homeView">
-      <div class="home-view">
-        <div class="home-greeting">Hi, Cindy. Your agents are ready.</div>
-        <div class="composer-home">
-          <input type="text" placeholder="Talk to your agents…" readonly>
-          <div class="composer-home-bottom">
-            <div style="display:flex; align-items:center; gap:10px;">
-              <span style="font-size:18px; color:var(--text-muted);">+</span>
-              <span style="font-size:11px; color:var(--text-muted); background:var(--surface); border:1px solid var(--border-light); border-radius:10px; padding:2px 8px;">🎯 Chief of Staff ▾</span>
-            </div>
-            <span style="font-size:16px; color:var(--text-muted);">🎙</span>
-          </div>
-        </div>
-        <div class="ppills">
-          <div class="ppill" onclick="enterTask()">
-            <span class="ppill-icon">📋</span>
-            <span class="ppill-text">Review my pending tasks and tell me what needs action</span>
-          </div>
-          <div class="ppill">
-            <span class="ppill-icon">📅</span>
-            <span class="ppill-text">Prep me for my next meeting with context from last time</span>
-          </div>
-          <div class="ppill">
-            <span class="ppill-icon">📧</span>
-            <span class="ppill-text">Show me emails that need a reply this week</span>
-          </div>
-        </div>
+    <div class="cl-item active">
+      <div class="cl-avatar" style="background: linear-gradient(135deg, #5B5FC7, #7B7FD7);">
+        🎯
+        <span class="online-dot"></span>
+      </div>
+      <div class="cl-info">
+        <div class="cl-name">My Assistant</div>
+        <div class="cl-preview">Your agents handled 47 emails…</div>
+      </div>
+      <div style="display:flex; flex-direction:column; align-items:flex-end; gap:2px;">
+        <span class="cl-time">6:45 AM</span>
+        <span class="cl-badge">3</span>
       </div>
     </div>
 
-    <!-- ═══ TASK CONVERSATION ═══ -->
-    <div class="task-view" id="taskBudget">
-      <div class="task-convo" id="budgetConvo">
-        <div class="task-convo-inner">
+    <div class="cl-item">
+      <div class="cl-avatar" style="background: linear-gradient(135deg, #0078D4, #005a9e);">SC</div>
+      <div class="cl-info">
+        <div class="cl-name">Sarah Chen</div>
+        <div class="cl-preview">Let's discuss in the Thursday sync</div>
+      </div>
+      <span class="cl-time">Fri</span>
+    </div>
 
-          <!-- Thinking dots -->
-          <div class="thinking hidden" id="thinkDots">
-            <span class="thinking-label">🎯 Chief of Staff</span>
-            <span class="thinking-dot"></span>
-            <span class="thinking-dot"></span>
-            <span class="thinking-dot"></span>
-          </div>
+    <div class="cl-item">
+      <div class="cl-avatar" style="background: linear-gradient(135deg, #107C10, #0a5e0a);">RB</div>
+      <div class="cl-info">
+        <div class="cl-name">Raj Bhatt</div>
+        <div class="cl-preview">Compliance addendum attached</div>
+      </div>
+      <span class="cl-time">Thu</span>
+    </div>
 
-          <!-- ═══ BEAT 1: Chief of Staff briefing ═══ -->
-          <div class="cp-msg hidden" id="b1">
-            <div class="agent-label">
-              <span class="agent-label-icon" style="background:linear-gradient(135deg, #0d9488, #0e7490);">🎯</span>
-              Chief of Staff
+    <div class="cl-item">
+      <div class="cl-avatar" style="background: linear-gradient(135deg, #D24726, #B83D20);">EM</div>
+      <div class="cl-info">
+        <div class="cl-name">Engineering Managers</div>
+        <div class="cl-preview">Hiring pipeline update</div>
+      </div>
+      <span class="cl-time">Wed</span>
+    </div>
+  </div>
+
+  <!-- ═══ Chat main ═══ -->
+  <div class="chat-main">
+    <div class="chat-header">
+      <div class="ch-avatar" style="background: linear-gradient(135deg, #5B5FC7, #7B7FD7);">🎯</div>
+      <span class="ch-name">My Assistant</span>
+      <span class="ch-status">Active · 4 agents online</span>
+      <div class="ch-actions">
+        <button class="ch-action">📞</button>
+        <button class="ch-action">📹</button>
+        <button class="ch-action">⋯</button>
+      </div>
+    </div>
+
+    <div class="messages" id="messages">
+
+      <!-- System: overnight activity -->
+      <div class="sys-msg" id="sysOvernight">
+        <div class="sys-line">
+          <span class="sys-hr"></span>
+          Monday · Agents worked overnight
+          <span class="sys-hr"></span>
+        </div>
+      </div>
+
+      <!-- Thinking indicator -->
+      <div class="thinking hidden" id="thinkDots">
+        <div class="thinking-avatar" style="background: linear-gradient(135deg, #5B5FC7, #7B7FD7);">🎯</div>
+        <div class="thinking-dots">
+          <span class="thinking-dot"></span>
+          <span class="thinking-dot"></span>
+          <span class="thinking-dot"></span>
+        </div>
+      </div>
+
+      <!-- ═══ BEAT 1: Morning briefing ═══ -->
+      <div class="hidden" id="b1">
+        <div class="msg anim-in">
+          <div class="msg-avatar" style="background: linear-gradient(135deg, #5B5FC7, #7B7FD7);">🎯</div>
+          <div class="msg-content">
+            <div class="msg-header">
+              <span class="msg-name">My Assistant</span>
+              <span class="msg-time">6:45 AM</span>
             </div>
-            <div class="cp-body">
-              <p><strong>Since you were last here</strong> — your agents handled 47 emails, refreshed 2 data sources, and prepped your calendar. Here's what needs you:</p>
+            <div class="msg-body">
+              <p>Good morning. While you slept, your agents handled <strong>47 emails</strong>, refreshed <strong>2 data sources</strong>, and prepped your calendar. Here's what needs you:</p>
               <p>• <span class="app-icon w">W</span> <strong>Sarah Chen (CFO)</strong> left 2 comments on Q3_Budget_Proposal.docx</p>
               <p>• <span class="app-icon x">X</span> <strong>Q3_Actuals.xlsx</strong> updated by Finance · 3 hours ago</p>
               <p>• <span class="app-icon x">X</span> <strong>Hiring_Plan_H2.xlsx</strong> pipeline data refreshed overnight</p>
-            </div>
-            <div class="ptag" style="top:80px;"><span class="ptag-title">Multi-agent</span>Chief of Staff compiled this from Mail Agent (emails), Data Agent (refreshed sources), and Document Agent (comments).</div>
-            <div style="display:flex; gap:8px; margin-top:12px;">
-              <button class="btn pri" onclick="pillClick(this, 'Show Sarah\'s comments')">Show comments</button>
+              <p>Want me to start with Sarah's comments?</p>
             </div>
           </div>
-
-          <!-- ═══ BEAT 2: Document Agent — comments + suggested response ═══ -->
-          <div class="cp-msg hidden" id="b2">
-            <!-- Handoff -->
-            <div class="handoff">
-              <span class="handoff-line"></span>
-              <span class="handoff-label">🎯 → 📄 handing off to <strong>Document Agent</strong></span>
-              <span class="handoff-line"></span>
-            </div>
-            <div class="agent-label">
-              <span class="agent-label-icon" style="background:linear-gradient(135deg, #185ABD, #1048A0);">📄</span>
-              Document Agent
-              <span class="agent-label-trust" style="background:#FEF3C7; color:var(--orange);">REVIEW</span>
-            </div>
-            <div class="cp-body">
-              <p>Sarah's comments on Q3_Budget_Proposal.docx:</p>
-              <p style="color:var(--text-secondary); padding-left:14px; font-style:italic; font-size:13px;">"Can we revisit the marketing allocation rationale?"</p>
-              <p style="color:var(--text-secondary); padding-left:14px; font-style:italic; font-size:13px;">"Timeline seems aggressive for the engineering ramp"</p>
-              <p style="margin-top:12px;">I've drafted a response to the first comment. Cross-referenced with data from <strong>📊 Data Agent</strong>:</p>
-            </div>
-            <div style="background:#F9F9F9; border-radius:12px; overflow:hidden; margin:8px 0;">
-              <div style="padding:10px 16px; font-size:11px; font-weight:600; color:var(--text-muted); border-bottom:1px solid rgba(0,0,0,0.04);">Proposed response — exec communication gate</div>
-              <div style="padding:12px 16px;">
-                <div style="font-size:13px; color:var(--text-secondary); line-height:1.7; font-style:italic; border-left:3px solid var(--text-muted); padding-left:14px;">"The revised marketing allocation is grounded in Q3 actual ROI data — campaign efficiency held at reduced spend levels. The 28% target balances growth investment with the engineering ramp funding. Happy to walk through the numbers in our Thursday sync."</div>
-                <div style="margin-top:8px; font-size:11px; color:var(--text-muted);"><span class="app-icon x">X</span> Q3_Actuals.xlsx · <span class="app-icon w">W</span> Q3_Budget_Proposal §2</div>
-              </div>
-              <div style="display:flex; align-items:center; gap:8px; padding:8px 16px; border-top:1px solid rgba(0,0,0,0.04);">
-                <span style="font-size:11px; color:var(--orange);">⏸ Paused — executive recipient requires approval</span>
-                <div style="margin-left:auto; display:flex; gap:8px;">
-                  <button class="btn sec">Edit first</button>
-                  <button class="btn pri" onclick="pillClick(this, 'Approve — post response')">Approve</button>
-                </div>
-              </div>
-            </div>
-            <div class="ptag" style="top:150px;"><span class="ptag-title">Graduated Autonomy</span>Doc Agent drafted the response automatically but paused at the exec gate. Routine comments → AUTO. Exec communication → REVIEW.</div>
-          </div>
-
-          <!-- ═══ BEAT 3: Data Agent cross-app pull + Word preview ═══ -->
-          <div class="cp-msg hidden" id="b3">
-            <div class="confirm-line"><span class="check">✓</span> Response posted to Q3_Budget_Proposal.docx, Section 2</div>
-
-            <!-- Handoff -->
-            <div class="handoff">
-              <span class="handoff-line"></span>
-              <span class="handoff-label">📄 → 📊 handing off to <strong>Data Agent</strong></span>
-              <span class="handoff-line"></span>
-            </div>
-            <div class="agent-label">
-              <span class="agent-label-icon" style="background:linear-gradient(135deg, var(--green), #0a5e0a);">📊</span>
-              Data Agent
-              <span class="agent-label-trust" style="background:var(--green-light); color:var(--green);">AUTO</span>
-            </div>
-            <div class="cp-body">
-              <p>Sarah's second comment: <em>"Timeline seems aggressive for the engineering ramp."</em></p>
-              <p>Pulled hiring pipeline from <strong>Hiring_Plan_H2.xlsx</strong>:</p>
-            </div>
-            <div style="background:#F9F9F9; border-radius:12px; padding:12px 16px; margin:8px 0; font-size:12px;">
-              <table style="width:100%; border-collapse:collapse; font-size:12px;">
-                <tr style="border-bottom:1px solid rgba(0,0,0,0.06);">
-                  <th style="text-align:left; padding:5px 8px; font-weight:600;">Role</th>
-                  <th style="text-align:left; padding:5px 8px; font-weight:600;">Pipeline</th>
-                  <th style="text-align:left; padding:5px 8px; font-weight:600;">Fill</th>
-                  <th style="text-align:left; padding:5px 8px; font-weight:600;">Start</th>
-                </tr>
-                <tr style="border-bottom:1px solid rgba(0,0,0,0.04);"><td style="padding:5px 8px;">ML Eng (×2)</td><td style="padding:5px 8px;">4</td><td style="padding:5px 8px;">6w</td><td style="padding:5px 8px;">Apr 15</td></tr>
-                <tr style="border-bottom:1px solid rgba(0,0,0,0.04);"><td style="padding:5px 8px;">Full-stack (×2)</td><td style="padding:5px 8px;">7</td><td style="padding:5px 8px;">4w</td><td style="padding:5px 8px;">Mar 28</td></tr>
-                <tr><td style="padding:5px 8px;">Platform (×1)</td><td style="padding:5px 8px;">2</td><td style="padding:5px 8px;">8w</td><td style="padding:5px 8px;">May 1</td></tr>
-              </table>
-            </div>
-
-            <!-- Handoff back to Doc Agent -->
-            <div class="handoff">
-              <span class="handoff-line"></span>
-              <span class="handoff-label">📊 → 📄 returning to <strong>Document Agent</strong></span>
-              <span class="handoff-line"></span>
-            </div>
-            <div class="agent-label">
-              <span class="agent-label-icon" style="background:linear-gradient(135deg, #185ABD, #1048A0);">📄</span>
-              Document Agent
-            </div>
-            <div class="cp-body">
-              <p>Ramp completable by end of Q3 <strong>if offers go out by March 15</strong>.</p>
-            </div>
-            <div class="confirm-line" style="margin-top:8px;"><span class="check">✓</span> Table inserted into §3 · <span class="check">✓</span> Response posted · <span class="check">✓</span> Both comments resolved</div>
-            <div class="ptag" style="top:220px;"><span class="ptag-title">Agent Orchestration</span>Data Agent pulled the pipeline data. Document Agent consumed it, built the table, and inserted it into Word. Two agents, one flow.</div>
-
-            <div class="cp-body" style="margin-top:12px;"><p>The doc is ready:</p></div>
-            <div style="background:white; border:1px solid var(--border); border-radius:12px; margin:8px 0; overflow:hidden; box-shadow:0 2px 12px rgba(0,0,0,0.08);">
-              <div style="display:flex; align-items:center; gap:8px; padding:6px 12px; background:#F3F3F3; border-bottom:1px solid #E0E0E0;">
-                <span class="app-icon w" style="width:20px; height:20px; font-size:10px;">W</span>
-                <span style="font-size:12px; font-weight:500;">Q3_Budget_Proposal.docx</span>
-                <span style="font-size:10px; color:var(--text-muted); margin-left:auto;">Editing</span>
-                <span style="font-size:10px; color:white; background:#185ABD; padding:2px 8px; border-radius:3px;">Share</span>
-              </div>
-              <div style="display:flex; gap:2px; padding:3px 12px; background:#F9F9F9; border-bottom:1px solid #E8E8E8; font-size:10px; color:var(--text-secondary);">
-                <span style="padding:2px 6px; color:var(--brand-blue); font-weight:600;">Home</span>
-                <span style="padding:2px 6px;">Insert</span>
-                <span style="padding:2px 6px;">Layout</span>
-                <span style="padding:2px 6px;">Review</span>
-              </div>
-              <div style="display:flex; align-items:center; gap:6px; padding:4px 12px; background:#FAFAFA; border-bottom:1px solid #F0F0F0; font-size:10px; color:var(--text-muted);">
-                <span>📄 Document Agent made 2 changes · 📊 Data Agent supplied pipeline · <span style="color:var(--green);">✓ Comments resolved</span></span>
-              </div>
-              <div style="padding:20px 28px; font-size:13px; line-height:1.8; color:var(--text-secondary); max-height:180px; overflow-y:auto;">
-                <div style="font-weight:600; color:var(--text); margin-bottom:8px;">§2 Marketing Allocation</div>
-                <div style="background:#E8F5E9; border-left:3px solid var(--green); padding:8px 12px; border-radius:0 6px 6px 0; margin:6px 0; font-size:12px; position:relative;">
-                  <span style="position:absolute; right:8px; top:-8px; background:var(--green); color:white; font-size:8px; padding:1px 6px; border-radius:8px;">📄 Doc Agent</span>
-                  Marketing allocation revised to $1.18M (28%), grounded in Q3 actual ROI data showing campaign efficiency held at reduced spend.
-                </div>
-                <div style="font-weight:600; color:var(--text); margin:14px 0 8px;">§3 Engineering Headcount</div>
-                <div style="background:#E8F5E9; border-left:3px solid var(--green); padding:8px 12px; border-radius:0 6px 6px 0; margin:6px 0; font-size:12px; position:relative;">
-                  <span style="position:absolute; right:8px; top:-8px; background:var(--green); color:white; font-size:8px; padding:1px 6px; border-radius:8px;">📊 Data Agent</span>
-                  Hiring pipeline: 5 roles, 13 candidates across ML Eng, Full-stack, and Platform. Ramp completable by Q3 if offers out by March 15.
-                </div>
-              </div>
-            </div>
-
-            <!-- Handoff back to Chief of Staff -->
-            <div class="handoff">
-              <span class="handoff-line"></span>
-              <span class="handoff-label">📄 → 🎯 returning to <strong>Chief of Staff</strong></span>
-              <span class="handoff-line"></span>
-            </div>
-            <div class="agent-label">
-              <span class="agent-label-icon" style="background:linear-gradient(135deg, #0d9488, #0e7490);">🎯</span>
-              Chief of Staff
-            </div>
-            <div class="cp-body"><p>Want me to notify Sarah?</p></div>
-            <div style="display:flex; gap:8px; margin-top:8px;">
-              <button class="btn pri" onclick="pillClick(this, 'Draft email to Sarah')">Draft email to Sarah</button>
-              <button class="btn sec">Move on →</button>
-            </div>
-          </div>
-
-          <!-- ═══ BEAT 4: Mail Agent — email draft ═══ -->
-          <div class="cp-msg hidden" id="b4">
-            <div class="handoff">
-              <span class="handoff-line"></span>
-              <span class="handoff-label">🎯 → ✉️ handing off to <strong>Mail Agent</strong></span>
-              <span class="handoff-line"></span>
-            </div>
-            <div class="agent-label">
-              <span class="agent-label-icon" style="background:linear-gradient(135deg, #0078D4, #005a9e);">✉️</span>
-              Mail Agent
-              <span class="agent-label-trust" style="background:#FEF3C7; color:var(--orange);">REVIEW</span>
-            </div>
-            <div class="cp-body"><p>Draft notification to Sarah Chen (CFO):</p></div>
-            <div style="background:#F9F9F9; border-radius:12px; overflow:hidden; margin:8px 0;">
-              <div style="padding:10px 16px; font-size:11px; font-weight:600; color:var(--text-muted); border-bottom:1px solid rgba(0,0,0,0.04);">Draft email — exec recipient gate</div>
-              <div style="padding:12px 16px;">
-                <div style="font-size:12px; color:var(--text-secondary); margin-bottom:6px;"><strong>To:</strong> Sarah Chen (CFO) · <strong>Subject:</strong> Q3 Budget Proposal — Updated per your comments</div>
-                <div style="font-size:13px; color:var(--text-secondary); line-height:1.7; font-style:italic; border-left:3px solid var(--text-muted); padding-left:14px;">"Hi Sarah — I've updated the Q3 Budget Proposal based on your comments. Marketing allocation revised to 28% with supporting ROI data, and the engineering hiring timeline is now backed by pipeline data (all 5 roles feasible by end of Q3). Both comments are resolved in the doc. Let me know if you'd like to discuss in our Thursday sync."</div>
-                <div style="margin-top:8px; font-size:11px; color:var(--text-muted);">Q3_Budget_Proposal.docx attached</div>
-              </div>
-              <div style="display:flex; align-items:center; gap:8px; padding:8px 16px; border-top:1px solid rgba(0,0,0,0.04);">
-                <span style="font-size:11px; color:var(--red);">⚠ 1 executive recipient</span>
-                <div style="margin-left:auto; display:flex; gap:8px;">
-                  <button class="btn sec">Edit draft</button>
-                  <button class="btn pri" onclick="pillClick(this, 'Send email to Sarah')">Send</button>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- ═══ BEAT 5: Chief of Staff wraps up ═══ -->
-          <div class="cp-msg hidden" id="b5">
-            <div class="confirm-line"><span class="check">✓</span> Email sent to Sarah Chen (CFO)</div>
-
-            <div class="handoff">
-              <span class="handoff-line"></span>
-              <span class="handoff-label">✉️ → 🎯 returning to <strong>Chief of Staff</strong></span>
-              <span class="handoff-line"></span>
-            </div>
-            <div class="agent-label">
-              <span class="agent-label-icon" style="background:linear-gradient(135deg, #0d9488, #0e7490);">🎯</span>
-              Chief of Staff
-            </div>
-            <div class="cp-body">
-              <p>Q3 Budget Finalization is up to date. ✉️ Mail Agent is watching for Sarah's reply. I'll surface it when she responds.</p>
-            </div>
-
-            <!-- Session recap -->
-            <div style="background:#F9F9F9; border-radius:12px; padding:14px 18px; margin:12px 0; font-size:12px;">
-              <div style="font-size:11px; font-weight:700; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.05em; margin-bottom:10px;">Session — Agent Activity</div>
-              <div style="display:flex; align-items:center; gap:8px; padding:4px 0; color:var(--text-secondary);">
-                <span style="font-size:9px; font-weight:700; padding:1px 6px; border-radius:4px; background:var(--green-light); color:var(--green);">AUTO</span>
-                📊 Data Agent pulled Q3 actuals + hiring pipeline
-              </div>
-              <div style="display:flex; align-items:center; gap:8px; padding:4px 0; border-top:1px solid rgba(0,0,0,0.04); color:var(--text-secondary);">
-                <span style="font-size:9px; font-weight:700; padding:1px 6px; border-radius:4px; background:#FEF3C7; color:var(--orange);">REVIEW</span>
-                📄 Document Agent responded to CFO comments — <strong>approved</strong>
-              </div>
-              <div style="display:flex; align-items:center; gap:8px; padding:4px 0; border-top:1px solid rgba(0,0,0,0.04); color:var(--text-secondary);">
-                <span style="font-size:9px; font-weight:700; padding:1px 6px; border-radius:4px; background:#FEF3C7; color:var(--orange);">REVIEW</span>
-                ✉️ Mail Agent sent email to CFO — <strong>approved</strong>
-              </div>
-              <div style="display:flex; align-items:center; gap:8px; padding:4px 0; border-top:1px solid rgba(0,0,0,0.04); color:var(--text-secondary);">
-                <span style="font-size:9px; font-weight:700; padding:1px 6px; border-radius:4px; background:var(--blue-light); color:var(--brand-blue);">AMBIENT</span>
-                ✉️ Mail Agent monitoring for Sarah's reply
-              </div>
-            </div>
-            <div class="ptag" style="top:360px;"><span class="ptag-title">The Orchestration</span>4 agents, 3 handoffs, 2 approval gates, 1 task resolved. Chief of Staff orchestrated. You approved twice. Everything else was automatic.</div>
-          </div>
-
         </div>
       </div>
-      <div class="task-composer">
-        <div class="composer">
-          <input type="text" placeholder="" readonly>
-          <div class="composer-bottom">
-            <div style="display:flex; align-items:center; gap:10px;">
-              <span style="font-size:18px; color:var(--text-muted);">+</span>
-              <span style="font-size:11px; color:var(--text-muted); background:var(--surface); border:1px solid var(--border-light); border-radius:10px; padding:2px 8px;">🎯 Chief of Staff ▾</span>
+
+      <!-- ═══ BEAT 2: Document Agent — comments + response ═══ -->
+      <div class="hidden" id="b2">
+        <div class="msg anim-in">
+          <div class="msg-avatar" style="background: linear-gradient(135deg, #5B5FC7, #7B7FD7);">🎯</div>
+          <div class="msg-content">
+            <div class="msg-header">
+              <span class="msg-name">My Assistant</span>
+              <span class="msg-time">7:12 AM</span>
             </div>
-            <span style="font-size:16px; color:var(--text-muted);">🎙</span>
+            <div class="agent-tag">📄 via Document Agent</div>
+            <div class="msg-body">
+              <p>Sarah's comments on Q3_Budget_Proposal.docx:</p>
+              <p><em>"Can we revisit the marketing allocation rationale?"</em></p>
+              <p><em>"Timeline seems aggressive for the engineering ramp"</em></p>
+              <p>I've drafted a response to the first one — cross-referenced Q3 actuals for the numbers:</p>
+            </div>
+            <div class="msg-card">
+              <div class="approval-banner">⏸ Needs your approval — executive communication</div>
+              <div class="mc-body">
+                <div style="font-style:italic; border-left:3px solid var(--text-muted); padding-left:12px; color:var(--text-secondary);">
+                  "The revised marketing allocation is grounded in Q3 actual ROI data — campaign efficiency held at reduced spend levels. The 28% target balances growth investment with the engineering ramp funding. Happy to walk through the numbers in our Thursday sync."
+                </div>
+                <div class="mc-sources" style="margin-top:8px;"><span class="app-icon x">X</span> Q3_Actuals.xlsx · <span class="app-icon w">W</span> Q3_Budget_Proposal §2</div>
+              </div>
+              <div class="mc-footer" id="approveFooter1">
+                <button class="btn pri" onclick="pillClick(this, 'Approve')">Approve</button>
+                <button class="btn sec">Edit first</button>
+                <button class="btn sec" style="border:none; color:var(--text-muted);">Reject</button>
+              </div>
+            </div>
           </div>
         </div>
-        <div style="text-align:center; font-size:11px; color:var(--text-muted); margin-top:4px;">AI-generated content may be incorrect</div>
+      </div>
+
+      <!-- ═══ BEAT 3: Data pull + Word preview ═══ -->
+      <div class="hidden" id="b3">
+        <div class="msg anim-in">
+          <div class="msg-avatar" style="background: linear-gradient(135deg, #5B5FC7, #7B7FD7);">🎯</div>
+          <div class="msg-content">
+            <div class="msg-header">
+              <span class="msg-name">My Assistant</span>
+              <span class="msg-time">7:13 AM</span>
+            </div>
+            <div class="msg-body">
+              <p><span class="check" style="color:var(--green);">✓</span> Response posted to §2.</p>
+              <p>For Sarah's second comment (<em>"timeline seems aggressive"</em>), I pulled the hiring pipeline:</p>
+            </div>
+            <div class="msg-card">
+              <div class="mc-header"><span class="agent-tag" style="margin:0;">📊 via Data Agent</span>Hiring_Plan_H2.xlsx</div>
+              <div class="mc-body" style="padding:8px 14px;">
+                <table style="width:100%; border-collapse:collapse; font-size:12px;">
+                  <tr style="border-bottom:1px solid rgba(0,0,0,0.06);">
+                    <th style="text-align:left; padding:5px 6px; font-weight:600;">Role</th>
+                    <th style="text-align:left; padding:5px 6px; font-weight:600;">Pipeline</th>
+                    <th style="text-align:left; padding:5px 6px; font-weight:600;">Time to fill</th>
+                    <th style="text-align:left; padding:5px 6px; font-weight:600;">Start</th>
+                  </tr>
+                  <tr style="border-bottom:1px solid rgba(0,0,0,0.04);"><td style="padding:5px 6px;">ML Eng (×2)</td><td style="padding:5px 6px;">4</td><td style="padding:5px 6px;">6 weeks</td><td style="padding:5px 6px;">Apr 15</td></tr>
+                  <tr style="border-bottom:1px solid rgba(0,0,0,0.04);"><td style="padding:5px 6px;">Full-stack (×2)</td><td style="padding:5px 6px;">7</td><td style="padding:5px 6px;">4 weeks</td><td style="padding:5px 6px;">Mar 28</td></tr>
+                  <tr><td style="padding:5px 6px;">Platform (×1)</td><td style="padding:5px 6px;">2</td><td style="padding:5px 6px;">8 weeks</td><td style="padding:5px 6px;">May 1</td></tr>
+                </table>
+              </div>
+            </div>
+            <div class="msg-body" style="margin-top:8px;">
+              <p>Ramp is completable by Q3 <strong>if offers go out by March 15</strong>. I've posted the response and inserted the table into §3. Both comments resolved.</p>
+            </div>
+            <div class="word-preview">
+              <div class="wp-chrome">
+                <span class="app-icon w" style="width:18px; height:18px; font-size:9px;">W</span>
+                <span style="font-size:12px; font-weight:500;">Q3_Budget_Proposal.docx</span>
+                <span style="font-size:10px; color:var(--text-muted); margin-left:auto;">Editing</span>
+              </div>
+              <div class="wp-activity">
+                <span>2 changes made · <span style="color:var(--green);">✓ Sarah's comments resolved</span></span>
+              </div>
+              <div class="wp-content">
+                <div style="font-weight:600; color:var(--text); margin-bottom:6px;">§2 Marketing Allocation</div>
+                <div class="wp-change">
+                  <span class="wp-badge">Agent</span>
+                  Marketing allocation revised to $1.18M (28%), grounded in Q3 actual ROI data showing campaign efficiency held at reduced spend.
+                </div>
+                <div style="font-weight:600; color:var(--text); margin:12px 0 6px;">§3 Engineering Headcount</div>
+                <div class="wp-change">
+                  <span class="wp-badge">Agent</span>
+                  Hiring pipeline: 5 roles, 13 candidates. Ramp completable by Q3 if offers out by March 15.
+                </div>
+              </div>
+            </div>
+            <div class="msg-body" style="margin-top:8px;"><p>Want me to send Sarah an update?</p></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ═══ BEAT 4: Email draft ═══ -->
+      <div class="hidden" id="b4">
+        <div class="msg anim-in">
+          <div class="msg-avatar" style="background: linear-gradient(135deg, #5B5FC7, #7B7FD7);">🎯</div>
+          <div class="msg-content">
+            <div class="msg-header">
+              <span class="msg-name">My Assistant</span>
+              <span class="msg-time">7:14 AM</span>
+            </div>
+            <div class="agent-tag">✉️ via Mail Agent</div>
+            <div class="msg-card">
+              <div class="approval-banner">⏸ Needs your approval — executive recipient</div>
+              <div class="mc-header">Draft email to CFO</div>
+              <div class="mc-body">
+                <div style="font-size:12px; margin-bottom:6px;"><strong>To:</strong> Sarah Chen (CFO) · <strong>Subject:</strong> Q3 Budget Proposal — Updated per your comments</div>
+                <div style="font-style:italic; border-left:3px solid var(--text-muted); padding-left:12px; color:var(--text-secondary);">
+                  "Hi Sarah — I've updated the Q3 Budget Proposal based on your comments. Marketing allocation revised to 28% with supporting ROI data, and the engineering hiring timeline is now backed by pipeline data (all 5 roles feasible by end of Q3). Both comments are resolved in the doc. Let me know if you'd like to discuss in our Thursday sync."
+                </div>
+                <div style="margin-top:8px; font-size:11px; color:var(--text-muted);">Q3_Budget_Proposal.docx attached</div>
+              </div>
+              <div class="mc-footer" id="approveFooter2">
+                <span style="font-size:11px; color:var(--red);">⚠ 1 executive recipient</span>
+                <div style="margin-left:auto; display:flex; gap:6px;">
+                  <button class="btn sec">Edit draft</button>
+                  <button class="btn pri" onclick="pillClick(this, 'Send')">Send</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ═══ BEAT 5: Wrap up ═══ -->
+      <div class="hidden" id="b5">
+        <div class="msg anim-in">
+          <div class="msg-avatar" style="background: linear-gradient(135deg, #5B5FC7, #7B7FD7);">🎯</div>
+          <div class="msg-content">
+            <div class="msg-header">
+              <span class="msg-name">My Assistant</span>
+              <span class="msg-time">7:14 AM</span>
+            </div>
+            <div class="msg-body">
+              <p><span style="color:var(--green);">✓</span> Email sent to Sarah Chen.</p>
+              <p>Q3 Budget task is up to date. I'm watching for Sarah's reply — I'll let you know when she responds.</p>
+            </div>
+            <div class="recap">
+              <div class="recap-title">What just happened</div>
+              <div class="recap-item">
+                <span class="recap-badge" style="background:var(--green-light); color:var(--green);">AUTO</span>
+                <span>Data Agent pulled Q3 actuals + hiring pipeline</span>
+              </div>
+              <div class="recap-item">
+                <span class="recap-badge" style="background:var(--orange-light); color:var(--orange);">REVIEW</span>
+                <span>Document Agent responded to CFO comments — <strong>you approved</strong></span>
+              </div>
+              <div class="recap-item">
+                <span class="recap-badge" style="background:var(--orange-light); color:var(--orange);">REVIEW</span>
+                <span>Mail Agent sent email to CFO — <strong>you approved</strong></span>
+              </div>
+              <div class="recap-item">
+                <span class="recap-badge" style="background:var(--teams-purple-light); color:var(--teams-purple);">AMBIENT</span>
+                <span>Mail Agent monitoring for Sarah's reply</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="chat-composer">
+      <div class="compose-box">
+        <input type="text" placeholder="Message My Assistant…" readonly>
+        <div class="compose-toolbar">
+          <button class="compose-icon">📎</button>
+          <button class="compose-icon">😊</button>
+          <button class="compose-icon">🎙</button>
+          <button class="compose-icon compose-send" style="color:var(--teams-purple);">➤</button>
+        </div>
       </div>
     </div>
   </div>
@@ -620,141 +603,118 @@
 
 <script>
 var beat = 0;
-var inTask = false;
-var animating = false;
 var pillProcessing = false;
 
 function startDemo() {
   document.getElementById('landing').classList.add('hidden');
-  setTimeout(function() { enterTask(); }, 1200);
+  setTimeout(function() { showBeat1(); }, 800);
 }
 
-function enterTask() {
-  if (inTask) return;
-  inTask = true; animating = true;
-  document.getElementById('homeView').style.display = 'none';
-  document.getElementById('taskBudget').classList.add('active');
-  document.getElementById('topTitle').textContent = 'Q3 Budget Finalization';
-  // Highlight CoS agent
-  document.querySelectorAll('.ag-item').forEach(function(e) { e.classList.remove('active'); });
-  document.getElementById('agCoS').classList.add('active');
-
-  show('b1'); scrollConvo(); beat = 0;
+function showBeat1() {
+  showEl('thinkDots'); scrollMsgs();
   setTimeout(function() {
-    var btn = document.querySelector('#b1 .btn.pri');
-    if (btn && !btn.classList.contains('used')) pillClick(btn, "Show Sarah's comments");
-  }, 3000);
+    hideEl('thinkDots');
+    setTimeout(function() {
+      showEl('b1'); scrollMsgs();
+      // Auto-advance after reading
+      setTimeout(function() {
+        // User says "Yes, show me"
+        insertUser("Yes, show me Sarah's comments");
+        setTimeout(function() {
+          showEl('thinkDots'); scrollMsgs();
+          setTimeout(function() {
+            hideEl('thinkDots');
+            setTimeout(function() {
+              showEl('b2'); scrollMsgs();
+            }, 300);
+          }, 1000);
+        }, 500);
+      }, 3500);
+    }, 300);
+  }, 1200);
 }
 
 function pillClick(btn, text) {
   if (pillProcessing) return;
   pillProcessing = true;
   grayParent(btn);
-  var inner = document.querySelector('.task-convo-inner');
-  var bubble = document.createElement('div');
-  bubble.className = 'user-msg anim-in';
-  bubble.innerHTML = '<div class="user-bubble">' + text + '</div>';
-  inner.appendChild(bubble);
-  scrollConvo();
 
-  if (text.indexOf('Show') >= 0) {
-    beat = 1;
-    // Highlight Doc Agent
-    highlightAgent('agDoc');
+  if (text === 'Approve') {
+    insertUser("Looks good, approve it");
     setTimeout(function() {
-      show('thinkDots'); scrollConvo();
+      showEl('thinkDots'); scrollMsgs();
       setTimeout(function() {
-        fadeOut('thinkDots');
+        hideEl('thinkDots');
         setTimeout(function() {
-          show('b2'); scrollConvo(); pillProcessing = false;
-          setTimeout(function() {
-            var btn2 = document.querySelector('#b2 .btn.pri');
-            if (btn2 && !btn2.classList.contains('used')) pillClick(btn2, "Approve — post response");
-          }, 3000);
-        }, 300);
-      }, 800);
-    }, 400);
-  } else if (text.indexOf('Approve') >= 0) {
-    beat = 2;
-    // Highlight Data Agent then Doc Agent
-    highlightAgent('agData');
-    setTimeout(function() {
-      show('thinkDots'); scrollConvo();
-      setTimeout(function() {
-        fadeOut('thinkDots');
-        setTimeout(function() {
-          highlightAgent('agDoc');
-          setTimeout(function() { highlightAgent('agCoS'); }, 1500);
-          show('b3'); scrollConvo();
-          document.getElementById('docStatus').textContent = '✓ 2 comments resolved';
+          showEl('b3'); scrollMsgs();
           pillProcessing = false;
+          // Auto-advance: "Yes, send her an update"
           setTimeout(function() {
-            var btn3 = document.querySelector('#b3 .btn.pri');
-            if (btn3 && !btn3.classList.contains('used')) pillClick(btn3, 'Draft email to Sarah');
+            insertUser("Yes, send her an update");
+            setTimeout(function() {
+              showEl('thinkDots'); scrollMsgs();
+              setTimeout(function() {
+                hideEl('thinkDots');
+                setTimeout(function() {
+                  showEl('b4'); scrollMsgs();
+                }, 300);
+              }, 800);
+            }, 500);
           }, 4000);
         }, 300);
       }, 1200);
-    }, 600);
-  } else if (text.indexOf('Draft') >= 0) {
-    beat = 3;
-    highlightAgent('agMail');
+    }, 400);
+  } else if (text === 'Send') {
+    insertUser("Send it");
     setTimeout(function() {
-      show('thinkDots'); scrollConvo();
-      setTimeout(function() {
-        fadeOut('thinkDots');
-        setTimeout(function() {
-          show('b4'); scrollConvo(); pillProcessing = false;
-          setTimeout(function() {
-            var btn4 = document.querySelector('#b4 .btn.pri');
-            if (btn4 && !btn4.classList.contains('used')) pillClick(btn4, 'Send email to Sarah');
-          }, 3000);
-        }, 300);
-      }, 800);
-    }, 600);
-  } else if (text.indexOf('Send') >= 0) {
-    beat = 4;
-    highlightAgent('agCoS');
-    document.getElementById('task1Sub').textContent = '✓ Updated · email sent';
-    document.getElementById('task1Dot').style.background = 'transparent';
-    document.getElementById('mailStatus').textContent = 'Monitoring Sarah\'s reply';
-    setTimeout(function() {
-      show('b5'); scrollConvo(); pillProcessing = false;
+      showEl('b5'); scrollMsgs();
+      pillProcessing = false;
       setTimeout(function() {
         document.getElementById('endOverlay').classList.add('visible');
       }, 4000);
-    }, 1000);
+    }, 800);
   }
 }
 
-function highlightAgent(id) {
-  document.querySelectorAll('.ag-item').forEach(function(e) { e.classList.remove('active'); });
-  document.getElementById(id).classList.add('active');
+function insertUser(text) {
+  var msgs = document.getElementById('messages');
+  var div = document.createElement('div');
+  div.className = 'msg user anim-in';
+  div.innerHTML =
+    '<div class="msg-content">' +
+      '<div class="msg-body">' + text + '</div>' +
+    '</div>';
+  msgs.appendChild(div);
+  scrollMsgs();
 }
 
-function show(id) {
+function showEl(id) {
   var el = document.getElementById(id);
   if (!el) return;
   el.parentNode.appendChild(el);
   el.classList.remove('hidden'); el.classList.add('anim-in');
 }
-function fadeOut(id) {
+function hideEl(id) {
   var el = document.getElementById(id);
   if (!el) return;
   el.style.transition = 'opacity 0.3s'; el.style.opacity = '0';
   setTimeout(function() { el.classList.add('hidden'); el.style.opacity = ''; el.style.transition = ''; }, 300);
 }
-function scrollConvo() {
-  var c = document.getElementById('budgetConvo');
-  setTimeout(function() { c.scrollTo({ top: c.scrollHeight, behavior: 'smooth' }); }, 150);
+function scrollMsgs() {
+  var m = document.getElementById('messages');
+  setTimeout(function() { m.scrollTo({ top: m.scrollHeight, behavior: 'smooth' }); }, 100);
 }
 function grayParent(btn) {
-  btn.parentElement.querySelectorAll('.btn').forEach(function(b) { b.classList.add('used'); });
+  var p = btn.closest('.mc-footer');
+  if (p) p.querySelectorAll('.btn').forEach(function(b) { b.classList.add('used'); });
 }
 
 document.addEventListener('keydown', function(e) {
   var endOv = document.getElementById('endOverlay');
-  if (endOv && endOv.classList.contains('visible')) { endOv.classList.remove('visible'); return; }
-  if (e.code === 'Escape') { /* could add reset */ }
+  if (endOv && endOv.classList.contains('visible')) {
+    endOv.classList.remove('visible');
+    return;
+  }
 });
 </script>
 </body>

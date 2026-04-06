@@ -580,10 +580,12 @@ function next() {
 }
 
 function doAction(btn, type) {
+  if (busy) return;
+  busy = true;
   var label = btn.textContent;
   btn.closest('.card-footer').querySelectorAll('.btn').forEach(function(b) { b.classList.add('used'); });
   insertUser(label);
-  setTimeout(next, 600);
+  setTimeout(function() { busy = false; next(); }, 600);
 }
 
 function insertUser(text) {
@@ -627,7 +629,8 @@ document.addEventListener('keydown', function(e) {
   }
   if (e.code === 'Space' || e.code === 'ArrowRight' || e.key === 'Enter') {
     e.preventDefault();
-    // If there's an active button, click it, otherwise advance
+    if (busy) return;
+    // If there's an active button, click it
     var activeBtn = document.querySelector('.card-footer .btn:not(.used)');
     if (activeBtn) { activeBtn.click(); return; }
     next();

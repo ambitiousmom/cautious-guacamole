@@ -468,85 +468,71 @@ var busy = false;
 
 function startDemo() {
   document.getElementById('landing').classList.add('hidden');
-  setTimeout(next, 600);
+  // Run the entire flow as a strict sequence
+  setTimeout(function() { runSequence(); }, 600);
 }
 
-function next() {
-  if (busy) return;
-  beat++;
-  if (beat >= beats.length) {
-    setTimeout(function() { document.getElementById('endOverlay').classList.add('visible'); }, 800);
-    return;
+function runSequence() {
+  var steps = [
+    // 1. Show briefing instantly
+    function(cb) { showEl('b1'); scroll(); setTimeout(cb, 2500); },
+    // 2. User says "Handle all of it."
+    function(cb) { insertUser("Handle all of it."); scroll(); setTimeout(cb, 400); },
+    // 3. Show calendar + budget card
+    function(cb) { showEl('b2'); scroll(); setTimeout(cb, 3000); },
+    // 4. Auto-tap "Approve both"
+    function(cb) {
+      var btn = document.querySelector('#approveFooter .btn:not(.used)');
+      if (btn) { btn.closest('.card-footer').querySelectorAll('.btn').forEach(function(b){b.classList.add('used');}); insertUser(btn.textContent); scroll(); }
+      setTimeout(cb, 600);
+    },
+    // 5. Show thinking dots
+    function(cb) { showEl('think'); scroll(); setTimeout(cb, 800); },
+    // 6. Hide dots, show conflict card
+    function(cb) { hideEl('think'); setTimeout(function() { showEl('b3'); scroll(); setTimeout(cb, 3000); }, 250); },
+    // 7. Auto-resolve: user types instruction
+    function(cb) {
+      var el = document.querySelector('[onclick="userResolves(this)"]');
+      if (el) { el.style.opacity = '0.3'; el.style.pointerEvents = 'none'; }
+      insertUser("Don't call it a conflict — frame as alignment.");
+      scroll(); setTimeout(cb, 600);
+    },
+    // 8. Show thinking dots
+    function(cb) { showEl('think'); scroll(); setTimeout(cb, 800); },
+    // 9. Hide dots, show correction + send
+    function(cb) { hideEl('think'); setTimeout(function() { showEl('b4'); scroll(); setTimeout(cb, 2500); }, 250); },
+    // 10. Auto-tap "Send it"
+    function(cb) {
+      var btn = document.querySelector('#sendFooter .btn:not(.used)');
+      if (btn) { btn.closest('.card-footer').querySelectorAll('.btn').forEach(function(b){b.classList.add('used');}); insertUser(btn.textContent); scroll(); }
+      setTimeout(cb, 600);
+    },
+    // 11. Show thinking dots
+    function(cb) { showEl('think'); scroll(); setTimeout(cb, 1200); },
+    // 12. Hide dots, show post-meeting + closing
+    function(cb) { hideEl('think'); setTimeout(function() { showEl('b5'); scroll(); setTimeout(cb, 5000); }, 250); },
+    // 13. End
+    function(cb) { document.getElementById('endOverlay').classList.add('visible'); }
+  ];
+
+  var i = 0;
+  function run() {
+    if (i < steps.length) {
+      steps[i](function() { i++; run(); });
+    }
   }
-  busy = true;
-
-  // Beat 0: briefing is pre-compiled, show instantly
-  if (beat === 0) {
-    showEl(beats[0]); scroll();
-    busy = false;
-    setTimeout(next, 2500);
-    return;
-  }
-
-  // Beat 1: user says instruction, then show calendar fix fast
-  if (beat === 1) {
-    insertUser("Handle all of it.");
-    setTimeout(function() {
-      showEl(beats[1]); scroll();
-      busy = false;
-      // Auto-tap approve after reading time
-      setTimeout(function() { autoTapBtn(); }, 2500);
-    }, 300);
-    return;
-  }
-
-  // All other beats: show thinking dots briefly, then reveal
-  showEl('think'); scroll();
-  setTimeout(function() {
-    hideEl('think');
-    setTimeout(function() {
-      showEl(beats[beat]); scroll();
-      busy = false;
-      // Auto-advance or auto-tap
-      if (beat === 2) {
-        // Has user resolve — auto-trigger after reading
-        setTimeout(function() { autoResolve(); }, 3000);
-      } else if (beat === 3) {
-        // Has send button — auto-tap
-        setTimeout(function() { autoTapBtn(); }, 2500);
-      } else if (beat === 4) {
-        setTimeout(next, 4000);
-      }
-    }, 250);
-  }, 800);
-}
-
-function autoTapBtn() {
-  var btn = document.querySelector('.card-footer .btn:not(.used)');
-  if (btn) btn.click();
-}
-
-function autoResolve() {
-  var el = document.querySelector('[onclick="userResolves(this)"]');
-  if (el && el.style.opacity !== '0.3') userResolves(el);
+  run();
 }
 
 function userResolves(el) {
-  if (busy) return;
-  busy = true;
+  // Manual tap — just in case
   el.style.opacity = '0.3';
   el.style.pointerEvents = 'none';
-  insertUser("Don't call it a conflict — frame as alignment.");
-  setTimeout(function() { busy = false; next(); }, 600);
 }
 
 function doAction(btn, type) {
-  if (busy) return;
-  busy = true;
-  var label = btn.textContent;
+  // Manual tap fallback — autoplay handles it
   btn.closest('.card-footer').querySelectorAll('.btn').forEach(function(b) { b.classList.add('used'); });
-  insertUser(label);
-  setTimeout(function() { busy = false; next(); }, 600);
 }
 
 function insertUser(text) {

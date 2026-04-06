@@ -33,11 +33,15 @@
   .node-icon { font-size:14px; pointer-events:none; }
 
   /* ═══ Edges ═══ */
-  .edge { stroke:#D9D3CC; stroke-width:1.5; fill:none; opacity:0.4; transition: opacity 0.4s, stroke 0.4s; }
-  .edge.active { opacity:1; stroke-width:2; }
+  .edge { stroke:#B0A8A0; stroke-width:1.5; fill:none; opacity:0.6; transition: opacity 0.4s, stroke 0.4s; }
+  .edge.active { opacity:1; stroke-width:2.5; }
   .edge.flow-down.active { stroke:#5B5FC7; }
   .edge.flow-up.active { stroke:#107C10; }
   .edge.flow-lateral.active { stroke:#E87400; }
+
+  /* Edge labels */
+  .edge-label { font-size:8px; fill:#999; pointer-events:none; font-weight:600; }
+  .edge-label.active { fill:#242424; }
 
   /* ═══ Flow dots ═══ */
   .flow-dot { r:3; opacity:0; }
@@ -185,34 +189,47 @@
 
   <!-- ═══ EDGES (drawn first, under nodes) ═══ -->
   <!-- Graph → Ingestion -->
-  <path class="edge flow-down" id="edge-g-ingest" d="M180,175 C180,210 420,200 420,235"/>
-  <path class="edge flow-down" id="edge-g-ingest2" d="M180,295 C180,260 420,260 420,235"/>
-  <path class="edge flow-down" id="edge-g-ingest3" d="M180,395 C250,380 380,300 420,270"/>
+  <path class="edge flow-down" id="edge-g-ingest" d="M310,118 C360,118 380,180 420,235"/>
+  <text class="edge-label" x="355" y="165" transform="rotate(-40,355,165)">raw signals</text>
+
+  <path class="edge flow-down" id="edge-g-ingest2" d="M310,228 C360,228 390,235 420,245"/>
+  <path class="edge flow-down" id="edge-g-ingest3" d="M310,340 C360,330 390,290 420,265"/>
 
   <!-- Ingestion → Orchestrator -->
-  <path class="edge flow-down" id="edge-ingest-orch" d="M470,270 L520,310"/>
+  <path class="edge flow-down" id="edge-ingest-orch" d="M470,270 L500,310"/>
+  <text class="edge-label" x="475" y="285">structured context</text>
 
   <!-- Memory ↔ Orchestrator -->
-  <path class="edge flow-up" id="edge-mem-orch" d="M520,430 L520,370"/>
-  <path class="edge flow-down" id="edge-orch-mem" d="M540,370 L540,430"/>
+  <path class="edge flow-up" id="edge-mem-orch" d="M515,420 L515,370"/>
+  <text class="edge-label" x="490" y="398" text-anchor="end">lessons</text>
+  <path class="edge flow-down" id="edge-orch-mem" d="M545,370 L545,420"/>
+  <text class="edge-label" x="550" y="398">corrections</text>
 
   <!-- Orchestrator → Specialist Agents -->
-  <path class="edge flow-down" id="edge-orch-mail-agent" d="M490,340 L430,340 L430,510"/>
-  <path class="edge flow-down" id="edge-orch-cal-agent" d="M520,370 L520,510"/>
-  <path class="edge flow-down" id="edge-orch-doc-agent" d="M550,340 L610,340 L610,510"/>
+  <path class="edge flow-down" id="edge-orch-mail-agent" d="M490,360 L430,360 L430,510"/>
+  <text class="edge-label" x="415" y="440" text-anchor="end">triage</text>
+  <path class="edge flow-down" id="edge-orch-cal-agent" d="M525,370 L525,510"/>
+  <text class="edge-label" x="530" y="440">resolve</text>
+  <path class="edge flow-down" id="edge-orch-doc-agent" d="M560,360 L610,360 L610,510"/>
+  <text class="edge-label" x="615" y="440">draft</text>
 
-  <!-- Orchestrator → Trust Gate → Surface -->
-  <path class="edge flow-down" id="edge-orch-surface" d="M560,340 C650,320 720,310 760,310"/>
+  <!-- Orchestrator → Trust Gate -->
+  <path class="edge flow-down" id="edge-orch-surface" d="M620,330 C670,320 720,310 750,310"/>
+  <text class="edge-label" x="680" y="305">proposed actions</text>
 
-  <!-- Trust Gate  -->
-  <path class="edge flow-down" id="edge-trust-surface" d="M810,310 L850,310"/>
+  <!-- Trust Gate → Surface -->
+  <path class="edge flow-down" id="edge-trust-surface" d="M830,290 L870,230"/>
+  <text class="edge-label" x="855" y="255">approved</text>
 
   <!-- Agent Mesh (lateral) -->
-  <path class="edge flow-lateral" id="edge-mesh" d="M430,570 C350,600 250,600 180,560"/>
-  <path class="edge flow-lateral" id="edge-mesh2" d="M610,570 C690,600 750,580 800,540"/>
+  <path class="edge flow-lateral" id="edge-mesh" d="M430,600 C350,630 250,630 200,620"/>
+  <text class="edge-label" x="300" y="645">signals only</text>
+  <path class="edge flow-lateral" id="edge-mesh2" d="M610,600 C690,630 760,620 800,615"/>
+  <text class="edge-label" x="710" y="645">availability</text>
 
   <!-- Surface → Memory (learning loop) -->
-  <path class="edge flow-up" id="edge-surface-mem" d="M850,380 C780,420 600,450 560,450"/>
+  <path class="edge flow-up" id="edge-surface-mem" d="M850,395 C780,430 620,450 560,450"/>
+  <text class="edge-label" x="720" y="440">user feedback → LESSONS.md</text>/>
 
   <!-- ═══ M365 SIGNAL NODES ═══ -->
   <!-- Mail -->

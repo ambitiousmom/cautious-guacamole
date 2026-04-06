@@ -575,37 +575,29 @@ function next() {
   }
   busy = true;
   showEl('think'); scroll();
-  var delay = beat === 5 ? 1500 : 900; // longer pause before post-meeting
+  var delay = beat === 5 ? 1500 : 900;
   setTimeout(function() {
     hideEl('think');
     setTimeout(function() {
-      // Insert user reply before certain beats
-      if (beat === 1) insertUser("Yes, start with the calendar");
-      if (beat === 3) insertUser("Good, approve those. What about the timeline comment?");
-      if (beat === 4) insertUser("Yes include it, good catch");
-      if (beat === 5) insertUser("Nice, I'm heading into the sync now");
+      // Single user instruction after briefing
+      if (beat === 1) insertUser("Handle all of it. Start with the calendar.");
 
       setTimeout(function() {
         showEl(beats[beat]); scroll();
         busy = false;
-        // Auto-advance for non-interactive beats
-        if (beat === 0 || beat === 4 || beat === 5 || beat === 6) {
+        // Auto-advance for non-interactive beats (pause at approval gates)
+        if (beat === 0) {
+          setTimeout(next, 3500);
+        } else if (beat === 4 || beat === 5 || beat === 6) {
           setTimeout(next, beat === 6 ? 4000 : 3000);
         }
-      }, beat === 1 || beat === 3 || beat === 4 || beat === 5 ? 400 : 0);
+      }, beat === 1 ? 400 : 0);
     }, 250);
   }, delay);
 }
 
 function doAction(btn, type) {
   btn.closest('.card-footer').querySelectorAll('.btn').forEach(function(b) { b.classList.add('used'); });
-  if (type === 'cal') {
-    insertUser("Move it, thanks");
-  } else if (type === 'approve') {
-    insertUser("Approve both. Good find on that Q1 history.");
-  } else if (type === 'email') {
-    insertUser("Yes, include the discrepancy");
-  }
   setTimeout(next, 600);
 }
 

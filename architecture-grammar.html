@@ -6,333 +6,197 @@
 <title>Architecture — OpenClaw × M365</title>
 <style>
   *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
-  body{font-family:'Segoe UI Variable Display','Segoe UI',-apple-system,sans-serif;background:#F5F1EC;color:#242424}
+  body{font-family:'Segoe UI Variable Display','Segoe UI',-apple-system,sans-serif;background:#F5F1EC;color:#242424;display:flex;flex-direction:column;align-items:center;min-height:100vh}
   header{text-align:center;padding:40px 24px 8px}
   header h1{font-size:28px;font-weight:700;letter-spacing:-0.02em}
-  header .sub{font-size:13px;color:#616161;margin-top:6px;max-width:600px;margin-left:auto;margin-right:auto;line-height:1.6}
+  header .sub{font-size:13px;color:#616161;margin-top:6px;max-width:560px;margin-left:auto;margin-right:auto;line-height:1.6}
   header .meta{font-size:11px;color:#999;margin-top:6px}
-  .diagram-wrap{max-width:1100px;margin:24px auto;padding:0 16px 80px;overflow-x:auto}
+  .diagram-wrap{margin:24px auto;padding:0 16px 80px;overflow-x:auto}
   svg text{font-family:'Segoe UI Variable Display','Segoe UI',-apple-system,sans-serif}
 </style>
 </head>
 <body>
 <header>
   <h1>OpenClaw × M365</h1>
-  <div class="sub">The WXP chat pane stops being request-response and becomes an always-on agent surface. Here's the architecture behind that shift.</div>
+  <div class="sub">Concentric rings. Outside in: humans → surfaces → orchestration → platform services → LLM core. Signals flow inward. Responses flow outward.</div>
   <div class="meta">Hema Sridharan · April 2026</div>
 </header>
 
 <div class="diagram-wrap">
-<svg viewBox="0 0 1060 980" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;min-width:800px;">
+<svg viewBox="0 0 900 900" xmlns="http://www.w3.org/2000/svg" style="width:860px;height:860px;">
 
   <defs>
-    <marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M0 0L10 5L0 10z" fill="#999"/></marker>
-    <marker id="ap" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M0 0L10 5L0 10z" fill="#5B5FC7"/></marker>
-    <marker id="ag" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M0 0L10 5L0 10z" fill="#107C10"/></marker>
-    <marker id="ao" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M0 0L10 5L0 10z" fill="#E87400"/></marker>
-    <marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M0 0L10 5L0 10z" fill="#D13438"/></marker>
+    <marker id="ai" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M0 0L10 5L0 10z" fill="#5B5FC7"/></marker>
+    <marker id="ao" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M0 0L10 5L0 10z" fill="#107C10"/></marker>
+    <marker id="am" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M0 0L10 5L0 10z" fill="#E87400"/></marker>
   </defs>
 
-  <!-- ══════════════════════════════════════════ -->
-  <!-- PART 1: TODAY vs. OPENCLAW (side by side)  -->
-  <!-- ══════════════════════════════════════════ -->
+  <!-- ═══ RING 6 (outermost): HUMANS ═══ -->
+  <circle cx="450" cy="450" r="420" fill="none" stroke="#E5DFD9" stroke-width="1" stroke-dasharray="4,4"/>
 
-  <text x="30" y="28" font-size="11" font-weight="700" fill="#999" letter-spacing="0.06em">TODAY — REQUEST / RESPONSE</text>
-  <text x="560" y="28" font-size="11" font-weight="700" fill="#5B5FC7" letter-spacing="0.06em">WITH OPENCLAW — ALWAYS-ON AGENT</text>
-
-  <!-- TODAY: simple horizontal -->
-  <rect x="30" y="40" width="490" height="100" rx="12" fill="white" stroke="#E0E0E0" stroke-width="1"/>
-
-  <circle cx="70" cy="90" r="18" fill="#ccc"/>
-  <text x="70" y="94" font-size="10" fill="white" text-anchor="middle">👤</text>
-  <text x="70" y="118" font-size="7" fill="#999" text-anchor="middle">asks</text>
-
-  <line x1="88" y1="90" x2="120" y2="90" stroke="#999" stroke-width="1" marker-end="url(#a)"/>
-
-  <rect x="125" y="74" width="70" height="32" rx="6" fill="#F0F0F0"/>
-  <text x="160" y="93" font-size="9" fill="#999" text-anchor="middle">prompt</text>
-
-  <line x1="195" y1="90" x2="220" y2="90" stroke="#999" stroke-width="1" marker-end="url(#a)"/>
-
-  <rect x="225" y="74" width="85" height="32" rx="6" fill="#F0F0F0"/>
-  <text x="267" y="88" font-size="8" fill="#999" text-anchor="middle">grounding</text>
-  <text x="267" y="98" font-size="7" fill="#bbb" text-anchor="middle">Graph + context</text>
-
-  <line x1="310" y1="90" x2="335" y2="90" stroke="#999" stroke-width="1" marker-end="url(#a)"/>
-
-  <rect x="340" y="74" width="55" height="32" rx="6" fill="#F0F0F0"/>
-  <text x="367" y="93" font-size="9" fill="#999" text-anchor="middle">LLM</text>
-
-  <line x1="395" y1="90" x2="420" y2="90" stroke="#999" stroke-width="1" marker-end="url(#a)"/>
-
-  <rect x="425" y="74" width="75" height="32" rx="6" fill="#F0F0F0"/>
-  <text x="462" y="93" font-size="8" fill="#999" text-anchor="middle">response</text>
-
-  <text x="260" y="130" font-size="8" fill="#999" text-anchor="middle" font-style="italic">User asks → system answers → forgets → done</text>
-
-  <!-- OPENCLAW: event-driven -->
-  <rect x="560" y="40" width="470" height="100" rx="12" fill="white" stroke="#5B5FC7" stroke-width="1.5"/>
-
-  <!-- Signals (multiple entry points) -->
-  <rect x="580" y="55" width="60" height="20" rx="4" fill="#DFF6DD"/>
-  <text x="610" y="69" font-size="7" fill="#107C10" text-anchor="middle" font-weight="600">📧 mail</text>
-  <rect x="580" y="78" width="60" height="20" rx="4" fill="#DFF6DD"/>
-  <text x="610" y="92" font-size="7" fill="#107C10" text-anchor="middle" font-weight="600">📄 doc Δ</text>
-  <rect x="580" y="101" width="60" height="20" rx="4" fill="#DFF6DD"/>
-  <text x="610" y="115" font-size="7" fill="#107C10" text-anchor="middle" font-weight="600">📅 conflict</text>
-
-  <line x1="640" y1="90" x2="670" y2="90" stroke="#107C10" stroke-width="1" marker-end="url(#ag)"/>
-  <text x="655" y="82" font-size="7" fill="#107C10" font-weight="600">signals</text>
-
-  <!-- Platform block -->
-  <rect x="675" y="60" width="170" height="65" rx="8" fill="#5B5FC7"/>
-  <text x="760" y="82" font-size="10" font-weight="700" fill="white" text-anchor="middle">⚙️ OpenClaw Platform</text>
-  <text x="760" y="95" font-size="7" fill="rgba(255,255,255,0.6)" text-anchor="middle">ingest → memory → orchestrate</text>
-  <text x="760" y="107" font-size="7" fill="rgba(255,255,255,0.6)" text-anchor="middle">→ trust gate → decide</text>
-
-  <!-- Three outputs from platform -->
-  <line x1="845" y1="75" x2="890" y2="60" stroke="#5B5FC7" stroke-width="1" marker-end="url(#ap)"/>
-  <rect x="893" y="50" width="105" height="22" rx="4" fill="#E8EBFA"/>
-  <text x="945" y="64" font-size="7" fill="#5B5FC7" text-anchor="middle" font-weight="600">ACT silently (auto)</text>
-
-  <line x1="845" y1="90" x2="890" y2="90" stroke="#5B5FC7" stroke-width="1" marker-end="url(#ap)"/>
-  <rect x="893" y="79" width="105" height="22" rx="4" fill="#E8EBFA"/>
-  <text x="945" y="93" font-size="7" fill="#5B5FC7" text-anchor="middle" font-weight="600">QUEUE for briefing</text>
-
-  <line x1="845" y1="105" x2="890" y2="118" stroke="#D13438" stroke-width="1" marker-end="url(#ar)"/>
-  <rect x="893" y="108" width="105" height="22" rx="4" fill="#FEE2E2"/>
-  <text x="945" y="122" font-size="7" fill="#D13438" text-anchor="middle" font-weight="600">ESCALATE to user</text>
-
-  <text x="760" y="135" font-size="8" fill="#5B5FC7" text-anchor="middle" font-style="italic">Signals trigger → agent decides → user sees only what matters</text>
-
-  <!-- ══════════════════════════════════════════ -->
-  <!-- PART 2: THE FULL FLOW (event loop)         -->
-  <!-- ══════════════════════════════════════════ -->
-
-  <text x="30" y="185" font-size="11" font-weight="700" fill="#5B5FC7" letter-spacing="0.06em">THE EVENT LOOP — HOW IT ACTUALLY WORKS</text>
-
-  <!-- Continuous signals (left column) -->
-  <rect x="30" y="210" width="130" height="200" rx="10" fill="white" stroke="#107C10" stroke-width="1.5"/>
-  <text x="95" y="232" font-size="10" font-weight="700" fill="#107C10" text-anchor="middle">Signals</text>
-  <text x="95" y="244" font-size="7" fill="#999" text-anchor="middle">continuous, not on-demand</text>
-
-  <rect x="45" y="258" width="100" height="20" rx="4" fill="#DFF6DD"/>
-  <text x="95" y="272" font-size="8" fill="#107C10" text-anchor="middle">📧 Mail arrives</text>
-  <rect x="45" y="283" width="100" height="20" rx="4" fill="#DFF6DD"/>
-  <text x="95" y="297" font-size="8" fill="#107C10" text-anchor="middle">📄 Doc changed</text>
-  <rect x="45" y="308" width="100" height="20" rx="4" fill="#DFF6DD"/>
-  <text x="95" y="322" font-size="8" fill="#107C10" text-anchor="middle">📅 Conflict found</text>
-  <rect x="45" y="333" width="100" height="20" rx="4" fill="#DFF6DD"/>
-  <text x="95" y="347" font-size="8" fill="#107C10" text-anchor="middle">🎤 Meeting ends</text>
-  <rect x="45" y="358" width="100" height="20" rx="4" fill="#DFF6DD"/>
-  <text x="95" y="372" font-size="8" fill="#107C10" text-anchor="middle">🕓 4 AM (cron)</text>
-  <rect x="45" y="383" width="100" height="20" rx="4" fill="#E8EBFA"/>
-  <text x="95" y="397" font-size="8" fill="#5B5FC7" text-anchor="middle">👤 User prompt</text>
-
-  <!-- Arrow: Signals → Ingestion -->
-  <line x1="160" y1="310" x2="215" y2="310" stroke="#107C10" stroke-width="1.5" marker-end="url(#ag)"/>
-  <text x="188" y="300" font-size="7" fill="#107C10" font-weight="600" text-anchor="middle">any of</text>
-  <text x="188" y="308" font-size="7" fill="#107C10" font-weight="600" text-anchor="middle">these</text>
-  <text x="188" y="316" font-size="7" fill="#107C10" font-weight="600" text-anchor="middle">triggers</text>
-
-  <!-- Ingestion + Memory -->
-  <rect x="220" y="260" width="150" height="100" rx="10" fill="white" stroke="#5B5FC7" stroke-width="1.5"/>
-  <text x="295" y="285" font-size="10" font-weight="700" fill="#5B5FC7" text-anchor="middle">Ingest + Enrich</text>
-  <text x="295" y="300" font-size="8" fill="#616161" text-anchor="middle">normalize signal</text>
-  <text x="295" y="312" font-size="8" fill="#616161" text-anchor="middle">+ pull from 🧠 Memory</text>
-  <text x="295" y="324" font-size="8" fill="#616161" text-anchor="middle">(lessons, patterns,</text>
-  <text x="295" y="336" font-size="8" fill="#616161" text-anchor="middle">preferences, SOUL)</text>
-  <text x="295" y="352" font-size="8" fill="#5B5FC7" text-anchor="middle" font-weight="600">= augmented context</text>
-
-  <!-- Arrow: Ingestion → Orchestrator -->
-  <line x1="370" y1="310" x2="435" y2="310" stroke="#5B5FC7" stroke-width="1.5" marker-end="url(#ap)"/>
-  <text x="400" y="302" font-size="7" fill="#5B5FC7" font-weight="600" text-anchor="middle">augmented</text>
-
-  <!-- Orchestrator -->
-  <rect x="440" y="250" width="180" height="120" rx="12" fill="#5B5FC7"/>
-  <text x="530" y="278" font-size="12" font-weight="700" fill="white" text-anchor="middle">🎯 Orchestrator</text>
-  <text x="530" y="295" font-size="8" fill="rgba(255,255,255,0.7)" text-anchor="middle">Decides for each signal:</text>
-  <text x="530" y="312" font-size="9" fill="rgba(255,255,255,0.9)" text-anchor="middle" font-weight="600">ACT? QUEUE? ESCALATE?</text>
-  <text x="530" y="328" font-size="8" fill="rgba(255,255,255,0.6)" text-anchor="middle">dispatches to specialists</text>
-  <text x="530" y="342" font-size="8" fill="rgba(255,255,255,0.6)" text-anchor="middle">consults LLM as needed</text>
-  <text x="530" y="356" font-size="8" fill="rgba(255,255,255,0.6)" text-anchor="middle">coordinates via mesh</text>
-
-  <!-- Three output paths from Orchestrator -->
-
-  <!-- Path 1: ACT (auto) — goes right and up -->
-  <path d="M620,275 L700,240" stroke="#107C10" stroke-width="1.5" fill="none" marker-end="url(#ag)"/>
-  <rect x="705" y="220" width="160" height="45" rx="8" fill="white" stroke="#107C10" stroke-width="1"/>
-  <text x="785" y="240" font-size="10" font-weight="700" fill="#107C10" text-anchor="middle">✓ ACT (auto)</text>
-  <text x="785" y="254" font-size="8" fill="#616161" text-anchor="middle">archive newsletters · sync calendar</text>
-  <text x="785" y="262" font-size="7" fill="#999" text-anchor="middle">silent · logged · user doesn't see</text>
-
-  <!-- Path 2: ESCALATE — goes right -->
-  <path d="M620,310 L700,310" stroke="#D13438" stroke-width="1.5" fill="none" marker-end="url(#ar)"/>
-
-  <!-- Trust Gate -->
-  <rect x="705" y="285" width="55" height="50" rx="6" fill="#FEF3C7" stroke="#E87400" stroke-width="1.5"/>
-  <text x="732" y="307" font-size="14" text-anchor="middle">⏸</text>
-  <text x="732" y="325" font-size="7" fill="#E87400" text-anchor="middle" font-weight="700">GATE</text>
-
-  <line x1="760" y1="310" x2="800" y2="310" stroke="#E87400" stroke-width="1.5" marker-end="url(#ao)"/>
-
-  <!-- WXP PANE (the replacement) -->
-  <rect x="805" y="275" width="210" height="70" rx="10" fill="white" stroke="#107C10" stroke-width="2"/>
-  <text x="910" y="298" font-size="11" font-weight="700" fill="#107C10" text-anchor="middle">💬 WXP Agent Pane</text>
-  <text x="910" y="312" font-size="8" fill="#616161" text-anchor="middle">Teams · Word · Excel · PPT</text>
-  <text x="910" y="324" font-size="8" fill="#616161" text-anchor="middle">gen UI cards · approvals · briefings</text>
-  <text x="910" y="336" font-size="7" fill="#5B5FC7" text-anchor="middle" font-weight="600">replaces request-response chat</text>
-
-  <!-- User at right -->
-  <circle cx="990" cy="390" r="22" fill="#242424"/>
-  <text x="990" y="394" font-size="12" fill="white" text-anchor="middle">👤</text>
-
-  <!-- User ↔ Pane -->
-  <line x1="960" y1="345" x2="990" y2="370" stroke="#107C10" stroke-width="1.2" marker-end="url(#ag)"/>
-  <text x="985" y="354" font-size="7" fill="#107C10" font-weight="600">sees</text>
-
-  <!-- User correction back -->
-  <path d="M968,395 L700,395 L530,370" stroke="#107C10" stroke-width="1" fill="none" stroke-dasharray="4,3" marker-end="url(#ag)"/>
-  <text x="750" y="388" font-size="7" fill="#107C10" font-weight="600">approves / corrects</text>
-
-  <!-- Path 3: QUEUE — goes right and down -->
-  <path d="M620,345 L700,370" stroke="#5B5FC7" stroke-width="1.5" fill="none" marker-end="url(#ap)"/>
-  <rect x="705" y="355" width="160" height="35" rx="8" fill="white" stroke="#5B5FC7" stroke-width="1"/>
-  <text x="785" y="374" font-size="10" font-weight="700" fill="#5B5FC7" text-anchor="middle">📋 QUEUE → briefing</text>
-  <text x="785" y="385" font-size="7" fill="#616161" text-anchor="middle">compiled overnight → morning brief</text>
-
-  <!-- Queue → Pane (delivers briefing) -->
-  <path d="M865,375 L900,345" stroke="#5B5FC7" stroke-width="1" fill="none" marker-end="url(#ap)"/>
-
-  <!-- ══════════════════════════════════════════ -->
-  <!-- PART 3: THE PANE TRANSFORMATION             -->
-  <!-- ══════════════════════════════════════════ -->
-
-  <text x="30" y="460" font-size="11" font-weight="700" fill="#107C10" letter-spacing="0.06em">THE PANE — FROM CHAT TO AGENT SURFACE</text>
-
-  <!-- Today's pane -->
-  <rect x="30" y="480" width="220" height="180" rx="10" fill="white" stroke="#E0E0E0" stroke-width="1"/>
-  <text x="140" y="500" font-size="10" font-weight="700" fill="#999" text-anchor="middle">Today's Copilot Pane</text>
-  <rect x="50" y="512" width="180" height="16" rx="4" fill="#F5F5F5"/>
-  <text x="140" y="523" font-size="7" fill="#999" text-anchor="middle">Ask me anything...</text>
-  <rect x="50" y="535" width="130" height="24" rx="6" fill="#F0F0F0"/>
-  <text x="115" y="550" font-size="8" fill="#999" text-anchor="middle">User: "summarize this"</text>
-  <rect x="50" y="565" width="150" height="24" rx="6" fill="#F0F0F0"/>
-  <text x="125" y="580" font-size="8" fill="#999" text-anchor="middle">Copilot: "Here's a summary..."</text>
-  <rect x="50" y="595" width="100" height="24" rx="6" fill="#F0F0F0"/>
-  <text x="100" y="610" font-size="8" fill="#999" text-anchor="middle">User: "make it shorter"</text>
-  <rect x="50" y="625" width="120" height="24" rx="6" fill="#F0F0F0"/>
-  <text x="110" y="640" font-size="8" fill="#999" text-anchor="middle">Copilot: "Done."</text>
-  <text x="140" y="655" font-size="7" fill="#bbb" text-anchor="middle" font-style="italic">ping-pong · forgets · waits</text>
-
-  <!-- Arrow between panes -->
-  <text x="310" y="570" font-size="28" fill="#5B5FC7" text-anchor="middle">→</text>
-  <text x="310" y="590" font-size="8" fill="#5B5FC7" text-anchor="middle" font-weight="700">becomes</text>
-
-  <!-- OpenClaw pane -->
-  <rect x="370" y="480" width="280" height="180" rx="10" fill="white" stroke="#5B5FC7" stroke-width="2"/>
-  <text x="510" y="500" font-size="10" font-weight="700" fill="#5B5FC7" text-anchor="middle">OpenClaw Agent Pane</text>
-
-  <rect x="390" y="512" width="240" height="24" rx="6" fill="#E8EBFA"/>
-  <text x="510" y="527" font-size="8" fill="#5B5FC7" text-anchor="middle" font-weight="600">☀️ Since you were last here...</text>
-
-  <rect x="390" y="540" width="200" height="18" rx="4" fill="#FEF3C7"/>
-  <text x="490" y="552" font-size="7" fill="#E87400" text-anchor="middle" font-weight="600">⏸ Approval: exec email draft</text>
-
-  <rect x="390" y="562" width="180" height="18" rx="4" fill="#FFF7ED"/>
-  <text x="480" y="574" font-size="7" fill="#E87400" text-anchor="middle">⚠ Budget discrepancy spotted</text>
-
-  <rect x="390" y="584" width="160" height="18" rx="4" fill="#DFF6DD"/>
-  <text x="470" y="596" font-size="7" fill="#107C10" text-anchor="middle">✓ 44 emails auto-handled</text>
-
-  <rect x="390" y="606" width="220" height="18" rx="4" fill="#E8EBFA"/>
-  <text x="500" y="618" font-size="7" fill="#5B5FC7" text-anchor="middle">📝 Lesson saved: frame as alignment</text>
-
-  <rect x="390" y="630" width="240" height="16" rx="4" fill="#F5F5F5"/>
-  <text x="510" y="641" font-size="7" fill="#999" text-anchor="middle">Message Cadbury...</text>
-
-  <text x="510" y="657" font-size="7" fill="#5B5FC7" text-anchor="middle" font-style="italic">agent-driven · remembers · proactive</text>
-
-  <!-- What the pane shows (annotation) -->
-  <rect x="690" y="490" width="200" height="160" rx="8" fill="#F9F9F9" stroke="#E5DFD9" stroke-width="1"/>
-  <text x="710" y="510" font-size="9" font-weight="700" fill="#242424">What the pane shows:</text>
-  <text x="710" y="528" font-size="8" fill="#616161">1. What agent did while away</text>
-  <text x="710" y="542" font-size="8" fill="#616161">2. What needs your approval</text>
-  <text x="710" y="556" font-size="8" fill="#616161">3. What agent caught proactively</text>
-  <text x="710" y="570" font-size="8" fill="#616161">4. What was handled silently</text>
-  <text x="710" y="584" font-size="8" fill="#616161">5. What agent learned</text>
-  <text x="710" y="598" font-size="8" fill="#616161">6. Chat input (still available)</text>
-  <text x="710" y="618" font-size="8" fill="#5B5FC7" font-weight="600">Chat is one input.</text>
-  <text x="710" y="630" font-size="8" fill="#5B5FC7" font-weight="600">Signals are the main input.</text>
-  <text x="710" y="642" font-size="8" fill="#5B5FC7" font-weight="600">The pane is a dashboard.</text>
-
-  <!-- ══════════════════════════════════════════ -->
-  <!-- PART 4: MULTI-USER MESH                     -->
-  <!-- ══════════════════════════════════════════ -->
-
-  <text x="30" y="710" font-size="11" font-weight="700" fill="#E87400" letter-spacing="0.06em">MULTI-USER — AGENT CALLS AGENT</text>
-
-  <!-- User A's pane -->
-  <rect x="30" y="730" width="130" height="55" rx="8" fill="white" stroke="#5B5FC7" stroke-width="1.5"/>
-  <text x="55" y="752" font-size="10">👤</text>
-  <text x="72" y="752" font-size="9" font-weight="600">Hema</text>
-  <text x="55" y="770" font-size="7" fill="#616161">Agent pane in Word</text>
-
-  <line x1="160" y1="758" x2="210" y2="758" stroke="#5B5FC7" stroke-width="1.2" marker-end="url(#ap)"/>
-
-  <!-- Hema's Platform instance -->
-  <rect x="215" y="733" width="140" height="50" rx="8" fill="#5B5FC7"/>
-  <text x="285" y="755" font-size="9" font-weight="700" fill="white" text-anchor="middle">⚙️ Hema's runtime</text>
-  <text x="285" y="768" font-size="7" fill="rgba(255,255,255,0.6)" text-anchor="middle">memory · agents · trust</text>
-
-  <!-- Mesh -->
-  <line x1="355" y1="758" x2="430" y2="758" stroke="#E87400" stroke-width="2" marker-end="url(#ao)"/>
-  <text x="392" y="748" font-size="8" fill="#E87400" font-weight="700" text-anchor="middle">signal</text>
-
-  <rect x="435" y="730" width="180" height="55" rx="10" fill="#FFF7ED" stroke="#E87400" stroke-width="2" stroke-dasharray="5,4"/>
-  <text x="525" y="752" font-size="10" font-weight="700" fill="#E87400" text-anchor="middle">🔗 Mesh</text>
-  <text x="525" y="768" font-size="7" fill="#616161" text-anchor="middle">signals only · never raw data</text>
-  <text x="525" y="778" font-size="7" fill="#E87400" text-anchor="middle" font-weight="600">THE GAP</text>
-
-  <line x1="615" y1="758" x2="690" y2="758" stroke="#E87400" stroke-width="2" marker-end="url(#ao)"/>
-  <text x="652" y="748" font-size="8" fill="#E87400" font-weight="700" text-anchor="middle">signal</text>
-
-  <!-- Sarah's Platform instance -->
-  <rect x="695" y="733" width="140" height="50" rx="8" fill="#5B5FC7"/>
-  <text x="765" y="755" font-size="9" font-weight="700" fill="white" text-anchor="middle">⚙️ Sarah's runtime</text>
-  <text x="765" y="768" font-size="7" fill="rgba(255,255,255,0.6)" text-anchor="middle">diff memory · diff SOUL</text>
-
-  <line x1="835" y1="758" x2="885" y2="758" stroke="#5B5FC7" stroke-width="1.2" marker-end="url(#ap)"/>
-
-  <!-- User B's pane -->
-  <rect x="890" y="730" width="130" height="55" rx="8" fill="white" stroke="#5B5FC7" stroke-width="1.5"/>
-  <text x="915" y="752" font-size="10">👤</text>
-  <text x="932" y="752" font-size="9" font-weight="600">Sarah</text>
-  <text x="915" y="770" font-size="7" fill="#616161">Agent pane in Excel</text>
-
-  <!-- Mesh examples below -->
-  <text x="435" y="808" font-size="8" fill="#616161">Hema's agent: "budget = 28% mktg"</text>
-  <text x="435" y="820" font-size="8" fill="#616161">Sarah's agent: "projection = +15% growth"</text>
-  <text x="435" y="832" font-size="8" fill="#E87400" font-weight="600">Mesh: "assumption mismatch" → both agents notified</text>
-  <text x="435" y="848" font-size="8" fill="#616161">Post-meeting: each agent picks up its person's action items</text>
-  <text x="435" y="860" font-size="8" fill="#616161">Calendar: "Mia's agent confirms Wed 10 AM free"</text>
-
-  <!-- ══════════════════════════════════════════ -->
-  <!-- LEARNING LOOP (bottom)                      -->
-  <!-- ══════════════════════════════════════════ -->
-
-  <path d="M990,412 C1030,450 1030,880 530,880 C30,880 20,450 30,412 C30,380 50,350 95,338" stroke="#107C10" stroke-width="1.5" fill="none" stroke-dasharray="5,4"/>
-  <text x="530" y="908" font-size="9" font-weight="600" fill="#107C10" text-anchor="middle">🔄 User corrects → Lesson saved → Memory enriched → Better decision → Pane improves → Trust earned → Gates graduate</text>
-
-  <!-- ══════════════════════════════════════════ -->
-  <!-- BOTTOM: one line                            -->
-  <!-- ══════════════════════════════════════════ -->
-  <text x="530" y="945" font-size="11" text-anchor="middle" font-weight="600">
-    <tspan fill="#107C10">M365</tspan> provides signals + surfaces.
-    <tspan fill="#5B5FC7">OpenClaw</tspan> provides the runtime.
-    <tspan fill="#E87400">The mesh</tspan> connects agents across people.
-  </text>
-  <text x="530" y="965" font-size="9" text-anchor="middle" fill="#999">The WXP pane becomes an agent dashboard. Chat is one input. Signals are the main input.</text>
+  <!-- Human users positioned around the outer edge -->
+  <circle cx="450" cy="40" r="22" fill="#242424"/>
+  <text x="450" y="44" font-size="14" fill="white" text-anchor="middle">👤</text>
+  <text x="450" y="75" font-size="10" fill="#242424" text-anchor="middle" font-weight="600">Hema</text>
+
+  <circle cx="830" cy="300" r="22" fill="#242424"/>
+  <text x="830" y="304" font-size="14" fill="white" text-anchor="middle">👤</text>
+  <text x="830" y="335" font-size="10" fill="#242424" text-anchor="middle" font-weight="600">Sarah</text>
+
+  <circle cx="780" cy="700" r="22" fill="#242424"/>
+  <text x="780" y="704" font-size="14" fill="white" text-anchor="middle">👤</text>
+  <text x="780" y="735" font-size="10" fill="#242424" text-anchor="middle" font-weight="600">Raj</text>
+
+  <circle cx="120" cy="700" r="22" fill="#242424"/>
+  <text x="120" y="704" font-size="14" fill="white" text-anchor="middle">👤</text>
+  <text x="120" y="735" font-size="10" fill="#242424" text-anchor="middle" font-weight="600">Mia</text>
+
+  <text x="35" y="440" font-size="9" fill="#999" font-weight="600" letter-spacing="0.05em" transform="rotate(-90,35,440)">HUMANS</text>
+
+  <!-- ═══ RING 5: SURFACES (M365) ═══ -->
+  <circle cx="450" cy="450" r="340" fill="none" stroke="#107C10" stroke-width="2" opacity="0.3"/>
+  <text x="120" y="370" font-size="9" fill="#107C10" font-weight="700" letter-spacing="0.05em" transform="rotate(-90,120,370)">SURFACES · M365</text>
+
+  <!-- Surface nodes -->
+  <rect x="390" y="118" width="120" height="36" rx="8" fill="white" stroke="#107C10" stroke-width="1.5"/>
+  <text x="450" y="140" font-size="10" font-weight="600" fill="#107C10" text-anchor="middle">💬 Teams Chat</text>
+
+  <rect x="700" y="250" width="100" height="36" rx="8" fill="white" stroke="#107C10" stroke-width="1.5"/>
+  <text x="750" y="272" font-size="10" font-weight="600" fill="#107C10" text-anchor="middle">📊 Excel</text>
+
+  <rect x="680" y="600" width="100" height="36" rx="8" fill="white" stroke="#107C10" stroke-width="1.5"/>
+  <text x="730" y="622" font-size="10" font-weight="600" fill="#107C10" text-anchor="middle">📧 Outlook</text>
+
+  <rect x="120" y="600" width="100" height="36" rx="8" fill="white" stroke="#107C10" stroke-width="1.5"/>
+  <text x="170" y="622" font-size="10" font-weight="600" fill="#107C10" text-anchor="middle">📝 Word</text>
+
+  <rect x="100" y="250" width="100" height="36" rx="8" fill="white" stroke="#107C10" stroke-width="1.5"/>
+  <text x="150" y="272" font-size="10" font-weight="600" fill="#107C10" text-anchor="middle">📱 Mobile</text>
+
+  <!-- Lines: humans → surfaces -->
+  <line x1="450" y1="62" x2="450" y2="118" stroke="#999" stroke-width="1" stroke-dasharray="3,3"/>
+  <line x1="810" y1="310" x2="760" y2="286" stroke="#999" stroke-width="1" stroke-dasharray="3,3"/>
+  <line x1="760" y1="710" x2="730" y2="636" stroke="#999" stroke-width="1" stroke-dasharray="3,3"/>
+  <line x1="138" y1="700" x2="170" y2="636" stroke="#999" stroke-width="1" stroke-dasharray="3,3"/>
+
+  <!-- ═══ RING 4: AGENT INSTANCES ═══ -->
+  <circle cx="450" cy="450" r="260" fill="none" stroke="#5B5FC7" stroke-width="2" opacity="0.3"/>
+  <text x="196" y="330" font-size="9" fill="#5B5FC7" font-weight="700" letter-spacing="0.05em" transform="rotate(-90,196,330)">AGENTS · PER USER</text>
+
+  <!-- Agent instances -->
+  <rect x="400" y="195" width="100" height="40" rx="8" fill="#5B5FC7"/>
+  <text x="450" y="214" font-size="9" font-weight="700" fill="white" text-anchor="middle">🎯 Hema's</text>
+  <text x="450" y="226" font-size="7" fill="rgba(255,255,255,0.6)" text-anchor="middle">Cadbury</text>
+
+  <rect x="640" y="310" width="100" height="40" rx="8" fill="#5B5FC7"/>
+  <text x="690" y="329" font-size="9" font-weight="700" fill="white" text-anchor="middle">🎯 Sarah's</text>
+  <text x="690" y="341" font-size="7" fill="rgba(255,255,255,0.6)" text-anchor="middle">agent</text>
+
+  <rect x="600" y="560" width="100" height="40" rx="8" fill="#5B5FC7"/>
+  <text x="650" y="579" font-size="9" font-weight="700" fill="white" text-anchor="middle">🎯 Raj's</text>
+  <text x="650" y="591" font-size="7" fill="rgba(255,255,255,0.6)" text-anchor="middle">agent</text>
+
+  <rect x="200" y="560" width="100" height="40" rx="8" fill="#5B5FC7"/>
+  <text x="250" y="579" font-size="9" font-weight="700" fill="white" text-anchor="middle">🎯 Mia's</text>
+  <text x="250" y="591" font-size="7" fill="rgba(255,255,255,0.6)" text-anchor="middle">agent</text>
+
+  <!-- Lines: surfaces → agents -->
+  <line x1="450" y1="154" x2="450" y2="195" stroke="#107C10" stroke-width="1.2" marker-end="url(#ao)"/>
+  <line x1="730" y1="286" x2="700" y2="310" stroke="#107C10" stroke-width="1.2" marker-end="url(#ao)"/>
+  <line x1="710" y1="600" x2="670" y2="575" stroke="#107C10" stroke-width="1.2" marker-end="url(#ao)"/>
+  <line x1="170" y1="600" x2="230" y2="575" stroke="#107C10" stroke-width="1.2" marker-end="url(#ao)"/>
+
+  <!-- ═══ MESH: lateral connections between agents ═══ -->
+  <line x1="500" y1="215" x2="640" y2="325" stroke="#E87400" stroke-width="2" stroke-dasharray="5,4" marker-end="url(#am)"/>
+  <line x1="640" y1="340" x2="500" y2="225" stroke="#E87400" stroke-width="2" stroke-dasharray="5,4"/>
+
+  <line x1="690" y1="350" x2="660" y2="560" stroke="#E87400" stroke-width="1.5" stroke-dasharray="5,4"/>
+  <line x1="250" y1="560" x2="410" y2="225" stroke="#E87400" stroke-width="1.5" stroke-dasharray="5,4"/>
+
+  <!-- Mesh label -->
+  <rect x="530" y="385" width="80" height="26" rx="6" fill="#FFF7ED" stroke="#E87400" stroke-width="1.5" stroke-dasharray="4,3"/>
+  <text x="570" y="402" font-size="8" font-weight="700" fill="#E87400" text-anchor="middle">🔗 MESH</text>
+
+  <text x="555" y="425" font-size="7" fill="#E87400" text-anchor="middle" font-weight="600">signals only</text>
+  <text x="555" y="435" font-size="7" fill="#E87400" text-anchor="middle">never raw data</text>
+
+  <!-- ═══ RING 3: ORCHESTRATION (Trust + Routing) ═══ -->
+  <circle cx="450" cy="450" r="170" fill="none" stroke="#5B5FC7" stroke-width="2" opacity="0.4"/>
+  <text x="285" y="390" font-size="9" fill="#5B5FC7" font-weight="700" letter-spacing="0.05em" transform="rotate(-90,285,390)">ORCHESTRATION</text>
+
+  <!-- Orchestration ring contents — positioned around the ring -->
+  <rect x="385" y="285" width="130" height="32" rx="6" fill="#E8EBFA" stroke="#5B5FC7" stroke-width="1"/>
+  <text x="450" y="305" font-size="9" font-weight="600" fill="#5B5FC7" text-anchor="middle">⏸ Trust Gate</text>
+
+  <rect x="560" y="430" width="60" height="50" rx="6" fill="#E8EBFA" stroke="#5B5FC7" stroke-width="1"/>
+  <text x="590" y="452" font-size="8" font-weight="600" fill="#5B5FC7" text-anchor="middle">✉️</text>
+  <text x="590" y="464" font-size="7" fill="#5B5FC7" text-anchor="middle">Mail</text>
+  <text x="590" y="474" font-size="6" fill="#999" text-anchor="middle">Agent</text>
+
+  <rect x="540" y="490" width="60" height="50" rx="6" fill="#E8EBFA" stroke="#5B5FC7" stroke-width="1"/>
+  <text x="570" y="512" font-size="8" font-weight="600" fill="#5B5FC7" text-anchor="middle">📄</text>
+  <text x="570" y="524" font-size="7" fill="#5B5FC7" text-anchor="middle">Doc</text>
+  <text x="570" y="534" font-size="6" fill="#999" text-anchor="middle">Agent</text>
+
+  <rect x="300" y="430" width="60" height="50" rx="6" fill="#E8EBFA" stroke="#5B5FC7" stroke-width="1"/>
+  <text x="330" y="452" font-size="8" font-weight="600" fill="#5B5FC7" text-anchor="middle">📅</text>
+  <text x="330" y="464" font-size="7" fill="#5B5FC7" text-anchor="middle">Cal</text>
+  <text x="330" y="474" font-size="6" fill="#999" text-anchor="middle">Agent</text>
+
+  <rect x="300" y="490" width="60" height="50" rx="6" fill="#E8EBFA" stroke="#5B5FC7" stroke-width="1"/>
+  <text x="330" y="512" font-size="8" font-weight="600" fill="#5B5FC7" text-anchor="middle">📊</text>
+  <text x="330" y="524" font-size="7" fill="#5B5FC7" text-anchor="middle">Data</text>
+  <text x="330" y="534" font-size="6" fill="#999" text-anchor="middle">Agent</text>
+
+  <text x="450" y="560" font-size="7" fill="#616161" text-anchor="middle">specialists dispatched by orchestrator</text>
+
+  <!-- ═══ RING 2: PLATFORM SERVICES ═══ -->
+  <circle cx="450" cy="450" r="100" fill="none" stroke="#5B5FC7" stroke-width="2" opacity="0.5"/>
+  <text x="356" y="438" font-size="8" fill="#5B5FC7" font-weight="700" letter-spacing="0.04em" transform="rotate(-90,356,438)">PLATFORM</text>
+
+  <!-- Platform services around inner ring -->
+  <text x="450" y="360" font-size="8" font-weight="600" fill="#5B5FC7" text-anchor="middle">🧠 Memory</text>
+  <text x="450" y="370" font-size="7" fill="#999" text-anchor="middle">LESSONS · SOUL · dreams</text>
+
+  <text x="540" y="395" font-size="7" font-weight="600" fill="#5B5FC7" text-anchor="end">🔐 Security</text>
+  <text x="380" y="395" font-size="7" font-weight="600" fill="#5B5FC7">🆔 Identity</text>
+
+  <text x="450" y="530" font-size="7" font-weight="600" fill="#5B5FC7" text-anchor="middle">📈 Observability</text>
+  <text x="540" y="520" font-size="7" font-weight="600" fill="#5B5FC7" text-anchor="end">✅ Evals</text>
+  <text x="380" y="520" font-size="7" font-weight="600" fill="#5B5FC7">📊 Data Sci</text>
+
+  <!-- ═══ RING 1 (core): LLM ═══ -->
+  <circle cx="450" cy="450" r="40" fill="#5B5FC7"/>
+  <text x="450" y="444" font-size="12" font-weight="700" fill="white" text-anchor="middle">🤖</text>
+  <text x="450" y="462" font-size="10" font-weight="700" fill="white" text-anchor="middle">LLM</text>
+
+  <!-- ═══ FLOW ANNOTATIONS ═══ -->
+  <!-- Inward arrow (signals) -->
+  <line x1="450" y1="82" x2="450" y2="118" stroke="#5B5FC7" stroke-width="1.5" marker-end="url(#ai)"/>
+  <text x="465" y="98" font-size="7" fill="#5B5FC7" font-weight="600">signals in ↓</text>
+
+  <!-- Outward arrow (responses) -->
+  <line x1="155" y1="275" x2="135" y2="257" stroke="#107C10" stroke-width="1.5" marker-end="url(#ao)"/>
+  <text x="100" y="242" font-size="7" fill="#107C10" font-weight="600">↑ responses out</text>
+
+  <!-- Learning loop annotation -->
+  <path d="M75,450 C75,250 200,155 385,155" stroke="#107C10" stroke-width="1.2" fill="none" stroke-dasharray="4,3" marker-end="url(#ao)"/>
+  <text x="85" y="300" font-size="8" fill="#107C10" font-weight="600" transform="rotate(-75,85,300)">corrections loop back in</text>
+
+  <!-- ═══ LEGEND ═══ -->
+  <rect x="30" y="810" width="840" height="70" rx="10" fill="white" stroke="#E5DFD9" stroke-width="1"/>
+
+  <text x="50" y="835" font-size="10" font-weight="700" fill="#242424">Rings (outside → in):</text>
+  <circle cx="80" cy="855" r="5" fill="#242424"/><text x="92" y="859" font-size="9" fill="#616161">Humans</text>
+  <circle cx="170" cy="855" r="5" fill="none" stroke="#107C10" stroke-width="2"/><text x="182" y="859" font-size="9" fill="#616161">M365 Surfaces</text>
+  <circle cx="300" cy="855" r="5" fill="#5B5FC7"/><text x="312" y="859" font-size="9" fill="#616161">Per-User Agents</text>
+  <circle cx="430" cy="855" r="5" fill="none" stroke="#5B5FC7" stroke-width="2"/><text x="442" y="859" font-size="9" fill="#616161">Orchestration</text>
+  <circle cx="550" cy="855" r="5" fill="#E8EBFA" stroke="#5B5FC7" stroke-width="1"/><text x="562" y="859" font-size="9" fill="#616161">Platform Services</text>
+  <circle cx="680" cy="855" r="5" fill="#5B5FC7"/><text x="692" y="859" font-size="9" fill="#616161">LLM Core</text>
+
+  <text x="50" y="872" font-size="9" fill="#E87400" font-weight="600">🔗 Orange dashed = Agent Mesh (lateral, signals only, THE GAP)</text>
+  <text x="500" y="872" font-size="9" fill="#107C10" font-weight="600">↑ Green = outward (responses, rendering)</text>
+  <text x="730" y="872" font-size="9" fill="#5B5FC7" font-weight="600">↓ Purple = inward (signals)</text>
 
 </svg>
 </div>

@@ -9,227 +9,182 @@
   body{font-family:'Segoe UI Variable Display','Segoe UI',-apple-system,sans-serif;background:#F5F1EC;color:#242424}
   header{text-align:center;padding:36px 24px 4px}
   header h1{font-size:26px;font-weight:700;letter-spacing:-0.02em}
-  header .sub{font-size:12px;color:#616161;margin-top:4px;max-width:560px;margin-left:auto;margin-right:auto;line-height:1.6}
+  header .sub{font-size:12px;color:#616161;margin-top:4px}
   header .meta{font-size:11px;color:#999;margin-top:4px}
-  .diagram-wrap{max-width:1000px;margin:16px auto;padding:0 12px 60px;overflow-x:auto}
+  .diagram-wrap{max-width:1000px;margin:16px auto;padding:0 12px 40px;overflow-x:auto}
   svg text{font-family:'Segoe UI Variable Display','Segoe UI',-apple-system,sans-serif}
 </style>
 </head>
 <body>
 <header>
   <h1>OpenClaw × M365</h1>
-  <div class="sub">One reasoning loop, tool calls radiating out. Security wraps every call. The mesh is a tool that reaches into another user's loop.</div>
+  <div class="sub">Per-user runtime inside each tenant. The mesh crosses the governance boundary.</div>
   <div class="meta">Hema Sridharan · April 2026</div>
 </header>
 
 <div class="diagram-wrap">
-<svg viewBox="0 0 960 880" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;min-width:750px;">
+<svg viewBox="0 0 960 560" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;min-width:750px;">
 
   <defs>
     <marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M0 0L10 5L0 10z" fill="#666"/></marker>
     <marker id="ap" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M0 0L10 5L0 10z" fill="#5B5FC7"/></marker>
-    <marker id="ag" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M0 0L10 5L0 10z" fill="#107C10"/></marker>
     <marker id="ao" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M0 0L10 5L0 10z" fill="#E87400"/></marker>
   </defs>
 
-  <!-- ═══ USER / SURFACE (top) ═══ -->
-  <circle cx="380" cy="40" r="20" fill="#242424"/>
-  <text x="380" y="44" font-size="12" fill="white" text-anchor="middle">👤</text>
-  <text x="420" y="44" font-size="9" fill="#242424" font-weight="600">User or Signal trigger</text>
+  <!-- ═══ TENANT A ═══ -->
+  <rect x="20" y="20" width="420" height="440" rx="16" fill="white" stroke="#5B5FC7" stroke-width="2"/>
+  <text x="40" y="45" font-size="11" font-weight="700" fill="#5B5FC7">Tenant A — governance boundary</text>
+  <text x="40" y="58" font-size="8" fill="#999">compliance · admin policy · data residency</text>
 
-  <line x1="380" y1="60" x2="380" y2="90" stroke="#666" stroke-width="1.2" marker-end="url(#a)"/>
+  <!-- User A -->
+  <circle cx="80" cy="105" r="22" fill="#242424"/>
+  <text x="80" y="109" font-size="13" fill="white" text-anchor="middle">👤</text>
+  <text x="80" y="138" font-size="10" fill="#242424" text-anchor="middle" font-weight="600">Hema</text>
 
-  <rect x="280" y="92" width="200" height="36" rx="8" fill="white" stroke="#107C10" stroke-width="1.5"/>
-  <text x="380" y="114" font-size="11" font-weight="700" fill="#107C10" text-anchor="middle">💬 WXP Agent Pane</text>
+  <!-- ↔ Teams -->
+  <line x1="102" y1="105" x2="148" y2="105" stroke="#666" stroke-width="1.2" marker-end="url(#a)"/>
+  <rect x="152" y="88" width="80" height="34" rx="6" fill="white" stroke="#107C10" stroke-width="1.5"/>
+  <text x="192" y="109" font-size="10" font-weight="600" fill="#107C10" text-anchor="middle">💬 Teams</text>
 
-  <line x1="380" y1="128" x2="380" y2="158" stroke="#107C10" stroke-width="1.2" marker-end="url(#ag)"/>
+  <!-- ↔ OpenClaw -->
+  <line x1="232" y1="105" x2="268" y2="105" stroke="#5B5FC7" stroke-width="1.2" marker-end="url(#ap)"/>
 
-  <!-- ═══ SECURITY WRAPPER (big box around orchestrator) ═══ -->
-  <rect x="60" y="160" width="640" height="480" rx="14" fill="none" stroke="#D13438" stroke-width="2" stroke-dasharray="6,4"/>
-  <text x="80" y="180" font-size="9" font-weight="700" fill="#D13438">🔐 SECURITY BOUNDARY — wraps every tool call</text>
-  <text x="80" y="192" font-size="7" fill="#999">SecretRef · exec allowlist · session isolation · prompt injection defense</text>
-  <text x="590" y="180" font-size="7" fill="#D13438" font-style="italic">Security & Compliance role</text>
+  <!-- OpenClaw A -->
+  <rect x="272" y="70" width="150" height="250" rx="12" fill="#F8F7FF" stroke="#5B5FC7" stroke-width="1.5"/>
+  <text x="347" y="92" font-size="11" font-weight="700" fill="#5B5FC7" text-anchor="middle">⚙️ Hema's OpenClaw</text>
 
-  <!-- ═══ ORCHESTRATOR (center — the reasoning loop) ═══ -->
-  <rect x="250" y="210" width="260" height="80" rx="14" fill="#5B5FC7"/>
-  <text x="380" y="240" font-size="14" font-weight="700" fill="white" text-anchor="middle">🎯 Orchestrator</text>
-  <text x="380" y="258" font-size="9" fill="rgba(255,255,255,0.7)" text-anchor="middle">LLM reasoning loop — thinks, calls tools,</text>
-  <text x="380" y="272" font-size="9" fill="rgba(255,255,255,0.7)" text-anchor="middle">gets results, decides next step</text>
-  <text x="380" y="286" font-size="7" fill="rgba(255,255,255,0.5)" text-anchor="middle">Architecture role</text>
+  <!-- OpenClaw internals -->
+  <rect x="286" y="102" width="122" height="22" rx="4" fill="#E8EBFA"/>
+  <text x="347" y="117" font-size="8" font-weight="600" fill="#5B5FC7" text-anchor="middle">🎯 Agent Loop</text>
 
-  <!-- ═══ TOOL CALLS radiating out from orchestrator ═══ -->
+  <rect x="286" y="130" width="122" height="22" rx="4" fill="#E8EBFA"/>
+  <text x="347" y="145" font-size="8" font-weight="600" fill="#5B5FC7" text-anchor="middle">🧠 Memory</text>
 
-  <!-- LEFT SIDE TOOLS -->
+  <rect x="286" y="158" width="122" height="22" rx="4" fill="#E8EBFA"/>
+  <text x="347" y="173" font-size="8" font-weight="600" fill="#5B5FC7" text-anchor="middle">📜 SOUL.md</text>
 
-  <!-- read_mail() -->
-  <line x1="250" y1="230" x2="92" y2="230" stroke="#5B5FC7" stroke-width="1" marker-end="url(#ap)"/>
-  <rect x="75" y="215" width="8" height="30" rx="2" fill="#5B5FC7"/>
-  <text x="90" y="222" font-size="8" fill="#5B5FC7" font-weight="600" text-anchor="end">tool_call:</text>
+  <rect x="286" y="186" width="122" height="22" rx="4" fill="#E8EBFA"/>
+  <text x="347" y="201" font-size="8" font-weight="600" fill="#5B5FC7" text-anchor="middle">⏸ Trust Policies</text>
 
-  <rect x="75" y="210" width="165" height="24" rx="6" fill="white" stroke="#107C10" stroke-width="1" transform="translate(-165,0)"/>
-  <text x="40" y="226" font-size="9" fill="#107C10" font-weight="600" font-family="monospace" text-anchor="middle">read_mail()</text>
+  <rect x="286" y="214" width="122" height="22" rx="4" fill="#E8EBFA"/>
+  <text x="347" y="229" font-size="8" font-weight="600" fill="#5B5FC7" text-anchor="middle">🧩 Tools / MCP</text>
 
-  <!-- Return -->
-  <line x1="92" y1="240" x2="250" y2="240" stroke="#107C10" stroke-width="1" stroke-dasharray="3,3" marker-end="url(#ag)"/>
-  <text x="160" y="252" font-size="7" fill="#107C10" text-anchor="middle">→ structured signals</text>
+  <rect x="286" y="242" width="122" height="22" rx="4" fill="#E8EBFA"/>
+  <text x="347" y="257" font-size="8" font-weight="600" fill="#5B5FC7" text-anchor="middle">🔐 Security</text>
 
-  <!-- check_calendar() -->
-  <line x1="250" y1="265" x2="92" y2="295" stroke="#5B5FC7" stroke-width="1" marker-end="url(#ap)"/>
-  <rect x="-90" y="280" width="165" height="24" rx="6" fill="white" stroke="#107C10" stroke-width="1"/>
-  <text x="-7" y="296" font-size="9" fill="#107C10" font-weight="600" font-family="monospace" text-anchor="middle">check_calendar()</text>
+  <rect x="286" y="270" width="122" height="22" rx="4" fill="#E8EBFA"/>
+  <text x="347" y="285" font-size="8" font-weight="600" fill="#5B5FC7" text-anchor="middle">📈 Observability</text>
 
-  <line x1="75" y1="305" x2="250" y2="275" stroke="#107C10" stroke-width="1" stroke-dasharray="3,3" marker-end="url(#ag)"/>
-  <text x="150" y="300" font-size="7" fill="#107C10" text-anchor="middle">→ conflicts</text>
+  <!-- OpenClaw → M365 APIs -->
+  <line x1="347" y1="320" x2="347" y2="365" stroke="#107C10" stroke-width="1.2" marker-end="url(#a)"/>
+  <text x="360" y="345" font-size="7" fill="#107C10" font-weight="600">tools call</text>
 
-  <!-- read_docs() -->
-  <line x1="250" y1="280" x2="92" y2="355" stroke="#5B5FC7" stroke-width="1" marker-end="url(#ap)"/>
-  <rect x="-90" y="342" width="165" height="24" rx="6" fill="white" stroke="#107C10" stroke-width="1"/>
-  <text x="-7" y="358" font-size="9" fill="#107C10" font-weight="600" font-family="monospace" text-anchor="middle">read_docs()</text>
+  <rect x="240" y="368" width="180" height="34" rx="6" fill="white" stroke="#107C10" stroke-width="1.5"/>
+  <text x="330" y="389" font-size="9" font-weight="600" fill="#107C10" text-anchor="middle">📡 M365 APIs (Graph)</text>
 
-  <line x1="75" y1="367" x2="250" y2="285" stroke="#107C10" stroke-width="1" stroke-dasharray="3,3" marker-end="url(#ag)"/>
-  <text x="140" y="340" font-size="7" fill="#107C10" text-anchor="middle">→ comments, changes</text>
+  <!-- OpenClaw → LLM API -->
+  <line x1="347" y1="402" x2="347" y2="435" stroke="#5B5FC7" stroke-width="1.2" marker-end="url(#ap)"/>
+  <text x="360" y="422" font-size="7" fill="#5B5FC7" font-weight="600">API call</text>
 
-  <!-- M365 label for left tools -->
-  <text x="-75" y="270" font-size="8" fill="#107C10" font-weight="700" transform="rotate(-90,-75,270)">M365 SIGNAL TOOLS</text>
+  <rect x="280" y="438" width="130" height="28" rx="6" fill="#5B5FC7"/>
+  <text x="345" y="456" font-size="9" font-weight="700" fill="white" text-anchor="middle">🤖 LLM API</text>
 
-  <!-- RIGHT SIDE TOOLS -->
+  <!-- ═══ TENANT B ═══ -->
+  <rect x="520" y="20" width="420" height="440" rx="16" fill="white" stroke="#5B5FC7" stroke-width="2"/>
+  <text x="540" y="45" font-size="11" font-weight="700" fill="#5B5FC7">Tenant B — governance boundary</text>
+  <text x="540" y="58" font-size="8" fill="#999">compliance · admin policy · data residency</text>
 
-  <!-- check_memory() -->
-  <line x1="510" y1="230" x2="590" y2="230" stroke="#5B5FC7" stroke-width="1" marker-end="url(#ap)"/>
-  <rect x="595" y="218" width="150" height="24" rx="6" fill="white" stroke="#5B5FC7" stroke-width="1"/>
-  <text x="670" y="234" font-size="9" fill="#5B5FC7" font-weight="600" font-family="monospace" text-anchor="middle">check_memory()</text>
+  <!-- User B -->
+  <circle cx="880" cy="105" r="22" fill="#242424"/>
+  <text x="880" y="109" font-size="13" fill="white" text-anchor="middle">👤</text>
+  <text x="880" y="138" font-size="10" fill="#242424" text-anchor="middle" font-weight="600">Sarah</text>
 
-  <line x1="670" y1="242" x2="510" y2="240" stroke="#5B5FC7" stroke-width="1" stroke-dasharray="3,3" marker-end="url(#ap)"/>
-  <text x="600" y="255" font-size="7" fill="#5B5FC7" text-anchor="middle">→ lessons, patterns, SOUL</text>
-  <text x="750" y="234" font-size="7" fill="#999" text-anchor="start" font-style="italic">Data Science</text>
+  <!-- ↔ Teams -->
+  <line x1="858" y1="105" x2="812" y2="105" stroke="#666" stroke-width="1.2" marker-end="url(#a)"/>
+  <rect x="728" y="88" width="80" height="34" rx="6" fill="white" stroke="#107C10" stroke-width="1.5"/>
+  <text x="768" y="109" font-size="10" font-weight="600" fill="#107C10" text-anchor="middle">💬 Teams</text>
 
-  <!-- draft_response() -->
-  <line x1="510" y1="260" x2="590" y2="275" stroke="#5B5FC7" stroke-width="1" marker-end="url(#ap)"/>
-  <rect x="595" y="263" width="150" height="24" rx="6" fill="white" stroke="#5B5FC7" stroke-width="1"/>
-  <text x="670" y="279" font-size="9" fill="#5B5FC7" font-weight="600" font-family="monospace" text-anchor="middle">draft_response()</text>
+  <!-- ↔ OpenClaw -->
+  <line x1="728" y1="105" x2="692" y2="105" stroke="#5B5FC7" stroke-width="1.2" marker-end="url(#ap)"/>
 
-  <line x1="670" y1="287" x2="510" y2="270" stroke="#5B5FC7" stroke-width="1" stroke-dasharray="3,3" marker-end="url(#ap)"/>
-  <text x="600" y="300" font-size="7" fill="#5B5FC7" text-anchor="middle">→ proposed text</text>
+  <!-- OpenClaw B -->
+  <rect x="538" y="70" width="150" height="250" rx="12" fill="#F8F7FF" stroke="#5B5FC7" stroke-width="1.5"/>
+  <text x="613" y="92" font-size="11" font-weight="700" fill="#5B5FC7" text-anchor="middle">⚙️ Sarah's OpenClaw</text>
 
-  <!-- check_trust() -->
-  <line x1="510" y1="275" x2="590" y2="320" stroke="#D13438" stroke-width="1" marker-end="url(#ap)"/>
-  <rect x="595" y="308" width="150" height="24" rx="6" fill="#FEE2E2" stroke="#D13438" stroke-width="1"/>
-  <text x="670" y="324" font-size="9" fill="#D13438" font-weight="600" font-family="monospace" text-anchor="middle">check_trust()</text>
+  <!-- OpenClaw internals -->
+  <rect x="552" y="102" width="122" height="22" rx="4" fill="#E8EBFA"/>
+  <text x="613" y="117" font-size="8" font-weight="600" fill="#5B5FC7" text-anchor="middle">🎯 Agent Loop</text>
 
-  <line x1="670" y1="332" x2="510" y2="280" stroke="#D13438" stroke-width="1" stroke-dasharray="3,3"/>
-  <text x="610" y="345" font-size="7" fill="#D13438" text-anchor="middle">→ auto | review | locked</text>
-  <text x="750" y="324" font-size="7" fill="#999" text-anchor="start" font-style="italic">Security</text>
+  <rect x="552" y="130" width="122" height="22" rx="4" fill="#E8EBFA"/>
+  <text x="613" y="145" font-size="8" font-weight="600" fill="#5B5FC7" text-anchor="middle">🧠 Memory</text>
 
-  <!-- BOTTOM TOOLS (action + learning) -->
+  <rect x="552" y="158" width="122" height="22" rx="4" fill="#E8EBFA"/>
+  <text x="613" y="173" font-size="8" font-weight="600" fill="#5B5FC7" text-anchor="middle">📜 SOUL.md</text>
 
-  <!-- send_email() / execute -->
-  <line x1="320" y1="290" x2="200" y2="420" stroke="#107C10" stroke-width="1" marker-end="url(#ag)"/>
-  <rect x="100" y="410" width="150" height="24" rx="6" fill="#DFF6DD" stroke="#107C10" stroke-width="1"/>
-  <text x="175" y="426" font-size="9" fill="#107C10" font-weight="600" font-family="monospace" text-anchor="middle">send_email()</text>
-  <text x="175" y="445" font-size="7" fill="#107C10" text-anchor="middle">→ executes the action</text>
+  <rect x="552" y="186" width="122" height="22" rx="4" fill="#E8EBFA"/>
+  <text x="613" y="201" font-size="8" font-weight="600" fill="#5B5FC7" text-anchor="middle">⏸ Trust Policies</text>
 
-  <!-- move_meeting() -->
-  <rect x="100" y="460" width="150" height="24" rx="6" fill="#DFF6DD" stroke="#107C10" stroke-width="1"/>
-  <text x="175" y="476" font-size="9" fill="#107C10" font-weight="600" font-family="monospace" text-anchor="middle">move_meeting()</text>
+  <rect x="552" y="214" width="122" height="22" rx="4" fill="#E8EBFA"/>
+  <text x="613" y="229" font-size="8" font-weight="600" fill="#5B5FC7" text-anchor="middle">🧩 Tools / MCP</text>
 
-  <!-- post_comment() -->
-  <rect x="100" y="498" width="150" height="24" rx="6" fill="#DFF6DD" stroke="#107C10" stroke-width="1"/>
-  <text x="175" y="514" font-size="9" fill="#107C10" font-weight="600" font-family="monospace" text-anchor="middle">post_comment()</text>
+  <rect x="552" y="242" width="122" height="22" rx="4" fill="#E8EBFA"/>
+  <text x="613" y="257" font-size="8" font-weight="600" fill="#5B5FC7" text-anchor="middle">🔐 Security</text>
 
-  <text x="90" y="540" font-size="7" fill="#107C10" font-style="italic">M365 write-back tools</text>
+  <rect x="552" y="270" width="122" height="22" rx="4" fill="#E8EBFA"/>
+  <text x="613" y="285" font-size="8" font-weight="600" fill="#5B5FC7" text-anchor="middle">📈 Observability</text>
 
-  <!-- save_lesson() -->
-  <line x1="440" y1="290" x2="530" y2="420" stroke="#107C10" stroke-width="1" marker-end="url(#ag)"/>
-  <rect x="450" y="410" width="150" height="24" rx="6" fill="white" stroke="#107C10" stroke-width="1.5"/>
-  <text x="525" y="426" font-size="9" fill="#107C10" font-weight="600" font-family="monospace" text-anchor="middle">save_lesson()</text>
-  <text x="525" y="445" font-size="7" fill="#107C10" text-anchor="middle">→ writes to LESSONS.md</text>
+  <!-- OpenClaw → M365 APIs -->
+  <line x1="613" y1="320" x2="613" y2="365" stroke="#107C10" stroke-width="1.2" marker-end="url(#a)"/>
+  <rect x="540" y="368" width="180" height="34" rx="6" fill="white" stroke="#107C10" stroke-width="1.5"/>
+  <text x="630" y="389" font-size="9" font-weight="600" fill="#107C10" text-anchor="middle">📡 M365 APIs (Graph)</text>
 
-  <!-- log_action() -->
-  <rect x="450" y="460" width="150" height="24" rx="6" fill="white" stroke="#E87400" stroke-width="1"/>
-  <text x="525" y="476" font-size="9" fill="#E87400" font-weight="600" font-family="monospace" text-anchor="middle">log_action()</text>
-  <text x="525" y="495" font-size="7" fill="#E87400" text-anchor="middle">→ autonomy ledger</text>
-  <text x="610" y="476" font-size="7" fill="#999" font-style="italic">Observability</text>
+  <!-- OpenClaw → LLM API -->
+  <line x1="613" y1="402" x2="613" y2="435" stroke="#5B5FC7" stroke-width="1.2" marker-end="url(#ap)"/>
+  <rect x="548" y="438" width="130" height="28" rx="6" fill="#5B5FC7"/>
+  <text x="613" y="456" font-size="9" font-weight="700" fill="white" text-anchor="middle">🤖 LLM API</text>
 
-  <!-- ═══ YIELD TO USER (when trust = review) ═══ -->
-  <rect x="270" y="380" width="220" height="34" rx="8" fill="#FEF3C7" stroke="#E87400" stroke-width="1.5"/>
-  <text x="380" y="400" font-size="10" font-weight="700" fill="#E87400" text-anchor="middle">⏸ yield_to_user(approval_card)</text>
-  <text x="380" y="420" font-size="7" fill="#E87400" text-anchor="middle">pauses loop → user sees card → approves → loop resumes</text>
+  <!-- ═══ THE MESH — crosses tenant boundaries ═══ -->
+  <line x1="422" y1="195" x2="538" y2="195" stroke="#E87400" stroke-width="3" marker-end="url(#ao)"/>
+  <line x1="538" y1="215" x2="422" y2="215" stroke="#E87400" stroke-width="3" marker-end="url(#ao)"/>
 
-  <line x1="380" y1="290" x2="380" y2="380" stroke="#E87400" stroke-width="1.2" marker-end="url(#ao)"/>
-  <text x="390" y="340" font-size="7" fill="#E87400" font-weight="600">trust = review</text>
+  <!-- Mesh label -->
+  <rect x="440" y="160" width="80" height="80" rx="10" fill="#FFF7ED" stroke="#E87400" stroke-width="2.5" stroke-dasharray="6,4"/>
+  <text x="480" y="187" font-size="16" text-anchor="middle">🔗</text>
+  <text x="480" y="205" font-size="9" font-weight="700" fill="#E87400" text-anchor="middle">MESH</text>
+  <text x="480" y="218" font-size="7" fill="#E87400" text-anchor="middle">signals</text>
+  <text x="480" y="228" font-size="7" fill="#E87400" text-anchor="middle">only</text>
 
-  <!-- User approval returns -->
-  <path d="M380,414 L380,435 L380,440 C380,440 420,445 430,290" stroke="#107C10" stroke-width="1" fill="none" stroke-dasharray="3,3" marker-end="url(#ag)"/>
-  <text x="435" y="370" font-size="7" fill="#107C10" font-weight="600">user approves</text>
-  <text x="435" y="380" font-size="7" fill="#107C10">→ loop resumes</text>
+  <!-- Mesh annotations below -->
+  <text x="480" y="270" font-size="8" fill="#E87400" text-anchor="middle" font-weight="700">Crosses governance boundary</text>
+  <text x="480" y="283" font-size="7" fill="#616161" text-anchor="middle">bilateral consent required</text>
+  <text x="480" y="295" font-size="7" fill="#616161" text-anchor="middle">signal types agreed by both tenants</text>
+  <text x="480" y="307" font-size="7" fill="#616161" text-anchor="middle">audited on both sides</text>
+  <text x="480" y="319" font-size="7" fill="#616161" text-anchor="middle">never raw data — structured signals</text>
 
-  <!-- ═══ CLOSE SECURITY BOUNDARY ═══ -->
+  <!-- Signal examples -->
+  <rect x="430" y="340" width="100" height="16" rx="3" fill="#FFF7ED"/>
+  <text x="480" y="352" font-size="7" fill="#E87400" text-anchor="middle" font-family="monospace">"mismatch detected"</text>
+  <rect x="430" y="360" width="100" height="16" rx="3" fill="#FFF7ED"/>
+  <text x="480" y="372" font-size="7" fill="#E87400" text-anchor="middle" font-family="monospace">"Wed 10 AM free"</text>
+  <rect x="430" y="380" width="100" height="16" rx="3" fill="#FFF7ED"/>
+  <text x="480" y="392" font-size="7" fill="#E87400" text-anchor="middle" font-family="monospace">"action item: Raj"</text>
+  <rect x="430" y="400" width="100" height="16" rx="3" fill="#FFF7ED"/>
+  <text x="480" y="412" font-size="7" fill="#E87400" text-anchor="middle" font-family="monospace">"dep chain: A→B"</text>
 
-  <!-- ═══ THE MESH (below security boundary) ═══ -->
-  <text x="60" y="580" font-size="10" font-weight="700" fill="#E87400">THE MESH — a special tool that reaches into another user's loop</text>
+  <text x="480" y="440" font-size="8" fill="#E87400" text-anchor="middle" font-weight="700">THE GAP</text>
+  <text x="480" y="452" font-size="7" fill="#999" text-anchor="middle">Like Exchange federation</text>
+  <text x="480" y="462" font-size="7" fill="#999" text-anchor="middle">not a database query</text>
 
-  <!-- Hema's loop -->
-  <rect x="60" y="600" width="200" height="70" rx="10" fill="#5B5FC7"/>
-  <text x="160" y="625" font-size="10" font-weight="700" fill="white" text-anchor="middle">🎯 Hema's Loop</text>
-  <text x="160" y="642" font-size="8" fill="rgba(255,255,255,0.7)" text-anchor="middle">her memory · her SOUL</text>
-  <text x="160" y="656" font-size="7" fill="rgba(255,255,255,0.5)" text-anchor="middle">her trust policies</text>
-
-  <!-- tool_call: mesh() -->
-  <line x1="260" y1="635" x2="345" y2="635" stroke="#E87400" stroke-width="1.5" marker-end="url(#ao)"/>
-  <text x="302" y="625" font-size="8" fill="#E87400" font-weight="600" font-family="monospace" text-anchor="middle">mesh()</text>
-
-  <!-- Mesh box -->
-  <rect x="350" y="598" width="200" height="75" rx="10" fill="#FFF7ED" stroke="#E87400" stroke-width="2" stroke-dasharray="5,4"/>
-  <text x="450" y="622" font-size="11" font-weight="700" fill="#E87400" text-anchor="middle">🔗 Mesh</text>
-  <text x="450" y="638" font-size="8" fill="#616161" text-anchor="middle">signal exchange only</text>
-  <text x="450" y="652" font-size="8" fill="#616161" text-anchor="middle">never raw data</text>
-  <text x="450" y="668" font-size="7" fill="#E87400" text-anchor="middle" font-weight="600">THE GAP</text>
-
-  <!-- mesh() → Sarah's loop -->
-  <line x1="550" y1="635" x2="630" y2="635" stroke="#E87400" stroke-width="1.5" marker-end="url(#ao)"/>
-  <text x="590" y="625" font-size="8" fill="#E87400" font-weight="600" font-family="monospace" text-anchor="middle">route()</text>
-
-  <!-- Sarah's loop -->
-  <rect x="635" y="600" width="200" height="70" rx="10" fill="#5B5FC7"/>
-  <text x="735" y="625" font-size="10" font-weight="700" fill="white" text-anchor="middle">🎯 Sarah's Loop</text>
-  <text x="735" y="642" font-size="8" fill="rgba(255,255,255,0.7)" text-anchor="middle">her memory · her SOUL</text>
-  <text x="735" y="656" font-size="7" fill="rgba(255,255,255,0.5)" text-anchor="middle">her trust policies</text>
-
-  <!-- Sarah's tools -->
-  <rect x="860" y="610" width="80" height="20" rx="4" fill="white" stroke="#107C10" stroke-width="1"/>
-  <text x="900" y="624" font-size="7" fill="#107C10" font-family="monospace" text-anchor="middle">her tools</text>
-  <line x1="835" y1="630" x2="860" y2="622" stroke="#5B5FC7" stroke-width="1" marker-end="url(#ap)"/>
-
-  <rect x="860" y="638" width="80" height="20" rx="4" fill="white" stroke="#5B5FC7" stroke-width="1"/>
-  <text x="900" y="652" font-size="7" fill="#5B5FC7" font-family="monospace" text-anchor="middle">her memory</text>
-  <line x1="835" y1="650" x2="860" y2="650" stroke="#5B5FC7" stroke-width="1" marker-end="url(#ap)"/>
-
-  <!-- Signal examples under mesh -->
-  <text x="350" y="698" font-size="8" fill="#616161">Hema: <tspan font-family="monospace" fill="#5B5FC7">mesh("is Mia free Wed 10?")</tspan></text>
-  <text x="350" y="712" font-size="8" fill="#616161">Mesh routes → Mia's loop → <tspan font-family="monospace" fill="#107C10">check_calendar()</tspan> → returns "confirmed"</text>
-  <text x="350" y="730" font-size="8" fill="#616161">Hema: <tspan font-family="monospace" fill="#5B5FC7">mesh("compare budget assumptions")</tspan></text>
-  <text x="350" y="744" font-size="8" fill="#616161">Mesh → Sarah's loop → <tspan font-family="monospace" fill="#107C10">read_docs()</tspan> → returns <tspan font-weight="600" fill="#E87400">signal only</tspan> ("+15% mismatch")</text>
-
-  <!-- ═══ FLYWHEEL (bottom) ═══ -->
-  <rect x="60" y="775" width="840" height="40" rx="10" fill="white" stroke="#107C10" stroke-width="1.5"/>
-  <text x="480" y="795" font-size="10" font-weight="700" fill="#107C10" text-anchor="middle">🔄 The Flywheel</text>
-  <text x="480" y="808" font-size="8" fill="#616161" text-anchor="middle">User corrects → <tspan font-family="monospace" fill="#5B5FC7">save_lesson()</tspan> → memory enriched → <tspan font-family="monospace" fill="#5B5FC7">check_memory()</tspan> returns new pattern → better tool calls next time</text>
-
-  <!-- ═══ LEGEND ═══ -->
-  <rect x="60" y="835" width="840" height="35" rx="8" fill="#F9F9F9" stroke="#E5DFD9" stroke-width="1"/>
-  <text x="80" y="857" font-size="8" fill="#999" font-weight="600">LEGEND:</text>
-  <line x1="140" y1="855" x2="170" y2="855" stroke="#5B5FC7" stroke-width="1.5" marker-end="url(#ap)"/>
-  <text x="178" y="858" font-size="8" fill="#616161">tool_call (out)</text>
-  <line x1="260" y1="855" x2="290" y2="855" stroke="#107C10" stroke-width="1.5" stroke-dasharray="3,3" marker-end="url(#ag)"/>
-  <text x="298" y="858" font-size="8" fill="#616161">result (back)</text>
-  <line x1="380" y1="855" x2="410" y2="855" stroke="#E87400" stroke-width="1.5" marker-end="url(#ao)"/>
-  <text x="418" y="858" font-size="8" fill="#616161">mesh (cross-person)</text>
-  <rect x="530" y="848" width="14" height="14" rx="3" fill="none" stroke="#D13438" stroke-width="1.5" stroke-dasharray="3,2"/>
-  <text x="552" y="858" font-size="8" fill="#616161">security boundary</text>
-  <rect x="660" y="849" width="12" height="12" rx="2" fill="#DFF6DD" stroke="#107C10" stroke-width="1"/>
-  <text x="680" y="858" font-size="8" fill="#616161">M365 tools</text>
-  <rect x="740" y="849" width="12" height="12" rx="2" fill="white" stroke="#5B5FC7" stroke-width="1"/>
-  <text x="760" y="858" font-size="8" fill="#616161">OpenClaw tools</text>
+  <!-- ═══ BOTTOM LINE ═══ -->
+  <text x="480" y="510" font-size="11" text-anchor="middle" font-weight="600">
+    Each <tspan fill="#5B5FC7">OpenClaw</tspan> instance lives inside its user's tenant.
+  </text>
+  <text x="480" y="528" font-size="11" text-anchor="middle" font-weight="600">
+    Same runtime. Different <tspan fill="#5B5FC7">memory</tspan>, <tspan fill="#5B5FC7">SOUL</tspan>, <tspan fill="#5B5FC7">trust</tspan>.
+  </text>
+  <text x="480" y="546" font-size="11" text-anchor="middle" font-weight="600">
+    The <tspan fill="#E87400">mesh</tspan> is the only thing that crosses.
+  </text>
 
 </svg>
 </div>

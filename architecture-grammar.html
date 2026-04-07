@@ -6,197 +6,256 @@
 <title>Architecture — OpenClaw × M365</title>
 <style>
   *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
-  body{font-family:'Segoe UI Variable Display','Segoe UI',-apple-system,sans-serif;background:#F5F1EC;color:#242424;display:flex;flex-direction:column;align-items:center;min-height:100vh}
-  header{text-align:center;padding:40px 24px 8px}
-  header h1{font-size:28px;font-weight:700;letter-spacing:-0.02em}
-  header .sub{font-size:13px;color:#616161;margin-top:6px;max-width:560px;margin-left:auto;margin-right:auto;line-height:1.6}
-  header .meta{font-size:11px;color:#999;margin-top:6px}
-  .diagram-wrap{margin:24px auto;padding:0 16px 80px;overflow-x:auto}
+  body{font-family:'Segoe UI Variable Display','Segoe UI',-apple-system,sans-serif;background:#F5F1EC;color:#242424}
+  header{text-align:center;padding:36px 24px 4px}
+  header h1{font-size:26px;font-weight:700;letter-spacing:-0.02em}
+  header .sub{font-size:12px;color:#616161;margin-top:4px}
+  header .meta{font-size:11px;color:#999;margin-top:4px}
+  .diagram-wrap{max-width:1100px;margin:16px auto;padding:0 12px 60px;overflow-x:auto}
   svg text{font-family:'Segoe UI Variable Display','Segoe UI',-apple-system,sans-serif}
 </style>
 </head>
 <body>
 <header>
-  <h1>OpenClaw × M365</h1>
-  <div class="sub">Concentric rings. Outside in: humans → surfaces → orchestration → platform services → LLM core. Signals flow inward. Responses flow outward.</div>
+  <h1>OpenClaw × M365 — Microservice Architecture</h1>
+  <div class="sub">Each service = one role's codebase. Follow the numbered call chain top to bottom.</div>
   <div class="meta">Hema Sridharan · April 2026</div>
 </header>
 
 <div class="diagram-wrap">
-<svg viewBox="0 0 900 900" xmlns="http://www.w3.org/2000/svg" style="width:860px;height:860px;">
+<svg viewBox="0 0 1000 1200" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;min-width:780px;">
 
   <defs>
-    <marker id="ai" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M0 0L10 5L0 10z" fill="#5B5FC7"/></marker>
-    <marker id="ao" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M0 0L10 5L0 10z" fill="#107C10"/></marker>
-    <marker id="am" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M0 0L10 5L0 10z" fill="#E87400"/></marker>
+    <marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M0 0L10 5L0 10z" fill="#666"/></marker>
+    <marker id="ap" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M0 0L10 5L0 10z" fill="#5B5FC7"/></marker>
+    <marker id="ag" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M0 0L10 5L0 10z" fill="#107C10"/></marker>
+    <marker id="ao" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M0 0L10 5L0 10z" fill="#E87400"/></marker>
+    <marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M0 0L10 5L0 10z" fill="#D13438"/></marker>
   </defs>
 
-  <!-- ═══ RING 6 (outermost): HUMANS ═══ -->
-  <circle cx="450" cy="450" r="420" fill="none" stroke="#E5DFD9" stroke-width="1" stroke-dasharray="4,4"/>
+  <!-- ═══ TRIGGER LANE (top) ═══ -->
+  <!-- User trigger -->
+  <circle cx="250" cy="35" r="20" fill="#242424"/>
+  <text x="250" y="39" font-size="12" fill="white" text-anchor="middle">👤</text>
+  <text x="250" y="65" font-size="9" fill="#242424" text-anchor="middle">User input</text>
 
-  <!-- Human users positioned around the outer edge -->
-  <circle cx="450" cy="40" r="22" fill="#242424"/>
-  <text x="450" y="44" font-size="14" fill="white" text-anchor="middle">👤</text>
-  <text x="450" y="75" font-size="10" fill="#242424" text-anchor="middle" font-weight="600">Hema</text>
+  <!-- Signal trigger -->
+  <rect x="430" y="18" width="100" height="34" rx="6" fill="#DFF6DD" stroke="#107C10" stroke-width="1"/>
+  <text x="480" y="39" font-size="9" fill="#107C10" text-anchor="middle" font-weight="600">📡 Signal</text>
+  <text x="480" y="65" font-size="8" fill="#999" text-anchor="middle">mail · doc Δ · cron</text>
 
-  <circle cx="830" cy="300" r="22" fill="#242424"/>
-  <text x="830" y="304" font-size="14" fill="white" text-anchor="middle">👤</text>
-  <text x="830" y="335" font-size="10" fill="#242424" text-anchor="middle" font-weight="600">Sarah</text>
+  <!-- Cron trigger -->
+  <rect x="620" y="18" width="80" height="34" rx="6" fill="#E8EBFA" stroke="#5B5FC7" stroke-width="1"/>
+  <text x="660" y="39" font-size="9" fill="#5B5FC7" text-anchor="middle" font-weight="600">🕓 4 AM</text>
+  <text x="660" y="65" font-size="8" fill="#999" text-anchor="middle">dream cycle</text>
 
-  <circle cx="780" cy="700" r="22" fill="#242424"/>
-  <text x="780" y="704" font-size="14" fill="white" text-anchor="middle">👤</text>
-  <text x="780" y="735" font-size="10" fill="#242424" text-anchor="middle" font-weight="600">Raj</text>
+  <text x="50" y="40" font-size="9" font-weight="700" fill="#999">TRIGGERS</text>
 
-  <circle cx="120" cy="700" r="22" fill="#242424"/>
-  <text x="120" y="704" font-size="14" fill="white" text-anchor="middle">👤</text>
-  <text x="120" y="735" font-size="10" fill="#242424" text-anchor="middle" font-weight="600">Mia</text>
+  <!-- All triggers → Surface Service -->
+  <line x1="250" y1="55" x2="250" y2="95" stroke="#666" stroke-width="1.2" marker-end="url(#a)"/>
+  <line x1="480" y1="52" x2="380" y2="95" stroke="#107C10" stroke-width="1.2" marker-end="url(#ag)"/>
+  <line x1="660" y1="52" x2="500" y2="95" stroke="#5B5FC7" stroke-width="1.2" marker-end="url(#ap)"/>
 
-  <text x="35" y="440" font-size="9" fill="#999" font-weight="600" letter-spacing="0.05em" transform="rotate(-90,35,440)">HUMANS</text>
+  <!-- ═══ 1. SURFACE SERVICE ═══ -->
+  <rect x="150" y="98" width="400" height="48" rx="10" fill="white" stroke="#107C10" stroke-width="2"/>
+  <text x="170" y="118" font-size="8" fill="white" font-weight="700"><tspan fill="#107C10" font-size="10">①</tspan></text>
+  <text x="190" y="120" font-size="12" font-weight="700" fill="#107C10">Surface Service</text>
+  <text x="190" y="136" font-size="8" fill="#616161">Teams · Mobile · Word · Excel · PPT    <tspan fill="#999" font-style="italic">Teams Surface role</tspan></text>
 
-  <!-- ═══ RING 5: SURFACES (M365) ═══ -->
-  <circle cx="450" cy="450" r="340" fill="none" stroke="#107C10" stroke-width="2" opacity="0.3"/>
-  <text x="120" y="370" font-size="9" fill="#107C10" font-weight="700" letter-spacing="0.05em" transform="rotate(-90,120,370)">SURFACES · M365</text>
+  <!-- ① → ② -->
+  <line x1="350" y1="146" x2="350" y2="180" stroke="#666" stroke-width="1.2" marker-end="url(#a)"/>
+  <text x="360" y="168" font-size="8" fill="#666" font-weight="600">user/signal</text>
 
-  <!-- Surface nodes -->
-  <rect x="390" y="118" width="120" height="36" rx="8" fill="white" stroke="#107C10" stroke-width="1.5"/>
-  <text x="450" y="140" font-size="10" font-weight="600" fill="#107C10" text-anchor="middle">💬 Teams Chat</text>
+  <!-- ═══ 2. AGENT GATEWAY ═══ -->
+  <rect x="175" y="183" width="350" height="48" rx="10" fill="white" stroke="#5B5FC7" stroke-width="2"/>
+  <text x="195" y="205" font-size="10" fill="#5B5FC7" font-weight="700">②</text>
+  <text x="215" y="205" font-size="12" font-weight="700" fill="#5B5FC7">Agent Gateway</text>
+  <text x="215" y="221" font-size="8" fill="#616161">Auth · resolve agent instance · load SOUL.md · scope    <tspan fill="#999" font-style="italic">Identity role</tspan></text>
 
-  <rect x="700" y="250" width="100" height="36" rx="8" fill="white" stroke="#107C10" stroke-width="1.5"/>
-  <text x="750" y="272" font-size="10" font-weight="600" fill="#107C10" text-anchor="middle">📊 Excel</text>
+  <!-- ② → ③ -->
+  <line x1="350" y1="231" x2="350" y2="268" stroke="#5B5FC7" stroke-width="1.2" marker-end="url(#ap)"/>
+  <text x="360" y="254" font-size="8" fill="#5B5FC7" font-weight="600">scoped request</text>
 
-  <rect x="680" y="600" width="100" height="36" rx="8" fill="white" stroke="#107C10" stroke-width="1.5"/>
-  <text x="730" y="622" font-size="10" font-weight="600" fill="#107C10" text-anchor="middle">📧 Outlook</text>
+  <!-- ═══ 3. ORCHESTRATOR ═══ -->
+  <rect x="140" y="270" width="420" height="58" rx="12" fill="#5B5FC7"/>
+  <text x="165" y="296" font-size="10" fill="white" font-weight="700">③</text>
+  <text x="185" y="296" font-size="13" font-weight="700" fill="white">🎯 Orchestrator Service</text>
+  <text x="185" y="315" font-size="8" fill="rgba(255,255,255,0.7)">The router. Decides: what services to call, in what order, for this signal.    <tspan font-style="italic">Architecture role</tspan></text>
 
-  <rect x="120" y="600" width="100" height="36" rx="8" fill="white" stroke="#107C10" stroke-width="1.5"/>
-  <text x="170" y="622" font-size="10" font-weight="600" fill="#107C10" text-anchor="middle">📝 Word</text>
+  <!-- ③ fans out to 4 services -->
+  <!-- ③ → ④ Signal Service -->
+  <line x1="200" y1="328" x2="110" y2="385" stroke="#107C10" stroke-width="1.2" marker-end="url(#ag)"/>
+  <text x="130" y="360" font-size="7" fill="#107C10" font-weight="600">pull data</text>
 
-  <rect x="100" y="250" width="100" height="36" rx="8" fill="white" stroke="#107C10" stroke-width="1.5"/>
-  <text x="150" y="272" font-size="10" font-weight="600" fill="#107C10" text-anchor="middle">📱 Mobile</text>
+  <!-- ③ → ⑤ Memory Service -->
+  <line x1="300" y1="328" x2="300" y2="385" stroke="#5B5FC7" stroke-width="1.2" marker-end="url(#ap)"/>
+  <text x="310" y="360" font-size="7" fill="#5B5FC7" font-weight="600">get context</text>
 
-  <!-- Lines: humans → surfaces -->
-  <line x1="450" y1="62" x2="450" y2="118" stroke="#999" stroke-width="1" stroke-dasharray="3,3"/>
-  <line x1="810" y1="310" x2="760" y2="286" stroke="#999" stroke-width="1" stroke-dasharray="3,3"/>
-  <line x1="760" y1="710" x2="730" y2="636" stroke="#999" stroke-width="1" stroke-dasharray="3,3"/>
-  <line x1="138" y1="700" x2="170" y2="636" stroke="#999" stroke-width="1" stroke-dasharray="3,3"/>
+  <!-- ③ → ⑥ Specialist Agents -->
+  <line x1="420" y1="328" x2="500" y2="385" stroke="#5B5FC7" stroke-width="1.2" marker-end="url(#ap)"/>
+  <text x="445" y="360" font-size="7" fill="#5B5FC7" font-weight="600">dispatch</text>
 
-  <!-- ═══ RING 4: AGENT INSTANCES ═══ -->
-  <circle cx="450" cy="450" r="260" fill="none" stroke="#5B5FC7" stroke-width="2" opacity="0.3"/>
-  <text x="196" y="330" font-size="9" fill="#5B5FC7" font-weight="700" letter-spacing="0.05em" transform="rotate(-90,196,330)">AGENTS · PER USER</text>
+  <!-- ③ → ⑧ Mesh (conditional) -->
+  <line x1="520" y1="328" x2="730" y2="385" stroke="#E87400" stroke-width="1.2" stroke-dasharray="4,3" marker-end="url(#ao)"/>
+  <text x="620" y="355" font-size="7" fill="#E87400" font-weight="600">cross-person?</text>
 
-  <!-- Agent instances -->
-  <rect x="400" y="195" width="100" height="40" rx="8" fill="#5B5FC7"/>
-  <text x="450" y="214" font-size="9" font-weight="700" fill="white" text-anchor="middle">🎯 Hema's</text>
-  <text x="450" y="226" font-size="7" fill="rgba(255,255,255,0.6)" text-anchor="middle">Cadbury</text>
+  <!-- ═══ ROW: ④ ⑤ ⑥ ═══ -->
 
-  <rect x="640" y="310" width="100" height="40" rx="8" fill="#5B5FC7"/>
-  <text x="690" y="329" font-size="9" font-weight="700" fill="white" text-anchor="middle">🎯 Sarah's</text>
-  <text x="690" y="341" font-size="7" fill="rgba(255,255,255,0.6)" text-anchor="middle">agent</text>
+  <!-- ④ Signal Service -->
+  <rect x="30" y="388" width="170" height="55" rx="8" fill="white" stroke="#107C10" stroke-width="1.5"/>
+  <text x="50" y="410" font-size="10" fill="#107C10" font-weight="700">④</text>
+  <text x="67" y="410" font-size="11" font-weight="700" fill="#107C10">Signal Service</text>
+  <text x="50" y="426" font-size="8" fill="#616161">Graph · Mail · Docs · Cal</text>
+  <text x="50" y="436" font-size="7" fill="#999" font-style="italic">M365 Integrations role</text>
 
-  <rect x="600" y="560" width="100" height="40" rx="8" fill="#5B5FC7"/>
-  <text x="650" y="579" font-size="9" font-weight="700" fill="white" text-anchor="middle">🎯 Raj's</text>
-  <text x="650" y="591" font-size="7" fill="rgba(255,255,255,0.6)" text-anchor="middle">agent</text>
+  <!-- ⑤ Memory Service -->
+  <rect x="220" y="388" width="170" height="55" rx="8" fill="white" stroke="#5B5FC7" stroke-width="1.5"/>
+  <text x="240" y="410" font-size="10" fill="#5B5FC7" font-weight="700">⑤</text>
+  <text x="257" y="410" font-size="11" font-weight="700" fill="#5B5FC7">Memory Service</text>
+  <text x="240" y="426" font-size="8" fill="#616161">LESSONS · vectors · BM25</text>
+  <text x="240" y="436" font-size="7" fill="#999" font-style="italic">Data Science role</text>
 
-  <rect x="200" y="560" width="100" height="40" rx="8" fill="#5B5FC7"/>
-  <text x="250" y="579" font-size="9" font-weight="700" fill="white" text-anchor="middle">🎯 Mia's</text>
-  <text x="250" y="591" font-size="7" fill="rgba(255,255,255,0.6)" text-anchor="middle">agent</text>
+  <!-- ⑥ Specialist Agents -->
+  <rect x="420" y="388" width="210" height="55" rx="8" fill="white" stroke="#5B5FC7" stroke-width="1.5"/>
+  <text x="440" y="410" font-size="10" fill="#5B5FC7" font-weight="700">⑥</text>
+  <text x="457" y="410" font-size="11" font-weight="700" fill="#5B5FC7">Specialist Agents</text>
+  <text x="440" y="426" font-size="8" fill="#616161">✉️ Mail  📅 Cal  📄 Doc  📊 Data</text>
+  <text x="440" y="436" font-size="7" fill="#999" font-style="italic">Plugins on Architecture runtime</text>
 
-  <!-- Lines: surfaces → agents -->
-  <line x1="450" y1="154" x2="450" y2="195" stroke="#107C10" stroke-width="1.2" marker-end="url(#ao)"/>
-  <line x1="730" y1="286" x2="700" y2="310" stroke="#107C10" stroke-width="1.2" marker-end="url(#ao)"/>
-  <line x1="710" y1="600" x2="670" y2="575" stroke="#107C10" stroke-width="1.2" marker-end="url(#ao)"/>
-  <line x1="170" y1="600" x2="230" y2="575" stroke="#107C10" stroke-width="1.2" marker-end="url(#ao)"/>
+  <!-- Agent calls Signal Service for data -->
+  <path d="M440,443 L440,460 L115,460 L115,443" stroke="#107C10" stroke-width="1" fill="none" stroke-dasharray="3,3" marker-end="url(#ag)"/>
+  <text x="280" y="455" font-size="7" fill="#107C10" text-anchor="middle">agents pull data from signals</text>
 
-  <!-- ═══ MESH: lateral connections between agents ═══ -->
-  <line x1="500" y1="215" x2="640" y2="325" stroke="#E87400" stroke-width="2" stroke-dasharray="5,4" marker-end="url(#am)"/>
-  <line x1="640" y1="340" x2="500" y2="225" stroke="#E87400" stroke-width="2" stroke-dasharray="5,4"/>
+  <!-- Agent calls Mesh -->
+  <path d="M580,443 L580,470 L730,470 L730,443" stroke="#E87400" stroke-width="1" fill="none" stroke-dasharray="3,3" marker-end="url(#ao)"/>
+  <text x="655" y="466" font-size="7" fill="#E87400" text-anchor="middle">agent → mesh</text>
 
-  <line x1="690" y1="350" x2="660" y2="560" stroke="#E87400" stroke-width="1.5" stroke-dasharray="5,4"/>
-  <line x1="250" y1="560" x2="410" y2="225" stroke="#E87400" stroke-width="1.5" stroke-dasharray="5,4"/>
+  <!-- ⑧ Mesh Service (right side) -->
+  <rect x="660" y="388" width="190" height="55" rx="8" fill="#FFF7ED" stroke="#E87400" stroke-width="2" stroke-dasharray="5,4"/>
+  <text x="680" y="410" font-size="10" fill="#E87400" font-weight="700">⑧</text>
+  <text x="697" y="410" font-size="11" font-weight="700" fill="#E87400">Mesh Service</text>
+  <text x="680" y="426" font-size="8" fill="#616161">Cross-person signal exchange</text>
+  <text x="680" y="436" font-size="7" fill="#E87400" font-style="italic" font-weight="600">THE GAP · co-owned</text>
 
-  <!-- Mesh label -->
-  <rect x="530" y="385" width="80" height="26" rx="6" fill="#FFF7ED" stroke="#E87400" stroke-width="1.5" stroke-dasharray="4,3"/>
-  <text x="570" y="402" font-size="8" font-weight="700" fill="#E87400" text-anchor="middle">🔗 MESH</text>
+  <!-- Mesh routes to other user's gateway -->
+  <rect x="880" y="388" width="90" height="55" rx="8" fill="#E8EBFA" stroke="#5B5FC7" stroke-width="1" stroke-dasharray="4,3"/>
+  <text x="925" y="410" font-size="9" font-weight="700" fill="#5B5FC7" text-anchor="middle">Sarah's</text>
+  <text x="925" y="424" font-size="9" fill="#5B5FC7" text-anchor="middle">Gateway</text>
+  <text x="925" y="436" font-size="7" fill="#999" text-anchor="middle">→ her stack</text>
+  <line x1="850" y1="415" x2="880" y2="415" stroke="#E87400" stroke-width="1.2" marker-end="url(#ao)"/>
+  <text x="860" y="408" font-size="6" fill="#E87400" font-weight="600">signal</text>
 
-  <text x="555" y="425" font-size="7" fill="#E87400" text-anchor="middle" font-weight="600">signals only</text>
-  <text x="555" y="435" font-size="7" fill="#E87400" text-anchor="middle">never raw data</text>
+  <!-- ═══ All results return to Orchestrator ═══ -->
+  <text x="350" y="495" font-size="8" fill="#666" text-anchor="middle" font-weight="600">④⑤⑥⑧ return results to ③ Orchestrator</text>
+  <path d="M115,443 L115,485 L300,485" stroke="#666" stroke-width="1" fill="none" marker-end="url(#a)"/>
+  <path d="M305,443 L305,485" stroke="#666" stroke-width="1" fill="none"/>
+  <path d="M525,443 L525,485 L370,485" stroke="#666" stroke-width="1" fill="none"/>
 
-  <!-- ═══ RING 3: ORCHESTRATION (Trust + Routing) ═══ -->
-  <circle cx="450" cy="450" r="170" fill="none" stroke="#5B5FC7" stroke-width="2" opacity="0.4"/>
-  <text x="285" y="390" font-size="9" fill="#5B5FC7" font-weight="700" letter-spacing="0.05em" transform="rotate(-90,285,390)">ORCHESTRATION</text>
+  <!-- ═══ ③ → ⑦ TRUST SERVICE ═══ -->
+  <line x1="350" y1="500" x2="350" y2="535" stroke="#D13438" stroke-width="1.5" marker-end="url(#ar)"/>
+  <text x="360" y="522" font-size="8" fill="#D13438" font-weight="600">proposed action</text>
 
-  <!-- Orchestration ring contents — positioned around the ring -->
-  <rect x="385" y="285" width="130" height="32" rx="6" fill="#E8EBFA" stroke="#5B5FC7" stroke-width="1"/>
-  <text x="450" y="305" font-size="9" font-weight="600" fill="#5B5FC7" text-anchor="middle">⏸ Trust Gate</text>
+  <!-- ⑦ Trust Service -->
+  <rect x="150" y="538" width="400" height="58" rx="10" fill="white" stroke="#D13438" stroke-width="2"/>
+  <text x="170" y="562" font-size="10" fill="#D13438" font-weight="700">⑦</text>
+  <text x="190" y="562" font-size="12" font-weight="700" fill="#D13438">⏸ Trust Service</text>
+  <text x="190" y="580" font-size="8" fill="#616161">Evaluate policy: <tspan fill="#107C10" font-weight="700">● auto</tspan> <tspan fill="#E87400" font-weight="700">● review</tspan> <tspan fill="#D13438" font-weight="700">● locked</tspan>    <tspan fill="#999" font-style="italic">Security role</tspan></text>
 
-  <rect x="560" y="430" width="60" height="50" rx="6" fill="#E8EBFA" stroke="#5B5FC7" stroke-width="1"/>
-  <text x="590" y="452" font-size="8" font-weight="600" fill="#5B5FC7" text-anchor="middle">✉️</text>
-  <text x="590" y="464" font-size="7" fill="#5B5FC7" text-anchor="middle">Mail</text>
-  <text x="590" y="474" font-size="6" fill="#999" text-anchor="middle">Agent</text>
+  <!-- Three outputs from Trust -->
 
-  <rect x="540" y="490" width="60" height="50" rx="6" fill="#E8EBFA" stroke="#5B5FC7" stroke-width="1"/>
-  <text x="570" y="512" font-size="8" font-weight="600" fill="#5B5FC7" text-anchor="middle">📄</text>
-  <text x="570" y="524" font-size="7" fill="#5B5FC7" text-anchor="middle">Doc</text>
-  <text x="570" y="534" font-size="6" fill="#999" text-anchor="middle">Agent</text>
+  <!-- AUTO → Execute silently -->
+  <line x1="230" y1="596" x2="130" y2="645" stroke="#107C10" stroke-width="1.2" marker-end="url(#ag)"/>
+  <text x="155" y="625" font-size="7" fill="#107C10" font-weight="600">auto →</text>
 
-  <rect x="300" y="430" width="60" height="50" rx="6" fill="#E8EBFA" stroke="#5B5FC7" stroke-width="1"/>
-  <text x="330" y="452" font-size="8" font-weight="600" fill="#5B5FC7" text-anchor="middle">📅</text>
-  <text x="330" y="464" font-size="7" fill="#5B5FC7" text-anchor="middle">Cal</text>
-  <text x="330" y="474" font-size="6" fill="#999" text-anchor="middle">Agent</text>
+  <rect x="30" y="648" width="195" height="40" rx="8" fill="#DFF6DD" stroke="#107C10" stroke-width="1"/>
+  <text x="50" y="668" font-size="10" fill="#107C10" font-weight="700">⑨</text>
+  <text x="67" y="668" font-size="10" font-weight="600" fill="#107C10">Execution Service</text>
+  <text x="67" y="680" font-size="7" fill="#616161">Send email · move meeting · archive</text>
 
-  <rect x="300" y="490" width="60" height="50" rx="6" fill="#E8EBFA" stroke="#5B5FC7" stroke-width="1"/>
-  <text x="330" y="512" font-size="8" font-weight="600" fill="#5B5FC7" text-anchor="middle">📊</text>
-  <text x="330" y="524" font-size="7" fill="#5B5FC7" text-anchor="middle">Data</text>
-  <text x="330" y="534" font-size="6" fill="#999" text-anchor="middle">Agent</text>
+  <!-- REVIEW/LOCKED → back to Surface -->
+  <line x1="450" y1="596" x2="600" y2="645" stroke="#D13438" stroke-width="1.2" marker-end="url(#ar)"/>
+  <text x="545" y="625" font-size="7" fill="#D13438" font-weight="600">review / locked →</text>
 
-  <text x="450" y="560" font-size="7" fill="#616161" text-anchor="middle">specialists dispatched by orchestrator</text>
+  <rect x="510" y="648" width="240" height="40" rx="8" fill="#FEE2E2" stroke="#D13438" stroke-width="1"/>
+  <text x="530" y="668" font-size="9" fill="#D13438" font-weight="600">→ Surface Service (approval card)</text>
+  <text x="530" y="680" font-size="7" fill="#616161">User sees gen UI card, approves or corrects</text>
 
-  <!-- ═══ RING 2: PLATFORM SERVICES ═══ -->
-  <circle cx="450" cy="450" r="100" fill="none" stroke="#5B5FC7" stroke-width="2" opacity="0.5"/>
-  <text x="356" y="438" font-size="8" fill="#5B5FC7" font-weight="700" letter-spacing="0.04em" transform="rotate(-90,356,438)">PLATFORM</text>
+  <!-- User approves → back to Execution -->
+  <path d="M630,688 L630,710 L225,710 L225,688" stroke="#107C10" stroke-width="1" fill="none" marker-end="url(#ag)"/>
+  <text x="430" y="706" font-size="7" fill="#107C10" font-weight="600">approved → execute</text>
 
-  <!-- Platform services around inner ring -->
-  <text x="450" y="360" font-size="8" font-weight="600" fill="#5B5FC7" text-anchor="middle">🧠 Memory</text>
-  <text x="450" y="370" font-size="7" fill="#999" text-anchor="middle">LESSONS · SOUL · dreams</text>
+  <!-- ═══ ⑩ OBSERVABILITY ═══ -->
+  <line x1="128" y1="688" x2="128" y2="745" stroke="#666" stroke-width="1" marker-end="url(#a)"/>
+  <text x="138" y="722" font-size="7" fill="#666" font-weight="600">log</text>
 
-  <text x="540" y="395" font-size="7" font-weight="600" fill="#5B5FC7" text-anchor="end">🔐 Security</text>
-  <text x="380" y="395" font-size="7" font-weight="600" fill="#5B5FC7">🆔 Identity</text>
+  <rect x="30" y="748" width="200" height="40" rx="8" fill="white" stroke="#E87400" stroke-width="1"/>
+  <text x="50" y="768" font-size="10" fill="#E87400" font-weight="700">⑩</text>
+  <text x="67" y="768" font-size="10" font-weight="600" fill="#E87400">Observability</text>
+  <text x="67" y="780" font-size="7" fill="#616161">Autonomy ledger · health · latency    <tspan fill="#999" font-style="italic">SysHealth role</tspan></text>
 
-  <text x="450" y="530" font-size="7" font-weight="600" fill="#5B5FC7" text-anchor="middle">📈 Observability</text>
-  <text x="540" y="520" font-size="7" font-weight="600" fill="#5B5FC7" text-anchor="end">✅ Evals</text>
-  <text x="380" y="520" font-size="7" font-weight="600" fill="#5B5FC7">📊 Data Sci</text>
+  <!-- ═══ ⑪ EVAL SERVICE (periodic) ═══ -->
+  <rect x="300" y="748" width="200" height="40" rx="8" fill="white" stroke="#E87400" stroke-width="1"/>
+  <text x="320" y="768" font-size="10" fill="#E87400" font-weight="700">⑪</text>
+  <text x="337" y="768" font-size="10" font-weight="600" fill="#E87400">Eval Service</text>
+  <text x="337" y="780" font-size="7" fill="#616161">Smoke tests · red team · quality    <tspan fill="#999" font-style="italic">Quality role</tspan></text>
 
-  <!-- ═══ RING 1 (core): LLM ═══ -->
-  <circle cx="450" cy="450" r="40" fill="#5B5FC7"/>
-  <text x="450" y="444" font-size="12" font-weight="700" fill="white" text-anchor="middle">🤖</text>
-  <text x="450" y="462" font-size="10" font-weight="700" fill="white" text-anchor="middle">LLM</text>
+  <!-- Eval → tests agents -->
+  <path d="M400,748 L400,443 L420,443" stroke="#E87400" stroke-width="1" fill="none" stroke-dasharray="3,3" marker-end="url(#ao)"/>
+  <text x="408" y="600" font-size="7" fill="#E87400" font-weight="600" transform="rotate(-90,408,600)">periodic tests</text>
 
-  <!-- ═══ FLOW ANNOTATIONS ═══ -->
-  <!-- Inward arrow (signals) -->
-  <line x1="450" y1="82" x2="450" y2="118" stroke="#5B5FC7" stroke-width="1.5" marker-end="url(#ai)"/>
-  <text x="465" y="98" font-size="7" fill="#5B5FC7" font-weight="600">signals in ↓</text>
+  <!-- ═══ ⑫ LEARNING SERVICE (the loop) ═══ -->
+  <rect x="570" y="748" width="220" height="40" rx="8" fill="white" stroke="#107C10" stroke-width="2"/>
+  <text x="590" y="768" font-size="10" fill="#107C10" font-weight="700">⑫</text>
+  <text x="607" y="768" font-size="10" font-weight="700" fill="#107C10">🔄 Learning Service</text>
+  <text x="607" y="780" font-size="7" fill="#616161">correction → LESSONS.md → Memory Service</text>
 
-  <!-- Outward arrow (responses) -->
-  <line x1="155" y1="275" x2="135" y2="257" stroke="#107C10" stroke-width="1.5" marker-end="url(#ao)"/>
-  <text x="100" y="242" font-size="7" fill="#107C10" font-weight="600">↑ responses out</text>
+  <!-- User correction → Learning -->
+  <path d="M750,688 L750,720 L680,748" stroke="#107C10" stroke-width="1.2" fill="none" marker-end="url(#ag)"/>
+  <text x="730" y="715" font-size="7" fill="#107C10" font-weight="600">user corrects</text>
 
-  <!-- Learning loop annotation -->
-  <path d="M75,450 C75,250 200,155 385,155" stroke="#107C10" stroke-width="1.2" fill="none" stroke-dasharray="4,3" marker-end="url(#ao)"/>
-  <text x="85" y="300" font-size="8" fill="#107C10" font-weight="600" transform="rotate(-75,85,300)">corrections loop back in</text>
+  <!-- Learning → Memory (the flywheel) -->
+  <path d="M680,788 L680,820 L305,820 L305,443" stroke="#107C10" stroke-width="1.5" fill="none" stroke-dasharray="5,4" marker-end="url(#ag)"/>
+  <text x="500" y="835" font-size="9" fill="#107C10" font-weight="700" text-anchor="middle">THE FLYWHEEL: correction → lesson → memory → better next time</text>
 
-  <!-- ═══ LEGEND ═══ -->
-  <rect x="30" y="810" width="840" height="70" rx="10" fill="white" stroke="#E5DFD9" stroke-width="1"/>
+  <!-- ═══ ROLE ASSIGNMENTS (bottom legend) ═══ -->
+  <rect x="30" y="870" width="940" height="110" rx="10" fill="white" stroke="#E5DFD9" stroke-width="1"/>
+  <text x="50" y="895" font-size="10" font-weight="700" fill="#242424">Which role owns which service:</text>
 
-  <text x="50" y="835" font-size="10" font-weight="700" fill="#242424">Rings (outside → in):</text>
-  <circle cx="80" cy="855" r="5" fill="#242424"/><text x="92" y="859" font-size="9" fill="#616161">Humans</text>
-  <circle cx="170" cy="855" r="5" fill="none" stroke="#107C10" stroke-width="2"/><text x="182" y="859" font-size="9" fill="#616161">M365 Surfaces</text>
-  <circle cx="300" cy="855" r="5" fill="#5B5FC7"/><text x="312" y="859" font-size="9" fill="#616161">Per-User Agents</text>
-  <circle cx="430" cy="855" r="5" fill="none" stroke="#5B5FC7" stroke-width="2"/><text x="442" y="859" font-size="9" fill="#616161">Orchestration</text>
-  <circle cx="550" cy="855" r="5" fill="#E8EBFA" stroke="#5B5FC7" stroke-width="1"/><text x="562" y="859" font-size="9" fill="#616161">Platform Services</text>
-  <circle cx="680" cy="855" r="5" fill="#5B5FC7"/><text x="692" y="859" font-size="9" fill="#616161">LLM Core</text>
+  <text x="50" y="918" font-size="9" fill="#107C10" font-weight="600">① Surface Service</text>
+  <text x="200" y="918" font-size="8" fill="#616161">← Teams Surface</text>
 
-  <text x="50" y="872" font-size="9" fill="#E87400" font-weight="600">🔗 Orange dashed = Agent Mesh (lateral, signals only, THE GAP)</text>
-  <text x="500" y="872" font-size="9" fill="#107C10" font-weight="600">↑ Green = outward (responses, rendering)</text>
-  <text x="730" y="872" font-size="9" fill="#5B5FC7" font-weight="600">↓ Purple = inward (signals)</text>
+  <text x="50" y="935" font-size="9" fill="#5B5FC7" font-weight="600">② Agent Gateway</text>
+  <text x="200" y="935" font-size="8" fill="#616161">← Identity &amp; Agent Platform</text>
+
+  <text x="50" y="952" font-size="9" fill="#5B5FC7" font-weight="600">③ Orchestrator</text>
+  <text x="200" y="952" font-size="8" fill="#616161">← Architecture</text>
+
+  <text x="50" y="969" font-size="9" fill="#107C10" font-weight="600">④ Signal Service</text>
+  <text x="200" y="969" font-size="8" fill="#616161">← M365 Integrations</text>
+
+  <text x="370" y="918" font-size="9" fill="#5B5FC7" font-weight="600">⑤ Memory Service</text>
+  <text x="520" y="918" font-size="8" fill="#616161">← Data Science</text>
+
+  <text x="370" y="935" font-size="9" fill="#5B5FC7" font-weight="600">⑥ Specialist Agents</text>
+  <text x="520" y="935" font-size="8" fill="#616161">← plugins on Architecture runtime</text>
+
+  <text x="370" y="952" font-size="9" fill="#D13438" font-weight="600">⑦ Trust Service</text>
+  <text x="520" y="952" font-size="8" fill="#616161">← Security &amp; Compliance</text>
+
+  <text x="370" y="969" font-size="9" fill="#E87400" font-weight="600">⑧ Mesh Service</text>
+  <text x="520" y="969" font-size="8" fill="#E87400" font-weight="600">← THE GAP · co-owned</text>
+
+  <text x="700" y="918" font-size="9" fill="#107C10" font-weight="600">⑨ Execution</text>
+  <text x="800" y="918" font-size="8" fill="#616161">← Architecture</text>
+
+  <text x="700" y="935" font-size="9" fill="#E87400" font-weight="600">⑩ Observability</text>
+  <text x="800" y="935" font-size="8" fill="#616161">← System Health</text>
+
+  <text x="700" y="952" font-size="9" fill="#E87400" font-weight="600">⑪ Eval Service</text>
+  <text x="800" y="952" font-size="8" fill="#616161">← Quality &amp; Evals</text>
+
+  <text x="700" y="969" font-size="9" fill="#107C10" font-weight="600">⑫ Learning</text>
+  <text x="800" y="969" font-size="8" fill="#616161">← loops to ⑤ Memory</text>
 
 </svg>
 </div>
